@@ -1,5 +1,4 @@
-import { ENVIRONMENT } from '../utils/env';
-
+import { ENVIRONMENT } from '@/utils/env';
 import { ThemeOptions, createTheme } from '@mui/material/styles';
 
 const themeOptions: ThemeOptions = {};

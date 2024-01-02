@@ -1,6 +1,7 @@
-import AppHeader from '../components/organisms/AppHeader';
-
+import AppHeader from '@/components/organisms/AppHeader';
+import ThemeRegistry from '@/components/atoms/ThemeRegistry';
 import { Metadata } from 'next';
+import Toolbar from '@mui/material/Toolbar';
 
 export const metadata: Metadata = {
   title: 'kNODEledge',
@@ -10,8 +11,11 @@ export const metadata: Metadata = {
 const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <html lang="en">
     <body>
-      <AppHeader />
-      {children}
+      <ThemeRegistry>
+        <AppHeader />
+        <Toolbar />
+        {children}
+      </ThemeRegistry>
     </body>
   </html>
 );
