@@ -41,6 +41,16 @@
     "import/order": [
       "error",
       {
+        "alphabetize": {
+          "order": "asc"
+        },
+        "pathGroups": [
+          {
+            "pattern": "@/**",
+            "group": "parent"
+          }
+        ],
+
         "newlines-between": "always"
       }
     ],

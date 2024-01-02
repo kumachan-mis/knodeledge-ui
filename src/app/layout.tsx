@@ -1,10 +1,12 @@
-import AppHeader from '@/components/organisms/AppHeader';
 import ThemeRegistry from '@/components/atoms/ThemeRegistry';
-import { Metadata } from 'next';
+import AppHeader from '@/components/organisms/AppHeader';
+import { ENVIRONMENT } from '@/utils/env';
+
 import Toolbar from '@mui/material/Toolbar';
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'kNODEledge',
+  title: `kNODEledge${ENVIRONMENT !== 'production' ? ` - ${ENVIRONMENT}` : ''}`,
   description: 'App to Create Graphically-Summarized Notes in Three Steps',
 };
 
