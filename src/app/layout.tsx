@@ -1,3 +1,5 @@
+import AppHeader from "../components/organisms/AppHeader";
+
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,7 +9,10 @@ export const metadata: Metadata = {
 
 const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <html lang="en">
-    <body>{children}</body>
+    <body>
+      <AppHeader />
+      {children}
+    </body>
   </html>
 );
 

@@ -5,6 +5,7 @@
     "plugin:@typescript-eslint/stylistic",
     "plugin:import/recommended",
     "plugin:import/typescript",
+    "plugin:storybook/recommended",
     "prettier"
   ],
   "plugins": ["@typescript-eslint", "import"],
@@ -37,15 +38,28 @@
     "prefer-const": "error",
     "require-await": "error",
     "@typescript-eslint/consistent-type-definitions": ["error", "type"],
-    "import/order": ["error", { "newlines-between": "always" }],
+    "import/order": [
+      "error",
+      {
+        "newlines-between": "always"
+      }
+    ],
     "import/no-named-as-default-member": "off",
     "react/forbid-prop-types": "error",
     "react/function-component-definition": [
       "error",
-      { "namedComponents": "arrow-function", "unnamedComponents": "arrow-function" }
+      {
+        "namedComponents": "arrow-function",
+        "unnamedComponents": "arrow-function"
+      }
     ],
     "react/hook-use-state": "error",
-    "react/jsx-filename-extension": ["error", { "extensions": [".jsx", ".tsx"] }],
+    "react/jsx-filename-extension": [
+      "error",
+      {
+        "extensions": [".jsx", ".tsx"]
+      }
+    ],
     "react/jsx-fragments": ["error", "syntax"],
     "react/jsx-handler-names": "error",
     "react/jsx-no-useless-fragment": "error",
