@@ -1,4 +1,4 @@
-import AppHeaderComponent from "./AppHeader";
+import AppHeaderComponent from './AppHeader';
 
 const AppHeader: React.FC = () => <AppHeaderComponent />;
 

@@ -1,6 +1,6 @@
-import AppHeaderComponent from "./AppHeader";
+import AppHeaderComponent from './AppHeader';
 
-import { Meta, StoryObj } from "@storybook/react";
+import { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof AppHeaderComponent> = {
   component: AppHeaderComponent,
