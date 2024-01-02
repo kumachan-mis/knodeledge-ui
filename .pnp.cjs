@@ -26,6 +26,7 @@ const RAW_RUNTIME_STATE =
       [null, {\
         "packageLocation": "./",\
         "packageDependencies": [\
+          ["@babel/runtime", "npm:7.23.7"],\
           ["@emotion/cache", "npm:11.11.0"],\
           ["@emotion/react", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:11.11.3"],\
           ["@emotion/styled", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:11.11.0"],\
@@ -11911,6 +11912,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./",\
         "packageDependencies": [\
           ["knodeledge-ui", "workspace:."],\
+          ["@babel/runtime", "npm:7.23.7"],\
           ["@emotion/cache", "npm:11.11.0"],\
           ["@emotion/react", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:11.11.3"],\
           ["@emotion/styled", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:11.11.0"],\

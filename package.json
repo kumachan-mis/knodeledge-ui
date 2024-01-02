@@ -24,6 +24,7 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@babel/runtime": "^7.23.7",
     "@storybook/addon-essentials": "^7.6.7",
     "@storybook/builder-vite": "^7.6.7",
     "@storybook/react": "^7.6.7",
