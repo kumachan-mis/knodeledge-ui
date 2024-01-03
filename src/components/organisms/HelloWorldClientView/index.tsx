@@ -19,11 +19,14 @@ const HelloWorldClientView: React.FC = () => {
   });
   const [count, setCount] = React.useState<number>(0);
 
-  const helloWorld = React.useCallback(async () => {
+  const helloWorld = React.useCallback(() => {
     setLoadableMessage((prev) => ({ ...prev, loading: true }));
-    const fetchedMessage = await fetchHelloWorld({ name: `client${count}` });
-    setLoadableMessage({ message: fetchedMessage, loading: false });
-    setCount(count + 1);
+
+    void (async () => {
+      const fetchedMessage = await fetchHelloWorld({ name: `client${count}` });
+      setLoadableMessage({ message: fetchedMessage, loading: false });
+      setCount(count + 1);
+    })();
   }, [count]);
 
   React.useEffect(() => {
