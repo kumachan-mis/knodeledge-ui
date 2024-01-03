@@ -5,8 +5,10 @@ import Container from '@mui/material/Container';
 
 const Home: React.FC = () => (
   <Container component="main" maxWidth="xl">
-    <HelloWorldServerView />
-    <HelloWorldClientView />
+    <div>
+      <HelloWorldServerView />
+      <HelloWorldClientView />
+    </div>
   </Container>
 );
 
