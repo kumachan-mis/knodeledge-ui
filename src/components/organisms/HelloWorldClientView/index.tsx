@@ -23,8 +23,9 @@ const HelloWorldClientView: React.FC = () => {
     setLoadableMessage((prev) => ({ ...prev, loading: true }));
 
     void (async () => {
-      const fetchedMessage = await fetchHelloWorld({ name: `client${count}` });
-      setLoadableMessage({ message: fetchedMessage, loading: false });
+      const errorable = await fetchHelloWorld({ name: `client${count}` });
+      const message = errorable.response ? errorable.response.message : errorable.errorMessage;
+      setLoadableMessage({ message, loading: false });
       setCount(count + 1);
     })();
   }, [count]);

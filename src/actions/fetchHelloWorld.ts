@@ -1,11 +1,11 @@
 'use server';
 
-export async function fetchHelloWorld(request: { name?: string }): Promise<string> {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/hello-world`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(request),
-  });
-  const data = await response.json();
-  return data.message;
+import { HelloWorldRequest, HelloWorldResponse } from '@/openapi';
+import { HelloWorldApi } from '@/openapi/apis';
+import { Errorable, config, fetchFromOpenApi } from '@/utils/openapi';
+
+const helloWorldApi = new HelloWorldApi(config);
+
+export async function fetchHelloWorld(request: HelloWorldRequest): Promise<Errorable<HelloWorldResponse>> {
+  return await fetchFromOpenApi(() => helloWorldApi.get({ helloWorldRequest: request }));
 }
