@@ -1,11 +1,10 @@
 'use client';
-import React from 'react';
-
 import { fetchHelloWorld } from '@/actions/fetchHelloWorld';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import React from 'react';
 
 type LoadableMessage = {
   message: string;
