@@ -1,4 +1,4 @@
-name: test
+name: Test
 
 on:
   push:
@@ -11,13 +11,25 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [20.9.0]
+        node-version: [20.10.0]
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - run: yarn install
-      - run: yarn typecheck
-      - run: yarn lint
-      - run: yarn unittest
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Run NPM Audit
+        run: yarn npm audit
+
+      - name: Run Typecheck
+        run: yarn typecheck
+
+      - name: Run Lint
+        run: yarn lint
+
+      - name: Run Unit Tests
+        run: yarn unittest

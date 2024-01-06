@@ -1,0 +1,17 @@
+name: Release
+on:
+  workflow_run:
+    workflows: [Test]
+    types: [completed]
+    branches: [main]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Release new version
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: yarn semantic-release
