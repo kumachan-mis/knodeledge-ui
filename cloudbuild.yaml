@@ -7,6 +7,7 @@ steps:
         'gcr.io/$PROJECT_ID/$_SERVICE_NAME:$TAG_NAME',
         '--build-arg',
         'NEXT_PUBLIC_API_URL=$_NEXT_PUBLIC_API_URL',
+        'NEXT_PUBLIC_ENVIRONMENT=$_NEXT_PUBLIC_ENVIRONMENT',
         '.',
       ]
 

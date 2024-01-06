@@ -21,7 +21,7 @@ const config: StorybookConfig = {
       },
       define: {
         'process.env': {
-          ENVIRONMENT: 'storybook',
+          NEXT_PUBLIC_ENVIRONMENT: 'storybook',
         },
       },
     }),
