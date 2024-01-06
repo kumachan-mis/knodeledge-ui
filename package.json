@@ -2,6 +2,12 @@
   "name": "knodeledge-ui",
   "version": "0.1.0",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kumachan-mis/knodeledge-ui.git"
+  },
+  "license": " Apache-2.0 License",
+  "author": "Yuya Suwa (@kumachan-mis)",
   "scripts": {
     "build": "next build",
     "build-storybook": "storybook build",
