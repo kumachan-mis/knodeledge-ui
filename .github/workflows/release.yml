@@ -11,6 +11,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install dependencies
+        run: yarn install
+
       - name: Release new version
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
