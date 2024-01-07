@@ -34,3 +34,6 @@ images:
 substitutions:
   _SERVICE_NAME: knodeledge-ui
   _REGION: us-central1
+
+options:
+  logging: CLOUD_LOGGING_ONLY
