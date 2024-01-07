@@ -10,5 +10,9 @@ jobs:
       - uses: actions/checkout@v4
       - name: Run unittest
         uses: ./.github/workflows/reusable-unittest.yml
+  release:
+    needs: unittest
+    runs-on: ubuntu-latest
+    steps:
       - name: Run staging release
         uses: ./.github/workflows/reusable-release.yml
