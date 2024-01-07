@@ -6,6 +6,9 @@ on:
 jobs:
   release:
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Release new version
         run: yarn semantic-release
     permissions:
