@@ -1,0 +1,12 @@
+name: Pull Request
+
+on:
+  pull_request:
+    branches: ['*']
+jobs:
+  unittest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run unittest
+        uses: ./.github/workflows/reusable-unittest.yml

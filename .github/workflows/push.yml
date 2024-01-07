@@ -1,0 +1,14 @@
+name: Push
+
+on:
+  push:
+    branches: [main]
+jobs:
+  unittest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run unittest
+        uses: ./.github/workflows/reusable-unittest.yml
+      - name: Run staging release
+        uses: ./.github/workflows/reusable-release.yml
