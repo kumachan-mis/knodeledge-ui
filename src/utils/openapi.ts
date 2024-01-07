@@ -1,13 +1,7 @@
 import { ApplicationErrorResponseFromJSON } from '@/openapi';
 import { Configuration, ResponseError } from '@/openapi/runtime';
 
-import { ENVIRONMENT } from './env';
-import { fetchWithGoogleAuth } from './googleAuth';
-
-export const config = new Configuration({
-  basePath: process.env.NEXT_PUBLIC_API_URL,
-  fetchApi: ['production', 'staging'].includes(ENVIRONMENT) ? fetchWithGoogleAuth : undefined,
-});
+export const config = new Configuration({ basePath: process.env.NEXT_PUBLIC_API_URL });
 
 export type Errorable<T extends object> =
   | {
