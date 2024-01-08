@@ -2,6 +2,7 @@ import ThemeRegistry from '@/components/atoms/ThemeRegistry';
 import AppHeader from '@/components/organisms/AppHeader';
 import { ENVIRONMENT } from '@/utils/env';
 
+import { UserProvider } from '@auth0/nextjs-auth0/client';
 import Toolbar from '@mui/material/Toolbar';
 import { Metadata } from 'next';
 
@@ -12,13 +13,15 @@ export const metadata: Metadata = {
 
 const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <html lang="en">
-    <body>
+    <UserProvider>
       <ThemeRegistry>
-        <AppHeader />
-        <Toolbar />
-        {children}
+        <body>
+          <AppHeader />
+          <Toolbar />
+          {children}
+        </body>
       </ThemeRegistry>
-    </body>
+    </UserProvider>
   </html>
 );
 
