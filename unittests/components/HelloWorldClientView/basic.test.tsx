@@ -1,5 +1,6 @@
 import { createOkResponse } from '../../testUtils';
 import HelloWorldClientView from '@/components/organisms/HelloWorldClientView';
+import { API_BASE_PATH } from '@/utils/openapi';
 
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -28,7 +29,7 @@ test('should show message from Hello World API', async () => {
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
     1,
-    `${process.env.NEXT_PUBLIC_API_URL}/api/hello-world`,
+    `${API_BASE_PATH}/api/hello-world`,
     expect.objectContaining({ method: 'POST', body: JSON.stringify({ name: 'client0' }) }),
   );
 });
@@ -51,7 +52,7 @@ test('should update message when COUNT UP button click', async () => {
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
     1,
-    `${process.env.NEXT_PUBLIC_API_URL}/api/hello-world`,
+    `${API_BASE_PATH}/api/hello-world`,
     expect.objectContaining({ method: 'POST', body: JSON.stringify({ name: 'client0' }) }),
   );
 
@@ -64,7 +65,7 @@ test('should update message when COUNT UP button click', async () => {
   expect(global.fetch).toHaveBeenCalledTimes(2);
   expect(global.fetch).toHaveBeenNthCalledWith(
     2,
-    `${process.env.NEXT_PUBLIC_API_URL}/api/hello-world`,
+    `${API_BASE_PATH}/api/hello-world`,
     expect.objectContaining({ method: 'POST', body: JSON.stringify({ name: 'client1' }) }),
   );
 });
