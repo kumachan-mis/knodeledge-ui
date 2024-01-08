@@ -40,7 +40,7 @@ images:
 substitutions:
   _SERVICE_NAME: knodeledge-ui
   _REGION: us-central1
-  _SERVICE_ACCOUNT: 'knodeledge-ui-identity'
+  _SERVICE_ACCOUNT: knodeledge-ui-identity
   _MAX_INSTANCES: '1'
 
 options:
