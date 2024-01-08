@@ -14,8 +14,8 @@ export async function JSON_POST(path: string, request: Request): Promise<Respons
 
   if (IDTOKEN_AUTH_REQUIRED) {
     try {
-      const idToken = await fetchIdToken();
-      headers.set(IDTOKEN_AUTH_HEADER, idToken);
+      const idTokenAuthHeaderValue = await fetchIdtokenAuthHeader();
+      headers.set(IDTOKEN_AUTH_HEADER, idTokenAuthHeaderValue);
     } catch (e) {
       // eslint-disable-next-line no-console
       console.warn(e);
@@ -37,7 +37,8 @@ export async function JSON_POST(path: string, request: Request): Promise<Respons
   }
 }
 
-async function fetchIdToken(): Promise<string> {
+async function fetchIdtokenAuthHeader(): Promise<string> {
   const client = await googleAuth.getIdTokenClient(IDTOKEN_TARGET_AUDIENCE);
-  return await client.idTokenProvider.fetchIdToken(IDTOKEN_TARGET_AUDIENCE);
+  const clientHeaders = await client.getRequestHeaders();
+  return clientHeaders.Authorization;
 }
