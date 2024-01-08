@@ -1,10 +1,8 @@
 FROM node:20.10-alpine AS builder
 
-ARG NEXT_PUBLIC_API_URL
 ARG NEXT_PUBLIC_ENVIRONMENT
 
-ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL \
-    NEXT_PUBLIC_ENVIRONMENT=$NEXT_PUBLIC_ENVIRONMENT
+ENV NEXT_PUBLIC_ENVIRONMENT=$NEXT_PUBLIC_ENVIRONMENT
 
 WORKDIR /app
 
@@ -24,7 +22,10 @@ FROM node:20.10-alpine AS runner
 
 WORKDIR /app
 
-ENV NODE_ENV production
+ARG API_URL
+
+ENV NODE_ENV=production \
+    API_URL=$API_URL
 
 COPY --from=builder /app/.yarnrc.yml    ./.yarnrc.yml
 COPY --from=builder /app/.yarn          ./.yarn
