@@ -1,6 +1,6 @@
 import { createOkResponse } from '../../testUtils';
 import HelloWorldClientView from '@/components/organisms/HelloWorldClientView';
-import { API_BASE_PATH } from '@/utils/openapi';
+import { API_BASE_PATH } from '@/utils/actions';
 
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';

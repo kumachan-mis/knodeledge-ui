@@ -1,8 +1,5 @@
-export async function POST(request: Request) {
-  const res = await fetch(`${process.env.API_URL}/api/hello-world`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(await request.json()),
-  });
-  return Response.json(await res.json());
+import { JSON_POST } from '@/utils/route';
+
+export async function POST(request: Request): Promise<Response> {
+  return JSON_POST('/api/hello-world', request);
 }
