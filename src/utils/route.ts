@@ -17,6 +17,8 @@ export async function JSON_POST(path: string, request: Request): Promise<Respons
       const idToken = await fetchIdToken();
       headers.set(IDTOKEN_AUTH_HEADER, idToken);
     } catch (e) {
+      // eslint-disable-next-line no-console
+      console.warn(e);
       return Response.json({ message: 'Forbidden' }, { status: 403 });
     }
   }
@@ -29,6 +31,8 @@ export async function JSON_POST(path: string, request: Request): Promise<Respons
     });
     return Response.json(await res.json(), { status: res.status });
   } catch (e) {
+    // eslint-disable-next-line no-console
+    console.warn(e);
     return Response.json({ message: 'Internal Server Error' }, { status: 500 });
   }
 }
