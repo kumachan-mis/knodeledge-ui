@@ -3,7 +3,7 @@ import { ENVIRONMENT } from './env';
 import { GoogleAuth } from 'google-auth-library';
 
 const IDTOKEN_TARGET_AUDIENCE = process.env.API_URL ?? '';
-const IDTOKEN_AUTH_HEADER = ' X-Serverless-Authorization';
+const IDTOKEN_AUTH_HEADER = 'X-Serverless-Authorization';
 const IDTOKEN_AUTH_REQUIRED = ['production', 'staging'].includes(ENVIRONMENT);
 
 const googleAuth = new GoogleAuth();
