@@ -28,7 +28,7 @@ test('should show message from Hello World API', async () => {
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
     1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/hello-world`,
+    `${process.env.APP_URL}/api/hello-world`,
     expect.objectContaining({ method: 'POST', body: JSON.stringify({ name: 'testuser#0' }) }),
   );
 });
@@ -51,7 +51,7 @@ test('should update message when COUNT UP button click', async () => {
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
     1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/hello-world`,
+    `${process.env.APP_URL}/api/hello-world`,
     expect.objectContaining({ method: 'POST', body: JSON.stringify({ name: 'testuser#0' }) }),
   );
 
@@ -64,7 +64,7 @@ test('should update message when COUNT UP button click', async () => {
   expect(global.fetch).toHaveBeenCalledTimes(2);
   expect(global.fetch).toHaveBeenNthCalledWith(
     2,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/hello-world`,
+    `${process.env.APP_URL}/api/hello-world`,
     expect.objectContaining({ method: 'POST', body: JSON.stringify({ name: 'testuser#1' }) }),
   );
 });

@@ -1,7 +1,7 @@
 import { ApplicationErrorResponseFromJSON } from '@/openapi';
 import { Configuration, ResponseError } from '@/openapi/runtime';
 
-export const config = new Configuration({ basePath: process.env.NEXT_PUBLIC_APP_URL });
+export const config = new Configuration({ basePath: process.env.APP_URL });
 
 export type Errorable<T extends object> =
   | {
