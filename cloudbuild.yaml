@@ -6,11 +6,11 @@ steps:
         '-t',
         '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_SERVICE_NAME}:${TAG_NAME}',
         '--build-arg',
-        'API_URL=$_API_URL',
+        'API_URL=${_API_URL}',
         '--build-arg',
-        'NEXT_PUBLIC_APP_URL=$_NEXT_PUBLIC_APP_URL',
+        'NEXT_PUBLIC_APP_URL=${_NEXT_PUBLIC_APP_URL}',
         '--build-arg',
-        'NEXT_PUBLIC_ENVIRONMENT=$_NEXT_PUBLIC_ENVIRONMENT',
+        'NEXT_PUBLIC_ENVIRONMENT=${_NEXT_PUBLIC_ENVIRONMENT}',
         '.',
       ]
 
@@ -23,15 +23,15 @@ steps:
       [
         'run',
         'deploy',
-        '$_SERVICE_NAME',
+        '${_SERVICE_NAME}',
         '--image',
         '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_SERVICE_NAME}:${TAG_NAME}',
         '--region',
-        '$_REGION',
+        '${_REGION}',
         '--service-account',
-        '$_SERVICE_ACCOUNT@$PROJECT_ID.iam.gserviceaccount.com',
+        '${_SERVICE_ACCOUNT}@$PROJECT_ID.iam.gserviceaccount.com',
         '--max-instances',
-        '$_MAX_INSTANCES',
+        '${_MAX_INSTANCES}',
       ]
 
 images:
