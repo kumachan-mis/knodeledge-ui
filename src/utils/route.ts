@@ -18,7 +18,6 @@ export async function JSON_ROUTE(path: string, method: string, request: Request)
       const idTokenAuthHeaderValue = await fetchIdtokenAuthHeader();
       headers.set(IDTOKEN_AUTH_HEADER, idTokenAuthHeaderValue);
     } catch (e) {
-      // eslint-disable-next-line no-console
       console.warn(e);
       return Response.json({ message: 'Forbidden' }, { status: 403 });
     }
@@ -32,7 +31,6 @@ export async function JSON_ROUTE(path: string, method: string, request: Request)
     });
     return Response.json(await res.json(), { status: res.status });
   } catch (e) {
-    // eslint-disable-next-line no-console
     console.warn(e);
     return Response.json({ message: 'Internal Server Error' }, { status: 500 });
   }

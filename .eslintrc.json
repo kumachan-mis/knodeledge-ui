@@ -16,7 +16,7 @@
     "eqeqeq": "error",
     "init-declarations": "error",
     "no-array-constructor": "error",
-    "no-console": "error",
+    "no-console": ["error", { "allow": ["info", "warn", "error"] }],
     "no-eval": "error",
     "no-extra-bind": "error",
     "no-implied-eval": "error",
