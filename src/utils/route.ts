@@ -1,23 +1,23 @@
-import { ENVIRONMENT } from './env';
+import { ENV_GCP } from './env';
 
 import { GoogleAuth } from 'google-auth-library';
 
 const IDTOKEN_TARGET_AUDIENCE = process.env.API_URL ?? '';
 const IDTOKEN_AUTH_HEADER = 'X-Serverless-Authorization';
-const IDTOKEN_AUTH_REQUIRED = ['production', 'staging'].includes(ENVIRONMENT);
 
 const googleAuth = new GoogleAuth();
 
-export async function JSON_POST(path: string, request: Request): Promise<Response> {
+export type RouteHandler = (request: Request) => Promise<Response>;
+
+export async function JSON_ROUTE(path: string, method: string, request: Request): Promise<Response> {
   const headers = new Headers(request.headers);
   headers.set('Content-Type', 'application/json');
 
-  if (IDTOKEN_AUTH_REQUIRED) {
+  if (ENV_GCP) {
     try {
       const idTokenAuthHeaderValue = await fetchIdtokenAuthHeader();
       headers.set(IDTOKEN_AUTH_HEADER, idTokenAuthHeaderValue);
     } catch (e) {
-      // eslint-disable-next-line no-console
       console.warn(e);
       return Response.json({ message: 'Forbidden' }, { status: 403 });
     }
@@ -25,13 +25,12 @@ export async function JSON_POST(path: string, request: Request): Promise<Respons
 
   try {
     const res = await fetch(`${process.env.API_URL}${path}`, {
-      method: 'POST',
+      method,
       headers,
       body: JSON.stringify(await request.json()),
     });
     return Response.json(await res.json(), { status: res.status });
   } catch (e) {
-    // eslint-disable-next-line no-console
     console.warn(e);
     return Response.json({ message: 'Internal Server Error' }, { status: 500 });
   }

@@ -26,6 +26,7 @@ const RAW_RUNTIME_STATE =
       [null, {\
         "packageLocation": "./",\
         "packageDependencies": [\
+          ["@auth0/nextjs-auth0", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:3.5.0"],\
           ["@babel/runtime", "npm:7.23.7"],\
           ["@emotion/cache", "npm:11.11.0"],\
           ["@emotion/react", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:11.11.3"],\
@@ -95,6 +96,37 @@ const RAW_RUNTIME_STATE =
           ["@ampproject/remapping", "npm:2.2.1"],\
           ["@jridgewell/gen-mapping", "npm:0.3.3"],\
           ["@jridgewell/trace-mapping", "npm:0.3.20"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@auth0/nextjs-auth0", [\
+      ["npm:3.5.0", {\
+        "packageLocation": "./.yarn/cache/@auth0-nextjs-auth0-npm-3.5.0-2a90316d19-fa3fec58d7.zip/node_modules/@auth0/nextjs-auth0/",\
+        "packageDependencies": [\
+          ["@auth0/nextjs-auth0", "npm:3.5.0"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:3.5.0", {\
+        "packageLocation": "./.yarn/__virtual__/@auth0-nextjs-auth0-virtual-92687e5e37/0/cache/@auth0-nextjs-auth0-npm-3.5.0-2a90316d19-fa3fec58d7.zip/node_modules/@auth0/nextjs-auth0/",\
+        "packageDependencies": [\
+          ["@auth0/nextjs-auth0", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:3.5.0"],\
+          ["@panva/hkdf", "npm:1.1.1"],\
+          ["@types/next", null],\
+          ["cookie", "npm:0.6.0"],\
+          ["debug", "virtual:1ff4b5f90832ba0a9c93ba1223af226e44ba70c1126a3740d93562b97bc36544e896a5e95908196f7458713e6a6089a34bfc67362fc6df7fa093bd06c878be47#npm:4.3.4"],\
+          ["joi", "npm:17.11.0"],\
+          ["jose", "npm:4.15.4"],\
+          ["next", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:14.0.4"],\
+          ["oauth4webapi", "npm:2.4.3"],\
+          ["openid-client", "npm:5.6.4"],\
+          ["tslib", "npm:2.6.2"],\
+          ["url-join", "npm:4.0.1"]\
+        ],\
+        "packagePeers": [\
+          "@types/next",\
+          "next"\
         ],\
         "linkType": "HARD"\
       }]\
@@ -3571,6 +3603,25 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["@hapi/hoek", [\
+      ["npm:9.3.0", {\
+        "packageLocation": "./.yarn/cache/@hapi-hoek-npm-9.3.0-447eb8d274-ad83a22378.zip/node_modules/@hapi/hoek/",\
+        "packageDependencies": [\
+          ["@hapi/hoek", "npm:9.3.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@hapi/topo", [\
+      ["npm:5.1.0", {\
+        "packageLocation": "./.yarn/cache/@hapi-topo-npm-5.1.0-5e0b776809-084bfa6470.zip/node_modules/@hapi/topo/",\
+        "packageDependencies": [\
+          ["@hapi/topo", "npm:5.1.0"],\
+          ["@hapi/hoek", "npm:9.3.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["@humanwhocodes/config-array", [\
       ["npm:0.11.13", {\
         "packageLocation": "./.yarn/cache/@humanwhocodes-config-array-npm-0.11.13-12314014f2-9f655e1df7.zip/node_modules/@humanwhocodes/config-array/",\
@@ -4479,6 +4530,15 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@npmcli/fs", "npm:3.1.0"],\
           ["semver", "npm:7.5.4"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@panva/hkdf", [\
+      ["npm:1.1.1", {\
+        "packageLocation": "./.yarn/cache/@panva-hkdf-npm-1.1.1-f16d36bb8a-f0dd129037.zip/node_modules/@panva/hkdf/",\
+        "packageDependencies": [\
+          ["@panva/hkdf", "npm:1.1.1"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -5949,6 +6009,34 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/@rushstack-eslint-patch-npm-1.6.1-1f2a0c6119-4c57775785.zip/node_modules/@rushstack/eslint-patch/",\
         "packageDependencies": [\
           ["@rushstack/eslint-patch", "npm:1.6.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@sideway/address", [\
+      ["npm:4.1.4", {\
+        "packageLocation": "./.yarn/cache/@sideway-address-npm-4.1.4-32f94bc9f5-48c422bd2d.zip/node_modules/@sideway/address/",\
+        "packageDependencies": [\
+          ["@sideway/address", "npm:4.1.4"],\
+          ["@hapi/hoek", "npm:9.3.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@sideway/formula", [\
+      ["npm:3.0.1", {\
+        "packageLocation": "./.yarn/cache/@sideway-formula-npm-3.0.1-ee371b2ddf-8d3ee7f80d.zip/node_modules/@sideway/formula/",\
+        "packageDependencies": [\
+          ["@sideway/formula", "npm:3.0.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@sideway/pinpoint", [\
+      ["npm:2.0.0", {\
+        "packageLocation": "./.yarn/cache/@sideway-pinpoint-npm-2.0.0-66d94e687e-1ed2180012.zip/node_modules/@sideway/pinpoint/",\
+        "packageDependencies": [\
+          ["@sideway/pinpoint", "npm:2.0.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -9564,6 +9652,13 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/cookie-npm-0.5.0-e2d58a161a-aae7911ddc.zip/node_modules/cookie/",\
         "packageDependencies": [\
           ["cookie", "npm:0.5.0"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:0.6.0", {\
+        "packageLocation": "./.yarn/cache/cookie-npm-0.6.0-362d6a2e45-c1f8f2ea7d.zip/node_modules/cookie/",\
+        "packageDependencies": [\
+          ["cookie", "npm:0.6.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -13506,6 +13601,29 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["joi", [\
+      ["npm:17.11.0", {\
+        "packageLocation": "./.yarn/cache/joi-npm-17.11.0-66efd6d755-392e897693.zip/node_modules/joi/",\
+        "packageDependencies": [\
+          ["joi", "npm:17.11.0"],\
+          ["@hapi/hoek", "npm:9.3.0"],\
+          ["@hapi/topo", "npm:5.1.0"],\
+          ["@sideway/address", "npm:4.1.4"],\
+          ["@sideway/formula", "npm:3.0.1"],\
+          ["@sideway/pinpoint", "npm:2.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["jose", [\
+      ["npm:4.15.4", {\
+        "packageLocation": "./.yarn/cache/jose-npm-4.15.4-c518ec3da8-20fa941597.zip/node_modules/jose/",\
+        "packageDependencies": [\
+          ["jose", "npm:4.15.4"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["js-tokens", [\
       ["npm:4.0.0", {\
         "packageLocation": "./.yarn/cache/js-tokens-npm-4.0.0-0ac852e9e2-af37d0d913.zip/node_modules/js-tokens/",\
@@ -13783,6 +13901,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./",\
         "packageDependencies": [\
           ["knodeledge-ui", "workspace:."],\
+          ["@auth0/nextjs-auth0", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:3.5.0"],\
           ["@babel/runtime", "npm:7.23.7"],\
           ["@emotion/cache", "npm:11.11.0"],\
           ["@emotion/react", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:11.11.3"],\
@@ -14727,11 +14846,29 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["oauth4webapi", [\
+      ["npm:2.4.3", {\
+        "packageLocation": "./.yarn/cache/oauth4webapi-npm-2.4.3-ea9143afd6-7f2db5dff1.zip/node_modules/oauth4webapi/",\
+        "packageDependencies": [\
+          ["oauth4webapi", "npm:2.4.3"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["object-assign", [\
       ["npm:4.1.1", {\
         "packageLocation": "./.yarn/cache/object-assign-npm-4.1.1-1004ad6dec-fcc6e4ea8c.zip/node_modules/object-assign/",\
         "packageDependencies": [\
           ["object-assign", "npm:4.1.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["object-hash", [\
+      ["npm:2.2.0", {\
+        "packageLocation": "./.yarn/cache/object-hash-npm-2.2.0-d97a921cc1-dee06b6271.zip/node_modules/object-hash/",\
+        "packageDependencies": [\
+          ["object-hash", "npm:2.2.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -14847,6 +14984,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["oidc-token-hash", [\
+      ["npm:5.0.3", {\
+        "packageLocation": "./.yarn/cache/oidc-token-hash-npm-5.0.3-7619b94ea8-35fa19aea9.zip/node_modules/oidc-token-hash/",\
+        "packageDependencies": [\
+          ["oidc-token-hash", "npm:5.0.3"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["on-finished", [\
       ["npm:2.4.1", {\
         "packageLocation": "./.yarn/cache/on-finished-npm-2.4.1-907af70f88-8e81472c50.zip/node_modules/on-finished/",\
@@ -14902,6 +15048,19 @@ const RAW_RUNTIME_STATE =
           ["define-lazy-prop", "npm:2.0.0"],\
           ["is-docker", "npm:2.2.1"],\
           ["is-wsl", "npm:2.2.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["openid-client", [\
+      ["npm:5.6.4", {\
+        "packageLocation": "./.yarn/cache/openid-client-npm-5.6.4-9b740f7bb0-ab9b1ec59b.zip/node_modules/openid-client/",\
+        "packageDependencies": [\
+          ["openid-client", "npm:5.6.4"],\
+          ["jose", "npm:4.15.4"],\
+          ["lru-cache", "npm:6.0.0"],\
+          ["object-hash", "npm:2.2.0"],\
+          ["oidc-token-hash", "npm:5.0.3"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -17785,6 +17944,15 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["uri-js", "npm:4.4.1"],\
           ["punycode", "npm:2.3.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["url-join", [\
+      ["npm:4.0.1", {\
+        "packageLocation": "./.yarn/cache/url-join-npm-4.0.1-e1f4415722-b53b256a9a.zip/node_modules/url-join/",\
+        "packageDependencies": [\
+          ["url-join", "npm:4.0.1"]\
         ],\
         "linkType": "HARD"\
       }]\
