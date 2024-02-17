@@ -1,4 +1,4 @@
-import AppHeaderComponent from '@/components/organisms/AppHeader/AppHeader';
+import AppHeaderComponent from '@/components/organisms/app/AppHeader/AppHeader';
 
 import { render } from '@testing-library/react';
 

@@ -1,27 +1,41 @@
-import { ApplicationErrorResponseFromJSON } from '@/openapi';
+import { ApplicationErrorResponse, ApplicationErrorResponseFromJSON } from '@/openapi';
 import { Configuration, ResponseError } from '@/openapi/runtime';
 
 export const config = new Configuration({ basePath: process.env.APP_URL });
 
-export type Errorable<T extends object> =
+export type Errorable<R extends object, E extends object = ApplicationErrorResponse> =
   | {
-      response: T;
-      errorMessage: null;
+      state: 'success';
+      response: R;
+      error: null;
     }
   | {
+      state: 'error';
       response: null;
-      errorMessage: string;
+      error: E;
+    }
+  | {
+      state: 'panic';
+      response: null;
+      error: ApplicationErrorResponse;
     };
 
-export async function fetchFromOpenApi<T extends object>(rawOpenApi: () => Promise<T>): Promise<Errorable<T>> {
+export async function fetchFromOpenApi<R extends object, E extends object = ApplicationErrorResponse>(
+  onRequest: () => Promise<R>,
+  onResposeError?: (error: ResponseError) => Errorable<R, E>,
+): Promise<Errorable<R, E>> {
   try {
-    const response = await rawOpenApi();
-    return { response, errorMessage: null };
+    const response = await onRequest();
+    return { state: 'success', response, error: null };
   } catch (error: unknown) {
     if (error instanceof ResponseError) {
-      const errorResponse = ApplicationErrorResponseFromJSON(await error.response.json());
-      return { response: null, errorMessage: errorResponse.message };
+      if (onResposeError) return onResposeError(error);
+
+      const errorResponse = ApplicationErrorResponseFromJSON(error.response.json());
+      return { state: 'panic', response: null, error: errorResponse };
     }
-    return { response: null, errorMessage: 'unknown error' };
+
+    const errorResponse = ApplicationErrorResponseFromJSON({ message: 'unknown error' });
+    return { state: 'panic', response: null, error: errorResponse };
   }
 }

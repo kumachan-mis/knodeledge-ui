@@ -1,5 +1,5 @@
-import { createOkResponse } from '../../testUtils';
-import HelloWorldClientView from '@/components/organisms/HelloWorldClientView';
+import { createOkResponse } from '../../../../testUtils';
+import HelloWorldClientView from '@/components/organisms/hello-world/HelloWorldClientView';
 
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
