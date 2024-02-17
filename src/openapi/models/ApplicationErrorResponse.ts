@@ -13,7 +13,7 @@
 
 import { exists, mapValues } from '../runtime';
 /**
- *
+ * Common error response for application
  * @export
  * @interface ApplicationErrorResponse
  */
