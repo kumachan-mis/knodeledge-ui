@@ -17,7 +17,7 @@ const ProjectCardListComponent: React.FC<ProjectCardListComponentProps> = ({ loa
   ) : (
     <Grid container spacing={4}>
       {loadableProjectList.data.map((loadableProject) => (
-        <Grid item key={loadableProject.data.id} lg={3} md={4} sm={6} xs={12}>
+        <Grid item key={loadableProject.data.id} md={4} sm={6} xl={3} xs={12}>
           <ProjectCard loadableProject={loadableProject} />
         </Grid>
       ))}
