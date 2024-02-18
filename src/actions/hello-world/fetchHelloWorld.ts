@@ -1,8 +1,8 @@
 'use server';
 
+import { Errorable, config, fetchFromOpenApi } from '@/actions/openapi';
 import { HelloWorldRequest, HelloWorldResponse } from '@/openapi';
 import { HelloWorldApi } from '@/openapi/apis';
-import { Errorable, config, fetchFromOpenApi } from '@/utils/actions';
 
 const helloWorldApi = new HelloWorldApi(config);
 

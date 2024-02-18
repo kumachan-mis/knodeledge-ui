@@ -1,5 +1,5 @@
 'use client';
-import { fetchHelloWorld } from '@/actions/fetchHelloWorld';
+import { fetchHelloWorld } from '@/actions/hello-world/fetchHelloWorld';
 
 import { Claims } from '@auth0/nextjs-auth0';
 import Box from '@mui/material/Box';
