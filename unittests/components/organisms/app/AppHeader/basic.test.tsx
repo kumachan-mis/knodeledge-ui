@@ -1,16 +1,18 @@
+import { USER } from '../../../../testutils/user';
+import ThemeRegistry from '@/components/atoms/ThemeRegistry';
 import AppHeaderComponent from '@/components/organisms/app/AppHeader/AppHeader';
 
 import { render } from '@testing-library/react';
 
 test('should show the app name and login button when user logged out', () => {
-  const screen = render(<AppHeaderComponent user={undefined} />);
+  const screen = render(<AppHeaderComponent user={undefined} />, { wrapper: ThemeRegistry });
   expect(screen.queryByText('kNODEledge')).toBeInTheDocument();
   expect(screen.getByRole('link', { name: 'Login' })).toHaveAttribute('href', '/api/auth/login');
 });
 
 test('should show the app name, E-mail address and logout button when user logged in', () => {
-  const screen = render(<AppHeaderComponent user={{ email: 'unittest@knodeledge.app' }} />);
+  const screen = render(<AppHeaderComponent user={USER} />, { wrapper: ThemeRegistry });
   expect(screen.queryByText('kNODEledge')).toBeInTheDocument();
-  expect(screen.queryByText('unittest@knodeledge.app')).toBeInTheDocument();
+  expect(screen.queryByText(USER.email)).toBeInTheDocument();
   expect(screen.getByRole('link', { name: 'Logout' })).toHaveAttribute('href', '/api/auth/logout');
 });
