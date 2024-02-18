@@ -17,7 +17,11 @@ test('should show message from Hello World API', async () => {
     Promise.resolve(createOkResponse({ message: 'Hello, testuser#0!' })),
   );
 
-  const screen = render(<HelloWorldClientView user={{ name: 'testuser' }} />);
+  const screen = render(
+    <HelloWorldClientView
+      user={{ user_id: 'auth0|000000000000000000000000', name: 'testuser', email: 'test@knodeledge.run.app' }}
+    />,
+  );
 
   expect(screen.queryByText('loading...')).toBeInTheDocument();
 
@@ -28,7 +32,7 @@ test('should show message from Hello World API', async () => {
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
     1,
-    `${process.env.APP_URL}/api/hello-world`,
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/hello-world`,
     expect.objectContaining({ method: 'POST', body: JSON.stringify({ name: 'testuser#0' }) }),
   );
 });
@@ -40,7 +44,11 @@ test('should update message when COUNT UP button click', async () => {
 
   const user = userEvent.setup();
 
-  const screen = render(<HelloWorldClientView user={{ name: 'testuser' }} />);
+  const screen = render(
+    <HelloWorldClientView
+      user={{ user_id: 'auth0|000000000000000000000000', name: 'testuser', email: 'test@knodeledge.run.app' }}
+    />,
+  );
 
   expect(screen.queryByText('loading...')).toBeInTheDocument();
 
@@ -51,7 +59,7 @@ test('should update message when COUNT UP button click', async () => {
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
     1,
-    `${process.env.APP_URL}/api/hello-world`,
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/hello-world`,
     expect.objectContaining({ method: 'POST', body: JSON.stringify({ name: 'testuser#0' }) }),
   );
 
@@ -64,7 +72,7 @@ test('should update message when COUNT UP button click', async () => {
   expect(global.fetch).toHaveBeenCalledTimes(2);
   expect(global.fetch).toHaveBeenNthCalledWith(
     2,
-    `${process.env.APP_URL}/api/hello-world`,
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/hello-world`,
     expect.objectContaining({ method: 'POST', body: JSON.stringify({ name: 'testuser#1' }) }),
   );
 });
