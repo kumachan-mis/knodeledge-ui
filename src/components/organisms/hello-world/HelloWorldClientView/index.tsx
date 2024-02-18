@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import React from 'react';
 
-type HelloWorldClientViewProps = {
+export type HelloWorldClientViewProps = {
   readonly user: Claims;
 };
 
