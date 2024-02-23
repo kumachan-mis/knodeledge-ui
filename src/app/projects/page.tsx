@@ -10,7 +10,7 @@ const ProjectList: React.FC = async () => {
 
   return (
     <Container component="main" maxWidth="lg">
-      <ProjectTitle />
+      <ProjectTitle>PROJECTS</ProjectTitle>
       <ProjectListContextProvider>
         {session?.user && <ProjectCardList user={session.user} />}
       </ProjectListContextProvider>
