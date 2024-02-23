@@ -46,3 +46,25 @@ test('should show project from Project List API', async () => {
     expect.objectContaining({ method: 'POST', body: JSON.stringify({ user: { id: USER.sub } }) }),
   );
 });
+
+test('should show empty message when no project is available', async () => {
+  (global.fetch as jest.Mock).mockReturnValueOnce(
+    Promise.resolve(
+      createOkResponse({
+        projects: [],
+      }),
+    ),
+  );
+  const screen = render(<ProjectCardList user={USER} />, { wrapper: ProjectListContextProvider });
+
+  await waitFor(() => {
+    expect(screen.queryByText('No Projects')).toBeInTheDocument();
+  });
+
+  expect(global.fetch).toHaveBeenCalledTimes(1);
+  expect(global.fetch).toHaveBeenNthCalledWith(
+    1,
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/projects/list`,
+    expect.objectContaining({ method: 'POST', body: JSON.stringify({ user: { id: USER.sub } }) }),
+  );
+});
