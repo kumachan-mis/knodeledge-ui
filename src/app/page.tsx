@@ -1,4 +1,4 @@
-import HelloWorldClientView from '@/components/organisms/HelloWorldClientView';
+import HelloWorldClientView from '@/components/organisms/hello-world/HelloWorldClientView';
 
 import { getSession } from '@auth0/nextjs-auth0';
 import Container from '@mui/material/Container';

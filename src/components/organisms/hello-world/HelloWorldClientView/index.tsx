@@ -1,5 +1,5 @@
 'use client';
-import { fetchHelloWorld } from '@/actions/fetchHelloWorld';
+import { fetchHelloWorld } from '@/actions/hello-world/fetchHelloWorld';
 
 import { Claims } from '@auth0/nextjs-auth0';
 import Box from '@mui/material/Box';
@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import React from 'react';
 
-type HelloWorldClientViewProps = {
+export type HelloWorldClientViewProps = {
   readonly user: Claims;
 };
 
@@ -28,7 +28,7 @@ const HelloWorldClientView: React.FC<HelloWorldClientViewProps> = ({ user }) => 
 
     void (async () => {
       const errorable = await fetchHelloWorld({ name: `${user.name}#${count}` });
-      const message = errorable.response ? errorable.response.message : errorable.errorMessage;
+      const message = errorable.response ? errorable.response.message : errorable.error.message;
       setLoadableMessage({ message, loading: false });
       setCount(count + 1);
     })();

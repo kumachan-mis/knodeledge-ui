@@ -1,5 +1,5 @@
 import ThemeRegistry from '@/components/atoms/ThemeRegistry';
-import AppHeader from '@/components/organisms/AppHeader';
+import AppHeader from '@/components/organisms/app/AppHeader';
 import { ENVIRONMENT } from '@/utils/env';
 
 import { UserProvider } from '@auth0/nextjs-auth0/client';
