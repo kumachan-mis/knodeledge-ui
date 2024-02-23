@@ -1,6 +1,5 @@
 import { createOkResponse } from '../../../../testutils/fetch';
 import { USER } from '../../../../testutils/user';
-import ThemeRegistry from '@/components/atoms/ThemeRegistry';
 import HelloWorldClientView from '@/components/organisms/hello-world/HelloWorldClientView';
 
 import { render, waitFor } from '@testing-library/react';
@@ -19,7 +18,7 @@ test('should show message from Hello World API', async () => {
     Promise.resolve(createOkResponse({ message: `Hello, ${USER.name}#0!` })),
   );
 
-  const screen = render(<HelloWorldClientView user={USER} />, { wrapper: ThemeRegistry });
+  const screen = render(<HelloWorldClientView user={USER} />);
 
   expect(screen.queryByText('loading...')).toBeInTheDocument();
 
@@ -42,7 +41,7 @@ test('should update message when COUNT UP button click', async () => {
 
   const user = userEvent.setup();
 
-  const screen = render(<HelloWorldClientView user={USER} />, { wrapper: ThemeRegistry });
+  const screen = render(<HelloWorldClientView user={USER} />);
 
   expect(screen.queryByText('loading...')).toBeInTheDocument();
 

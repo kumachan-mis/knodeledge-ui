@@ -34,24 +34,6 @@ if (ENVIRONMENT === 'storybook') {
       },
     },
   };
-} else if (ENVIRONMENT === 'unittest') {
-  themeOptions = {
-    ...themeOptions,
-    transitions: {
-      ...themeOptions.transitions,
-      create: () => 'none',
-    },
-    components: {
-      ...themeOptions.components,
-      MuiButtonBase: {
-        ...themeOptions.components?.MuiButtonBase,
-        defaultProps: {
-          ...themeOptions.components?.MuiButtonBase?.defaultProps,
-          disableRipple: true,
-        },
-      },
-    },
-  };
 }
 
 export const theme = createTheme(themeOptions);
