@@ -4,6 +4,7 @@ import { LoadableProjectList } from '@/contexts/projects';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 
 export type ProjectCardListComponentProps = {
   readonly loadableProjectList: LoadableProjectList;
@@ -13,6 +14,12 @@ const ProjectCardListComponent: React.FC<ProjectCardListComponentProps> = ({ loa
   loadableProjectList.state === 'loading' ? (
     <Box display="flex" justifyContent="center" p={2}>
       <CircularProgress />
+    </Box>
+  ) : loadableProjectList.data.length === 0 ? (
+    <Box display="flex" justifyContent="center" p={2}>
+      <Typography color="text.secondary" variant="h5">
+        No Projects
+      </Typography>
     </Box>
   ) : (
     <Grid container spacing={4}>
