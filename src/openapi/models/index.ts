@@ -1,7 +1,5 @@
 /* eslint-disable */
 export * from './ApplicationErrorResponse';
-export * from './HelloWorldRequest';
-export * from './HelloWorldResponse';
 export * from './Project';
 export * from './ProjectCreateErrorResponse';
 export * from './ProjectCreateRequest';
