@@ -33,12 +33,12 @@ const AppHeaderComponent: React.FC<AppHeaderComponentProps> = ({ user }) => (
           <Typography component="div" sx={{ mx: 2 }}>
             {user.email}
           </Typography>
-          <Button LinkComponent={Link} color="inherit" href="/api/auth/logout">
+          <Button color="inherit" href="/api/auth/logout">
             Logout
           </Button>
         </>
       ) : (
-        <Button LinkComponent={Link} color="inherit" href="/api/auth/login">
+        <Button color="inherit" href="/api/auth/login">
           Login
         </Button>
       )}
