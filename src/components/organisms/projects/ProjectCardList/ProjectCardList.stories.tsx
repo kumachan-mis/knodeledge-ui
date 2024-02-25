@@ -46,14 +46,6 @@ export const Basic: Story = {
           },
           error: null,
         },
-        {
-          state: 'loading',
-          data: {
-            id: 'PROJECT_LOADING',
-            name: 'Project Loading',
-          },
-          error: null,
-        },
       ],
       error: null,
     },
