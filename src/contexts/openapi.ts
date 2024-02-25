@@ -12,10 +12,6 @@ export type LoadableData<D> =
 
 export type LoadableAction<E> =
   | {
-      state: 'loading';
-      error: null;
-    }
-  | {
       state: 'success';
       error: null;
     }
