@@ -32,7 +32,7 @@ const ProjectDialogComponent: React.FC<ProjectDialogComponentProps> = ({
   onSubmit,
   onClose,
 }) => (
-  <Dialog fullWidth maxWidth="md" onClose={onClose} open={open}>
+  <Dialog fullWidth maxWidth="md" open={open}>
     <DialogTitle>{title}</DialogTitle>
     <ProjectDialogFormComponent onClose={onClose} onSubmit={onSubmit} submitText={submitText} />
   </Dialog>
