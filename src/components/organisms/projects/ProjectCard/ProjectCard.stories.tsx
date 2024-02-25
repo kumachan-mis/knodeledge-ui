@@ -63,16 +63,3 @@ export const LongDescription: Story = {
     },
   },
 };
-
-export const Loading: Story = {
-  args: {
-    loadableProject: {
-      state: 'loading',
-      data: {
-        id: 'PROJECT_LOADING',
-        name: 'Project Loading',
-      },
-      error: null,
-    },
-  },
-};

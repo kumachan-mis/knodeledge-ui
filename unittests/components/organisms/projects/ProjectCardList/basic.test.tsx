@@ -14,23 +14,22 @@ beforeEach(() => {
 });
 
 test('should show project from Project List API', async () => {
-  (global.fetch as jest.Mock).mockReturnValueOnce(
-    Promise.resolve(
-      createOkResponse({
-        projects: [
-          {
-            id: 'PROJECT_WITHOUT_DESCRIPTION',
-            name: 'Project Without Description',
-          },
-          {
-            id: 'PROJECT_WITH_DESCRIPTION',
-            name: 'Project With Description',
-            description: 'Project Description',
-          },
-        ],
-      }),
-    ),
+  (global.fetch as jest.Mock).mockResolvedValueOnce(
+    createOkResponse({
+      projects: [
+        {
+          id: 'PROJECT_WITHOUT_DESCRIPTION',
+          name: 'Project Without Description',
+        },
+        {
+          id: 'PROJECT_WITH_DESCRIPTION',
+          name: 'Project With Description',
+          description: 'Project Description',
+        },
+      ],
+    }),
   );
+
   const screen = render(<ProjectCardList user={USER} />, { wrapper: ProjectListContextProvider });
 
   await waitFor(() => {
@@ -48,13 +47,8 @@ test('should show project from Project List API', async () => {
 });
 
 test('should show empty message when no project is available', async () => {
-  (global.fetch as jest.Mock).mockReturnValueOnce(
-    Promise.resolve(
-      createOkResponse({
-        projects: [],
-      }),
-    ),
-  );
+  (global.fetch as jest.Mock).mockResolvedValueOnce(createOkResponse({ projects: [] }));
+
   const screen = render(<ProjectCardList user={USER} />, { wrapper: ProjectListContextProvider });
 
   await waitFor(() => {

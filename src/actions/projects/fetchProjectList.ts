@@ -1,8 +1,8 @@
-import { Errorable, config, fetchFromOpenApi } from '@/actions/openapi';
-import { ProjectListRequest, ProjectListResponse, ProjectsApi } from '@/openapi';
+import { Errorable, fetchFromOpenApi } from '@/actions/openapi';
+import { ProjectListRequest, ProjectListResponse } from '@/openapi';
 
-const projectsApi = new ProjectsApi(config);
+import { projectsApi } from './api';
 
 export async function fetchProjectList(request: ProjectListRequest): Promise<Errorable<ProjectListResponse>> {
-  return await fetchFromOpenApi(() => projectsApi.list({ projectListRequest: request }));
+  return await fetchFromOpenApi(async () => await projectsApi.list({ projectListRequest: request }));
 }
