@@ -60,6 +60,16 @@ export const Basic: Story = {
   },
 };
 
+export const Empty: Story = {
+  args: {
+    loadableProjectList: {
+      state: 'success',
+      data: [],
+      error: null,
+    },
+  },
+};
+
 export const Loading: Story = {
   args: {
     loadableProjectList: {
