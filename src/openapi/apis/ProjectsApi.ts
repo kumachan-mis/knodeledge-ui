@@ -14,6 +14,9 @@
 import * as runtime from '../runtime';
 import type {
   ApplicationErrorResponse,
+  ProjectCreateErrorResponse,
+  ProjectCreateRequest,
+  ProjectCreateResponse,
   ProjectListErrorResponse,
   ProjectListRequest,
   ProjectListResponse,
@@ -21,6 +24,12 @@ import type {
 import {
   ApplicationErrorResponseFromJSON,
   ApplicationErrorResponseToJSON,
+  ProjectCreateErrorResponseFromJSON,
+  ProjectCreateErrorResponseToJSON,
+  ProjectCreateRequestFromJSON,
+  ProjectCreateRequestToJSON,
+  ProjectCreateResponseFromJSON,
+  ProjectCreateResponseToJSON,
   ProjectListErrorResponseFromJSON,
   ProjectListErrorResponseToJSON,
   ProjectListRequestFromJSON,
@@ -28,6 +37,10 @@ import {
   ProjectListResponseFromJSON,
   ProjectListResponseToJSON,
 } from '../models/index';
+
+export interface CreateRequest {
+  projectCreateRequest?: ProjectCreateRequest;
+}
 
 export interface ListRequest {
   projectListRequest?: ProjectListRequest;
@@ -37,6 +50,44 @@ export interface ListRequest {
  *
  */
 export class ProjectsApi extends runtime.BaseAPI {
+  /**
+   * Create new project
+   */
+  async createRaw(
+    requestParameters: CreateRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<runtime.ApiResponse<ProjectCreateResponse>> {
+    const queryParameters: any = {};
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    headerParameters['Content-Type'] = 'application/json';
+
+    const response = await this.request(
+      {
+        path: `/api/projects/create`,
+        method: 'POST',
+        headers: headerParameters,
+        query: queryParameters,
+        body: ProjectCreateRequestToJSON(requestParameters.projectCreateRequest),
+      },
+      initOverrides,
+    );
+
+    return new runtime.JSONApiResponse(response, (jsonValue) => ProjectCreateResponseFromJSON(jsonValue));
+  }
+
+  /**
+   * Create new project
+   */
+  async create(
+    requestParameters: CreateRequest = {},
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<ProjectCreateResponse> {
+    const response = await this.createRaw(requestParameters, initOverrides);
+    return await response.value();
+  }
+
   /**
    * Get list of projects
    */
