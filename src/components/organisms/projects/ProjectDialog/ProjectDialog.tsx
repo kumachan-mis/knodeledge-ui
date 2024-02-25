@@ -72,6 +72,7 @@ const ProjectDialogFormComponent: React.FC<ProjectDialogFormComponentProps> = ({
           render={({ field }) => (
             <TextField
               {...field}
+              disabled={isSubmitting}
               error={!!errors.name}
               fullWidth
               helperText={errors.name?.message}
@@ -91,6 +92,7 @@ const ProjectDialogFormComponent: React.FC<ProjectDialogFormComponentProps> = ({
           render={({ field }) => (
             <TextField
               {...field}
+              disabled={isSubmitting}
               error={!!errors.description}
               fullWidth
               helperText={errors.description?.message}
