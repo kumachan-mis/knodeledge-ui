@@ -14,6 +14,9 @@ const meta: Meta<typeof ProjectDialogComponent> = {
       // Do nothing
     },
   },
+  parameters: {
+    docs: { disable: true },
+  },
 };
 
 export default meta;
