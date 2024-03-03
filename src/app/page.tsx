@@ -1,9 +1,10 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
+import { NextPage } from 'next';
 import Link from 'next/link';
 
-const Home: React.FC = () => (
+const HomePage: NextPage = () => (
   <Container component="main" maxWidth="lg" sx={{ my: 6 }}>
     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
       <Button LinkComponent={Link} color="primary" href="/projects" variant="contained">
@@ -13,4 +14,4 @@ const Home: React.FC = () => (
   </Container>
 );
 
-export default Home;
+export default HomePage;

@@ -5,8 +5,9 @@ import { ProjectListContextProvider } from '@/contexts/projects';
 
 import { getSession } from '@auth0/nextjs-auth0';
 import Container from '@mui/material/Container';
+import { NextPage } from 'next';
 
-const ProjectList: React.FC = async () => {
+const ProjectListPage: NextPage = async () => {
   const session = await getSession();
 
   return (
@@ -22,4 +23,4 @@ const ProjectList: React.FC = async () => {
   );
 };
 
-export default ProjectList;
+export default ProjectListPage;
