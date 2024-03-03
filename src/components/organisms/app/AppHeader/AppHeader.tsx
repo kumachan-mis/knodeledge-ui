@@ -13,7 +13,7 @@ export type AppHeaderComponentProps = {
 
 const AppHeaderComponent: React.FC<AppHeaderComponentProps> = ({ user }) => (
   <AppBar>
-    <Toolbar>
+    <Toolbar variant="dense">
       <IconButton
         LinkComponent={Link}
         aria-label="menu"

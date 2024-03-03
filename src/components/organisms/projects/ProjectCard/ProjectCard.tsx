@@ -5,6 +5,7 @@ import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
+import Link from 'next/link';
 
 type ProjectCardComponentProps = {
   readonly loadableProject: LoadableProject;
@@ -12,7 +13,7 @@ type ProjectCardComponentProps = {
 
 const ProjectCardComponent: React.FC<ProjectCardComponentProps> = ({ loadableProject }) => (
   <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-    <CardActionArea>
+    <CardActionArea LinkComponent={Link} href={`/projects/${loadableProject.data.id}`}>
       <CardContent>
         <Tooltip title={loadableProject.data.name}>
           <Typography color="text.primary" component="div" gutterBottom noWrap variant="h6">
