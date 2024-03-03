@@ -1,7 +1,7 @@
 'use client';
 import { createProject } from '@/actions/projects/createProject';
-import { fetchProjectList } from '@/actions/projects/fetchProjectList';
-import { Project, ProjectWithoutAutofield, ProjectWithoutAutofieldError, User } from '@/openapi';
+import { listProject } from '@/actions/projects/listProject';
+import { Project, ProjectWithoutAutofield, ProjectWithoutAutofieldError, UserOnlyId } from '@/openapi';
 
 import { LoadableAction, LoadableData } from './openapi';
 
@@ -25,14 +25,14 @@ export function useLoadableProjectList(): LoadableProjectList {
   return React.useContext(ProjectListValueContext);
 }
 
-export function useInitProjectList(user: User): void {
+export function useInitProjectList(user: UserOnlyId): void {
   const setProjectList = React.useContext(ProjectListSetContext);
 
   React.useEffect(() => {
     setProjectList({ state: 'loading', data: null, error: null });
 
     void (async () => {
-      const errorable = await fetchProjectList({ user });
+      const errorable = await listProject({ user });
       if (errorable.state !== 'success') return;
 
       const { projects } = errorable.response;
@@ -43,7 +43,7 @@ export function useInitProjectList(user: User): void {
   }, [user.id]);
 }
 
-export function useCreateProject(user: User): LoadableActionProjectCreate {
+export function useCreateProject(user: UserOnlyId): LoadableActionProjectCreate {
   const setProjectList = React.useContext(ProjectListSetContext);
   return async (project) => {
     const errorable = await createProject({ user, project });

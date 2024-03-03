@@ -3,6 +3,6 @@ import { ProjectListRequest, ProjectListResponse } from '@/openapi';
 
 import { projectsApi } from './api';
 
-export async function fetchProjectList(request: ProjectListRequest): Promise<Errorable<ProjectListResponse>> {
+export async function listProject(request: ProjectListRequest): Promise<Errorable<ProjectListResponse>> {
   return await fetchFromOpenApi(async () => await projectsApi.list({ projectListRequest: request }));
 }
