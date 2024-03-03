@@ -12,8 +12,8 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { User } from './User';
-import { UserFromJSON, UserFromJSONTyped, UserToJSON } from './User';
+import type { UserOnlyId } from './UserOnlyId';
+import { UserOnlyIdFromJSON, UserOnlyIdFromJSONTyped, UserOnlyIdToJSON } from './UserOnlyId';
 
 /**
  * Request Body for Project List API
@@ -23,10 +23,10 @@ import { UserFromJSON, UserFromJSONTyped, UserToJSON } from './User';
 export interface ProjectListRequest {
   /**
    *
-   * @type {User}
+   * @type {UserOnlyId}
    * @memberof ProjectListRequest
    */
-  user: User;
+  user: UserOnlyId;
 }
 
 /**
@@ -48,7 +48,7 @@ export function ProjectListRequestFromJSONTyped(json: any, ignoreDiscriminator: 
     return json;
   }
   return {
-    user: UserFromJSON(json['user']),
+    user: UserOnlyIdFromJSON(json['user']),
   };
 }
 
@@ -60,6 +60,6 @@ export function ProjectListRequestToJSON(value?: ProjectListRequest | null): any
     return null;
   }
   return {
-    user: UserToJSON(value.user),
+    user: UserOnlyIdToJSON(value.user),
   };
 }

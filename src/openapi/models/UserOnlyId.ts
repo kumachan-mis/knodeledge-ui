@@ -13,42 +13,43 @@
 
 import { exists, mapValues } from '../runtime';
 /**
- * Error Message for User object
+ * User object with only ID
  * @export
- * @interface UserError
+ * @interface UserOnlyId
  */
-export interface UserError {
+export interface UserOnlyId {
   /**
-   * Error message for user ID
+   * User ID
    * @type {string}
-   * @memberof UserError
+   * @memberof UserOnlyId
    */
-  id?: string;
+  id: string;
 }
 
 /**
- * Check if a given object implements the UserError interface.
+ * Check if a given object implements the UserOnlyId interface.
  */
-export function instanceOfUserError(value: object): boolean {
+export function instanceOfUserOnlyId(value: object): boolean {
   let isInstance = true;
+  isInstance = isInstance && 'id' in value;
 
   return isInstance;
 }
 
-export function UserErrorFromJSON(json: any): UserError {
-  return UserErrorFromJSONTyped(json, false);
+export function UserOnlyIdFromJSON(json: any): UserOnlyId {
+  return UserOnlyIdFromJSONTyped(json, false);
 }
 
-export function UserErrorFromJSONTyped(json: any, ignoreDiscriminator: boolean): UserError {
+export function UserOnlyIdFromJSONTyped(json: any, ignoreDiscriminator: boolean): UserOnlyId {
   if (json === undefined || json === null) {
     return json;
   }
   return {
-    id: !exists(json, 'id') ? undefined : json['id'],
+    id: json['id'],
   };
 }
 
-export function UserErrorToJSON(value?: UserError | null): any {
+export function UserOnlyIdToJSON(value?: UserOnlyId | null): any {
   if (value === undefined) {
     return undefined;
   }

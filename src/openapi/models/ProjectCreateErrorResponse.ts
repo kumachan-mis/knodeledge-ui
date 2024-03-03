@@ -18,8 +18,8 @@ import {
   ProjectWithoutAutofieldErrorFromJSONTyped,
   ProjectWithoutAutofieldErrorToJSON,
 } from './ProjectWithoutAutofieldError';
-import type { UserError } from './UserError';
-import { UserErrorFromJSON, UserErrorFromJSONTyped, UserErrorToJSON } from './UserError';
+import type { UserOnlyIdError } from './UserOnlyIdError';
+import { UserOnlyIdErrorFromJSON, UserOnlyIdErrorFromJSONTyped, UserOnlyIdErrorToJSON } from './UserOnlyIdError';
 
 /**
  * Error Response Body for Project Create API
@@ -35,10 +35,10 @@ export interface ProjectCreateErrorResponse {
   message?: string;
   /**
    *
-   * @type {UserError}
+   * @type {UserOnlyIdError}
    * @memberof ProjectCreateErrorResponse
    */
-  user?: UserError;
+  user?: UserOnlyIdError;
   /**
    *
    * @type {ProjectWithoutAutofieldError}
@@ -69,7 +69,7 @@ export function ProjectCreateErrorResponseFromJSONTyped(
   }
   return {
     message: !exists(json, 'message') ? undefined : json['message'],
-    user: !exists(json, 'user') ? undefined : UserErrorFromJSON(json['user']),
+    user: !exists(json, 'user') ? undefined : UserOnlyIdErrorFromJSON(json['user']),
     project: !exists(json, 'project') ? undefined : ProjectWithoutAutofieldErrorFromJSON(json['project']),
   };
 }
@@ -83,7 +83,7 @@ export function ProjectCreateErrorResponseToJSON(value?: ProjectCreateErrorRespo
   }
   return {
     message: value.message,
-    user: UserErrorToJSON(value.user),
+    user: UserOnlyIdErrorToJSON(value.user),
     project: ProjectWithoutAutofieldErrorToJSON(value.project),
   };
 }

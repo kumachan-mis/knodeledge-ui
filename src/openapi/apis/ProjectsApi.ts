@@ -17,6 +17,9 @@ import type {
   ProjectCreateErrorResponse,
   ProjectCreateRequest,
   ProjectCreateResponse,
+  ProjectFindErrorResponse,
+  ProjectFindRequest,
+  ProjectFindResponse,
   ProjectListErrorResponse,
   ProjectListRequest,
   ProjectListResponse,
@@ -30,6 +33,12 @@ import {
   ProjectCreateRequestToJSON,
   ProjectCreateResponseFromJSON,
   ProjectCreateResponseToJSON,
+  ProjectFindErrorResponseFromJSON,
+  ProjectFindErrorResponseToJSON,
+  ProjectFindRequestFromJSON,
+  ProjectFindRequestToJSON,
+  ProjectFindResponseFromJSON,
+  ProjectFindResponseToJSON,
   ProjectListErrorResponseFromJSON,
   ProjectListErrorResponseToJSON,
   ProjectListRequestFromJSON,
@@ -40,6 +49,10 @@ import {
 
 export interface CreateRequest {
   projectCreateRequest?: ProjectCreateRequest;
+}
+
+export interface FindRequest {
+  projectFindRequest?: ProjectFindRequest;
 }
 
 export interface ListRequest {
@@ -85,6 +98,44 @@ export class ProjectsApi extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<ProjectCreateResponse> {
     const response = await this.createRaw(requestParameters, initOverrides);
+    return await response.value();
+  }
+
+  /**
+   * Find project
+   */
+  async findRaw(
+    requestParameters: FindRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<runtime.ApiResponse<ProjectFindResponse>> {
+    const queryParameters: any = {};
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    headerParameters['Content-Type'] = 'application/json';
+
+    const response = await this.request(
+      {
+        path: `/api/projects/find`,
+        method: 'POST',
+        headers: headerParameters,
+        query: queryParameters,
+        body: ProjectFindRequestToJSON(requestParameters.projectFindRequest),
+      },
+      initOverrides,
+    );
+
+    return new runtime.JSONApiResponse(response, (jsonValue) => ProjectFindResponseFromJSON(jsonValue));
+  }
+
+  /**
+   * Find project
+   */
+  async find(
+    requestParameters: FindRequest = {},
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<ProjectFindResponse> {
+    const response = await this.findRaw(requestParameters, initOverrides);
     return await response.value();
   }
 

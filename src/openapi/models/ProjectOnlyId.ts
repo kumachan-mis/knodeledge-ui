@@ -13,34 +13,34 @@
 
 import { exists, mapValues } from '../runtime';
 /**
- * User object
+ * Project object with only ID
  * @export
- * @interface User
+ * @interface ProjectOnlyId
  */
-export interface User {
+export interface ProjectOnlyId {
   /**
-   * User ID
+   * Auto-generated project ID
    * @type {string}
-   * @memberof User
+   * @memberof ProjectOnlyId
    */
   id: string;
 }
 
 /**
- * Check if a given object implements the User interface.
+ * Check if a given object implements the ProjectOnlyId interface.
  */
-export function instanceOfUser(value: object): boolean {
+export function instanceOfProjectOnlyId(value: object): boolean {
   let isInstance = true;
   isInstance = isInstance && 'id' in value;
 
   return isInstance;
 }
 
-export function UserFromJSON(json: any): User {
-  return UserFromJSONTyped(json, false);
+export function ProjectOnlyIdFromJSON(json: any): ProjectOnlyId {
+  return ProjectOnlyIdFromJSONTyped(json, false);
 }
 
-export function UserFromJSONTyped(json: any, ignoreDiscriminator: boolean): User {
+export function ProjectOnlyIdFromJSONTyped(json: any, ignoreDiscriminator: boolean): ProjectOnlyId {
   if (json === undefined || json === null) {
     return json;
   }
@@ -49,7 +49,7 @@ export function UserFromJSONTyped(json: any, ignoreDiscriminator: boolean): User
   };
 }
 
-export function UserToJSON(value?: User | null): any {
+export function ProjectOnlyIdToJSON(value?: ProjectOnlyId | null): any {
   if (value === undefined) {
     return undefined;
   }
