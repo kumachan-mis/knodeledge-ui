@@ -15,7 +15,7 @@ export type AppDrawerProps = {
 export const APP_DRAWER_WIDTH = 240;
 
 const AppDrawer: React.FC<AppDrawerProps> = ({ mobileOpen, onMobileClose, onMobileTransitionEnd, children }) => (
-  <Box component="nav" sx={{ width: { sm: APP_DRAWER_WIDTH }, flexShrink: { sm: 0 } }}>
+  <Box component="nav" sx={{ width: { md: APP_DRAWER_WIDTH }, flexShrink: { sm: 0 } }}>
     <Drawer
       // Better open performance on mobile
       ModalProps={{ keepMounted: true }}
@@ -23,7 +23,7 @@ const AppDrawer: React.FC<AppDrawerProps> = ({ mobileOpen, onMobileClose, onMobi
       onTransitionEnd={onMobileTransitionEnd}
       open={mobileOpen}
       sx={{
-        display: { xs: 'block', sm: 'none' },
+        display: { xs: 'block', sm: 'block', md: 'none' },
         '& .MuiDrawer-paper': { boxSizing: 'border-box', width: APP_DRAWER_WIDTH },
       }}
       variant="temporary"
@@ -34,7 +34,7 @@ const AppDrawer: React.FC<AppDrawerProps> = ({ mobileOpen, onMobileClose, onMobi
     <Drawer
       open
       sx={{
-        display: { xs: 'none', sm: 'block' },
+        display: { xs: 'none', sm: 'none', md: 'block' },
         '& .MuiDrawer-paper': { boxSizing: 'border-box', width: APP_DRAWER_WIDTH },
       }}
       variant="permanent"

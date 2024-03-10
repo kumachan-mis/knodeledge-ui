@@ -13,20 +13,20 @@ export type AppDrawerHeaderProps = {
 };
 
 const AppDrawerHeader: React.FC<AppDrawerHeaderProps> = ({ authorized, username, onToggleMobileDrawer }) => (
-  <AppBar sx={{ width: { sm: `calc(100% - ${APP_DRAWER_WIDTH}px)` }, ml: { sm: `${APP_DRAWER_WIDTH}px` } }}>
+  <AppBar sx={{ width: { md: `calc(100% - ${APP_DRAWER_WIDTH}px)` }, ml: { md: `${APP_DRAWER_WIDTH}px` } }}>
     <AppToolbar
-      ToolbarMenu={() => (
+      authorized={authorized}
+      menu={
         <IconButton
           aria-label="open drawer"
           color="inherit"
           edge="start"
           onClick={onToggleMobileDrawer}
-          sx={{ mr: 2, display: { sm: 'none' } }}
+          sx={{ mr: 2, display: { md: 'none' } }}
         >
           <MenuIcon />
         </IconButton>
-      )}
-      authorized={authorized}
+      }
       username={username}
     />
   </AppBar>

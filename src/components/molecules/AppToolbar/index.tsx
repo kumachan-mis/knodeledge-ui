@@ -8,12 +8,12 @@ import React from 'react';
 export type AppToolbarProps = {
   readonly authorized: boolean;
   readonly username?: string;
-  readonly ToolbarMenu?: React.FC;
+  readonly menu?: React.ReactNode;
 };
 
-const AppToolbar: React.FC<AppToolbarProps> = ({ authorized, username, ToolbarMenu = () => null }) => (
+const AppToolbar: React.FC<AppToolbarProps> = ({ authorized, username, menu }) => (
   <Toolbar variant="dense">
-    <ToolbarMenu />
+    {menu}
     <Box sx={{ flexGrow: 1 }}>
       <Button LinkComponent={Link} color="inherit" href="/" sx={{ textTransform: 'none' }}>
         <Typography component="div" variant="h6">

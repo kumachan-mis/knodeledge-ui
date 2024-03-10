@@ -1,4 +1,6 @@
-import Typography from '@mui/material/Typography';
+import ProjectTopView from '@/components/organisms/top/ProjectTopView';
+
+import { getSession } from '@auth0/nextjs-auth0';
 import { NextPage } from 'next';
 
 export type ProjectDetailPageProps = {
@@ -7,8 +9,9 @@ export type ProjectDetailPageProps = {
   };
 };
 
-const ProjectDetailPage: NextPage<ProjectDetailPageProps> = ({ params }) => {
-  return <Typography>{`Project ID: ${params.projectId}`}</Typography>;
+const ProjectDetailPage: NextPage<ProjectDetailPageProps> = async ({ params }) => {
+  const session = await getSession();
+  return session && <ProjectTopView projectId={params.projectId} user={session.user} />;
 };
 
 export default ProjectDetailPage;
