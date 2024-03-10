@@ -1,4 +1,4 @@
-import AppHeader from '@/components/organisms/app/AppHeader';
+import AppHeader from '@/components/molecules/AppHeader';
 
 import { Claims } from '@auth0/nextjs-auth0';
 import Container from '@mui/material/Container';
@@ -11,7 +11,7 @@ export type AppLayoutComponentProps = {
 
 const AppLayoutComponent: React.FC<AppLayoutComponentProps> = ({ user, children }) => (
   <Container component="main" maxWidth="lg" sx={{ my: 6 }}>
-    <AppHeader user={user} />
+    <AppHeader authorized={!!user} userName={user?.name} />
     <Toolbar />
     {children}
   </Container>

@@ -1,4 +1,3 @@
-import { Claims } from '@auth0/nextjs-auth0';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -8,16 +7,17 @@ import { SxProps, Theme } from '@mui/material/styles';
 import Link from 'next/link';
 import React from 'react';
 
-export type AppHeaderComponentProps = {
-  readonly user: Claims | undefined;
+export type AppHeaderProps = {
+  readonly authorized: boolean;
+  readonly userName?: string;
   readonly sx?: SxProps<Theme>;
-  readonly AppHeaderMenu?: React.FC<{ user: Claims | undefined }>;
+  readonly AppHeaderMenu?: React.FC;
 };
 
-const AppHeaderComponent: React.FC<AppHeaderComponentProps> = ({ user, sx, AppHeaderMenu = () => null }) => (
+const AppHeader: React.FC<AppHeaderProps> = ({ authorized, userName, sx, AppHeaderMenu = () => null }) => (
   <AppBar sx={sx}>
     <Toolbar variant="dense">
-      <AppHeaderMenu user={user} />
+      <AppHeaderMenu />
       <Box sx={{ flexGrow: 1 }}>
         <Button LinkComponent={Link} color="inherit" href="/" sx={{ textTransform: 'none' }}>
           <Typography component="div" variant="h6">
@@ -25,15 +25,15 @@ const AppHeaderComponent: React.FC<AppHeaderComponentProps> = ({ user, sx, AppHe
           </Typography>
         </Button>
       </Box>
-      {user ? (
-        <>
-          <Typography component="div" sx={{ mx: 2 }}>
-            {user.email}
-          </Typography>
-          <Button color="inherit" href="/api/auth/logout">
-            Logout
-          </Button>
-        </>
+      {userName ?? (
+        <Typography component="div" sx={{ mx: 2 }}>
+          {userName}
+        </Typography>
+      )}
+      {authorized ? (
+        <Button color="inherit" href="/api/auth/logout">
+          Logout
+        </Button>
       ) : (
         <Button color="inherit" href="/api/auth/login">
           Login
@@ -43,4 +43,4 @@ const AppHeaderComponent: React.FC<AppHeaderComponentProps> = ({ user, sx, AppHe
   </AppBar>
 );
 
-export default AppHeaderComponent;
+export default AppHeader;

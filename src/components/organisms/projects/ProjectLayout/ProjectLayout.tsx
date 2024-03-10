@@ -1,5 +1,5 @@
 'use client';
-import AppHeader from '@/components/organisms/app/AppHeader';
+import AppHeader from '@/components/molecules/AppHeader';
 import ProjectDrawer, {
   ProjectDrawerMenu,
   useProjectDrawer,
@@ -22,8 +22,9 @@ const ProjectLayoutComponent: React.FC<ProjectLayoutComponentProps> = ({ user, c
     <Box sx={{ display: 'flex' }}>
       <AppHeader
         AppHeaderMenu={() => <ProjectDrawerMenu onMobileToggle={handleMobileToggle} />}
+        authorized={!!user}
         sx={{ width: { sm: `calc(100% - ${PROJECT_DRAWER_WIDTH}px)` }, ml: { sm: `${PROJECT_DRAWER_WIDTH}px` } }}
-        user={user}
+        userName={user.name}
       />
       <Box component="nav" sx={{ width: { sm: PROJECT_DRAWER_WIDTH }, flexShrink: { sm: 0 } }}>
         <ProjectDrawer
