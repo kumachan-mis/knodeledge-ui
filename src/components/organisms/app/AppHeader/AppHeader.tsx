@@ -1,33 +1,30 @@
 import { Claims } from '@auth0/nextjs-auth0';
-import HomeIcon from '@mui/icons-material/Home';
 import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import { SxProps, Theme } from '@mui/material/styles';
 import Link from 'next/link';
+import React from 'react';
 
 export type AppHeaderComponentProps = {
-  user: Claims | undefined;
+  readonly user: Claims | undefined;
+  readonly sx?: SxProps<Theme>;
+  readonly AppHeaderMenu?: React.FC<{ user: Claims | undefined }>;
 };
 
-const AppHeaderComponent: React.FC<AppHeaderComponentProps> = ({ user }) => (
-  <AppBar>
+const AppHeaderComponent: React.FC<AppHeaderComponentProps> = ({ user, sx, AppHeaderMenu = () => null }) => (
+  <AppBar sx={sx}>
     <Toolbar variant="dense">
-      <IconButton
-        LinkComponent={Link}
-        aria-label="menu"
-        color="inherit"
-        edge="start"
-        href="/"
-        size="large"
-        sx={{ mr: 2 }}
-      >
-        <HomeIcon />
-      </IconButton>
-      <Typography component="div" sx={{ flexGrow: 1 }} variant="h6">
-        kNODEledge
-      </Typography>
+      <AppHeaderMenu user={user} />
+      <Box sx={{ flexGrow: 1 }}>
+        <Button LinkComponent={Link} color="inherit" href="/" sx={{ textTransform: 'none' }}>
+          <Typography component="div" variant="h6">
+            kNODEledge
+          </Typography>
+        </Button>
+      </Box>
       {user ? (
         <>
           <Typography component="div" sx={{ mx: 2 }}>

@@ -48,7 +48,7 @@ const ProjectDialogFormComponent: React.FC<ProjectDialogFormComponentProps> = ({
     defaultValues: { name: '', description: '' },
   });
 
-  const onSubmitForm = handleSubmit(async (data) => {
+  const handleSubmitForm = handleSubmit(async (data) => {
     const result = await onSubmit(data);
     if (result.state === 'success') {
       onClose();
@@ -62,7 +62,7 @@ const ProjectDialogFormComponent: React.FC<ProjectDialogFormComponentProps> = ({
     <form
       onSubmit={(event) => {
         event.preventDefault();
-        void onSubmitForm(event);
+        void handleSubmitForm(event);
       }}
     >
       <DialogContent sx={{ '& > *': { my: 2 } }}>

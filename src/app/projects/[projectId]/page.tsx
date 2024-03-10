@@ -1,4 +1,3 @@
-import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { NextPage } from 'next';
 
@@ -9,11 +8,7 @@ export type ProjectDetailPageProps = {
 };
 
 const ProjectDetailPage: NextPage<ProjectDetailPageProps> = ({ params }) => {
-  return (
-    <Container component="main" maxWidth="lg" sx={{ my: 6 }}>
-      <Typography>{`Project ID: ${params.projectId}`}</Typography>
-    </Container>
-  );
+  return <Typography>{`Project ID: ${params.projectId}`}</Typography>;
 };
 
 export default ProjectDetailPage;
