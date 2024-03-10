@@ -1,1 +1,0 @@
-export const PROJECT_DRAWER_WIDTH = 240;

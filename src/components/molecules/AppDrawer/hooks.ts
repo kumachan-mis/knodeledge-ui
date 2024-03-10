@@ -1,13 +1,13 @@
 import React from 'react';
 
-export type UseProjectDrawerReturn = {
+export type UseAppDrawerReturn = {
   readonly mobileOpen: boolean;
   readonly handleMobileClose: () => void;
   readonly handleMobileToggle: () => void;
   readonly handleMobileTransitionEnd: () => void;
 };
 
-function useProjectDrawer(): UseProjectDrawerReturn {
+function useAppDrawer(): UseAppDrawerReturn {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [mobileClosing, setMobileClosing] = React.useState(false);
 
@@ -28,4 +28,4 @@ function useProjectDrawer(): UseProjectDrawerReturn {
   return { mobileOpen, handleMobileClose, handleMobileToggle, handleMobileTransitionEnd };
 }
 
-export default useProjectDrawer;
+export default useAppDrawer;

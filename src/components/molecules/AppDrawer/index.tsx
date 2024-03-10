@@ -1,24 +1,21 @@
-import { PROJECT_DRAWER_WIDTH } from './constants';
-
 import { Claims } from '@auth0/nextjs-auth0';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Toolbar from '@mui/material/Toolbar';
 import React from 'react';
 
-export type ProjectDrawerComponentProps = {
+export type AppDrawerProps = {
   readonly user: Claims;
   readonly mobileOpen: boolean;
   readonly onMobileClose: () => void;
   readonly onMobileTransitionEnd: () => void;
+  readonly children?: React.ReactNode;
 };
 
-const ProjectDrawerComponent: React.FC<ProjectDrawerComponentProps> = ({
-  mobileOpen,
-  onMobileClose,
-  onMobileTransitionEnd,
-}) => (
-  <Box component="nav" sx={{ width: { sm: PROJECT_DRAWER_WIDTH }, flexShrink: { sm: 0 } }}>
+export const APP_DRAWER_WIDTH = 240;
+
+const AppDrawer: React.FC<AppDrawerProps> = ({ mobileOpen, onMobileClose, onMobileTransitionEnd, children }) => (
+  <Box component="nav" sx={{ width: { sm: APP_DRAWER_WIDTH }, flexShrink: { sm: 0 } }}>
     <Drawer
       // Better open performance on mobile
       ModalProps={{ keepMounted: true }}
@@ -27,27 +24,28 @@ const ProjectDrawerComponent: React.FC<ProjectDrawerComponentProps> = ({
       open={mobileOpen}
       sx={{
         display: { xs: 'block', sm: 'none' },
-        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: PROJECT_DRAWER_WIDTH },
+        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: APP_DRAWER_WIDTH },
       }}
       variant="temporary"
     >
       <Toolbar variant="dense" />
-      <ProjectDrawerContent />
+      {children}
     </Drawer>
     <Drawer
       open
       sx={{
         display: { xs: 'none', sm: 'block' },
-        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: PROJECT_DRAWER_WIDTH },
+        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: APP_DRAWER_WIDTH },
       }}
       variant="permanent"
     >
       <Toolbar variant="dense" />
-      <ProjectDrawerContent />
+      {children}
     </Drawer>
   </Box>
 );
 
-const ProjectDrawerContent: React.FC = () => <div>Project Drawer Content</div>;
+export default AppDrawer;
 
-export default ProjectDrawerComponent;
+export { default as useAppDrawer } from './hooks';
+export type { UseAppDrawerReturn } from './hooks';

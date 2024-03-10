@@ -1,8 +1,8 @@
+import AppContainer from '@/components/molecules/AppContainer';
 import AppHeader from '@/components/molecules/AppHeader';
+import AppMain from '@/components/molecules/AppMain';
 
 import { Claims } from '@auth0/nextjs-auth0';
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
 import Toolbar from '@mui/material/Toolbar';
 
 export type AppLayoutComponentProps = {
@@ -11,13 +11,13 @@ export type AppLayoutComponentProps = {
 };
 
 const AppLayoutComponent: React.FC<AppLayoutComponentProps> = ({ user, children }) => (
-  <Box sx={{ display: 'flex' }}>
+  <AppContainer>
     <AppHeader authorized={!!user} userName={user?.name} />
-    <Container component="main" maxWidth="lg" sx={{ my: 6 }}>
+    <AppMain>
       <Toolbar />
       {children}
-    </Container>
-  </Box>
+    </AppMain>
+  </AppContainer>
 );
 
 export default AppLayoutComponent;
