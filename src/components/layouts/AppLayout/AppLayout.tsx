@@ -3,7 +3,6 @@ import AppHeader from '@/components/molecules/AppHeader';
 import AppMain from '@/components/molecules/AppMain';
 
 import { Claims } from '@auth0/nextjs-auth0';
-import Toolbar from '@mui/material/Toolbar';
 
 export type AppLayoutComponentProps = {
   readonly user: Claims | undefined;
@@ -12,11 +11,8 @@ export type AppLayoutComponentProps = {
 
 const AppLayoutComponent: React.FC<AppLayoutComponentProps> = ({ user, children }) => (
   <AppContainer>
-    <AppHeader authorized={!!user} userName={user?.name} />
-    <AppMain>
-      <Toolbar />
-      {children}
-    </AppMain>
+    <AppHeader authorized={!!user} username={user?.name} />
+    <AppMain>{children}</AppMain>
   </AppContainer>
 );
 

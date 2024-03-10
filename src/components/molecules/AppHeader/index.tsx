@@ -5,12 +5,12 @@ import React from 'react';
 
 export type AppHeaderProps = {
   readonly authorized: boolean;
-  readonly userName?: string;
+  readonly username?: string;
 };
 
-const AppHeader: React.FC<AppHeaderProps> = ({ authorized, userName }) => (
+const AppHeader: React.FC<AppHeaderProps> = ({ authorized, username }) => (
   <AppBar>
-    <AppToolbar authorized={authorized} userName={userName} />
+    <AppToolbar authorized={authorized} username={username} />
   </AppBar>
 );
 

@@ -1,25 +1,25 @@
-import AppHeaderComponent from '.';
+import AppHeader from '.';
 
 import { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof AppHeaderComponent> = {
-  component: AppHeaderComponent,
+const meta: Meta<typeof AppHeader> = {
+  component: AppHeader,
 };
 
 export default meta;
 
-type Story = StoryObj<typeof AppHeaderComponent>;
+type Story = StoryObj<typeof AppHeader>;
 
 export const Login: Story = {
   args: {
     authorized: false,
-    userName: '',
+    username: '',
   },
 };
 
 export const Logout: Story = {
   args: {
     authorized: true,
-    userName: 'dev@knodeledge.run.app',
+    username: 'dev@knodeledge.run.app',
   },
 };

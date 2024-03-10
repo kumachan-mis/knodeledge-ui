@@ -1,5 +1,5 @@
 import { generateRandomString } from '../../../../testutils/string';
-import ProjectDialog from '@/components/organisms/projects/ProjectDialog';
+import ProjectDialog from '@/components/organisms/dialog/ProjectDialog';
 
 import { render, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';

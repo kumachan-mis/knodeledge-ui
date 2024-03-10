@@ -1,4 +1,4 @@
-import ProjectTitle from '@/components/organisms/projects/ProjectTitle';
+import ProjectTitle from '@/components/organisms/list/ProjectTitle';
 
 import { render } from '@testing-library/react';
 

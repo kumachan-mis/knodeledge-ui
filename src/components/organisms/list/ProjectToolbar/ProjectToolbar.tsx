@@ -1,5 +1,5 @@
 'use client';
-import ProjectDialog from '../ProjectDialog';
+import ProjectDialog from '../../dialog/ProjectDialog';
 import { LoadableAction } from '@/contexts/openapi';
 import { useDialog } from '@/hooks/dialog';
 import { ProjectWithoutAutofield, ProjectWithoutAutofieldError } from '@/openapi';

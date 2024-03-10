@@ -1,6 +1,6 @@
 import { createOkResponse } from '../../../../testutils/fetch';
 import { USER } from '../../../../testutils/user';
-import ProjectCardList from '@/components/organisms/projects/ProjectCardList';
+import ProjectCardList from '@/components/organisms/list/ProjectCardList';
 import { ProjectListContextProvider } from '@/contexts/projects';
 
 import { render, waitFor } from '@testing-library/react';

@@ -1,6 +1,6 @@
-import ProjectCardList from '@/components/organisms/projects/ProjectCardList';
-import ProjectTitle from '@/components/organisms/projects/ProjectTitle';
-import ProjectToolbar from '@/components/organisms/projects/ProjectToolbar';
+import ProjectCardList from '@/components/organisms/list/ProjectCardList';
+import ProjectTitle from '@/components/organisms/list/ProjectTitle';
+import ProjectToolbar from '@/components/organisms/list/ProjectToolbar';
 import { ProjectListContextProvider } from '@/contexts/projects';
 
 import { getSession } from '@auth0/nextjs-auth0';

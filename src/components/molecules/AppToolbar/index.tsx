@@ -7,11 +7,11 @@ import React from 'react';
 
 export type AppToolbarProps = {
   readonly authorized: boolean;
-  readonly userName?: string;
+  readonly username?: string;
   readonly ToolbarMenu?: React.FC;
 };
 
-const AppToolbar: React.FC<AppToolbarProps> = ({ authorized, userName, ToolbarMenu = () => null }) => (
+const AppToolbar: React.FC<AppToolbarProps> = ({ authorized, username, ToolbarMenu = () => null }) => (
   <Toolbar variant="dense">
     <ToolbarMenu />
     <Box sx={{ flexGrow: 1 }}>
@@ -21,9 +21,9 @@ const AppToolbar: React.FC<AppToolbarProps> = ({ authorized, userName, ToolbarMe
         </Typography>
       </Button>
     </Box>
-    {userName ?? (
+    {username ?? (
       <Typography component="div" sx={{ mx: 2 }}>
-        {userName}
+        {username}
       </Typography>
     )}
     {authorized ? (

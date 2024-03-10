@@ -1,4 +1,4 @@
-import ProjectCard from '@/components/organisms/projects/ProjectCard';
+import ProjectCard from '@/components/organisms/list/ProjectCard';
 import { LoadableProjectList } from '@/contexts/projects';
 
 import Box from '@mui/material/Box';

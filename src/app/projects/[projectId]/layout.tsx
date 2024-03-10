@@ -1,4 +1,4 @@
-import ProjectLayout from '@/components/organisms/projects/ProjectLayout';
+import ProjectLayout from '@/components/layouts/ProjectLayout';
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => <ProjectLayout>{children}</ProjectLayout>;
 

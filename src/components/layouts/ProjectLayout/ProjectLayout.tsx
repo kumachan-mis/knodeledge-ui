@@ -16,7 +16,7 @@ const ProjectLayoutComponent: React.FC<ProjectLayoutComponentProps> = ({ user, c
 
   return (
     <AppContainer>
-      <AppDrawerHeader authorized={!!user} onMobileDrawerToggle={handleMobileToggle} userName={user.name} />
+      <AppDrawerHeader authorized={!!user} onToggleMobileDrawer={handleMobileToggle} username={user.name} />
       <AppDrawer
         mobileOpen={mobileOpen}
         onMobileClose={handleMobileClose}

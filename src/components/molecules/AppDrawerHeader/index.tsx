@@ -8,11 +8,11 @@ import React from 'react';
 
 export type AppDrawerHeaderProps = {
   readonly authorized: boolean;
-  readonly userName?: string;
-  readonly onMobileDrawerToggle: () => void;
+  readonly username?: string;
+  readonly onToggleMobileDrawer: () => void;
 };
 
-const AppDrawerHeader: React.FC<AppDrawerHeaderProps> = ({ authorized, userName, onMobileDrawerToggle }) => (
+const AppDrawerHeader: React.FC<AppDrawerHeaderProps> = ({ authorized, username, onToggleMobileDrawer }) => (
   <AppBar sx={{ width: { sm: `calc(100% - ${APP_DRAWER_WIDTH}px)` }, ml: { sm: `${APP_DRAWER_WIDTH}px` } }}>
     <AppToolbar
       ToolbarMenu={() => (
@@ -20,14 +20,14 @@ const AppDrawerHeader: React.FC<AppDrawerHeaderProps> = ({ authorized, userName,
           aria-label="open drawer"
           color="inherit"
           edge="start"
-          onClick={onMobileDrawerToggle}
+          onClick={onToggleMobileDrawer}
           sx={{ mr: 2, display: { sm: 'none' } }}
         >
           <MenuIcon />
         </IconButton>
       )}
       authorized={authorized}
-      userName={userName}
+      username={username}
     />
   </AppBar>
 );
