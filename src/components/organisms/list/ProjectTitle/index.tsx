@@ -1,8 +1,13 @@
-import { Typography } from '@mui/material';
+import ProjectTitleComponent from './ProjectTitle';
+
 import React from 'react';
 
-const ProjectTitle: React.FC<{ readonly children?: React.ReactNode }> = ({ children }) => (
-  <Typography variant="h4">{children}</Typography>
+export type ProjectTitleProps = {
+  readonly children?: React.ReactNode;
+};
+
+const ProjectTitle: React.FC<ProjectTitleProps> = ({ children }) => (
+  <ProjectTitleComponent>{children}</ProjectTitleComponent>
 );
 
 export default ProjectTitle;
