@@ -9,13 +9,6 @@ if (ENVIRONMENT === 'storybook') {
     ...themeOptions,
     components: {
       ...themeOptions.components,
-      MuiAppBar: {
-        ...themeOptions.components?.MuiAppBar,
-        defaultProps: {
-          ...themeOptions.components?.MuiAppBar?.defaultProps,
-          position: 'static',
-        },
-      },
       MuiCircularProgress: {
         ...themeOptions.components?.MuiCircularProgress,
         defaultProps: {

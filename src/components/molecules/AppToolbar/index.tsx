@@ -21,11 +21,9 @@ const AppToolbar: React.FC<AppToolbarProps> = ({ authorized, username, menu }) =
         </Typography>
       </Button>
     </Box>
-    {username ?? (
-      <Typography component="div" sx={{ mx: 2 }}>
-        {username}
-      </Typography>
-    )}
+    <Typography component="div" sx={{ mx: 2 }}>
+      {username ?? ''}
+    </Typography>
     {authorized ? (
       <Button color="inherit" href="/api/auth/logout">
         Logout

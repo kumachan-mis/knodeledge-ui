@@ -21,7 +21,6 @@ const ProjectLayoutComponent: React.FC<ProjectLayoutComponentProps> = ({ user, c
         mobileOpen={mobileOpen}
         onMobileClose={handleMobileClose}
         onMobileTransitionEnd={handleMobileTransitionEnd}
-        user={user}
       />
       <AppDrawerMain>{children}</AppDrawerMain>
     </AppContainer>

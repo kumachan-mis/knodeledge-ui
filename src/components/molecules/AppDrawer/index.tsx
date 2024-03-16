@@ -1,11 +1,9 @@
-import { Claims } from '@auth0/nextjs-auth0';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Toolbar from '@mui/material/Toolbar';
 import React from 'react';
 
 export type AppDrawerProps = {
-  readonly user: Claims;
   readonly mobileOpen: boolean;
   readonly onMobileClose: () => void;
   readonly onMobileTransitionEnd: () => void;
