@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
+import React from 'react';
 
 export type ProjectCardListComponentProps = {
   readonly loadableProjectList: LoadableProjectList;

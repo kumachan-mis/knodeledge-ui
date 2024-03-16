@@ -2,9 +2,10 @@ import { APP_DRAWER_WIDTH } from '@/components/molecules/AppDrawer';
 
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
+import React from 'react';
 
 export type AppDrawerMainProps = {
-  children: React.ReactNode;
+  readonly children: React.ReactNode;
 };
 
 const AppDrawerMain: React.FC<AppDrawerMainProps> = ({ children }) => (
