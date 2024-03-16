@@ -1,3 +1,4 @@
+'use client';
 import { useInitProject, useLoadableProject } from '@/contexts/projects';
 
 import ProjectTopViewComponent from './ProjectTopView';
