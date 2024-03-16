@@ -1,4 +1,4 @@
-import { findProject } from '@/actions/projects/findProject';
+import { useInitProject, useLoadableProject } from '@/contexts/projects';
 
 import ProjectTopViewComponent from './ProjectTopView';
 
@@ -9,11 +9,11 @@ export type ProjectTopViewProps = {
   readonly projectId: string;
 };
 
-const ProjectTopView: React.FC<ProjectTopViewProps> = async ({ user, projectId }) => {
-  const errorable = await findProject({ user: { id: user.sub }, project: { id: projectId } });
-  if (errorable.state !== 'success') return null;
+const ProjectTopView: React.FC<ProjectTopViewProps> = ({ user, projectId }) => {
+  const loadableProject = useLoadableProject();
+  useInitProject({ id: user.sub }, projectId);
 
-  return <ProjectTopViewComponent project={errorable.response.project} />;
+  return <ProjectTopViewComponent loadableProject={loadableProject} />;
 };
 
 export default ProjectTopView;

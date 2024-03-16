@@ -1,9 +1,9 @@
-import { LoadableProject } from '@/contexts/projects';
+import { LoadableProjectListItem } from '@/contexts/projects';
 
 import ProjectCardComponent from './ProjectCard';
 
 type ProjectCardProps = {
-  readonly loadableProject: LoadableProject;
+  readonly loadableProject: LoadableProjectListItem;
 };
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ loadableProject }) => (

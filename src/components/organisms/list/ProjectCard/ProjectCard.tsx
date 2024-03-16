@@ -1,4 +1,4 @@
-import { LoadableProject } from '@/contexts/projects';
+import { LoadableProjectListItem } from '@/contexts/projects';
 
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import Link from 'next/link';
 
 type ProjectCardComponentProps = {
-  readonly loadableProject: LoadableProject;
+  readonly loadableProject: LoadableProjectListItem;
 };
 
 const ProjectCardComponent: React.FC<ProjectCardComponentProps> = ({ loadableProject }) => (
