@@ -12,56 +12,69 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import type { ProjectOnlyIdError } from './ProjectOnlyIdError';
+import {
+  ProjectOnlyIdErrorFromJSON,
+  ProjectOnlyIdErrorFromJSONTyped,
+  ProjectOnlyIdErrorToJSON,
+} from './ProjectOnlyIdError';
 import type { UserOnlyIdError } from './UserOnlyIdError';
 import { UserOnlyIdErrorFromJSON, UserOnlyIdErrorFromJSONTyped, UserOnlyIdErrorToJSON } from './UserOnlyIdError';
 
 /**
- * Error Response Body for Project List API
+ * Error Response Body for Project Find API
  * @export
- * @interface ProjectListErrorResponse
+ * @interface ProjectFindErrorResponse
  */
-export interface ProjectListErrorResponse {
+export interface ProjectFindErrorResponse {
   /**
    * Error message when request body format is invalid
    * @type {string}
-   * @memberof ProjectListErrorResponse
+   * @memberof ProjectFindErrorResponse
    */
   message?: string;
   /**
    *
    * @type {UserOnlyIdError}
-   * @memberof ProjectListErrorResponse
+   * @memberof ProjectFindErrorResponse
    */
   user?: UserOnlyIdError;
+  /**
+   *
+   * @type {ProjectOnlyIdError}
+   * @memberof ProjectFindErrorResponse
+   */
+  project?: ProjectOnlyIdError;
 }
 
 /**
- * Check if a given object implements the ProjectListErrorResponse interface.
+ * Check if a given object implements the ProjectFindErrorResponse interface.
  */
-export function instanceOfProjectListErrorResponse(value: object): boolean {
+export function instanceOfProjectFindErrorResponse(value: object): boolean {
   let isInstance = true;
 
   return isInstance;
 }
 
-export function ProjectListErrorResponseFromJSON(json: any): ProjectListErrorResponse {
-  return ProjectListErrorResponseFromJSONTyped(json, false);
+export function ProjectFindErrorResponseFromJSON(json: any): ProjectFindErrorResponse {
+  return ProjectFindErrorResponseFromJSONTyped(json, false);
 }
 
-export function ProjectListErrorResponseFromJSONTyped(
+export function ProjectFindErrorResponseFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
-): ProjectListErrorResponse {
+): ProjectFindErrorResponse {
   if (json === undefined || json === null) {
     return json;
   }
   return {
     message: !exists(json, 'message') ? undefined : json['message'],
     user: !exists(json, 'user') ? undefined : UserOnlyIdErrorFromJSON(json['user']),
+    project: !exists(json, 'project') ? undefined : ProjectOnlyIdErrorFromJSON(json['project']),
   };
 }
 
-export function ProjectListErrorResponseToJSON(value?: ProjectListErrorResponse | null): any {
+export function ProjectFindErrorResponseToJSON(value?: ProjectFindErrorResponse | null): any {
   if (value === undefined) {
     return undefined;
   }
@@ -71,5 +84,6 @@ export function ProjectListErrorResponseToJSON(value?: ProjectListErrorResponse 
   return {
     message: value.message,
     user: UserOnlyIdErrorToJSON(value.user),
+    project: ProjectOnlyIdErrorToJSON(value.project),
   };
 }

@@ -18,8 +18,8 @@ import {
   ProjectWithoutAutofieldFromJSONTyped,
   ProjectWithoutAutofieldToJSON,
 } from './ProjectWithoutAutofield';
-import type { User } from './User';
-import { UserFromJSON, UserFromJSONTyped, UserToJSON } from './User';
+import type { UserOnlyId } from './UserOnlyId';
+import { UserOnlyIdFromJSON, UserOnlyIdFromJSONTyped, UserOnlyIdToJSON } from './UserOnlyId';
 
 /**
  * Request Body for Project Create API
@@ -29,10 +29,10 @@ import { UserFromJSON, UserFromJSONTyped, UserToJSON } from './User';
 export interface ProjectCreateRequest {
   /**
    *
-   * @type {User}
+   * @type {UserOnlyId}
    * @memberof ProjectCreateRequest
    */
-  user: User;
+  user: UserOnlyId;
   /**
    *
    * @type {ProjectWithoutAutofield}
@@ -61,7 +61,7 @@ export function ProjectCreateRequestFromJSONTyped(json: any, ignoreDiscriminator
     return json;
   }
   return {
-    user: UserFromJSON(json['user']),
+    user: UserOnlyIdFromJSON(json['user']),
     project: ProjectWithoutAutofieldFromJSON(json['project']),
   };
 }
@@ -74,7 +74,7 @@ export function ProjectCreateRequestToJSON(value?: ProjectCreateRequest | null):
     return null;
   }
   return {
-    user: UserToJSON(value.user),
+    user: UserOnlyIdToJSON(value.user),
     project: ProjectWithoutAutofieldToJSON(value.project),
   };
 }

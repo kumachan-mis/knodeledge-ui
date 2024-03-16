@@ -1,9 +1,7 @@
 import ThemeRegistry from '@/components/atoms/ThemeRegistry';
-import AppHeader from '@/components/organisms/app/AppHeader';
 import { ENVIRONMENT } from '@/utils/env';
 
 import { UserProvider } from '@auth0/nextjs-auth0/client';
-import Toolbar from '@mui/material/Toolbar';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -11,18 +9,14 @@ export const metadata: Metadata = {
   description: 'App to Create Graphically-Summarized Notes in Three Steps',
 };
 
-const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <html lang="en">
-    <UserProvider>
-      <ThemeRegistry>
-        <body>
-          <AppHeader />
-          <Toolbar />
-          {children}
-        </body>
-      </ThemeRegistry>
-    </UserProvider>
+    <body>
+      <UserProvider>
+        <ThemeRegistry> {children}</ThemeRegistry>
+      </UserProvider>
+    </body>
   </html>
 );
 
-export default RootLayout;
+export default Layout;
