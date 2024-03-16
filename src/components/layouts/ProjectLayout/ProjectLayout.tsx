@@ -8,7 +8,7 @@ import { Claims } from '@auth0/nextjs-auth0';
 
 export type ProjectLayoutComponentProps = {
   readonly user: Claims;
-  readonly children: React.ReactNode;
+  readonly children?: React.ReactNode;
 };
 
 const ProjectLayoutComponent: React.FC<ProjectLayoutComponentProps> = ({ user, children }) => {

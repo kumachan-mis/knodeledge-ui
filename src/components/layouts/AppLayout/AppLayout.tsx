@@ -6,7 +6,7 @@ import { Claims } from '@auth0/nextjs-auth0';
 
 export type AppLayoutComponentProps = {
   readonly user: Claims | undefined;
-  readonly children: React.ReactNode;
+  readonly children?: React.ReactNode;
 };
 
 const AppLayoutComponent: React.FC<AppLayoutComponentProps> = ({ user, children }) => (
