@@ -4,6 +4,7 @@ import { useCreateProject } from '@/contexts/projects';
 import ProjectToolbarComponent from './ProjectToolbar';
 
 import { Claims } from '@auth0/nextjs-auth0';
+import React from 'react';
 
 export type ProjectToolbarProps = {
   readonly user: Claims;

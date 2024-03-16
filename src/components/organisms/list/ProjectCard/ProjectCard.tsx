@@ -6,6 +6,7 @@ import CardContent from '@mui/material/CardContent';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import Link from 'next/link';
+import React from 'react';
 
 type ProjectCardComponentProps = {
   readonly loadableProject: LoadableProjectListItem;

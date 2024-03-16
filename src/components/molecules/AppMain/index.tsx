@@ -1,8 +1,9 @@
 import Container from '@mui/material/Container';
 import Toolbar from '@mui/material/Toolbar';
+import React from 'react';
 
 export type AppMainProps = {
-  children: React.ReactNode;
+  readonly children: React.ReactNode;
 };
 
 const AppMain: React.FC<AppMainProps> = ({ children }) => (

@@ -3,6 +3,8 @@ import { ProjectWithoutAutofield, ProjectWithoutAutofieldError } from '@/openapi
 
 import ProjectDialogComponent from './ProjectDialog';
 
+import React from 'react';
+
 export type ProjectDialogProps = {
   readonly open: boolean;
   readonly title: string;

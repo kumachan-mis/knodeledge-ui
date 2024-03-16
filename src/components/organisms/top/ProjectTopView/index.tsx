@@ -4,6 +4,7 @@ import { useInitProject, useLoadableProject } from '@/contexts/projects';
 import ProjectTopViewComponent from './ProjectTopView';
 
 import { Claims } from '@auth0/nextjs-auth0';
+import React from 'react';
 
 export type ProjectTopViewProps = {
   readonly user: Claims;
