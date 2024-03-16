@@ -4,7 +4,6 @@ import ProjectToolbar from '@/components/organisms/list/ProjectToolbar';
 import { ProjectListContextProvider } from '@/contexts/projects';
 
 import { getSession } from '@auth0/nextjs-auth0';
-import Box from '@mui/material/Box';
 import { NextPage } from 'next';
 
 const ProjectListPage: NextPage = async () => {
@@ -12,13 +11,11 @@ const ProjectListPage: NextPage = async () => {
 
   return (
     session?.user && (
-      <Box>
+      <ProjectListContextProvider>
         <ProjectTitle>PROJECTS</ProjectTitle>
-        <ProjectListContextProvider>
-          <ProjectToolbar user={session.user} />
-          <ProjectCardList user={session.user} />
-        </ProjectListContextProvider>
-      </Box>
+        <ProjectToolbar user={session.user} />
+        <ProjectCardList user={session.user} />
+      </ProjectListContextProvider>
     )
   );
 };

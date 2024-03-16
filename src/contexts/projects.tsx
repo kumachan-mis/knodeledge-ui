@@ -112,6 +112,16 @@ export function useCreateProject(user: UserOnlyId): LoadableActionProjectCreate 
   };
 }
 
+export const ProjectContextProvider: React.FC<{ readonly children?: React.ReactNode }> = ({ children }) => {
+  const [project, setProject] = React.useState<LoadableProject>({ state: 'loading', data: null, error: null });
+
+  return (
+    <ProjectValueContext.Provider value={project}>
+      <ProjectSetContext.Provider value={setProject}>{children}</ProjectSetContext.Provider>
+    </ProjectValueContext.Provider>
+  );
+};
+
 export const ProjectListContextProvider: React.FC<{ readonly children?: React.ReactNode }> = ({ children }) => {
   const [projectList, setProjectList] = React.useState<LoadableProjectList>({
     state: 'loading',
@@ -123,15 +133,5 @@ export const ProjectListContextProvider: React.FC<{ readonly children?: React.Re
     <ProjectListValueContext.Provider value={projectList}>
       <ProjectListSetContext.Provider value={setProjectList}>{children}</ProjectListSetContext.Provider>
     </ProjectListValueContext.Provider>
-  );
-};
-
-export const ProjectContextProvider: React.FC<{ readonly children?: React.ReactNode }> = ({ children }) => {
-  const [project, setProject] = React.useState<LoadableProject>({ state: 'loading', data: null, error: null });
-
-  return (
-    <ProjectValueContext.Provider value={project}>
-      <ProjectSetContext.Provider value={setProject}>{children}</ProjectSetContext.Provider>
-    </ProjectValueContext.Provider>
   );
 };
