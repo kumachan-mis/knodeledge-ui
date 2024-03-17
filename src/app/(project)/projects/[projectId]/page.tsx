@@ -1,3 +1,4 @@
+import UnauthorizedError from '@/components/organisms/error/UnauthorizedError';
 import { ProjectContextProvider } from '@/contexts/projects';
 
 import ProjectDetailPageClient, { ProjectDetailPageClientProps } from './client';
@@ -7,12 +8,14 @@ import { NextPage } from 'next';
 
 const ProjectDetailPage: NextPage<ProjectDetailPageClientProps> = async (props) => {
   const session = await getSession();
+  if (!session) {
+    return <UnauthorizedError />;
+  }
+
   return (
-    session?.user && (
-      <ProjectContextProvider>
-        <ProjectDetailPageClient user={session.user} {...props} />
-      </ProjectContextProvider>
-    )
+    <ProjectContextProvider>
+      <ProjectDetailPageClient user={session.user} {...props} />
+    </ProjectContextProvider>
   );
 };
 

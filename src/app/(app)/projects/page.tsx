@@ -1,3 +1,4 @@
+import UnauthorizedError from '@/components/organisms/error/UnauthorizedError';
 import { ProjectListContextProvider } from '@/contexts/projects';
 
 import ProjectListPageClient from './client';
@@ -7,12 +8,14 @@ import { NextPage } from 'next';
 
 const ProjectListPage: NextPage = async () => {
   const session = await getSession();
+  if (!session) {
+    return <UnauthorizedError />;
+  }
+
   return (
-    session?.user && (
-      <ProjectListContextProvider>
-        <ProjectListPageClient user={session.user} />
-      </ProjectListContextProvider>
-    )
+    <ProjectListContextProvider>
+      <ProjectListPageClient user={session.user} />
+    </ProjectListContextProvider>
   );
 };
 
