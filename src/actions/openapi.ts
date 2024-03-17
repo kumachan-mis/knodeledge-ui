@@ -22,20 +22,27 @@ export type Errorable<R extends object, E extends object = ApplicationErrorRespo
 
 export async function fetchFromOpenApi<R extends object, E extends object = ApplicationErrorResponse>(
   onRequest: () => Promise<R>,
-  onResposeError?: (error: ResponseError) => Promise<Errorable<R, E>>,
+  onResposeError: (error: ResponseError) => Promise<Errorable<R, E>> = defaultOnResposeError,
 ): Promise<Errorable<R, E>> {
   try {
     const response = await onRequest();
     return { state: 'success', response, error: null };
   } catch (error: unknown) {
     if (error instanceof ResponseError) {
-      if (onResposeError) return await onResposeError(error);
-
-      const errorResponse = ApplicationErrorResponseFromJSON(await error.response.json());
-      return { state: 'panic', response: null, error: errorResponse };
+      return await onResposeError(error);
     }
-
     const errorResponse = ApplicationErrorResponseFromJSON({ message: 'unknown error' });
     return { state: 'panic', response: null, error: errorResponse };
   }
+}
+
+export async function defaultOnResposeError<R extends object, E extends object>(
+  error: ResponseError,
+): Promise<Errorable<R, E>> {
+  if (400 <= error.response.status && error.response.status < 600) {
+    const errorResponse = ApplicationErrorResponseFromJSON(await error.response.json());
+    return { state: 'panic', response: null, error: errorResponse };
+  }
+  const errorResponse = ApplicationErrorResponseFromJSON({ message: 'unknown error' });
+  return { state: 'panic', response: null, error: errorResponse };
 }

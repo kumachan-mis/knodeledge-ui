@@ -1,9 +1,20 @@
 import { createOkResponse } from '../../../../testutils/fetch';
 import { USER } from '../../../../testutils/user';
 import ProjectTopView from '@/components/organisms/top/ProjectTopView';
-import { ProjectContextProvider } from '@/contexts/projects';
+import { ProjectContextProvider, useInitProject } from '@/contexts/projects';
 
 import { render, waitFor } from '@testing-library/react';
+
+const Wrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => (
+  <ProjectContextProvider>
+    <HooksWrapper>{children}</HooksWrapper>
+  </ProjectContextProvider>
+);
+
+const HooksWrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
+  useInitProject({ id: USER.sub }, 'PROJECT');
+  return children;
+};
 
 beforeEach(() => {
   global.fetch = jest.fn();
@@ -23,7 +34,7 @@ test('should show project without description', async () => {
     }),
   );
 
-  const { getByText } = render(<ProjectTopView projectId="PROJECT" user={USER} />, { wrapper: ProjectContextProvider });
+  const { getByText } = render(<ProjectTopView />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(getByText('Project Without Description')).toBeInTheDocument();
@@ -51,7 +62,7 @@ test('should show project with description', async () => {
     }),
   );
 
-  const { getByText } = render(<ProjectTopView projectId="PROJECT" user={USER} />, { wrapper: ProjectContextProvider });
+  const { getByText } = render(<ProjectTopView />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(getByText('Project With Description')).toBeInTheDocument();

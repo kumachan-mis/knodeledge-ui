@@ -12,7 +12,7 @@ export type ProjectCardListComponentProps = {
 };
 
 const ProjectCardListComponent: React.FC<ProjectCardListComponentProps> = ({ loadableProjectList }) =>
-  loadableProjectList.state === 'loading' ? (
+  loadableProjectList.state !== 'success' ? (
     <Box display="flex" justifyContent="center" p={2}>
       <CircularProgress />
     </Box>

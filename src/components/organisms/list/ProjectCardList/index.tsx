@@ -1,19 +1,12 @@
 'use client';
-import { useInitProjectList, useLoadableProjectList } from '@/contexts/projects';
+import { useLoadableProjectList } from '@/contexts/projects';
 
 import ProjectCardListComponent from './ProjectCardList';
 
-import { Claims } from '@auth0/nextjs-auth0';
 import React from 'react';
 
-export type ProjectCardListProps = {
-  readonly user: Claims;
-};
-
-const ProjectCardList: React.FC<ProjectCardListProps> = ({ user }) => {
+const ProjectCardList: React.FC = () => {
   const loadableProjectList = useLoadableProjectList();
-  useInitProjectList({ id: user.sub });
-
   return <ProjectCardListComponent loadableProjectList={loadableProjectList} />;
 };
 

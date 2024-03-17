@@ -18,7 +18,6 @@ export const WithoutDescription: Story = {
         id: 'PROJECT_WITHOUT_DESCRIPTION',
         name: 'Project Without Description',
       },
-      error: null,
     },
   },
 };
@@ -32,7 +31,6 @@ export const WithDescription: Story = {
         name: 'Project With Description',
         description: 'This is my project.',
       },
-      error: null,
     },
   },
 };
@@ -51,7 +49,6 @@ export const LongDescription: Story = {
           "This long description is a good test for the component's layout.",
         ].join(' '),
       },
-      error: null,
     },
   },
 };
@@ -61,7 +58,6 @@ export const Loading: Story = {
     loadableProject: {
       state: 'loading',
       data: null,
-      error: null,
     },
   },
 };

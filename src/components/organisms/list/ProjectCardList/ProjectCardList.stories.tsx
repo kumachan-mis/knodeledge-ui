@@ -47,7 +47,6 @@ export const Basic: Story = {
           error: null,
         },
       ],
-      error: null,
     },
   },
 };
@@ -57,7 +56,6 @@ export const Empty: Story = {
     loadableProjectList: {
       state: 'success',
       data: [],
-      error: null,
     },
   },
 };
@@ -67,7 +65,6 @@ export const Loading: Story = {
     loadableProjectList: {
       state: 'loading',
       data: null,
-      error: null,
     },
   },
 };

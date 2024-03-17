@@ -13,7 +13,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <html lang="en">
     <body>
       <UserProvider>
-        <ThemeRegistry> {children}</ThemeRegistry>
+        <ThemeRegistry>{children}</ThemeRegistry>
       </UserProvider>
     </body>
   </html>
