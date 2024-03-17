@@ -1,13 +1,25 @@
-export type LoadableData<D> =
+export type LoadableList<D> =
   | {
       state: 'loading';
       data: null;
-      error: null;
+    }
+  | {
+      state: 'success';
+      data: D[];
+    };
+
+export type LoadableObject<D> =
+  | {
+      state: 'loading';
+      data: null;
     }
   | {
       state: 'success';
       data: D;
-      error: null;
+    }
+  | {
+      state: 'notfound';
+      data: null;
     };
 
 export type LoadableAction<E> =

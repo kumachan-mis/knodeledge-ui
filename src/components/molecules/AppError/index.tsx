@@ -1,10 +1,11 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import React from 'react';
 
 export type AppErrorProps = {
-  statusCode: number;
-  message: string;
-  action: React.ReactNode;
+  readonly statusCode: number;
+  readonly message: string;
+  readonly action: React.ReactNode;
 };
 
 const AppError: React.FC<AppErrorProps> = ({ statusCode, message, action }) => (

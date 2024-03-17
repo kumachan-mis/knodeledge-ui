@@ -1,6 +1,5 @@
-import { Errorable, fetchFromOpenApi } from '@/actions/openapi';
+import { Errorable, defaultOnResposeError, fetchFromOpenApi } from '@/actions/openapi';
 import {
-  ApplicationErrorResponseFromJSON,
   ProjectCreateErrorResponse,
   ProjectCreateErrorResponseFromJSON,
   ProjectCreateRequest,
@@ -19,11 +18,7 @@ export async function createProject(
         const errorResponse = ProjectCreateErrorResponseFromJSON(await error.response.json());
         return { state: 'error', response: null, error: errorResponse };
       }
-      if (500 <= error.response.status && error.response.status < 600) {
-        const errorResponse = ApplicationErrorResponseFromJSON(await error.response.json());
-        return { state: 'panic', response: null, error: errorResponse };
-      }
-      return { state: 'panic', response: null, error: { message: 'unknown error' } };
+      return await defaultOnResposeError(error);
     },
   );
 }
