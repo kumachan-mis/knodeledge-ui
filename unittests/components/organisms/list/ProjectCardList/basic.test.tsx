@@ -1,9 +1,20 @@
 import { createOkResponse } from '../../../../testutils/fetch';
 import { USER } from '../../../../testutils/user';
 import ProjectCardList from '@/components/organisms/list/ProjectCardList';
-import { ProjectListContextProvider } from '@/contexts/projects';
+import { ProjectListContextProvider, useInitProjectList } from '@/contexts/projects';
 
 import { render, waitFor } from '@testing-library/react';
+
+const Wrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => (
+  <ProjectListContextProvider>
+    <HooksWrapper>{children}</HooksWrapper>
+  </ProjectListContextProvider>
+);
+
+const HooksWrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
+  useInitProjectList({ id: USER.sub });
+  return children;
+};
 
 beforeAll(() => {
   global.fetch = jest.fn();
@@ -30,7 +41,7 @@ test('should show project from Project List API', async () => {
     }),
   );
 
-  const screen = render(<ProjectCardList user={USER} />, { wrapper: ProjectListContextProvider });
+  const screen = render(<ProjectCardList />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.queryByText('Project Without Description')).toBeInTheDocument();
@@ -49,7 +60,7 @@ test('should show project from Project List API', async () => {
 test('should show empty message when no project is available', async () => {
   (global.fetch as jest.Mock).mockResolvedValueOnce(createOkResponse({ projects: [] }));
 
-  const screen = render(<ProjectCardList user={USER} />, { wrapper: ProjectListContextProvider });
+  const screen = render(<ProjectCardList />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.queryByText('No Projects')).toBeInTheDocument();

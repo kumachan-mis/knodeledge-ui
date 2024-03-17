@@ -2,10 +2,21 @@ import { createOkResponse } from '../../../../testutils/fetch';
 import { USER } from '../../../../testutils/user';
 import ProjectCardList from '@/components/organisms/list/ProjectCardList';
 import ProjectToolbar from '@/components/organisms/list/ProjectToolbar';
-import { ProjectListContextProvider } from '@/contexts/projects';
+import { ProjectListContextProvider, useInitProjectList } from '@/contexts/projects';
 
 import { render, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
+
+const Wrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => (
+  <ProjectListContextProvider>
+    <HooksWrapper>{children}</HooksWrapper>
+  </ProjectListContextProvider>
+);
+
+const HooksWrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
+  useInitProjectList({ id: USER.sub });
+  return children;
+};
 
 beforeAll(() => {
   global.fetch = jest.fn();
@@ -45,11 +56,11 @@ test('should create a project', async () => {
     );
 
   const screen = render(
-    <>
+    <div>
       <ProjectToolbar user={USER} />
-      <ProjectCardList user={USER} />
-    </>,
-    { wrapper: ProjectListContextProvider },
+      <ProjectCardList />
+    </div>,
+    { wrapper: Wrapper },
   );
 
   await waitFor(() => {
@@ -119,11 +130,11 @@ test('should close dialog', async () => {
   );
 
   const screen = render(
-    <>
+    <div>
       <ProjectToolbar user={USER} />
-      <ProjectCardList user={USER} />
-    </>,
-    { wrapper: ProjectListContextProvider },
+      <ProjectCardList />
+    </div>,
+    { wrapper: Wrapper },
   );
 
   await waitFor(() => {

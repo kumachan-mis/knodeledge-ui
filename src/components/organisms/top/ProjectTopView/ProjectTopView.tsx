@@ -12,7 +12,7 @@ export type ProjectTopViewProps = {
 
 const ProjectTopViewComponent: React.FC<ProjectTopViewProps> = ({ loadableProject }) => (
   <Container maxWidth="sm">
-    {loadableProject.state === 'loading' ? (
+    {loadableProject.state !== 'success' ? (
       <Box display="flex" justifyContent="center" p={12}>
         <CircularProgress />
       </Box>
