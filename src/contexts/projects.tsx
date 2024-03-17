@@ -5,6 +5,7 @@ import { listProject } from '@/actions/projects/listProject';
 import { Project, ProjectWithoutAutofield, ProjectWithoutAutofieldError, UserOnlyId } from '@/openapi';
 
 import { LoadableAction, LoadableList, LoadableObject } from './openapi';
+import { useSetPanic } from './panic';
 
 import React from 'react';
 
@@ -36,6 +37,7 @@ export function useLoadableProject(): LoadableProject {
 
 export function useInitProject(user: UserOnlyId, projectId: string): void {
   const setProject = React.useContext(ProjectSetContext);
+  const setPanic = useSetPanic();
 
   React.useEffect(() => {
     setProject({ state: 'loading', data: null });
@@ -43,6 +45,7 @@ export function useInitProject(user: UserOnlyId, projectId: string): void {
     void (async () => {
       const errorable = await findProject({ user, project: { id: projectId } });
       if (errorable.state === 'panic') {
+        setPanic(errorable.error.message);
         return;
       }
 
@@ -63,6 +66,7 @@ export function useLoadableProjectList(): LoadableProjectList {
 
 export function useInitProjectList(user: UserOnlyId): void {
   const setProjectList = React.useContext(ProjectListSetContext);
+  const setPanic = useSetPanic();
 
   React.useEffect(() => {
     setProjectList({ state: 'loading', data: null });
@@ -70,6 +74,7 @@ export function useInitProjectList(user: UserOnlyId): void {
     void (async () => {
       const errorable = await listProject({ user });
       if (errorable.state === 'panic') {
+        setPanic(errorable.error.message);
         return;
       }
 
@@ -91,10 +96,13 @@ export function useInitProjectList(user: UserOnlyId): void {
 }
 
 export function useCreateProject(user: UserOnlyId): LoadableActionProjectCreate {
+  const setPanic = useSetPanic();
   const setProjectList = React.useContext(ProjectListSetContext);
+
   return async (project) => {
     const errorable = await createProject({ user, project });
     if (errorable.state === 'panic') {
+      setPanic(errorable.error.message);
       return {
         state: 'error',
         error: { name: 'unknown error', description: 'unknown error' },
