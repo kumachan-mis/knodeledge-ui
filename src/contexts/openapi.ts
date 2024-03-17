@@ -31,3 +31,13 @@ export type LoadableAction<E> =
       state: 'error';
       error: E;
     };
+
+export type Panic =
+  | {
+      state: 'healthy';
+      message: null;
+    }
+  | {
+      state: 'panic';
+      message: string;
+    };

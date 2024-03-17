@@ -1,4 +1,6 @@
 import ThemeRegistry from '@/components/atoms/ThemeRegistry';
+import PanicError from '@/components/organisms/error/PanicError';
+import { PanicContextProvider } from '@/contexts/panic';
 import { ENVIRONMENT } from '@/utils/env';
 
 import { UserProvider } from '@auth0/nextjs-auth0/client';
@@ -13,7 +15,12 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <html lang="en">
     <body>
       <UserProvider>
-        <ThemeRegistry>{children}</ThemeRegistry>
+        <ThemeRegistry>
+          <PanicContextProvider>
+            <PanicError />
+            {children}
+          </PanicContextProvider>
+        </ThemeRegistry>
       </UserProvider>
     </body>
   </html>
