@@ -63,7 +63,7 @@ test('should create a project', async () => {
   const screen = render(
     <div>
       <ProjectToolbar user={USER} />
-      <ProjectCardList />
+      <ProjectCardList user={USER} />
     </div>,
     { wrapper: Wrapper },
   );
@@ -137,7 +137,7 @@ test('should close dialog', async () => {
   const screen = render(
     <div>
       <ProjectToolbar user={USER} />
-      <ProjectCardList />
+      <ProjectCardList user={USER} />
     </div>,
     { wrapper: Wrapper },
   );
@@ -177,7 +177,7 @@ test('should show error message when internal error occured', async () => {
   const screen = render(
     <div>
       <ProjectToolbar user={USER} />
-      <ProjectCardList />
+      <ProjectCardList user={USER} />
     </div>,
     { wrapper: Wrapper },
   );

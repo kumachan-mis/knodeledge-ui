@@ -6,6 +6,12 @@ import React from 'react';
 
 const meta: Meta<typeof ProjectCardComponent> = {
   component: ProjectCardComponent,
+  args: {
+    // eslint-disable-next-line @typescript-eslint/require-await
+    onUpdateProject: async () => {
+      return { state: 'success', error: null };
+    },
+  },
   decorators: [
     (Story) => (
       <Box width="250px">

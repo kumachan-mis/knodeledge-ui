@@ -46,7 +46,7 @@ test('should show project from Project List API', async () => {
     }),
   );
 
-  const screen = render(<ProjectCardList />, { wrapper: Wrapper });
+  const screen = render(<ProjectCardList user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.queryByText('Project Without Description')).toBeInTheDocument();
@@ -65,7 +65,7 @@ test('should show project from Project List API', async () => {
 test('should show empty message when no project is available', async () => {
   (global.fetch as jest.Mock).mockResolvedValueOnce(createOkResponse({ projects: [] }));
 
-  const screen = render(<ProjectCardList />, { wrapper: Wrapper });
+  const screen = render(<ProjectCardList user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.queryByText('No Projects')).toBeInTheDocument();
@@ -82,7 +82,7 @@ test('should show empty message when no project is available', async () => {
 test('should show error message when internal error occured', async () => {
   (global.fetch as jest.Mock).mockResolvedValueOnce(createErrorResponse({ message: 'Internal Server Error' }));
 
-  const screen = render(<ProjectCardList />, { wrapper: Wrapper });
+  const screen = render(<ProjectCardList user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.queryByText('Fatal Error Occured')).toBeInTheDocument();

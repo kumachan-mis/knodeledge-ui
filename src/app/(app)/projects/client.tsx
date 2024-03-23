@@ -15,7 +15,7 @@ const ProjectListPageClient: NextPage<AuthorizedPageProps> = ({ user }) => {
     <Box>
       <ProjectTitle>PROJECTS</ProjectTitle>
       <ProjectToolbar user={user} />
-      <ProjectCardList />
+      <ProjectCardList user={user} />
     </Box>
   );
 };

@@ -2,6 +2,7 @@
 import { createProject } from '@/actions/projects/createProject';
 import { findProject } from '@/actions/projects/findProject';
 import { listProject } from '@/actions/projects/listProject';
+import { updateProject } from '@/actions/projects/updateProject';
 import { Project, ProjectWithoutAutofield, ProjectWithoutAutofieldError, UserOnlyId } from '@/openapi';
 
 import { LoadableAction, LoadableList, LoadableObject } from './openapi';
@@ -16,6 +17,11 @@ export type LoadableProjectListItem = { data: Project } & LoadableAction<unknown
 export type LoadableProjectList = LoadableList<LoadableProjectListItem>;
 
 export type LoadableActionProjectCreate = (
+  project: ProjectWithoutAutofield,
+) => Promise<LoadableAction<ProjectWithoutAutofieldError>>;
+
+export type LoadableActionProjectUpdate = (
+  id: string,
   project: ProjectWithoutAutofield,
 ) => Promise<LoadableAction<ProjectWithoutAutofieldError>>;
 
@@ -60,6 +66,35 @@ export function useInitProject(user: UserOnlyId, projectId: string): void {
   }, [user.id, projectId]);
 }
 
+export function useUpdateProject(user: UserOnlyId): LoadableActionProjectUpdate {
+  const setPanic = useSetPanic();
+  const setProject = React.useContext(ProjectSetContext);
+
+  return async (id, project) => {
+    const errorable = await updateProject({ user, project: { id, ...project } });
+    if (errorable.state === 'panic') {
+      setPanic(errorable.error.message);
+      return {
+        state: 'error',
+        error: { name: 'unknown error', description: 'unknown error' },
+      };
+    }
+
+    if (errorable.state === 'error') {
+      return {
+        state: 'error',
+        error: errorable.error.project ?? { name: 'unknown error', description: 'unknown error' },
+      };
+    }
+
+    setProject({
+      state: 'success',
+      data: errorable.response.project,
+    });
+    return { state: 'success', error: null };
+  };
+}
+
 export function useLoadableProjectList(): LoadableProjectList {
   return React.useContext(ProjectListValueContext);
 }
@@ -95,7 +130,7 @@ export function useInitProjectList(user: UserOnlyId): void {
   }, [user.id]);
 }
 
-export function useCreateProject(user: UserOnlyId): LoadableActionProjectCreate {
+export function useCreateProjectInList(user: UserOnlyId): LoadableActionProjectCreate {
   const setPanic = useSetPanic();
   const setProjectList = React.useContext(ProjectListSetContext);
 
@@ -128,6 +163,47 @@ export function useCreateProject(user: UserOnlyId): LoadableActionProjectCreate 
           },
           ...prev.data,
         ],
+      };
+    });
+    return { state: 'success', error: null };
+  };
+}
+
+export function useUpdateProjectInList(user: UserOnlyId): LoadableActionProjectUpdate {
+  const setPanic = useSetPanic();
+  const setProjectList = React.useContext(ProjectListSetContext);
+
+  return async (id, project) => {
+    const errorable = await updateProject({ user, project: { id, ...project } });
+    if (errorable.state === 'panic') {
+      setPanic(errorable.error.message);
+      return {
+        state: 'error',
+        error: { name: 'unknown error', description: 'unknown error' },
+      };
+    }
+
+    if (errorable.state === 'error') {
+      return {
+        state: 'error',
+        error: errorable.error.project ?? { name: 'unknown error', description: 'unknown error' },
+      };
+    }
+
+    setProjectList((prev) => {
+      if (prev.state !== 'success') return prev;
+      return {
+        state: 'success',
+        data: prev.data.map((item) => {
+          if (item.data.id === errorable.response.project.id) {
+            return {
+              state: 'success',
+              data: errorable.response.project,
+              error: null,
+            };
+          }
+          return item;
+        }),
       };
     });
     return { state: 'success', error: null };

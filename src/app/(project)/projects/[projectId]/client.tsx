@@ -20,7 +20,7 @@ const ProjectDetailPageClient: NextPage<AuthorizedPageProps<ProjectDetailPageCli
     return <NotFoundError />;
   }
 
-  return <ProjectTopView />;
+  return <ProjectTopView user={user} />;
 };
 
 export default ProjectDetailPageClient;
