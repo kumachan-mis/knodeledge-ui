@@ -21,6 +21,7 @@ const ProjectToolbarComponent: React.FC<ProjectToolbarComponentProps> = ({ onCre
         New Project
       </Button>
       <ProjectDialog
+        defaultValues={{ name: '', description: '' }}
         onClose={onCloseNewProjectDialog}
         onSubmit={onCreateProject}
         open={openNewProjectDialog}
