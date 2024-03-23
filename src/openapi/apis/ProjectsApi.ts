@@ -23,6 +23,9 @@ import type {
   ProjectListErrorResponse,
   ProjectListRequest,
   ProjectListResponse,
+  ProjectUpdateErrorResponse,
+  ProjectUpdateRequest,
+  ProjectUpdateResponse,
 } from '../models/index';
 import {
   ApplicationErrorResponseFromJSON,
@@ -45,6 +48,12 @@ import {
   ProjectListRequestToJSON,
   ProjectListResponseFromJSON,
   ProjectListResponseToJSON,
+  ProjectUpdateErrorResponseFromJSON,
+  ProjectUpdateErrorResponseToJSON,
+  ProjectUpdateRequestFromJSON,
+  ProjectUpdateRequestToJSON,
+  ProjectUpdateResponseFromJSON,
+  ProjectUpdateResponseToJSON,
 } from '../models/index';
 
 export interface CreateRequest {
@@ -57,6 +66,10 @@ export interface FindRequest {
 
 export interface ListRequest {
   projectListRequest?: ProjectListRequest;
+}
+
+export interface UpdateRequest {
+  projectUpdateRequest?: ProjectUpdateRequest;
 }
 
 /**
@@ -174,6 +187,44 @@ export class ProjectsApi extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<ProjectListResponse> {
     const response = await this.listRaw(requestParameters, initOverrides);
+    return await response.value();
+  }
+
+  /**
+   * Update project
+   */
+  async updateRaw(
+    requestParameters: UpdateRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<runtime.ApiResponse<ProjectUpdateResponse>> {
+    const queryParameters: any = {};
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    headerParameters['Content-Type'] = 'application/json';
+
+    const response = await this.request(
+      {
+        path: `/api/projects/update`,
+        method: 'POST',
+        headers: headerParameters,
+        query: queryParameters,
+        body: ProjectUpdateRequestToJSON(requestParameters.projectUpdateRequest),
+      },
+      initOverrides,
+    );
+
+    return new runtime.JSONApiResponse(response, (jsonValue) => ProjectUpdateResponseFromJSON(jsonValue));
+  }
+
+  /**
+   * Update project
+   */
+  async update(
+    requestParameters: UpdateRequest = {},
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<ProjectUpdateResponse> {
+    const response = await this.updateRaw(requestParameters, initOverrides);
     return await response.value();
   }
 }
