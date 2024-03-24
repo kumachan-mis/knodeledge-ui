@@ -1,5 +1,5 @@
 'use client';
-import { useCreateProject } from '@/contexts/projects';
+import { useCreateProjectInList } from '@/contexts/projects';
 
 import ProjectToolbarComponent from './ProjectToolbar';
 
@@ -11,7 +11,7 @@ export type ProjectToolbarProps = {
 };
 
 const ProjectToolbar: React.FC<ProjectToolbarProps> = ({ user }) => {
-  const createProject = useCreateProject({ id: user.sub });
+  const createProject = useCreateProjectInList({ id: user.sub });
   return <ProjectToolbarComponent onCreateProject={createProject} />;
 };
 

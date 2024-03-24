@@ -27,6 +27,7 @@ export const Create: Story = {
   args: {
     title: 'Create Project',
     submitText: 'Create',
+    defaultValues: { name: '', description: '' },
   },
 };
 
@@ -34,6 +35,7 @@ export const Update: Story = {
   args: {
     title: 'Update Project',
     submitText: 'Update',
+    defaultValues: { name: 'project name', description: 'project description' },
   },
 };
 
@@ -41,11 +43,15 @@ export const ServerError: Story = {
   args: {
     title: 'Server Error',
     submitText: 'Submit',
+    defaultValues: { name: '', description: '' },
     // eslint-disable-next-line @typescript-eslint/require-await
     onSubmit: async () => {
       return {
         state: 'error',
-        error: { name: 'project name server error', description: 'project description server error' },
+        error: {
+          message: 'server error',
+          project: { name: 'project name error', description: 'project description error' },
+        },
       };
     },
   },

@@ -1,4 +1,4 @@
-import { createErrorResponse, createOkResponse } from '../../../../testutils/fetch';
+import { createBadRequestResponse, createInternalErrorResponse, createOkResponse } from '../../../../testutils/fetch';
 import { USER } from '../../../../testutils/user';
 import PanicError from '@/components/organisms/error/PanicError';
 import ProjectCardList from '@/components/organisms/list/ProjectCardList';
@@ -63,7 +63,7 @@ test('should create a project', async () => {
   const screen = render(
     <div>
       <ProjectToolbar user={USER} />
-      <ProjectCardList />
+      <ProjectCardList user={USER} />
     </div>,
     { wrapper: Wrapper },
   );
@@ -137,7 +137,7 @@ test('should close dialog', async () => {
   const screen = render(
     <div>
       <ProjectToolbar user={USER} />
-      <ProjectCardList />
+      <ProjectCardList user={USER} />
     </div>,
     { wrapper: Wrapper },
   );
@@ -167,17 +167,87 @@ test('should close dialog', async () => {
   expect(global.fetch).toHaveBeenCalledTimes(1);
 });
 
+test('should show error message when project creation failed', async () => {
+  const user = userEvent.setup();
+
+  (global.fetch as jest.Mock)
+    .mockResolvedValueOnce(
+      createOkResponse({
+        projects: [],
+      }),
+    )
+    .mockResolvedValueOnce(
+      createBadRequestResponse({
+        user: {},
+        project: {
+          name: 'name error',
+          description: 'description error',
+        },
+      }),
+    );
+
+  const screen = render(
+    <div>
+      <ProjectToolbar user={USER} />
+      <ProjectCardList user={USER} />
+    </div>,
+    { wrapper: Wrapper },
+  );
+
+  await waitFor(() => {
+    expect(screen.queryByText('No Projects')).toBeInTheDocument();
+  });
+
+  expect(global.fetch).toHaveBeenCalledTimes(1);
+  expect(global.fetch).toHaveBeenNthCalledWith(
+    1,
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/projects/list`,
+    expect.objectContaining({ method: 'POST', body: JSON.stringify({ user: { id: USER.sub } }) }),
+  );
+
+  await user.click(screen.getByRole('button', { name: 'New Project' }));
+
+  const dialog = within(await within(screen.baseElement).findByRole('dialog'));
+
+  await user.click(dialog.getByRole('textbox', { name: 'Project Name' }));
+  await user.paste('Test Project');
+
+  await waitFor(() => {
+    expect(dialog.queryByRole('button', { name: 'Create Project' })).toBeEnabled();
+  });
+
+  await user.click(dialog.getByRole('button', { name: 'Create Project' }));
+
+  await waitFor(() => {
+    expect(dialog.queryByText('name error')).toBeInTheDocument();
+  });
+  expect(dialog.queryByText('description error')).toBeInTheDocument();
+
+  expect(global.fetch).toHaveBeenCalledTimes(2);
+  expect(global.fetch).toHaveBeenNthCalledWith(
+    2,
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/projects/create`,
+    expect.objectContaining({
+      method: 'POST',
+      body: JSON.stringify({
+        user: { id: USER.sub },
+        project: { name: 'Test Project', description: '' },
+      }),
+    }),
+  );
+});
+
 test('should show error message when internal error occured', async () => {
   const user = userEvent.setup();
 
   (global.fetch as jest.Mock)
     .mockResolvedValueOnce(createOkResponse({ projects: [] }))
-    .mockResolvedValueOnce(createErrorResponse({ message: 'Internal Server Error' }));
+    .mockResolvedValueOnce(createInternalErrorResponse({ message: 'Internal Server Error' }));
 
   const screen = render(
     <div>
       <ProjectToolbar user={USER} />
-      <ProjectCardList />
+      <ProjectCardList user={USER} />
     </div>,
     { wrapper: Wrapper },
   );

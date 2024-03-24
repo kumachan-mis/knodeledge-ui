@@ -4,13 +4,6 @@ import { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof ProjectToolbarComponent> = {
   component: ProjectToolbarComponent,
-};
-
-export default meta;
-
-type Story = StoryObj<typeof ProjectToolbarComponent>;
-
-export const Basic: Story = {
   args: {
     // eslint-disable-next-line @typescript-eslint/require-await
     onCreateProject: async () => {
@@ -18,3 +11,9 @@ export const Basic: Story = {
     },
   },
 };
+
+export default meta;
+
+type Story = StoryObj<typeof ProjectToolbarComponent>;
+
+export const Basic: Story = {};

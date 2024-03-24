@@ -9,7 +9,14 @@ test('should render project dialog', async () => {
   const onClose = jest.fn();
 
   const screen = render(
-    <ProjectDialog onClose={onClose} onSubmit={onSubmit} open submitText="Submit" title="Project Dialog Title" />,
+    <ProjectDialog
+      defaultValues={{ name: '', description: '' }}
+      onClose={onClose}
+      onSubmit={onSubmit}
+      open
+      submitText="Submit"
+      title="Project Dialog Title"
+    />,
   );
   const dialog = within(await within(screen.baseElement).findByRole('dialog'));
 
@@ -36,7 +43,14 @@ test.each<{ name: string; projectName: string }>([
   const onClose = jest.fn();
 
   const screen = render(
-    <ProjectDialog onClose={onClose} onSubmit={onSubmit} open submitText="Submit" title="Project Dialog Title" />,
+    <ProjectDialog
+      defaultValues={{ name: '', description: '' }}
+      onClose={onClose}
+      onSubmit={onSubmit}
+      open
+      submitText="Submit"
+      title="Project Dialog Title"
+    />,
   );
   const dialog = within(await within(screen.baseElement).findByRole('dialog'));
 
@@ -77,7 +91,14 @@ test.each<{ name: string; projectName: string; projectDescription: string }>([
   const onClose = jest.fn();
 
   const screen = render(
-    <ProjectDialog onClose={onClose} onSubmit={onSubmit} open submitText="Submit" title="Project Dialog Title" />,
+    <ProjectDialog
+      defaultValues={{ name: '', description: '' }}
+      onClose={onClose}
+      onSubmit={onSubmit}
+      open
+      submitText="Submit"
+      title="Project Dialog Title"
+    />,
   );
   const dialog = within(await within(screen.baseElement).findByRole('dialog'));
 
@@ -110,7 +131,14 @@ test('should not submit if project name is empty', async () => {
   const onClose = jest.fn();
 
   const screen = render(
-    <ProjectDialog onClose={onClose} onSubmit={onSubmit} open submitText="Submit" title="Project Dialog Title" />,
+    <ProjectDialog
+      defaultValues={{ name: '', description: '' }}
+      onClose={onClose}
+      onSubmit={onSubmit}
+      open
+      submitText="Submit"
+      title="Project Dialog Title"
+    />,
   );
   const dialog = within(await within(screen.baseElement).findByRole('dialog'));
 
@@ -139,7 +167,14 @@ test('should not submit if project name is too long', async () => {
   const onClose = jest.fn();
 
   const screen = render(
-    <ProjectDialog onClose={onClose} onSubmit={onSubmit} open submitText="Submit" title="Project Dialog Title" />,
+    <ProjectDialog
+      defaultValues={{ name: '', description: '' }}
+      onClose={onClose}
+      onSubmit={onSubmit}
+      open
+      submitText="Submit"
+      title="Project Dialog Title"
+    />,
   );
   const dialog = within(await within(screen.baseElement).findByRole('dialog'));
 
@@ -167,7 +202,14 @@ test('should not submit if project description is too long', async () => {
   const onClose = jest.fn();
 
   const screen = render(
-    <ProjectDialog onClose={onClose} onSubmit={onSubmit} open submitText="Submit" title="Project Dialog Title" />,
+    <ProjectDialog
+      defaultValues={{ name: '', description: '' }}
+      onClose={onClose}
+      onSubmit={onSubmit}
+      open
+      submitText="Submit"
+      title="Project Dialog Title"
+    />,
   );
   const dialog = within(await within(screen.baseElement).findByRole('dialog'));
 
@@ -188,17 +230,70 @@ test('should not submit if project description is too long', async () => {
   });
 });
 
-test('should show error mmessages if project creation fails', async () => {
+test('should not submit if project properties are same as default', async () => {
+  const user = userEvent.setup();
+
+  const onSubmit = jest.fn().mockResolvedValueOnce({ state: 'success', error: null });
+  const onClose = jest.fn();
+
+  const screen = render(
+    <ProjectDialog
+      defaultValues={{ name: 'Project Name', description: 'Project Description' }}
+      onClose={onClose}
+      onSubmit={onSubmit}
+      open
+      submitText="Submit"
+      title="Project Dialog Title"
+    />,
+  );
+  const dialog = within(await within(screen.baseElement).findByRole('dialog'));
+
+  await user.type(dialog.getByRole('textbox', { name: 'Project Name' }), '{backspace}');
+
+  await waitFor(() => {
+    expect(dialog.queryByRole('button', { name: 'Submit' })).toBeEnabled();
+  });
+
+  await user.type(dialog.getByRole('textbox', { name: 'Project Name' }), 'e');
+
+  await waitFor(() => {
+    expect(dialog.queryByRole('button', { name: 'Submit' })).toBeDisabled();
+  });
+
+  await user.type(dialog.getByRole('textbox', { name: 'Project Description' }), 'x');
+
+  await waitFor(() => {
+    expect(dialog.queryByRole('button', { name: 'Submit' })).toBeEnabled();
+  });
+
+  await user.type(dialog.getByRole('textbox', { name: 'Project Description' }), '{backspace}');
+
+  await waitFor(() => {
+    expect(dialog.queryByRole('button', { name: 'Submit' })).toBeDisabled();
+  });
+});
+
+test('should show error mmessages if project submission fails', async () => {
   const user = userEvent.setup();
 
   const onSubmit = jest.fn().mockResolvedValueOnce({
     state: 'error',
-    error: { name: 'project name error', description: 'project description error' },
+    error: {
+      message: 'root error',
+      project: { name: 'name error', description: 'description error' },
+    },
   });
   const onClose = jest.fn();
 
   const screen = render(
-    <ProjectDialog onClose={onClose} onSubmit={onSubmit} open submitText="Submit" title="Project Dialog Title" />,
+    <ProjectDialog
+      defaultValues={{ name: '', description: '' }}
+      onClose={onClose}
+      onSubmit={onSubmit}
+      open
+      submitText="Submit"
+      title="Project Dialog Title"
+    />,
   );
   const dialog = within(await within(screen.baseElement).findByRole('dialog'));
 
@@ -221,8 +316,9 @@ test('should show error mmessages if project creation fails', async () => {
   expect(onSubmit).toHaveBeenNthCalledWith(1, { name: 'Project Name', description: 'Project Description' });
   expect(onClose).not.toHaveBeenCalled();
 
-  expect(dialog.queryByText('project name error')).toBeInTheDocument();
-  expect(dialog.queryByText('project description error')).toBeInTheDocument();
+  expect(dialog.queryByText('root error')).toBeInTheDocument();
+  expect(dialog.queryByText('name error')).toBeInTheDocument();
+  expect(dialog.queryByText('description error')).toBeInTheDocument();
 });
 
 test('should close dialog', async () => {
@@ -231,7 +327,14 @@ test('should close dialog', async () => {
   const onClose = jest.fn();
 
   const screen = render(
-    <ProjectDialog onClose={onClose} onSubmit={jest.fn()} open submitText="Submit" title="Project Dialog Title" />,
+    <ProjectDialog
+      defaultValues={{ name: '', description: '' }}
+      onClose={onClose}
+      onSubmit={jest.fn()}
+      open
+      submitText="Submit"
+      title="Project Dialog Title"
+    />,
   );
   const dialog = within(await within(screen.baseElement).findByRole('dialog'));
 
