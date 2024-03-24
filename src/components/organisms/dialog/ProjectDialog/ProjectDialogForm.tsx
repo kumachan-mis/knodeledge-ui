@@ -33,7 +33,7 @@ const ProjectDialogFormComponent: React.FC<ProjectDialogFormComponentProps> = ({
     handleSubmit,
     control,
     setError,
-    formState: { isValidating, isValid, isSubmitting, errors },
+    formState: { isValidating, isValid, isDirty, isSubmitting, errors },
   } = useForm<ProjectFieldValues>({ defaultValues });
 
   const handleSubmitForm = handleSubmit(async (data) => {
@@ -100,7 +100,12 @@ const ProjectDialogFormComponent: React.FC<ProjectDialogFormComponentProps> = ({
         <Button disabled={isValidating || isSubmitting} onClick={onClose} variant="outlined">
           Close
         </Button>
-        <Button disabled={isValidating || !isValid || isSubmitting} type="submit" variant="contained">
+        {/**
+         * Button can be disabled if isDitry because:
+         * - if new project is being created, project name is required
+         * - if project is being update, one or more of project properties must be different from the original
+         */}
+        <Button disabled={isValidating || !isValid || !isDirty || isSubmitting} type="submit" variant="contained">
           {submitText}
         </Button>
       </DialogActions>

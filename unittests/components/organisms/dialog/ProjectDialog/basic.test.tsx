@@ -230,6 +230,49 @@ test('should not submit if project description is too long', async () => {
   });
 });
 
+test('should not submit if project properties are same as default', async () => {
+  const user = userEvent.setup();
+
+  const onSubmit = jest.fn().mockResolvedValueOnce({ state: 'success', error: null });
+  const onClose = jest.fn();
+
+  const screen = render(
+    <ProjectDialog
+      defaultValues={{ name: 'Project Name', description: 'Project Description' }}
+      onClose={onClose}
+      onSubmit={onSubmit}
+      open
+      submitText="Submit"
+      title="Project Dialog Title"
+    />,
+  );
+  const dialog = within(await within(screen.baseElement).findByRole('dialog'));
+
+  await user.type(dialog.getByRole('textbox', { name: 'Project Name' }), '{backspace}');
+
+  await waitFor(() => {
+    expect(dialog.queryByRole('button', { name: 'Submit' })).toBeEnabled();
+  });
+
+  await user.type(dialog.getByRole('textbox', { name: 'Project Name' }), 'e');
+
+  await waitFor(() => {
+    expect(dialog.queryByRole('button', { name: 'Submit' })).toBeDisabled();
+  });
+
+  await user.type(dialog.getByRole('textbox', { name: 'Project Description' }), 'x');
+
+  await waitFor(() => {
+    expect(dialog.queryByRole('button', { name: 'Submit' })).toBeEnabled();
+  });
+
+  await user.type(dialog.getByRole('textbox', { name: 'Project Description' }), '{backspace}');
+
+  await waitFor(() => {
+    expect(dialog.queryByRole('button', { name: 'Submit' })).toBeDisabled();
+  });
+});
+
 test('should show error mmessages if project submission fails', async () => {
   const user = userEvent.setup();
 
