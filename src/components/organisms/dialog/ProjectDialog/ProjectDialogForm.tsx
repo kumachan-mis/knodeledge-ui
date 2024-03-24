@@ -1,10 +1,12 @@
 'use client';
 import { LoadableAction } from '@/contexts/openapi';
-import { ProjectWithoutAutofield, ProjectWithoutAutofieldError } from '@/openapi';
+import { ProjectActionError } from '@/contexts/projects';
+import { ProjectWithoutAutofield } from '@/openapi';
 
 import Button from '@mui/material/Button';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+import FormHelperText from '@mui/material/FormHelperText';
 import TextField from '@mui/material/TextField';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -12,7 +14,7 @@ import { Controller, useForm } from 'react-hook-form';
 export type ProjectDialogFormComponentProps = {
   readonly submitText: string;
   readonly defaultValues: ProjectFieldValues;
-  readonly onSubmit: (project: ProjectWithoutAutofield) => Promise<LoadableAction<ProjectWithoutAutofieldError>>;
+  readonly onSubmit: (project: ProjectWithoutAutofield) => Promise<LoadableAction<ProjectActionError>>;
   readonly onClose: () => void;
 };
 
@@ -40,8 +42,9 @@ const ProjectDialogFormComponent: React.FC<ProjectDialogFormComponentProps> = ({
       onClose();
       return;
     }
-    setError('name', { type: 'server', message: result.error.name });
-    setError('description', { type: 'server', message: result.error.description });
+    setError('root', { type: 'server', message: result.error.message });
+    setError('name', { type: 'server', message: result.error.project.name });
+    setError('description', { type: 'server', message: result.error.project.description });
   });
 
   return (
@@ -52,6 +55,7 @@ const ProjectDialogFormComponent: React.FC<ProjectDialogFormComponentProps> = ({
       }}
     >
       <DialogContent sx={{ '& > *': { my: 2 } }}>
+        <FormHelperText error>{errors.root?.message}</FormHelperText>
         <Controller
           control={control}
           name="name"

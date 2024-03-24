@@ -1,7 +1,7 @@
 import ProjectCard from '@/components/organisms/list/ProjectCard';
 import { LoadableAction } from '@/contexts/openapi';
-import { LoadableProjectList } from '@/contexts/projects';
-import { ProjectWithoutAutofield, ProjectWithoutAutofieldError } from '@/openapi';
+import { LoadableProjectList, ProjectActionError } from '@/contexts/projects';
+import { ProjectWithoutAutofield } from '@/openapi';
 
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -14,7 +14,7 @@ export type ProjectCardListComponentProps = {
   readonly onUpdateProject: (
     id: string,
     project: ProjectWithoutAutofield,
-  ) => Promise<LoadableAction<ProjectWithoutAutofieldError>>;
+  ) => Promise<LoadableAction<ProjectActionError>>;
 };
 
 const ProjectCardListComponent: React.FC<ProjectCardListComponentProps> = ({ loadableProjectList, onUpdateProject }) =>
@@ -30,11 +30,11 @@ const ProjectCardListComponent: React.FC<ProjectCardListComponentProps> = ({ loa
     </Box>
   ) : (
     <Grid container spacing={4}>
-      {loadableProjectList.data.map((loadableProject) => (
-        <Grid item key={loadableProject.data.id} md={4} sm={6} xl={3} xs={12}>
+      {loadableProjectList.data.map((project) => (
+        <Grid item key={project.id} md={4} sm={6} xl={3} xs={12}>
           <ProjectCard
-            loadableProject={loadableProject}
-            onUpdateProject={(project) => onUpdateProject(loadableProject.data.id, project)}
+            onUpdateProject={(updatedProject) => onUpdateProject(project.id, updatedProject)}
+            project={project}
           />
         </Grid>
       ))}

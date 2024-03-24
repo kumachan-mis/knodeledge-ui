@@ -1,4 +1,4 @@
-import { createErrorResponse, createOkResponse } from '../../../../testutils/fetch';
+import { createInternalErrorResponse, createOkResponse } from '../../../../testutils/fetch';
 import { USER } from '../../../../testutils/user';
 import PanicError from '@/components/organisms/error/PanicError';
 import ProjectTopView from '@/components/organisms/top/ProjectTopView';
@@ -39,7 +39,7 @@ test('should show project without description', async () => {
     }),
   );
 
-  const { getByText } = render(<ProjectTopView />, { wrapper: Wrapper });
+  const { getByText } = render(<ProjectTopView user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(getByText('Project Without Description')).toBeInTheDocument();
@@ -67,7 +67,7 @@ test('should show project with description', async () => {
     }),
   );
 
-  const { getByText } = render(<ProjectTopView />, { wrapper: Wrapper });
+  const { getByText } = render(<ProjectTopView user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(getByText('Project With Description')).toBeInTheDocument();
@@ -86,9 +86,9 @@ test('should show project with description', async () => {
 });
 
 test('should show error message when internal error occured', async () => {
-  (global.fetch as jest.Mock).mockResolvedValueOnce(createErrorResponse({ message: 'Internal Server Error' }));
+  (global.fetch as jest.Mock).mockResolvedValueOnce(createInternalErrorResponse({ message: 'Internal Server Error' }));
 
-  const { getByText } = render(<ProjectTopView />, { wrapper: Wrapper });
+  const { getByText } = render(<ProjectTopView user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(getByText('Fatal Error Occured')).toBeInTheDocument();

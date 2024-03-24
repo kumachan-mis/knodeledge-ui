@@ -1,5 +1,6 @@
 import { LoadableAction } from '@/contexts/openapi';
-import { ProjectWithoutAutofield, ProjectWithoutAutofieldError } from '@/openapi';
+import { ProjectActionError } from '@/contexts/projects';
+import { ProjectWithoutAutofield } from '@/openapi';
 
 import ProjectDialogComponent from './ProjectDialog';
 import { ProjectFieldValues } from './ProjectDialogForm';
@@ -11,7 +12,7 @@ export type ProjectDialogProps = {
   readonly title: string;
   readonly submitText: string;
   readonly defaultValues: ProjectFieldValues;
-  readonly onSubmit: (project: ProjectWithoutAutofield) => Promise<LoadableAction<ProjectWithoutAutofieldError>>;
+  readonly onSubmit: (project: ProjectWithoutAutofield) => Promise<LoadableAction<ProjectActionError>>;
   readonly onClose: () => void;
 };
 

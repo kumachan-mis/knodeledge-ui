@@ -1,15 +1,16 @@
 'use client';
 import ProjectDialog from '../../dialog/ProjectDialog';
 import { LoadableAction } from '@/contexts/openapi';
+import { ProjectActionError } from '@/contexts/projects';
 import { useDialog } from '@/hooks/dialog';
-import { ProjectWithoutAutofield, ProjectWithoutAutofieldError } from '@/openapi';
+import { ProjectWithoutAutofield } from '@/openapi';
 
 import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
 import React from 'react';
 
 export type ProjectToolbarComponentProps = {
-  readonly onCreateProject: (project: ProjectWithoutAutofield) => Promise<LoadableAction<ProjectWithoutAutofieldError>>;
+  readonly onCreateProject: (project: ProjectWithoutAutofield) => Promise<LoadableAction<ProjectActionError>>;
 };
 
 const ProjectToolbarComponent: React.FC<ProjectToolbarComponentProps> = ({ onCreateProject }) => {

@@ -230,12 +230,15 @@ test('should not submit if project description is too long', async () => {
   });
 });
 
-test('should show error mmessages if project creation fails', async () => {
+test('should show error mmessages if project submission fails', async () => {
   const user = userEvent.setup();
 
   const onSubmit = jest.fn().mockResolvedValueOnce({
     state: 'error',
-    error: { name: 'project name error', description: 'project description error' },
+    error: {
+      message: 'root error',
+      project: { name: 'name error', description: 'description error' },
+    },
   });
   const onClose = jest.fn();
 
@@ -270,8 +273,9 @@ test('should show error mmessages if project creation fails', async () => {
   expect(onSubmit).toHaveBeenNthCalledWith(1, { name: 'Project Name', description: 'Project Description' });
   expect(onClose).not.toHaveBeenCalled();
 
-  expect(dialog.queryByText('project name error')).toBeInTheDocument();
-  expect(dialog.queryByText('project description error')).toBeInTheDocument();
+  expect(dialog.queryByText('root error')).toBeInTheDocument();
+  expect(dialog.queryByText('name error')).toBeInTheDocument();
+  expect(dialog.queryByText('description error')).toBeInTheDocument();
 });
 
 test('should close dialog', async () => {

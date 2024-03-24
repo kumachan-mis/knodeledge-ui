@@ -48,7 +48,10 @@ export const ServerError: Story = {
     onSubmit: async () => {
       return {
         state: 'error',
-        error: { name: 'project name server error', description: 'project description server error' },
+        error: {
+          message: 'server error',
+          project: { name: 'project name error', description: 'project description error' },
+        },
       };
     },
   },

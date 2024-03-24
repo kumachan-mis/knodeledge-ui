@@ -12,18 +12,31 @@ import React from 'react';
 
 export type LoadableProject = LoadableObject<Project>;
 
-export type LoadableProjectListItem = { data: Project } & LoadableAction<unknown>;
+export type LoadableProjectList = LoadableList<Project>;
 
-export type LoadableProjectList = LoadableList<LoadableProjectListItem>;
+export type ProjectActionError = {
+  message: string;
+  project: Required<ProjectWithoutAutofieldError>;
+};
 
 export type LoadableActionProjectCreate = (
   project: ProjectWithoutAutofield,
-) => Promise<LoadableAction<ProjectWithoutAutofieldError>>;
+) => Promise<LoadableAction<ProjectActionError>>;
 
 export type LoadableActionProjectUpdate = (
   id: string,
   project: ProjectWithoutAutofield,
-) => Promise<LoadableAction<ProjectWithoutAutofieldError>>;
+) => Promise<LoadableAction<ProjectActionError>>;
+
+const EMPTY_PROJECT_ACTION_ERROR: ProjectActionError = {
+  message: '',
+  project: { name: '', description: '' },
+} as const;
+
+const UNKNOWN_PEOJECT_ACTION_ERROR: ProjectActionError = {
+  message: 'unknown error',
+  project: { name: 'unknown error', description: 'unknown error' },
+} as const;
 
 const ProjectValueContext = React.createContext<LoadableProject>({ state: 'loading', data: null });
 
@@ -74,23 +87,23 @@ export function useUpdateProject(user: UserOnlyId): LoadableActionProjectUpdate 
     const errorable = await updateProject({ user, project: { id, ...project } });
     if (errorable.state === 'panic') {
       setPanic(errorable.error.message);
-      return {
-        state: 'error',
-        error: { name: 'unknown error', description: 'unknown error' },
-      };
+      return { state: 'error', error: UNKNOWN_PEOJECT_ACTION_ERROR };
     }
 
+    if (errorable.state === 'error' && (!!errorable.error.user?.id || !!errorable.error.project?.id)) {
+      return { state: 'error', error: UNKNOWN_PEOJECT_ACTION_ERROR };
+    }
     if (errorable.state === 'error') {
       return {
         state: 'error',
-        error: errorable.error.project ?? { name: 'unknown error', description: 'unknown error' },
+        error: {
+          message: errorable.error.message ?? EMPTY_PROJECT_ACTION_ERROR.message,
+          project: { ...EMPTY_PROJECT_ACTION_ERROR.project, ...errorable.error.project },
+        },
       };
     }
 
-    setProject({
-      state: 'success',
-      data: errorable.response.project,
-    });
+    setProject({ state: 'success', data: errorable.response.project });
     return { state: 'success', error: null };
   };
 }
@@ -117,14 +130,7 @@ export function useInitProjectList(user: UserOnlyId): void {
         return;
       }
 
-      setProjectList({
-        state: 'success',
-        data: errorable.response.projects.map((project) => ({
-          state: 'success',
-          data: project,
-          error: null,
-        })),
-      });
+      setProjectList({ state: 'success', data: errorable.response.projects });
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.id]);
@@ -138,32 +144,26 @@ export function useCreateProjectInList(user: UserOnlyId): LoadableActionProjectC
     const errorable = await createProject({ user, project });
     if (errorable.state === 'panic') {
       setPanic(errorable.error.message);
-      return {
-        state: 'error',
-        error: { name: 'unknown error', description: 'unknown error' },
-      };
+      return { state: 'error', error: UNKNOWN_PEOJECT_ACTION_ERROR };
+    }
+
+    if (errorable.state === 'error' && !!errorable.error.user?.id) {
+      return { state: 'error', error: UNKNOWN_PEOJECT_ACTION_ERROR };
     }
 
     if (errorable.state === 'error') {
       return {
         state: 'error',
-        error: errorable.error.project ?? { name: 'unknown error', description: 'unknown error' },
+        error: {
+          message: errorable.error.message ?? EMPTY_PROJECT_ACTION_ERROR.message,
+          project: { ...EMPTY_PROJECT_ACTION_ERROR.project, ...errorable.error.project },
+        },
       };
     }
 
     setProjectList((prev) => {
       if (prev.state !== 'success') return prev;
-      return {
-        state: 'success',
-        data: [
-          {
-            state: 'success',
-            data: errorable.response.project,
-            error: null,
-          },
-          ...prev.data,
-        ],
-      };
+      return { state: 'success', data: [errorable.response.project, ...prev.data] };
     });
     return { state: 'success', error: null };
   };
@@ -177,16 +177,20 @@ export function useUpdateProjectInList(user: UserOnlyId): LoadableActionProjectU
     const errorable = await updateProject({ user, project: { id, ...project } });
     if (errorable.state === 'panic') {
       setPanic(errorable.error.message);
-      return {
-        state: 'error',
-        error: { name: 'unknown error', description: 'unknown error' },
-      };
+      return { state: 'error', error: UNKNOWN_PEOJECT_ACTION_ERROR };
+    }
+
+    if (errorable.state === 'error' && (!!errorable.error.user?.id || !!errorable.error.project?.id)) {
+      return { state: 'error', error: UNKNOWN_PEOJECT_ACTION_ERROR };
     }
 
     if (errorable.state === 'error') {
       return {
         state: 'error',
-        error: errorable.error.project ?? { name: 'unknown error', description: 'unknown error' },
+        error: {
+          message: errorable.error.message ?? EMPTY_PROJECT_ACTION_ERROR.message,
+          project: { ...EMPTY_PROJECT_ACTION_ERROR.project, ...errorable.error.project },
+        },
       };
     }
 
@@ -194,16 +198,9 @@ export function useUpdateProjectInList(user: UserOnlyId): LoadableActionProjectU
       if (prev.state !== 'success') return prev;
       return {
         state: 'success',
-        data: prev.data.map((item) => {
-          if (item.data.id === errorable.response.project.id) {
-            return {
-              state: 'success',
-              data: errorable.response.project,
-              error: null,
-            };
-          }
-          return item;
-        }),
+        data: prev.data.map((project) =>
+          project.id === errorable.response.project.id ? errorable.response.project : project,
+        ),
       };
     });
     return { state: 'success', error: null };
