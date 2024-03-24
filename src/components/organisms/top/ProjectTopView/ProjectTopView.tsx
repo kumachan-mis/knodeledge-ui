@@ -1,8 +1,8 @@
 import ProjectDialog from '../../dialog/ProjectDialog';
 import { LoadableAction } from '@/contexts/openapi';
-import { LoadableProject } from '@/contexts/projects';
+import { LoadableProject, ProjectActionError } from '@/contexts/projects';
 import { useDialog } from '@/hooks/dialog';
-import { ProjectWithoutAutofield, ProjectWithoutAutofieldError } from '@/openapi';
+import { ProjectWithoutAutofield } from '@/openapi';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -16,7 +16,7 @@ export type ProjectTopViewProps = {
   readonly onUpdateProject: (
     id: string,
     project: ProjectWithoutAutofield,
-  ) => Promise<LoadableAction<ProjectWithoutAutofieldError>>;
+  ) => Promise<LoadableAction<ProjectActionError>>;
 };
 
 const ProjectTopViewComponent: React.FC<ProjectTopViewProps> = ({ loadableProject, onUpdateProject }) => {
@@ -48,7 +48,7 @@ const ProjectTopViewComponent: React.FC<ProjectTopViewProps> = ({ loadableProjec
           <ProjectDialog
             defaultValues={{ name: loadableProject.data.name, description: loadableProject.data.description ?? '' }}
             onClose={onCloseEditProjectDialog}
-            onSubmit={(project) => onUpdateProject(loadableProject.data.id, project)}
+            onSubmit={(updatedProject) => onUpdateProject(loadableProject.data.id, updatedProject)}
             open={openEditProjectDialog}
             submitText="Update Project"
             title="Edit Project"
