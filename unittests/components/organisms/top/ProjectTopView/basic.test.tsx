@@ -153,7 +153,7 @@ test('should update project with Project Update API', async () => {
 
   await user.click(screen.getByText('Update Project'));
 
-  const dialog = within(await within(screen.baseElement).findByRole('dialog'));
+  const dialog = within(await screen.findByRole('dialog'));
 
   expect(dialog.getByRole('textbox', { name: 'Project Name' })).toHaveValue('Project Name');
   expect(dialog.getByRole('textbox', { name: 'Project Description' })).toHaveValue('Project Description');
@@ -216,7 +216,7 @@ test('should show error message when project update failed', async () => {
 
   await user.click(screen.getByText('Update Project'));
 
-  const dialog = within(await within(screen.baseElement).findByRole('dialog'));
+  const dialog = within(await screen.findByRole('dialog'));
 
   expect(dialog.getByRole('textbox', { name: 'Project Name' })).toHaveValue('Project Name');
   expect(dialog.getByRole('textbox', { name: 'Project Description' })).toHaveValue('Project Description');
@@ -276,7 +276,7 @@ test('should show error message when project to be updated does not exist', asyn
 
   await user.click(screen.getByText('Update Project'));
 
-  const dialog = within(await within(screen.baseElement).findByRole('dialog'));
+  const dialog = within(await screen.findByRole('dialog'));
 
   expect(dialog.getByRole('textbox', { name: 'Project Name' })).toHaveValue('Project Name');
   expect(dialog.getByRole('textbox', { name: 'Project Description' })).toHaveValue('');
@@ -335,7 +335,7 @@ test('should show error message when internal error occured in Project Update AP
 
   await user.click(screen.getByText('Update Project'));
 
-  const dialog = within(await within(screen.baseElement).findByRole('dialog'));
+  const dialog = within(await screen.findByRole('dialog'));
 
   expect(dialog.getByRole('textbox', { name: 'Project Name' })).toHaveValue('Project Name');
   expect(dialog.getByRole('textbox', { name: 'Project Description' })).toHaveValue('');

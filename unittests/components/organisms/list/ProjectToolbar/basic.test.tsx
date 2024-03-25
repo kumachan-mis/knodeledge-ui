@@ -82,7 +82,7 @@ test('should create a project', async () => {
 
   await user.click(screen.getByRole('button', { name: 'New Project' }));
 
-  const dialog = within(await within(screen.baseElement).findByRole('dialog'));
+  const dialog = within(await screen.findByRole('dialog'));
 
   await user.click(dialog.getByRole('textbox', { name: 'Project Name' }));
   await user.paste('Test Project');
@@ -94,7 +94,7 @@ test('should create a project', async () => {
   await user.click(dialog.getByRole('button', { name: 'Create Project' }));
 
   await waitFor(() => {
-    expect(within(screen.baseElement).queryByRole('dialog')).not.toBeInTheDocument();
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
   await waitFor(() => {
@@ -156,12 +156,12 @@ test('should close dialog', async () => {
 
   await user.click(screen.getByRole('button', { name: 'New Project' }));
 
-  const dialog = within(await within(screen.baseElement).findByRole('dialog'));
+  const dialog = within(await screen.findByRole('dialog'));
 
   await user.click(dialog.getByRole('button', { name: 'Close' }));
 
   await waitFor(() => {
-    expect(within(screen.baseElement).queryByRole('dialog')).not.toBeInTheDocument();
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
   expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -207,7 +207,7 @@ test('should show error message when project creation failed', async () => {
 
   await user.click(screen.getByRole('button', { name: 'New Project' }));
 
-  const dialog = within(await within(screen.baseElement).findByRole('dialog'));
+  const dialog = within(await screen.findByRole('dialog'));
 
   await user.click(dialog.getByRole('textbox', { name: 'Project Name' }));
   await user.paste('Test Project');
@@ -265,7 +265,7 @@ test('should show error message when internal error occured', async () => {
 
   await user.click(screen.getByRole('button', { name: 'New Project' }));
 
-  const dialog = within(await within(screen.baseElement).findByRole('dialog'));
+  const dialog = within(await screen.findByRole('dialog'));
 
   await user.click(dialog.getByRole('textbox', { name: 'Project Name' }));
   await user.paste('Test Project');
