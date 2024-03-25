@@ -18,7 +18,7 @@ test('should render project dialog', async () => {
       title="Project Dialog Title"
     />,
   );
-  const dialog = within(await within(screen.baseElement).findByRole('dialog'));
+  const dialog = within(await screen.findByRole('dialog'));
 
   expect(dialog.queryByText('Project Dialog Title')).toBeInTheDocument();
   expect(dialog.queryByRole('textbox', { name: 'Project Name' })).toHaveValue('');
@@ -52,7 +52,7 @@ test.each<{ name: string; projectName: string }>([
       title="Project Dialog Title"
     />,
   );
-  const dialog = within(await within(screen.baseElement).findByRole('dialog'));
+  const dialog = within(await screen.findByRole('dialog'));
 
   await user.click(dialog.getByRole('textbox', { name: 'Project Name' }));
   await user.paste(projectName);
@@ -100,7 +100,7 @@ test.each<{ name: string; projectName: string; projectDescription: string }>([
       title="Project Dialog Title"
     />,
   );
-  const dialog = within(await within(screen.baseElement).findByRole('dialog'));
+  const dialog = within(await screen.findByRole('dialog'));
 
   await user.click(dialog.getByRole('textbox', { name: 'Project Name' }));
   await user.paste(projectName);
@@ -140,7 +140,7 @@ test('should not submit if project name is empty', async () => {
       title="Project Dialog Title"
     />,
   );
-  const dialog = within(await within(screen.baseElement).findByRole('dialog'));
+  const dialog = within(await screen.findByRole('dialog'));
 
   await user.click(dialog.getByRole('textbox', { name: 'Project Name' }));
   await user.paste('Project Name');
@@ -176,7 +176,7 @@ test('should not submit if project name is too long', async () => {
       title="Project Dialog Title"
     />,
   );
-  const dialog = within(await within(screen.baseElement).findByRole('dialog'));
+  const dialog = within(await screen.findByRole('dialog'));
 
   await user.click(dialog.getByRole('textbox', { name: 'Project Name' }));
   await user.paste(generateRandomString(100));
@@ -211,7 +211,7 @@ test('should not submit if project description is too long', async () => {
       title="Project Dialog Title"
     />,
   );
-  const dialog = within(await within(screen.baseElement).findByRole('dialog'));
+  const dialog = within(await screen.findByRole('dialog'));
 
   await user.click(dialog.getByRole('textbox', { name: 'Project Name' }));
   await user.paste('Project Name');
@@ -246,7 +246,7 @@ test('should not submit if project properties are same as default', async () => 
       title="Project Dialog Title"
     />,
   );
-  const dialog = within(await within(screen.baseElement).findByRole('dialog'));
+  const dialog = within(await screen.findByRole('dialog'));
 
   await user.type(dialog.getByRole('textbox', { name: 'Project Name' }), '{backspace}');
 
@@ -295,7 +295,7 @@ test('should show error mmessages if project submission fails', async () => {
       title="Project Dialog Title"
     />,
   );
-  const dialog = within(await within(screen.baseElement).findByRole('dialog'));
+  const dialog = within(await screen.findByRole('dialog'));
 
   await user.click(dialog.getByRole('textbox', { name: 'Project Name' }));
   await user.paste('Project Name');
@@ -336,7 +336,7 @@ test('should close dialog', async () => {
       title="Project Dialog Title"
     />,
   );
-  const dialog = within(await within(screen.baseElement).findByRole('dialog'));
+  const dialog = within(await screen.findByRole('dialog'));
 
   await user.click(dialog.getByRole('button', { name: 'Close' }));
 

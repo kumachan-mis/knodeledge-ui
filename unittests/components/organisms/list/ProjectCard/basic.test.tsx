@@ -58,14 +58,14 @@ test('should update project', async () => {
 
   await user.click(screen.getByLabelText('update project'));
 
-  const dialog = within(await within(screen.baseElement).findByRole('dialog'));
+  const dialog = within(await screen.findByRole('dialog'));
 
   await user.type(dialog.getByRole('textbox', { name: 'Project Name' }), ' Updated');
 
   await user.click(dialog.getByRole('button', { name: 'Update Project' }));
 
   await waitFor(() => {
-    expect(within(screen.baseElement).queryByRole('dialog')).not.toBeInTheDocument();
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
   expect(updateProject).toHaveBeenCalledTimes(1);
@@ -89,12 +89,12 @@ test('should close dialog to update project', async () => {
 
   await user.click(screen.getByLabelText('update project'));
 
-  const dialog = within(await within(screen.baseElement).findByRole('dialog'));
+  const dialog = within(await screen.findByRole('dialog'));
 
   await user.click(dialog.getByRole('button', { name: 'Close' }));
 
   await waitFor(() => {
-    expect(within(screen.baseElement).queryByRole('dialog')).not.toBeInTheDocument();
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
   expect(updateProject).not.toHaveBeenCalled();
@@ -124,7 +124,7 @@ test('should show error when failed to update project', async () => {
 
   await user.click(screen.getByLabelText('update project'));
 
-  const dialog = within(await within(screen.baseElement).findByRole('dialog'));
+  const dialog = within(await screen.findByRole('dialog'));
 
   await user.type(dialog.getByRole('textbox', { name: 'Project Name' }), ' Updated');
   await user.type(dialog.getByRole('textbox', { name: 'Project Description' }), 'Description');
