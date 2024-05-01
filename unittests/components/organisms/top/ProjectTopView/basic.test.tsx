@@ -27,15 +27,15 @@ const HooksWrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) =>
   return children;
 };
 
-beforeEach(() => {
+beforeAll(() => {
   global.fetch = jest.fn();
 });
 
-afterEach(() => {
+beforeEach(() => {
   (global.fetch as jest.Mock).mockRestore();
 });
 
-test('should show project without description', async () => {
+test('should show project without description from Project Find API', async () => {
   (global.fetch as jest.Mock).mockResolvedValueOnce(
     createOkResponse({
       project: {
@@ -62,7 +62,7 @@ test('should show project without description', async () => {
   );
 });
 
-test('should show project with description', async () => {
+test('should show project with description from Project Find API', async () => {
   (global.fetch as jest.Mock).mockResolvedValueOnce(
     createOkResponse({
       project: {
