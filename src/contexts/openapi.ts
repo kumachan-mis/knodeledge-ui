@@ -1,14 +1,4 @@
-export type LoadableList<D> =
-  | {
-      state: 'loading';
-      data: null;
-    }
-  | {
-      state: 'success';
-      data: D[];
-    };
-
-export type LoadableObject<D> =
+export type LoadableData<D> =
   | {
       state: 'loading';
       data: null;

@@ -1,4 +1,5 @@
 import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import Toolbar from '@mui/material/Toolbar';
 import React from 'react';
@@ -27,6 +28,7 @@ const AppDrawer: React.FC<AppDrawerProps> = ({ mobileOpen, onMobileClose, onMobi
       variant="temporary"
     >
       <Toolbar variant="dense" />
+      <Divider />
       {children}
     </Drawer>
     <Drawer
@@ -38,6 +40,7 @@ const AppDrawer: React.FC<AppDrawerProps> = ({ mobileOpen, onMobileClose, onMobi
       variant="permanent"
     >
       <Toolbar variant="dense" />
+      <Divider />
       {children}
     </Drawer>
   </Box>

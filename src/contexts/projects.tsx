@@ -5,14 +5,14 @@ import { listProject } from '@/actions/projects/listProject';
 import { updateProject } from '@/actions/projects/updateProject';
 import { Project, ProjectWithoutAutofield, ProjectWithoutAutofieldError, UserOnlyId } from '@/openapi';
 
-import { LoadableAction, LoadableList, LoadableObject } from './openapi';
+import { LoadableAction, LoadableData } from './openapi';
 import { useSetPanic } from './panic';
 
 import React from 'react';
 
-export type LoadableProject = LoadableObject<Project>;
+export type LoadableProject = LoadableData<Project>;
 
-export type LoadableProjectList = LoadableList<Project>;
+export type LoadableProjectList = LoadableData<Project[]>;
 
 export type ProjectActionError = {
   message: string;
