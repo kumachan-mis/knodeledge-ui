@@ -12,7 +12,7 @@ export async function createProject(
   request: ProjectCreateRequest,
 ): Promise<Errorable<ProjectCreateResponse, ProjectCreateErrorResponse>> {
   return await fetchFromOpenApi<ProjectCreateResponse, ProjectCreateErrorResponse>(
-    async () => await projectsApi.create({ projectCreateRequest: request }),
+    async () => await projectsApi.projectsCreate({ projectCreateRequest: request }),
     async (error) => {
       if (400 <= error.response.status && error.response.status < 500) {
         const errorResponse = ProjectCreateErrorResponseFromJSON(await error.response.json());

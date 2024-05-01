@@ -9,10 +9,11 @@ import React from 'react';
 
 export type ProjectLayoutComponentProps = {
   readonly user: Claims;
+  readonly DrawerContent?: React.FC<{ readonly user: Claims }>;
   readonly children?: React.ReactNode;
 };
 
-const ProjectLayoutComponent: React.FC<ProjectLayoutComponentProps> = ({ user, children }) => {
+const ProjectLayoutComponent: React.FC<ProjectLayoutComponentProps> = ({ user, DrawerContent, children }) => {
   const { mobileOpen, handleMobileClose, handleMobileToggle, handleMobileTransitionEnd } = useAppDrawer();
 
   return (
@@ -22,7 +23,9 @@ const ProjectLayoutComponent: React.FC<ProjectLayoutComponentProps> = ({ user, c
         mobileOpen={mobileOpen}
         onMobileClose={handleMobileClose}
         onMobileTransitionEnd={handleMobileTransitionEnd}
-      />
+      >
+        {DrawerContent && <DrawerContent user={user} />}
+      </AppDrawer>
       <AppDrawerMain>{children}</AppDrawerMain>
     </AppContainer>
   );

@@ -56,19 +56,19 @@ import {
   ProjectUpdateResponseToJSON,
 } from '../models/index';
 
-export interface CreateRequest {
+export interface ProjectsCreateRequest {
   projectCreateRequest?: ProjectCreateRequest;
 }
 
-export interface FindRequest {
+export interface ProjectsFindRequest {
   projectFindRequest?: ProjectFindRequest;
 }
 
-export interface ListRequest {
+export interface ProjectsListRequest {
   projectListRequest?: ProjectListRequest;
 }
 
-export interface UpdateRequest {
+export interface ProjectsUpdateRequest {
   projectUpdateRequest?: ProjectUpdateRequest;
 }
 
@@ -79,8 +79,8 @@ export class ProjectsApi extends runtime.BaseAPI {
   /**
    * Create new project
    */
-  async createRaw(
-    requestParameters: CreateRequest,
+  async projectsCreateRaw(
+    requestParameters: ProjectsCreateRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<ProjectCreateResponse>> {
     const queryParameters: any = {};
@@ -106,19 +106,19 @@ export class ProjectsApi extends runtime.BaseAPI {
   /**
    * Create new project
    */
-  async create(
-    requestParameters: CreateRequest = {},
+  async projectsCreate(
+    requestParameters: ProjectsCreateRequest = {},
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<ProjectCreateResponse> {
-    const response = await this.createRaw(requestParameters, initOverrides);
+    const response = await this.projectsCreateRaw(requestParameters, initOverrides);
     return await response.value();
   }
 
   /**
    * Find project
    */
-  async findRaw(
-    requestParameters: FindRequest,
+  async projectsFindRaw(
+    requestParameters: ProjectsFindRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<ProjectFindResponse>> {
     const queryParameters: any = {};
@@ -144,19 +144,19 @@ export class ProjectsApi extends runtime.BaseAPI {
   /**
    * Find project
    */
-  async find(
-    requestParameters: FindRequest = {},
+  async projectsFind(
+    requestParameters: ProjectsFindRequest = {},
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<ProjectFindResponse> {
-    const response = await this.findRaw(requestParameters, initOverrides);
+    const response = await this.projectsFindRaw(requestParameters, initOverrides);
     return await response.value();
   }
 
   /**
    * Get list of projects
    */
-  async listRaw(
-    requestParameters: ListRequest,
+  async projectsListRaw(
+    requestParameters: ProjectsListRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<ProjectListResponse>> {
     const queryParameters: any = {};
@@ -182,19 +182,19 @@ export class ProjectsApi extends runtime.BaseAPI {
   /**
    * Get list of projects
    */
-  async list(
-    requestParameters: ListRequest = {},
+  async projectsList(
+    requestParameters: ProjectsListRequest = {},
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<ProjectListResponse> {
-    const response = await this.listRaw(requestParameters, initOverrides);
+    const response = await this.projectsListRaw(requestParameters, initOverrides);
     return await response.value();
   }
 
   /**
    * Update project
    */
-  async updateRaw(
-    requestParameters: UpdateRequest,
+  async projectsUpdateRaw(
+    requestParameters: ProjectsUpdateRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<ProjectUpdateResponse>> {
     const queryParameters: any = {};
@@ -220,11 +220,11 @@ export class ProjectsApi extends runtime.BaseAPI {
   /**
    * Update project
    */
-  async update(
-    requestParameters: UpdateRequest = {},
+  async projectsUpdate(
+    requestParameters: ProjectsUpdateRequest = {},
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<ProjectUpdateResponse> {
-    const response = await this.updateRaw(requestParameters, initOverrides);
+    const response = await this.projectsUpdateRaw(requestParameters, initOverrides);
     return await response.value();
   }
 }

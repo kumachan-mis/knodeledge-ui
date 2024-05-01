@@ -12,7 +12,7 @@ export async function findProject(
   request: ProjectFindRequest,
 ): Promise<Errorable<ProjectFindResponse, ProjectFindErrorResponse>> {
   return await fetchFromOpenApi(
-    async () => await projectsApi.find({ projectFindRequest: request }),
+    async () => await projectsApi.projectsFind({ projectFindRequest: request }),
     async (error) => {
       if (error.response.status === 404) {
         const errorResponse = ProjectFindErrorResponseFromJSON(await error.response.json());
