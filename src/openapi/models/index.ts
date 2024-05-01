@@ -1,5 +1,19 @@
 /* eslint-disable */
 export * from './ApplicationErrorResponse';
+export * from './Chapter';
+export * from './ChapterCreateErrorResponse';
+export * from './ChapterCreateRequest';
+export * from './ChapterCreateResponse';
+export * from './ChapterError';
+export * from './ChapterListErrorResponse';
+export * from './ChapterListRequest';
+export * from './ChapterListResponse';
+export * from './ChapterUpdateErrorResponse';
+export * from './ChapterUpdateRequest';
+export * from './ChapterUpdateResponse';
+export * from './ChapterWithSections';
+export * from './ChapterWithoutAutofield';
+export * from './ChapterWithoutAutofieldError';
 export * from './Project';
 export * from './ProjectCreateErrorResponse';
 export * from './ProjectCreateRequest';
@@ -18,5 +32,6 @@ export * from './ProjectUpdateRequest';
 export * from './ProjectUpdateResponse';
 export * from './ProjectWithoutAutofield';
 export * from './ProjectWithoutAutofieldError';
+export * from './Section';
 export * from './UserOnlyId';
 export * from './UserOnlyIdError';
