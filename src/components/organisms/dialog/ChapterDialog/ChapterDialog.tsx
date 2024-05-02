@@ -3,7 +3,7 @@ import { ChapterActionError } from '@/contexts/chapters';
 import { LoadableAction } from '@/contexts/openapi';
 import { ChapterWithoutAutofield } from '@/openapi';
 
-import ChapterDialogFormComponent, { ChapterFieldValues } from './ChapterDialogForm';
+import ChapterDialogFormComponent, { ChapterFieldValidates, ChapterFieldValues } from './ChapterDialogForm';
 
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -14,6 +14,7 @@ export type ChapterDialogComponentProps = {
   readonly title: string;
   readonly submitText: string;
   readonly defaultValues: ChapterFieldValues;
+  readonly validates?: ChapterFieldValidates;
   readonly onSubmit: (project: ChapterWithoutAutofield) => Promise<LoadableAction<ChapterActionError>>;
   readonly onClose: () => void;
 };

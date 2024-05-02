@@ -1,5 +1,5 @@
 import ChapterDialog from '@/components/organisms/dialog/ChapterDialog';
-import { ChapterActionError } from '@/contexts/chapters';
+import { ChapterActionError, LoadableChapterList } from '@/contexts/chapters';
 import { LoadableAction } from '@/contexts/openapi';
 import { LoadableProject } from '@/contexts/projects';
 import { useDialog } from '@/hooks/dialog';
@@ -13,16 +13,18 @@ import React from 'react';
 
 export type ProjectDrawerHeaderComponentProps = {
   readonly loadableProject: LoadableProject;
+  readonly loadableChapterList: LoadableChapterList;
   readonly onCreateChapter: (chapter: ChapterWithoutAutofield) => Promise<LoadableAction<ChapterActionError>>;
 };
 
 const ProjectDrawerHeaderComponent: React.FC<ProjectDrawerHeaderComponentProps> = ({
   loadableProject,
+  loadableChapterList,
   onCreateChapter,
 }) => {
   const { open: openNewChapterDialog, onOpen: onOpenNewChapterDialog, onClose: onCloseNewChapterDialog } = useDialog();
 
-  if (loadableProject.state !== 'success') {
+  if (loadableProject.state !== 'success' || loadableChapterList.state !== 'success') {
     return <Box alignItems="center" display="flex" width="100%" />;
   }
 
@@ -31,7 +33,7 @@ const ProjectDrawerHeaderComponent: React.FC<ProjectDrawerHeaderComponentProps> 
       <Typography flexGrow={1} fontWeight="bold" noWrap variant="subtitle1">
         {loadableProject.data.name}
       </Typography>
-      <IconButton onClick={onOpenNewChapterDialog} size="small">
+      <IconButton aria-label="new chapter" onClick={onOpenNewChapterDialog} size="small">
         <NoteAddIcon />
       </IconButton>
       <ChapterDialog
@@ -41,6 +43,12 @@ const ProjectDrawerHeaderComponent: React.FC<ProjectDrawerHeaderComponentProps> 
         open={openNewChapterDialog}
         submitText="Create Chapter"
         title="New Chapter"
+        validates={{
+          number: (value) => {
+            const maxChapterNumber = loadableChapterList.data.length + 1;
+            return parseInt(value, 10) <= maxChapterNumber || 'chapter number is too large';
+          },
+        }}
       />
     </Box>
   );

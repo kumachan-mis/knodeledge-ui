@@ -19,6 +19,21 @@ export const Basic: Story = {
         name: 'Project',
       },
     },
+    loadableChapterList: {
+      state: 'success',
+      data: [
+        {
+          id: 'CHAPTER_ONE',
+          name: 'Chapter One',
+          number: 1,
+        },
+        {
+          id: 'CHAPTER_TWO',
+          name: 'Chapter Two',
+          number: 2,
+        },
+      ],
+    },
   },
 };
 
@@ -28,12 +43,20 @@ export const Loading: Story = {
       state: 'loading',
       data: null,
     },
+    loadableChapterList: {
+      state: 'loading',
+      data: null,
+    },
   },
 };
 
 export const NotFound: Story = {
   args: {
     loadableProject: {
+      state: 'notfound',
+      data: null,
+    },
+    loadableChapterList: {
       state: 'notfound',
       data: null,
     },

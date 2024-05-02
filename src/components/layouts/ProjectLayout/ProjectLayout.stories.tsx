@@ -25,6 +25,21 @@ export const Basic: Story = {
   args: {
     DrawerHeader: () => (
       <ProjectDrawerHeaderComponent
+        loadableChapterList={{
+          state: 'success',
+          data: [
+            {
+              id: 'CHAPTER_ONE',
+              number: 1,
+              name: 'Chapter One',
+            },
+            {
+              id: 'CHAPTER_TWO',
+              number: 2,
+              name: 'Chapter Two',
+            },
+          ],
+        }}
         loadableProject={{
           state: 'success',
           data: {
@@ -32,6 +47,8 @@ export const Basic: Story = {
             name: 'Project Without Description',
           },
         }}
+        // eslint-disable-next-line @typescript-eslint/require-await
+        onCreateChapter={async () => ({ state: 'success', data: [], error: null })}
       />
     ),
     DrawerContent: () => (
@@ -60,10 +77,16 @@ export const Loading: Story = {
   args: {
     DrawerHeader: () => (
       <ProjectDrawerHeaderComponent
+        loadableChapterList={{
+          state: 'loading',
+          data: null,
+        }}
         loadableProject={{
           state: 'loading',
           data: null,
         }}
+        // eslint-disable-next-line @typescript-eslint/require-await
+        onCreateChapter={async () => ({ state: 'success', data: [], error: null })}
       />
     ),
     DrawerContent: () => (
@@ -81,10 +104,16 @@ export const NotFound: Story = {
   args: {
     DrawerHeader: () => (
       <ProjectDrawerHeaderComponent
+        loadableChapterList={{
+          state: 'notfound',
+          data: null,
+        }}
         loadableProject={{
           state: 'notfound',
           data: null,
         }}
+        // eslint-disable-next-line @typescript-eslint/require-await
+        onCreateChapter={async () => ({ state: 'success', data: [], error: null })}
       />
     ),
     DrawerContent: () => (

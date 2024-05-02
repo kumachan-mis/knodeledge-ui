@@ -9,11 +9,12 @@ import DialogContent from '@mui/material/DialogContent';
 import FormHelperText from '@mui/material/FormHelperText';
 import TextField from '@mui/material/TextField';
 import React from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, Validate } from 'react-hook-form';
 
 export type ChapterDialogFormComponentProps = {
   readonly submitText: string;
   readonly defaultValues: ChapterFieldValues;
+  readonly validates?: ChapterFieldValidates;
   readonly onSubmit: (project: ChapterWithoutAutofield) => Promise<LoadableAction<ChapterActionError>>;
   readonly onClose: () => void;
 };
@@ -23,9 +24,15 @@ export type ChapterFieldValues = {
   number: string;
 };
 
+export type ChapterFieldValidates = {
+  name?: Validate<string, ChapterFieldValues>;
+  number?: Validate<string, ChapterFieldValues>;
+};
+
 const ChapterDialogFormComponent: React.FC<ChapterDialogFormComponentProps> = ({
   submitText,
   defaultValues,
+  validates,
   onSubmit,
   onClose,
 }) => {
@@ -74,6 +81,7 @@ const ChapterDialogFormComponent: React.FC<ChapterDialogFormComponentProps> = ({
           rules={{
             required: 'name is required',
             maxLength: { value: 100, message: 'name cannot be longer than 100 characters' },
+            validate: validates?.name,
           }}
         />
         <Controller
@@ -94,6 +102,7 @@ const ChapterDialogFormComponent: React.FC<ChapterDialogFormComponentProps> = ({
           rules={{
             required: 'number is required',
             pattern: { value: /^[1-9][0-9]*$/, message: 'number must be a positive integer' },
+            validate: validates?.number,
           }}
         />
       </DialogContent>

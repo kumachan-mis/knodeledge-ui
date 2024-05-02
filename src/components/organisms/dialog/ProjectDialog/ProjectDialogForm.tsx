@@ -9,11 +9,12 @@ import DialogContent from '@mui/material/DialogContent';
 import FormHelperText from '@mui/material/FormHelperText';
 import TextField from '@mui/material/TextField';
 import React from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, Validate, useForm } from 'react-hook-form';
 
 export type ProjectDialogFormComponentProps = {
   readonly submitText: string;
   readonly defaultValues: ProjectFieldValues;
+  readonly validates?: ProjectFieldValidates;
   readonly onSubmit: (project: ProjectWithoutAutofield) => Promise<LoadableAction<ProjectActionError>>;
   readonly onClose: () => void;
 };
@@ -23,9 +24,15 @@ export type ProjectFieldValues = {
   description: string;
 };
 
+export type ProjectFieldValidates = {
+  name?: Validate<string, ProjectFieldValues>;
+  description?: Validate<string, ProjectFieldValues>;
+};
+
 const ProjectDialogFormComponent: React.FC<ProjectDialogFormComponentProps> = ({
   submitText,
   defaultValues,
+  validates,
   onSubmit,
   onClose,
 }) => {
@@ -74,6 +81,7 @@ const ProjectDialogFormComponent: React.FC<ProjectDialogFormComponentProps> = ({
           rules={{
             required: 'name is required',
             maxLength: { value: 100, message: 'name cannot be longer than 100 characters' },
+            validate: validates?.name,
           }}
         />
         <Controller
@@ -93,6 +101,7 @@ const ProjectDialogFormComponent: React.FC<ProjectDialogFormComponentProps> = ({
           )}
           rules={{
             maxLength: { value: 400, message: 'description cannot be longer than 400 characters' },
+            validate: validates?.description,
           }}
         />
       </DialogContent>
