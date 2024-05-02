@@ -85,7 +85,7 @@ test('should show empty message when no project is available', async () => {
   );
 });
 
-test('should show error message when internal error occured in Project List API', async () => {
+test('should show error message when internal error occured', async () => {
   (global.fetch as jest.Mock).mockResolvedValueOnce(createInternalErrorResponse({ message: 'Internal Server Error' }));
 
   const screen = render(<ProjectCardList user={USER} />, { wrapper: Wrapper });
@@ -326,7 +326,7 @@ test('should show error message when project to be updated does not exist', asyn
   );
 });
 
-test('should show error message when internal error occured in Project Update API', async () => {
+test('should show error message when internal error occured', async () => {
   const user = userEvent.setup();
 
   (global.fetch as jest.Mock)

@@ -91,7 +91,7 @@ test('should show project with description from Project Find API', async () => {
   );
 });
 
-test('should show nothing when not foud error occured Project Find API', async () => {
+test('should show nothing when not foud error occured', async () => {
   (global.fetch as jest.Mock).mockResolvedValueOnce(createNotFoundResponse({ message: 'Not Found' }));
 
   const screen = render(<ProjectTopView user={USER} />, { wrapper: Wrapper });
@@ -113,7 +113,7 @@ test('should show nothing when not foud error occured Project Find API', async (
   );
 });
 
-test('should show error message when internal error occured in Project Find API', async () => {
+test('should show error message when internal error occured', async () => {
   (global.fetch as jest.Mock).mockResolvedValueOnce(createInternalErrorResponse({ message: 'Internal Server Error' }));
 
   const screen = render(<ProjectTopView user={USER} />, { wrapper: Wrapper });
@@ -326,7 +326,7 @@ test('should show error message when project to be updated does not exist', asyn
   );
 });
 
-test('should show error message when internal error occured in Project Update API', async () => {
+test('should show error message when internal error occured', async () => {
   const user = userEvent.setup();
   (global.fetch as jest.Mock)
     .mockResolvedValueOnce(
