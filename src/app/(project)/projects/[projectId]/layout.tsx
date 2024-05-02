@@ -1,13 +1,13 @@
 import ProjectLayout from '@/components/layouts/ProjectLayout';
-import ProjectDrawerContent from '@/components/organisms/top/ProjectDrawerContent';
-import ProjectDrawerHeader from '@/components/organisms/top/ProjectDrawerHeader';
+import ChapterList from '@/components/organisms/top/ChapterList';
+import ChapterListHeader from '@/components/organisms/top/ChapterListHeader';
 import { ChapterListContextProvider } from '@/contexts/chapters';
 import { ProjectContextProvider } from '@/contexts/projects';
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <ProjectContextProvider>
     <ChapterListContextProvider>
-      <ProjectLayout DrawerContent={ProjectDrawerContent} DrawerHeader={ProjectDrawerHeader}>
+      <ProjectLayout DrawerContent={ChapterList} DrawerHeader={ChapterListHeader}>
         {children}
       </ProjectLayout>
     </ChapterListContextProvider>

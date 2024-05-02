@@ -6,8 +6,8 @@ import {
 } from '../../../../testutils/fetch';
 import { USER } from '../../../../testutils/user';
 import PanicError from '@/components/organisms/error/PanicError';
-import ProjectDrawerContent from '@/components/organisms/top/ProjectDrawerContent';
-import ProjectDrawerHeader from '@/components/organisms/top/ProjectDrawerHeader';
+import ChapterList from '@/components/organisms/top/ChapterList';
+import ChapterListHeader from '@/components/organisms/top/ChapterListHeader';
 import { ChapterListContextProvider, useInitChapterList } from '@/contexts/chapters';
 import { PanicContextProvider } from '@/contexts/panic';
 import { ProjectContextProvider, useInitProject } from '@/contexts/projects';
@@ -71,7 +71,7 @@ test('should show project name from Project Find API', async () => {
       }),
     );
 
-  const screen = render(<ProjectDrawerHeader user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ChapterListHeader user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.getByText('Project Name')).toBeInTheDocument();
@@ -102,7 +102,7 @@ test('should show nothing when not foud error occured', async () => {
     .mockResolvedValueOnce(createNotFoundResponse({ message: 'Not Found' }))
     .mockResolvedValueOnce(createNotFoundResponse({ message: 'Not Found' }));
 
-  const screen = render(<ProjectDrawerHeader user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ChapterListHeader user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(global.fetch).toHaveBeenCalledTimes(2);
@@ -175,7 +175,7 @@ test.each<{
   async ({ projectFindResponse, chaptersListResponse }) => {
     (global.fetch as jest.Mock).mockResolvedValueOnce(projectFindResponse).mockResolvedValueOnce(chaptersListResponse);
 
-    const screen = render(<ProjectDrawerHeader user={USER} />, { wrapper: Wrapper });
+    const screen = render(<ChapterListHeader user={USER} />, { wrapper: Wrapper });
 
     await waitFor(() => {
       expect(screen.getByText('Fatal Error Occured')).toBeInTheDocument();
@@ -275,8 +275,8 @@ test.each<{
 
   const screen = render(
     <div>
-      <ProjectDrawerHeader user={USER} />
-      <ProjectDrawerContent />
+      <ChapterListHeader user={USER} />
+      <ChapterList />
     </div>,
     { wrapper: Wrapper },
   );
@@ -370,7 +370,7 @@ test('should disable submission when chapter number is too large', async () => {
       }),
     );
 
-  const screen = render(<ProjectDrawerHeader user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ChapterListHeader user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.getByText('Project Name')).toBeInTheDocument();
@@ -451,7 +451,7 @@ test('should close dialog', async () => {
       }),
     );
 
-  const screen = render(<ProjectDrawerHeader user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ChapterListHeader user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.getByText('Project Name')).toBeInTheDocument();
@@ -531,7 +531,7 @@ test('should show error message when chapter creation failed', async () => {
       }),
     );
 
-  const screen = render(<ProjectDrawerHeader user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ChapterListHeader user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.getByText('Project Name')).toBeInTheDocument();
@@ -625,7 +625,7 @@ test('should show error message when internal error occured', async () => {
     )
     .mockResolvedValueOnce(createInternalErrorResponse({ message: 'Internal Server Error' }));
 
-  const screen = render(<ProjectDrawerHeader user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ChapterListHeader user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.getByText('Project Name')).toBeInTheDocument();

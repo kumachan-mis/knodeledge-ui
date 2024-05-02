@@ -1,5 +1,5 @@
-import ProjectDrawerContentComponent from '@/components/organisms/top/ProjectDrawerContent/ProjectDrawerContent';
-import ProjectDrawerHeaderComponent from '@/components/organisms/top/ProjectDrawerHeader/ProjectDrawerHeader';
+import ChapterListComponent from '@/components/organisms/top/ChapterList/ChapterList';
+import ChapterListHeaderComponent from '@/components/organisms/top/ChapterListHeader/ChapterListHeader';
 
 import ProjectLayout from './ProjectLayout';
 
@@ -24,7 +24,7 @@ type Story = StoryObj<typeof ProjectLayout>;
 export const Basic: Story = {
   args: {
     DrawerHeader: () => (
-      <ProjectDrawerHeaderComponent
+      <ChapterListHeaderComponent
         loadableChapterList={{
           state: 'success',
           data: [
@@ -52,7 +52,7 @@ export const Basic: Story = {
       />
     ),
     DrawerContent: () => (
-      <ProjectDrawerContentComponent
+      <ChapterListComponent
         loadableChapterList={{
           state: 'success',
           data: [
@@ -76,7 +76,7 @@ export const Basic: Story = {
 export const Loading: Story = {
   args: {
     DrawerHeader: () => (
-      <ProjectDrawerHeaderComponent
+      <ChapterListHeaderComponent
         loadableChapterList={{
           state: 'loading',
           data: null,
@@ -90,7 +90,7 @@ export const Loading: Story = {
       />
     ),
     DrawerContent: () => (
-      <ProjectDrawerContentComponent
+      <ChapterListComponent
         loadableChapterList={{
           state: 'loading',
           data: null,
@@ -103,7 +103,7 @@ export const Loading: Story = {
 export const NotFound: Story = {
   args: {
     DrawerHeader: () => (
-      <ProjectDrawerHeaderComponent
+      <ChapterListHeaderComponent
         loadableChapterList={{
           state: 'notfound',
           data: null,
@@ -117,7 +117,7 @@ export const NotFound: Story = {
       />
     ),
     DrawerContent: () => (
-      <ProjectDrawerContentComponent
+      <ChapterListComponent
         loadableChapterList={{
           state: 'notfound',
           data: null,
