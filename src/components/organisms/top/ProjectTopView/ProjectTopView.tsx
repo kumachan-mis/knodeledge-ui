@@ -21,9 +21,9 @@ export type ProjectTopViewComponentProps = {
 
 const ProjectTopViewComponent: React.FC<ProjectTopViewComponentProps> = ({ loadableProject, onUpdateProject }) => {
   const {
-    open: openEditProjectDialog,
-    onOpen: onOpenEditProjectDialog,
-    onClose: onCloseEditProjectDialog,
+    open: openUpdateProjectDialog,
+    onOpen: onOpenUpdateProjectDialog,
+    onClose: onCloseUpdateProjectDialog,
   } = useDialog();
 
   return loadableProject.state === 'loading' ? (
@@ -42,17 +42,17 @@ const ProjectTopViewComponent: React.FC<ProjectTopViewComponentProps> = ({ loada
           {loadableProject.data.description}
         </Typography>
         <Box display="flex" justifyContent="center" my={6}>
-          <Button onClick={onOpenEditProjectDialog} variant="contained">
+          <Button onClick={onOpenUpdateProjectDialog} variant="contained">
             Update Project
           </Button>
         </Box>
         <ProjectDialog
           defaultValues={{ name: loadableProject.data.name, description: loadableProject.data.description ?? '' }}
-          onClose={onCloseEditProjectDialog}
+          onClose={onCloseUpdateProjectDialog}
           onSubmit={(updatedProject) => onUpdateProject(loadableProject.data.id, updatedProject)}
-          open={openEditProjectDialog}
-          submitText="Update Project"
-          title="Edit Project"
+          open={openUpdateProjectDialog}
+          submitText="Save Changes"
+          title="Update Project"
         />
       </Container>
     )

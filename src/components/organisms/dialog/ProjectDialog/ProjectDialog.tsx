@@ -3,7 +3,7 @@ import { LoadableAction } from '@/contexts/openapi';
 import { ProjectActionError } from '@/contexts/projects';
 import { ProjectWithoutAutofield } from '@/openapi';
 
-import ProjectDialogFormComponent, { ProjectFieldValues } from './ProjectDialogForm';
+import ProjectDialogFormComponent, { ProjectFieldValidates, ProjectFieldValues } from './ProjectDialogForm';
 
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -14,6 +14,7 @@ export type ProjectDialogComponentProps = {
   readonly title: string;
   readonly submitText: string;
   readonly defaultValues: ProjectFieldValues;
+  readonly validates?: ProjectFieldValidates;
   readonly onSubmit: (project: ProjectWithoutAutofield) => Promise<LoadableAction<ProjectActionError>>;
   readonly onClose: () => void;
 };

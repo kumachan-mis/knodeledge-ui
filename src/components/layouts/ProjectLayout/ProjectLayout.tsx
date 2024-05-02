@@ -9,17 +9,24 @@ import React from 'react';
 
 export type ProjectLayoutComponentProps = {
   readonly user: Claims;
+  readonly DrawerHeader?: React.FC<{ readonly user: Claims }>;
   readonly DrawerContent?: React.FC<{ readonly user: Claims }>;
   readonly children?: React.ReactNode;
 };
 
-const ProjectLayoutComponent: React.FC<ProjectLayoutComponentProps> = ({ user, DrawerContent, children }) => {
+const ProjectLayoutComponent: React.FC<ProjectLayoutComponentProps> = ({
+  user,
+  DrawerHeader,
+  DrawerContent,
+  children,
+}) => {
   const { mobileOpen, handleMobileClose, handleMobileToggle, handleMobileTransitionEnd } = useAppDrawer();
 
   return (
     <AppContainer>
       <AppDrawerHeader authorized={!!user} onToggleMobileDrawer={handleMobileToggle} username={user.name} />
       <AppDrawer
+        header={DrawerHeader && <DrawerHeader user={user} />}
         mobileOpen={mobileOpen}
         onMobileClose={handleMobileClose}
         onMobileTransitionEnd={handleMobileTransitionEnd}

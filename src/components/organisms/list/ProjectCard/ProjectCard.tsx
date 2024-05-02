@@ -22,9 +22,9 @@ type ProjectCardComponentProps = {
 
 const ProjectCardComponent: React.FC<ProjectCardComponentProps> = ({ project, onUpdateProject }) => {
   const {
-    open: openEditProjectDialog,
-    onOpen: onOpenEditProjectDialog,
-    onClose: onCloseEditProjectDialog,
+    open: openUpdateProjectDialog,
+    onOpen: onOpenUpdateProjectDialog,
+    onClose: onCloseUpdateProjectDialog,
   } = useDialog();
 
   return (
@@ -42,16 +42,16 @@ const ProjectCardComponent: React.FC<ProjectCardComponentProps> = ({ project, on
         </CardContent>
       </CardActionArea>
       <CardActions disableSpacing>
-        <IconButton aria-label="update project" onClick={onOpenEditProjectDialog} size="small">
+        <IconButton aria-label="update project" onClick={onOpenUpdateProjectDialog} size="small">
           <EditIcon />
         </IconButton>
         <ProjectDialog
           defaultValues={{ name: project.name, description: project.description ?? '' }}
-          onClose={onCloseEditProjectDialog}
+          onClose={onCloseUpdateProjectDialog}
           onSubmit={onUpdateProject}
-          open={openEditProjectDialog}
-          submitText="Update Project"
-          title="Edit Project"
+          open={openUpdateProjectDialog}
+          submitText="Save Changes"
+          title="Update Project"
         />
       </CardActions>
     </Card>

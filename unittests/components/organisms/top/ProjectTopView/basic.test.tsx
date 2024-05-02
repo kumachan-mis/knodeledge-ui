@@ -91,7 +91,29 @@ test('should show project with description from Project Find API', async () => {
   );
 });
 
-test('should show error message when internal error occured in Project Find API', async () => {
+test('should show nothing when not foud error occured', async () => {
+  (global.fetch as jest.Mock).mockResolvedValueOnce(createNotFoundResponse({ message: 'Not Found' }));
+
+  const screen = render(<ProjectTopView user={USER} />, { wrapper: Wrapper });
+
+  await waitFor(() => {
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+  });
+
+  expect(screen.queryByText('Fatal Error Occured')).not.toBeInTheDocument();
+  expect(screen.queryByText('Not Found')).not.toBeInTheDocument();
+
+  expect(global.fetch).toHaveBeenNthCalledWith(
+    1,
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/projects/find`,
+    expect.objectContaining({
+      method: 'POST',
+      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
+    }),
+  );
+});
+
+test('should show error message when internal error occured', async () => {
   (global.fetch as jest.Mock).mockResolvedValueOnce(createInternalErrorResponse({ message: 'Internal Server Error' }));
 
   const screen = render(<ProjectTopView user={USER} />, { wrapper: Wrapper });
@@ -160,7 +182,7 @@ test('should update project with Project Update API', async () => {
 
   await user.type(dialog.getByRole('textbox', { name: 'Project Name' }), ' Updated');
 
-  await user.click(dialog.getByRole('button', { name: 'Update Project' }));
+  await user.click(dialog.getByRole('button', { name: 'Save Changes' }));
 
   await waitFor(() => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
@@ -225,7 +247,7 @@ test('should show error message when project update failed', async () => {
   await user.click(dialog.getByRole('textbox', { name: 'Project Description' }));
   await user.paste('Updated Description');
 
-  await user.click(dialog.getByRole('button', { name: 'Update Project' }));
+  await user.click(dialog.getByRole('button', { name: 'Save Changes' }));
 
   await waitFor(() => {
     expect(dialog.queryByText('name error')).toBeInTheDocument();
@@ -284,7 +306,7 @@ test('should show error message when project to be updated does not exist', asyn
   await user.click(dialog.getByRole('textbox', { name: 'Project Description' }));
   await user.paste('Updated Description');
 
-  await user.click(dialog.getByRole('button', { name: 'Update Project' }));
+  await user.click(dialog.getByRole('button', { name: 'Save Changes' }));
 
   await waitFor(() => {
     expect(dialog.queryByText('not found')).toBeInTheDocument();
@@ -304,7 +326,7 @@ test('should show error message when project to be updated does not exist', asyn
   );
 });
 
-test('should show error message when internal error occured in Project Update API', async () => {
+test('should show error message when internal error occured', async () => {
   const user = userEvent.setup();
   (global.fetch as jest.Mock)
     .mockResolvedValueOnce(
@@ -343,7 +365,7 @@ test('should show error message when internal error occured in Project Update AP
   await user.click(dialog.getByRole('textbox', { name: 'Project Description' }));
   await user.paste('Updated Description');
 
-  await user.click(dialog.getByRole('button', { name: 'Update Project' }));
+  await user.click(dialog.getByRole('button', { name: 'Save Changes' }));
 
   await waitFor(() => {
     expect(screen.queryByText('Fatal Error Occured')).toBeInTheDocument();

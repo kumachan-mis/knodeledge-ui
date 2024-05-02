@@ -68,7 +68,7 @@ test('should show chapter from Chapter List API', async () => {
   );
 });
 
-test('should show nothing when not foud error occured Chapter List API ', async () => {
+test('should show nothing when not foud error occured', async () => {
   (global.fetch as jest.Mock).mockResolvedValueOnce(createNotFoundResponse({ message: 'Not Found' }));
 
   const screen = render(<ProjectDrawerContent />, { wrapper: Wrapper });
@@ -90,7 +90,7 @@ test('should show nothing when not foud error occured Chapter List API ', async 
   );
 });
 
-test('should show error message when internal error occured in Chapter List API', async () => {
+test('should show error message when internal error occured', async () => {
   (global.fetch as jest.Mock).mockResolvedValueOnce(createInternalErrorResponse({ message: 'Internal Server Error' }));
 
   const screen = render(<ProjectDrawerContent />, { wrapper: Wrapper });

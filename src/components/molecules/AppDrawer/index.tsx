@@ -8,12 +8,19 @@ export type AppDrawerProps = {
   readonly mobileOpen: boolean;
   readonly onMobileClose: () => void;
   readonly onMobileTransitionEnd: () => void;
+  readonly header?: React.ReactNode;
   readonly children?: React.ReactNode;
 };
 
 export const APP_DRAWER_WIDTH = 240;
 
-const AppDrawer: React.FC<AppDrawerProps> = ({ mobileOpen, onMobileClose, onMobileTransitionEnd, children }) => (
+const AppDrawer: React.FC<AppDrawerProps> = ({
+  mobileOpen,
+  onMobileClose,
+  onMobileTransitionEnd,
+  header,
+  children,
+}) => (
   <Box component="nav" sx={{ width: { md: APP_DRAWER_WIDTH }, flexShrink: { sm: 0 } }}>
     <Drawer
       // Better open performance on mobile
@@ -27,7 +34,7 @@ const AppDrawer: React.FC<AppDrawerProps> = ({ mobileOpen, onMobileClose, onMobi
       }}
       variant="temporary"
     >
-      <Toolbar variant="dense" />
+      <Toolbar variant="dense">{header}</Toolbar>
       <Divider />
       {children}
     </Drawer>
@@ -39,7 +46,7 @@ const AppDrawer: React.FC<AppDrawerProps> = ({ mobileOpen, onMobileClose, onMobi
       }}
       variant="permanent"
     >
-      <Toolbar variant="dense" />
+      <Toolbar variant="dense">{header}</Toolbar>
       <Divider />
       {children}
     </Drawer>
