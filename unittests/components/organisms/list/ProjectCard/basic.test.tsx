@@ -62,7 +62,7 @@ test('should update project', async () => {
 
   await user.type(dialog.getByRole('textbox', { name: 'Project Name' }), ' Updated');
 
-  await user.click(dialog.getByRole('button', { name: 'Update Project' }));
+  await user.click(dialog.getByRole('button', { name: 'Save Changes' }));
 
   await waitFor(() => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
@@ -129,7 +129,7 @@ test('should show error when failed to update project', async () => {
   await user.type(dialog.getByRole('textbox', { name: 'Project Name' }), ' Updated');
   await user.type(dialog.getByRole('textbox', { name: 'Project Description' }), 'Description');
 
-  await user.click(dialog.getByRole('button', { name: 'Update Project' }));
+  await user.click(dialog.getByRole('button', { name: 'Save Changes' }));
 
   await waitFor(() => {
     expect(dialog.queryByText('root error')).toBeInTheDocument();
