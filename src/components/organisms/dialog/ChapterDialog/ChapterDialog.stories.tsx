@@ -1,9 +1,9 @@
-import ProjectDialogComponent from './ProjectDialog';
+import ChapterDialogComponent from './ChapterDialog';
 
 import { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof ProjectDialogComponent> = {
-  component: ProjectDialogComponent,
+const meta: Meta<typeof ChapterDialogComponent> = {
+  component: ChapterDialogComponent,
   args: {
     open: true,
     // eslint-disable-next-line @typescript-eslint/require-await
@@ -21,21 +21,21 @@ const meta: Meta<typeof ProjectDialogComponent> = {
 
 export default meta;
 
-type Story = StoryObj<typeof ProjectDialogComponent>;
+type Story = StoryObj<typeof ChapterDialogComponent>;
 
 export const Create: Story = {
   args: {
-    title: 'New Project',
-    submitText: 'Create Project',
-    defaultValues: { name: '', description: '' },
+    title: 'New Chapter',
+    submitText: 'Create Chapter',
+    defaultValues: { name: '', number: '' },
   },
 };
 
 export const Update: Story = {
   args: {
-    title: 'Update Project',
+    title: 'Update Chapter',
     submitText: 'Save Changes',
-    defaultValues: { name: 'project name', description: 'project description' },
+    defaultValues: { name: 'chapter name', number: '1' },
   },
 };
 
@@ -43,14 +43,14 @@ export const ServerError: Story = {
   args: {
     title: 'Server Error',
     submitText: 'Submit',
-    defaultValues: { name: '', description: '' },
+    defaultValues: { name: '', number: '' },
     // eslint-disable-next-line @typescript-eslint/require-await
     onSubmit: async () => {
       return {
         state: 'error',
         error: {
           message: 'server error',
-          project: { name: 'project name error', description: 'project description error' },
+          chapter: { name: 'chapter name error', number: 'chapter number error' },
         },
       };
     },
