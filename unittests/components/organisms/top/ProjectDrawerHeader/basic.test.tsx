@@ -6,10 +6,12 @@ import {
 } from '../../../../testutils/fetch';
 import { USER } from '../../../../testutils/user';
 import PanicError from '@/components/organisms/error/PanicError';
+import ProjectDrawerContent from '@/components/organisms/top/ProjectDrawerContent';
 import ProjectDrawerHeader from '@/components/organisms/top/ProjectDrawerHeader';
 import { ChapterListContextProvider, useInitChapterList } from '@/contexts/chapters';
 import { PanicContextProvider } from '@/contexts/panic';
 import { ProjectContextProvider, useInitProject } from '@/contexts/projects';
+import { ChapterWithoutAutofield } from '@/openapi';
 
 import { render, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -200,7 +202,36 @@ test.each<{
   },
 );
 
-test('should create a chapter', async () => {
+test.each<{
+  name: string;
+  chapter: ChapterWithoutAutofield;
+  expectedChapterTexts: string[];
+}>([
+  {
+    name: 'first chapter',
+    chapter: {
+      name: 'Chapter',
+      number: 1,
+    },
+    expectedChapterTexts: ['#1 Chapter', '#2 Chapter One', '#3 Chapter Two'],
+  },
+  {
+    name: 'middle chapter',
+    chapter: {
+      name: 'Chapter',
+      number: 2,
+    },
+    expectedChapterTexts: ['#1 Chapter One', '#2 Chapter', '#3 Chapter Two'],
+  },
+  {
+    name: 'last chapter',
+    chapter: {
+      name: 'Chapter',
+      number: 3,
+    },
+    expectedChapterTexts: ['#1 Chapter One', '#2 Chapter Two', '#3 Chapter'],
+  },
+])('should create a chapter ($name)', async ({ chapter, expectedChapterTexts }) => {
   const user = userEvent.setup();
 
   (global.fetch as jest.Mock)
@@ -234,15 +265,21 @@ test('should create a chapter', async () => {
     .mockResolvedValueOnce(
       createOkResponse({
         chapter: {
-          id: 'CHAPTER_THREE',
-          name: 'Chapter Three',
-          number: 3,
+          id: 'NEW_CHAPTER',
+          name: chapter.name,
+          number: chapter.number,
           sections: [],
         },
       }),
     );
 
-  const screen = render(<ProjectDrawerHeader user={USER} />, { wrapper: Wrapper });
+  const screen = render(
+    <div>
+      <ProjectDrawerHeader user={USER} />
+      <ProjectDrawerContent />
+    </div>,
+    { wrapper: Wrapper },
+  );
 
   await waitFor(() => {
     expect(screen.getByText('Project Name')).toBeInTheDocument();
@@ -272,10 +309,10 @@ test('should create a chapter', async () => {
   const dialog = within(await screen.findByRole('dialog'));
 
   await user.click(dialog.getByRole('textbox', { name: 'Chapter Name' }));
-  await user.paste('Test Chapter');
+  await user.paste(chapter.name);
 
   await user.click(dialog.getByRole('textbox', { name: 'Chapter Number' }));
-  await user.paste('3');
+  await user.paste(`${chapter.number}`);
 
   await waitFor(() => {
     expect(dialog.queryByRole('button', { name: 'Create Chapter' })).toBeEnabled();
@@ -293,13 +330,12 @@ test('should create a chapter', async () => {
     `${process.env.NEXT_PUBLIC_APP_URL}/api/chapters/create`,
     expect.objectContaining({
       method: 'POST',
-      body: JSON.stringify({
-        user: { id: USER.sub },
-        project: { id: 'PROJECT' },
-        chapter: { name: 'Test Chapter', number: 3 },
-      }),
+      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' }, chapter }),
     }),
   );
+
+  const chapters = screen.getAllByRole('listitem');
+  expect(chapters.map((chapter) => chapter.textContent)).toEqual(expectedChapterTexts);
 });
 
 test('should disable submission when chapter number is too large', async () => {
