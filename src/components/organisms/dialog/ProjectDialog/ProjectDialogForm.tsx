@@ -41,7 +41,7 @@ const ProjectDialogFormComponent: React.FC<ProjectDialogFormComponentProps> = ({
     control,
     setError,
     formState: { isValidating, isValid, isDirty, isSubmitting, errors },
-  } = useForm<ProjectFieldValues>({ defaultValues });
+  } = useForm<ProjectFieldValues>({ defaultValues, mode: 'onChange' });
 
   const handleSubmitForm = handleSubmit(async (data) => {
     const result = await onSubmit(data);
@@ -74,13 +74,12 @@ const ProjectDialogFormComponent: React.FC<ProjectDialogFormComponentProps> = ({
               fullWidth
               helperText={errors.name?.message}
               label="Project Name"
-              required
               variant="standard"
             />
           )}
           rules={{
-            required: 'name is required',
-            maxLength: { value: 100, message: 'name cannot be longer than 100 characters' },
+            required: 'project name is required',
+            maxLength: { value: 100, message: 'project name cannot be longer than 100 characters' },
             validate: validates?.name,
           }}
         />
@@ -100,7 +99,7 @@ const ProjectDialogFormComponent: React.FC<ProjectDialogFormComponentProps> = ({
             />
           )}
           rules={{
-            maxLength: { value: 400, message: 'description cannot be longer than 400 characters' },
+            maxLength: { value: 400, message: 'project description cannot be longer than 400 characters' },
             validate: validates?.description,
           }}
         />

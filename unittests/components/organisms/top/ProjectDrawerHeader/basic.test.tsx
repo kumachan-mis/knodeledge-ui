@@ -415,6 +415,8 @@ test('should disable submission when chapter number is too large', async () => {
   await waitFor(() => {
     expect(dialog.queryByRole('button', { name: 'Create Chapter' })).toBeDisabled();
   });
+
+  expect(dialog.queryByText('chapter number is too large')).toBeInTheDocument();
 });
 
 test('should close dialog', async () => {

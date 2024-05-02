@@ -41,7 +41,7 @@ const ChapterDialogFormComponent: React.FC<ChapterDialogFormComponentProps> = ({
     control,
     setError,
     formState: { isValidating, isValid, isDirty, isSubmitting, errors },
-  } = useForm<ChapterFieldValues>({ defaultValues });
+  } = useForm<ChapterFieldValues>({ defaultValues, mode: 'onChange' });
 
   const handleSubmitForm = handleSubmit(async (data) => {
     const result = await onSubmit({ name: data.name, number: parseInt(data.number, 10) });
@@ -74,13 +74,12 @@ const ChapterDialogFormComponent: React.FC<ChapterDialogFormComponentProps> = ({
               fullWidth
               helperText={errors.name?.message}
               label="Chapter Name"
-              required
               variant="standard"
             />
           )}
           rules={{
-            required: 'name is required',
-            maxLength: { value: 100, message: 'name cannot be longer than 100 characters' },
+            required: 'chapter name is required',
+            maxLength: { value: 100, message: 'chapter name cannot be longer than 100 characters' },
             validate: validates?.name,
           }}
         />
@@ -95,13 +94,12 @@ const ChapterDialogFormComponent: React.FC<ChapterDialogFormComponentProps> = ({
               fullWidth
               helperText={errors.number?.message}
               label="Chapter Number"
-              required
               variant="standard"
             />
           )}
           rules={{
-            required: 'number is required',
-            pattern: { value: /^[1-9][0-9]*$/, message: 'number must be a positive integer' },
+            required: 'chapter number is required',
+            pattern: { value: /^[1-9][0-9]*$/, message: 'chapter number must be a positive integer' },
             validate: validates?.number,
           }}
         />
