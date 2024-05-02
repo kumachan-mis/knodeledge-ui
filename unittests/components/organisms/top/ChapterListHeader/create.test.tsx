@@ -110,7 +110,7 @@ test.each<{
   const screen = render(
     <div>
       <ChapterListHeader user={USER} />
-      <ChapterList />
+      <ChapterList user={USER} />
     </div>,
     { wrapper: Wrapper },
   );

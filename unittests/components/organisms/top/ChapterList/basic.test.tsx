@@ -50,7 +50,7 @@ test('should show chapter from Chapter List API', async () => {
     }),
   );
 
-  const screen = render(<ChapterList />, { wrapper: Wrapper });
+  const screen = render(<ChapterList user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.getByText('#1 Chapter One')).toBeInTheDocument();
@@ -71,7 +71,7 @@ test('should show chapter from Chapter List API', async () => {
 test('should show nothing when not foud error occured', async () => {
   (global.fetch as jest.Mock).mockResolvedValueOnce(createNotFoundResponse({ message: 'Not Found' }));
 
-  const screen = render(<ChapterList />, { wrapper: Wrapper });
+  const screen = render(<ChapterList user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -93,7 +93,7 @@ test('should show nothing when not foud error occured', async () => {
 test('should show error message when internal error occured', async () => {
   (global.fetch as jest.Mock).mockResolvedValueOnce(createInternalErrorResponse({ message: 'Internal Server Error' }));
 
-  const screen = render(<ChapterList />, { wrapper: Wrapper });
+  const screen = render(<ChapterList user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.getByText('Fatal Error Occured')).toBeInTheDocument();

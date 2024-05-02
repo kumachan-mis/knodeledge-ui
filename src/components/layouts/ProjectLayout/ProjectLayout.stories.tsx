@@ -68,6 +68,10 @@ export const Basic: Story = {
             },
           ],
         }}
+        // eslint-disable-next-line @typescript-eslint/require-await
+        onUpdateChapter={async () => {
+          return { state: 'success', error: null };
+        }}
       />
     ),
   },
@@ -95,6 +99,10 @@ export const Loading: Story = {
           state: 'loading',
           data: null,
         }}
+        // eslint-disable-next-line @typescript-eslint/require-await
+        onUpdateChapter={async () => {
+          return { state: 'success', error: null };
+        }}
       />
     ),
   },
@@ -121,6 +129,10 @@ export const NotFound: Story = {
         loadableChapterList={{
           state: 'notfound',
           data: null,
+        }}
+        // eslint-disable-next-line @typescript-eslint/require-await
+        onUpdateChapter={async () => {
+          return { state: 'success', error: null };
         }}
       />
     ),
