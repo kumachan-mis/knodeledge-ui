@@ -26,6 +26,9 @@ test('should render chapter dialog', async () => {
   expect(dialog.queryByRole('textbox', { name: 'Chapter Number' })).toHaveValue('');
   expect(dialog.queryByRole('button', { name: 'Submit' })).toBeDisabled();
   expect(dialog.queryByRole('button', { name: 'Close' })).toBeEnabled();
+
+  expect(dialog.queryByText('chapter name is required')).not.toBeInTheDocument();
+  expect(dialog.queryByText('chapter number is required')).not.toBeInTheDocument();
 });
 
 test('should create chapter', async () => {
@@ -104,6 +107,8 @@ test('should not submit if chapter name is empty', async () => {
   await waitFor(() => {
     expect(dialog.queryByRole('button', { name: 'Submit' })).toBeDisabled();
   });
+
+  expect(dialog.queryByText('chapter name is required')).toBeInTheDocument();
 });
 
 test('should not submit if chapter name is too long', async () => {
@@ -140,6 +145,8 @@ test('should not submit if chapter name is too long', async () => {
   await waitFor(() => {
     expect(dialog.queryByRole('button', { name: 'Submit' })).toBeDisabled();
   });
+
+  expect(dialog.queryByText('chapter name cannot be longer than 100 characters')).toBeInTheDocument();
 });
 
 test('should not submit if chapter number is empty', async () => {
@@ -176,6 +183,8 @@ test('should not submit if chapter number is empty', async () => {
   await waitFor(() => {
     expect(dialog.queryByRole('button', { name: 'Submit' })).toBeDisabled();
   });
+
+  expect(dialog.queryByText('chapter number is required')).toBeInTheDocument();
 });
 
 test.each<{ name: string; chapterNumber: string }>([
@@ -198,10 +207,6 @@ test.each<{ name: string; chapterNumber: string }>([
   {
     name: 'floating point number',
     chapterNumber: '1.1',
-  },
-  {
-    name: 'empty string',
-    chapterNumber: '',
   },
   {
     name: 'whitespace',
@@ -246,6 +251,8 @@ test.each<{ name: string; chapterNumber: string }>([
 
   await user.tripleClick(dialog.getByRole('textbox', { name: 'Chapter Number' }));
   await user.paste(chapterNumber);
+
+  expect(dialog.queryByText('chapter number must be a positive integer')).toBeInTheDocument();
 });
 
 test('should not submit if chapter number is too large', async () => {
@@ -283,6 +290,8 @@ test('should not submit if chapter number is too large', async () => {
   await waitFor(() => {
     expect(dialog.queryByRole('button', { name: 'Submit' })).toBeDisabled();
   });
+
+  expect(dialog.queryByText('chapter number is too large')).toBeInTheDocument();
 });
 
 test('should not submit if chapter properties are same as default', async () => {

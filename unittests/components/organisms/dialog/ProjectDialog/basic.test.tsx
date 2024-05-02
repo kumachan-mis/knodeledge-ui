@@ -25,6 +25,8 @@ test('should render project dialog', async () => {
   expect(dialog.queryByRole('textbox', { name: 'Project Description' })).toHaveValue('');
   expect(dialog.queryByRole('button', { name: 'Submit' })).toBeDisabled();
   expect(dialog.queryByRole('button', { name: 'Close' })).toBeEnabled();
+
+  expect(dialog.queryByText('project name is required')).not.toBeInTheDocument();
 });
 
 test.each<{ name: string; projectName: string }>([
@@ -158,6 +160,8 @@ test('should not submit if project name is empty', async () => {
   await waitFor(() => {
     expect(dialog.queryByRole('button', { name: 'Submit' })).toBeDisabled();
   });
+
+  expect(dialog.queryByText('project name is required')).toBeInTheDocument();
 });
 
 test('should not submit if project name is too long', async () => {
@@ -193,6 +197,8 @@ test('should not submit if project name is too long', async () => {
   await waitFor(() => {
     expect(dialog.queryByRole('button', { name: 'Submit' })).toBeDisabled();
   });
+
+  expect(dialog.queryByText('project name cannot be longer than 100 characters')).toBeInTheDocument();
 });
 
 test('should not submit if project description is too long', async () => {
@@ -228,6 +234,8 @@ test('should not submit if project description is too long', async () => {
   await waitFor(() => {
     expect(dialog.queryByRole('button', { name: 'Submit' })).toBeDisabled();
   });
+
+  expect(dialog.queryByText('project description cannot be longer than 400 characters')).toBeInTheDocument();
 });
 
 test('should not submit if project properties are same as default', async () => {
