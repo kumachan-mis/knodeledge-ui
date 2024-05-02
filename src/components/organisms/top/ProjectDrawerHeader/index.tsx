@@ -1,5 +1,5 @@
 'use client';
-import { useCreateChapterInList } from '@/contexts/chapters';
+import { useCreateChapterInList, useLoadableChapterList } from '@/contexts/chapters';
 import { useLoadableProject } from '@/contexts/projects';
 
 import ProjectDrawerHeaderComponent from './ProjectDrawerHeader';
@@ -13,8 +13,15 @@ export type ProjectDrawerHeaderProps = {
 
 const ProjectDrawerHeader: React.FC<ProjectDrawerHeaderProps> = ({ user }) => {
   const loadableProject = useLoadableProject();
+  const loadableChapterList = useLoadableChapterList();
   const createChapter = useCreateChapterInList({ id: user.sub }, { id: loadableProject.data?.id ?? '' });
-  return <ProjectDrawerHeaderComponent loadableProject={loadableProject} onCreateChapter={createChapter} />;
+  return (
+    <ProjectDrawerHeaderComponent
+      loadableChapterList={loadableChapterList}
+      loadableProject={loadableProject}
+      onCreateChapter={createChapter}
+    />
+  );
 };
 
 export default ProjectDrawerHeader;
