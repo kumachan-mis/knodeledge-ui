@@ -50,7 +50,7 @@ test('should show chapter from Chapter List API', async () => {
     }),
   );
 
-  const screen = render(<ChapterList user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ChapterList projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.getByText('#1 Chapter One')).toBeInTheDocument();
@@ -69,16 +69,16 @@ test('should show chapter from Chapter List API', async () => {
 });
 
 test('should show nothing when not foud error occured', async () => {
-  (global.fetch as jest.Mock).mockResolvedValueOnce(createNotFoundResponse({ message: 'Not Found' }));
+  (global.fetch as jest.Mock).mockResolvedValueOnce(createNotFoundResponse({ message: 'not found' }));
 
-  const screen = render(<ChapterList user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ChapterList projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(global.fetch).toHaveBeenCalledTimes(1);
   });
 
   expect(screen.queryByText('Fatal Error Occured')).not.toBeInTheDocument();
-  expect(screen.queryByText('Not Found')).not.toBeInTheDocument();
+  expect(screen.queryByText('not found')).not.toBeInTheDocument();
 
   expect(global.fetch).toHaveBeenNthCalledWith(
     1,
@@ -91,14 +91,14 @@ test('should show nothing when not foud error occured', async () => {
 });
 
 test('should show error message when internal error occured', async () => {
-  (global.fetch as jest.Mock).mockResolvedValueOnce(createInternalErrorResponse({ message: 'Internal Server Error' }));
+  (global.fetch as jest.Mock).mockResolvedValueOnce(createInternalErrorResponse({ message: 'internal error' }));
 
-  const screen = render(<ChapterList user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ChapterList projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.getByText('Fatal Error Occured')).toBeInTheDocument();
   });
-  expect(screen.getByText('Internal Server Error')).toBeInTheDocument();
+  expect(screen.getByText('internal error')).toBeInTheDocument();
 
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(

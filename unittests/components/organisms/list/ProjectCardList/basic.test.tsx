@@ -80,14 +80,14 @@ test('should show empty message when no project is available', async () => {
 });
 
 test('should show error message when internal error occured', async () => {
-  (global.fetch as jest.Mock).mockResolvedValueOnce(createInternalErrorResponse({ message: 'Internal Server Error' }));
+  (global.fetch as jest.Mock).mockResolvedValueOnce(createInternalErrorResponse({ message: 'internal error' }));
 
   const screen = render(<ProjectCardList user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.queryByText('Fatal Error Occured')).toBeInTheDocument();
   });
-  expect(screen.queryByText('Internal Server Error')).toBeInTheDocument();
+  expect(screen.queryByText('internal error')).toBeInTheDocument();
 
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(

@@ -9,12 +9,13 @@ import React from 'react';
 
 export type ChapterListHeaderProps = {
   readonly user: Claims;
+  readonly projectId: string;
 };
 
-const ChapterListHeader: React.FC<ChapterListHeaderProps> = ({ user }) => {
+const ChapterListHeader: React.FC<ChapterListHeaderProps> = ({ user, projectId }) => {
   const loadableProject = useLoadableProject();
   const loadableChapterList = useLoadableChapterList();
-  const createChapter = useCreateChapterInList({ id: user.sub }, { id: loadableProject.data?.id ?? '' });
+  const createChapter = useCreateChapterInList({ id: user.sub }, { id: projectId });
   return (
     <ChapterListHeaderComponent
       loadableChapterList={loadableChapterList}

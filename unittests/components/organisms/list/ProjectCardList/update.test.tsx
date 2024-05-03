@@ -277,7 +277,7 @@ test('should show error message when internal error occured', async () => {
         ],
       }),
     )
-    .mockResolvedValueOnce(createInternalErrorResponse({ message: 'Internal Server Error' }));
+    .mockResolvedValueOnce(createInternalErrorResponse({ message: 'internal error' }));
 
   const screen = render(<ProjectCardList user={USER} />, { wrapper: Wrapper });
 
@@ -307,7 +307,7 @@ test('should show error message when internal error occured', async () => {
   await waitFor(() => {
     expect(screen.queryByText('Fatal Error Occured')).toBeInTheDocument();
   });
-  expect(screen.queryByText('Internal Server Error')).toBeInTheDocument();
+  expect(screen.queryByText('internal error')).toBeInTheDocument();
 
   expect(global.fetch).toHaveBeenCalledTimes(2);
   expect(global.fetch).toHaveBeenNthCalledWith(

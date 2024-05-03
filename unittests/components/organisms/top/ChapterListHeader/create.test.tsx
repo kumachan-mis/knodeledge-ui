@@ -109,8 +109,8 @@ test.each<{
 
   const screen = render(
     <div>
-      <ChapterListHeader user={USER} />
-      <ChapterList user={USER} />
+      <ChapterListHeader projectId="PROJECT" user={USER} />
+      <ChapterList projectId="PROJECT" user={USER} />
     </div>,
     { wrapper: Wrapper },
   );
@@ -204,7 +204,7 @@ test('should disable submission when chapter number is too large', async () => {
       }),
     );
 
-  const screen = render(<ChapterListHeader user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ChapterListHeader projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.getByText('Project Name')).toBeInTheDocument();
@@ -285,7 +285,7 @@ test('should close dialog', async () => {
       }),
     );
 
-  const screen = render(<ChapterListHeader user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ChapterListHeader projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.getByText('Project Name')).toBeInTheDocument();
@@ -365,7 +365,7 @@ test('should show error message when chapter creation failed', async () => {
       }),
     );
 
-  const screen = render(<ChapterListHeader user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ChapterListHeader projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.getByText('Project Name')).toBeInTheDocument();
@@ -457,9 +457,9 @@ test('should show error message when internal error occured', async () => {
         ],
       }),
     )
-    .mockResolvedValueOnce(createInternalErrorResponse({ message: 'Internal Server Error' }));
+    .mockResolvedValueOnce(createInternalErrorResponse({ message: 'internal error' }));
 
-  const screen = render(<ChapterListHeader user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ChapterListHeader projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.getByText('Project Name')).toBeInTheDocument();
@@ -503,7 +503,7 @@ test('should show error message when internal error occured', async () => {
   await waitFor(() => {
     expect(screen.queryByText('Fatal Error Occured')).toBeInTheDocument();
   });
-  expect(screen.queryByText('Internal Server Error')).toBeInTheDocument();
+  expect(screen.queryByText('internal error')).toBeInTheDocument();
 
   expect(global.fetch).toHaveBeenCalledTimes(3);
   expect(global.fetch).toHaveBeenNthCalledWith(

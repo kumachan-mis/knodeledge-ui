@@ -36,30 +36,31 @@ const ChapterListItemComponent: React.FC<ChapterListItemComponentProps> = ({
       <ListItemText primaryTypographyProps={{ variant: 'subtitle1' }}>
         {`#${chapter.number} ${chapter.name}`}
       </ListItemText>
-
       <ListItemSecondaryAction>
         <IconButton
-          aria-controls={chapterMenuOpen ? 'chapter-list-item-menu' : undefined}
+          aria-controls={chapterMenuOpen ? `chapter-list-item-menu-${chapter.number}` : undefined}
           aria-expanded={chapterMenuOpen ? 'true' : undefined}
           aria-haspopup="true"
           aria-label="chapter menu"
           edge="end"
-          id="chapter-list-item-buttom"
+          id={`chapter-list-item-buttom-${chapter.number}`}
           onClick={onOpenChapterMenu}
         >
           <MoreVertIcon />
         </IconButton>
+        <ChapterListItemMenuComponent
+          anchorEl={chapterMenuAnchorEl}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+          aria-labelledby={`chapter-list-item-buttom-${chapter.number}`}
+          chapter={chapter}
+          id={`chapter-list-item-menu-${chapter.number}`}
+          maxChapterNumber={maxChapterNumber}
+          onClose={onCloseChapterMenu}
+          onUpdateChapter={onUpdateChapter}
+          open={chapterMenuOpen}
+          transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+        />
       </ListItemSecondaryAction>
-      <ChapterListItemMenuComponent
-        anchorEl={chapterMenuAnchorEl}
-        aria-labelledby="chapter-list-item-buttom"
-        chapter={chapter}
-        id="chapter-list-item-menu"
-        maxChapterNumber={maxChapterNumber}
-        onClose={onCloseChapterMenu}
-        onUpdateChapter={onUpdateChapter}
-        open={chapterMenuOpen}
-      />
     </ListItem>
   );
 };

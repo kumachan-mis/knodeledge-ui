@@ -63,7 +63,7 @@ test('should show project name from Project Find API', async () => {
       }),
     );
 
-  const screen = render(<ChapterListHeader user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ChapterListHeader projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.getByText('Project Name')).toBeInTheDocument();
@@ -91,17 +91,17 @@ test('should show project name from Project Find API', async () => {
 
 test('should show nothing when not foud error occured', async () => {
   (global.fetch as jest.Mock)
-    .mockResolvedValueOnce(createNotFoundResponse({ message: 'Not Found' }))
-    .mockResolvedValueOnce(createNotFoundResponse({ message: 'Not Found' }));
+    .mockResolvedValueOnce(createNotFoundResponse({ message: 'not found' }))
+    .mockResolvedValueOnce(createNotFoundResponse({ message: 'not found' }));
 
-  const screen = render(<ChapterListHeader user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ChapterListHeader projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(global.fetch).toHaveBeenCalledTimes(2);
   });
 
   expect(screen.queryByText('Fatal Error Occured')).not.toBeInTheDocument();
-  expect(screen.queryByText('Not Found')).not.toBeInTheDocument();
+  expect(screen.queryByText('not found')).not.toBeInTheDocument();
 
   expect(global.fetch).toHaveBeenNthCalledWith(
     1,
@@ -128,7 +128,7 @@ test.each<{
 }>([
   {
     name: 'Project Find API',
-    projectFindResponse: createInternalErrorResponse({ message: 'Internal Server Error' }),
+    projectFindResponse: createInternalErrorResponse({ message: 'internal error' }),
     chaptersListResponse: createOkResponse({
       chapters: [
         {
@@ -155,24 +155,24 @@ test.each<{
         description: 'Project Description',
       },
     }),
-    chaptersListResponse: createInternalErrorResponse({ message: 'Internal Server Error' }),
+    chaptersListResponse: createInternalErrorResponse({ message: 'internal error' }),
   },
   {
     name: 'All APIs',
-    projectFindResponse: createInternalErrorResponse({ message: 'Internal Server Error' }),
-    chaptersListResponse: createInternalErrorResponse({ message: 'Internal Server Error' }),
+    projectFindResponse: createInternalErrorResponse({ message: 'internal error' }),
+    chaptersListResponse: createInternalErrorResponse({ message: 'internal error' }),
   },
 ])(
   'should show error message when internal error occured ($name)',
   async ({ projectFindResponse, chaptersListResponse }) => {
     (global.fetch as jest.Mock).mockResolvedValueOnce(projectFindResponse).mockResolvedValueOnce(chaptersListResponse);
 
-    const screen = render(<ChapterListHeader user={USER} />, { wrapper: Wrapper });
+    const screen = render(<ChapterListHeader projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
 
     await waitFor(() => {
       expect(screen.getByText('Fatal Error Occured')).toBeInTheDocument();
     });
-    expect(screen.getByText('Internal Server Error')).toBeInTheDocument();
+    expect(screen.getByText('internal error')).toBeInTheDocument();
 
     expect(global.fetch).toHaveBeenCalledTimes(2);
     expect(global.fetch).toHaveBeenNthCalledWith(
