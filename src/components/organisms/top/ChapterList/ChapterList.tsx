@@ -1,4 +1,4 @@
-import ChapterListItem from '../ChapterListItem';
+import ChapterListItem from '@/components/organisms/top/ChapterListItem';
 import { ChapterActionError, LoadableChapterList } from '@/contexts/chapters';
 import { LoadableAction } from '@/contexts/openapi';
 import { ChapterWithoutAutofield } from '@/openapi';

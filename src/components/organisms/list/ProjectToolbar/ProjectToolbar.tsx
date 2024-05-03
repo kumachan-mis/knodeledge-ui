@@ -1,5 +1,5 @@
 'use client';
-import ProjectDialog from '../../dialog/ProjectDialog';
+import ProjectDialog from '@/components/organisms/dialog/ProjectDialog';
 import { LoadableAction } from '@/contexts/openapi';
 import { ProjectActionError } from '@/contexts/projects';
 import { useDialog } from '@/hooks/dialog';
