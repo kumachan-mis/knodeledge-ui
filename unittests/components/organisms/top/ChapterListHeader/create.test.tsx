@@ -1,13 +1,8 @@
-import {
-  createBadRequestResponse,
-  createInternalErrorResponse,
-  createNotFoundResponse,
-  createOkResponse,
-} from '../../../../testutils/fetch';
+import { createBadRequestResponse, createInternalErrorResponse, createOkResponse } from '../../../../testutils/fetch';
 import { USER } from '../../../../testutils/user';
 import PanicError from '@/components/organisms/error/PanicError';
-import ProjectDrawerContent from '@/components/organisms/top/ProjectDrawerContent';
-import ProjectDrawerHeader from '@/components/organisms/top/ProjectDrawerHeader';
+import ChapterList from '@/components/organisms/top/ChapterList';
+import ChapterListHeader from '@/components/organisms/top/ChapterListHeader';
 import { ChapterListContextProvider, useInitChapterList } from '@/contexts/chapters';
 import { PanicContextProvider } from '@/contexts/panic';
 import { ProjectContextProvider, useInitProject } from '@/contexts/projects';
@@ -40,167 +35,6 @@ beforeAll(() => {
 beforeEach(() => {
   (global.fetch as jest.Mock).mockRestore();
 });
-
-test('should show project name from Project Find API', async () => {
-  (global.fetch as jest.Mock)
-    .mockResolvedValueOnce(
-      createOkResponse({
-        project: {
-          id: 'PROJECT',
-          name: 'Project Name',
-          description: 'Project Description',
-        },
-      }),
-    )
-    .mockResolvedValueOnce(
-      createOkResponse({
-        chapters: [
-          {
-            id: 'CHAPTER_ONE',
-            name: 'Chapter One',
-            number: 1,
-            sections: [],
-          },
-          {
-            id: 'CHAPTER_TWO',
-            name: 'Chapter Two',
-            number: 2,
-            sections: [],
-          },
-        ],
-      }),
-    );
-
-  const screen = render(<ProjectDrawerHeader user={USER} />, { wrapper: Wrapper });
-
-  await waitFor(() => {
-    expect(screen.getByText('Project Name')).toBeInTheDocument();
-  });
-  expect(screen.queryByText('Project Description')).not.toBeInTheDocument();
-
-  expect(global.fetch).toHaveBeenCalledTimes(2);
-  expect(global.fetch).toHaveBeenNthCalledWith(
-    1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/projects/find`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-    }),
-  );
-  expect(global.fetch).toHaveBeenNthCalledWith(
-    2,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/chapters/list`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-    }),
-  );
-});
-
-test('should show nothing when not foud error occured', async () => {
-  (global.fetch as jest.Mock)
-    .mockResolvedValueOnce(createNotFoundResponse({ message: 'Not Found' }))
-    .mockResolvedValueOnce(createNotFoundResponse({ message: 'Not Found' }));
-
-  const screen = render(<ProjectDrawerHeader user={USER} />, { wrapper: Wrapper });
-
-  await waitFor(() => {
-    expect(global.fetch).toHaveBeenCalledTimes(2);
-  });
-
-  expect(screen.queryByText('Fatal Error Occured')).not.toBeInTheDocument();
-  expect(screen.queryByText('Not Found')).not.toBeInTheDocument();
-
-  expect(global.fetch).toHaveBeenNthCalledWith(
-    1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/projects/find`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-    }),
-  );
-  expect(global.fetch).toHaveBeenNthCalledWith(
-    2,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/chapters/list`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-    }),
-  );
-});
-
-test.each<{
-  name: string;
-  projectFindResponse: Partial<Response>;
-  chaptersListResponse: Partial<Response>;
-}>([
-  {
-    name: 'Project Find API',
-    projectFindResponse: createInternalErrorResponse({ message: 'Internal Server Error' }),
-    chaptersListResponse: createOkResponse({
-      chapters: [
-        {
-          id: 'CHAPTER_ONE',
-          name: 'Chapter One',
-          number: 1,
-          sections: [],
-        },
-        {
-          id: 'CHAPTER_TWO',
-          name: 'Chapter Two',
-          number: 2,
-          sections: [],
-        },
-      ],
-    }),
-  },
-  {
-    name: 'Chapters List API',
-    projectFindResponse: createOkResponse({
-      project: {
-        id: 'PROJECT',
-        name: 'Project Name',
-        description: 'Project Description',
-      },
-    }),
-    chaptersListResponse: createInternalErrorResponse({ message: 'Internal Server Error' }),
-  },
-  {
-    name: 'All APIs',
-    projectFindResponse: createInternalErrorResponse({ message: 'Internal Server Error' }),
-    chaptersListResponse: createInternalErrorResponse({ message: 'Internal Server Error' }),
-  },
-])(
-  'should show error message when internal error occured ($name)',
-  async ({ projectFindResponse, chaptersListResponse }) => {
-    (global.fetch as jest.Mock).mockResolvedValueOnce(projectFindResponse).mockResolvedValueOnce(chaptersListResponse);
-
-    const screen = render(<ProjectDrawerHeader user={USER} />, { wrapper: Wrapper });
-
-    await waitFor(() => {
-      expect(screen.getByText('Fatal Error Occured')).toBeInTheDocument();
-    });
-    expect(screen.getByText('Internal Server Error')).toBeInTheDocument();
-
-    expect(global.fetch).toHaveBeenCalledTimes(2);
-    expect(global.fetch).toHaveBeenNthCalledWith(
-      1,
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/projects/find`,
-      expect.objectContaining({
-        method: 'POST',
-        body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-      }),
-    );
-    expect(global.fetch).toHaveBeenNthCalledWith(
-      2,
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/chapters/list`,
-      expect.objectContaining({
-        method: 'POST',
-        body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-      }),
-    );
-  },
-);
 
 test.each<{
   name: string;
@@ -275,8 +109,8 @@ test.each<{
 
   const screen = render(
     <div>
-      <ProjectDrawerHeader user={USER} />
-      <ProjectDrawerContent />
+      <ChapterListHeader projectId="PROJECT" user={USER} />
+      <ChapterList projectId="PROJECT" user={USER} />
     </div>,
     { wrapper: Wrapper },
   );
@@ -370,7 +204,7 @@ test('should disable submission when chapter number is too large', async () => {
       }),
     );
 
-  const screen = render(<ProjectDrawerHeader user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ChapterListHeader projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.getByText('Project Name')).toBeInTheDocument();
@@ -451,7 +285,7 @@ test('should close dialog', async () => {
       }),
     );
 
-  const screen = render(<ProjectDrawerHeader user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ChapterListHeader projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.getByText('Project Name')).toBeInTheDocument();
@@ -531,7 +365,7 @@ test('should show error message when chapter creation failed', async () => {
       }),
     );
 
-  const screen = render(<ProjectDrawerHeader user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ChapterListHeader projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.getByText('Project Name')).toBeInTheDocument();
@@ -623,9 +457,9 @@ test('should show error message when internal error occured', async () => {
         ],
       }),
     )
-    .mockResolvedValueOnce(createInternalErrorResponse({ message: 'Internal Server Error' }));
+    .mockResolvedValueOnce(createInternalErrorResponse({ message: 'internal error' }));
 
-  const screen = render(<ProjectDrawerHeader user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ChapterListHeader projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.getByText('Project Name')).toBeInTheDocument();
@@ -669,7 +503,7 @@ test('should show error message when internal error occured', async () => {
   await waitFor(() => {
     expect(screen.queryByText('Fatal Error Occured')).toBeInTheDocument();
   });
-  expect(screen.queryByText('Internal Server Error')).toBeInTheDocument();
+  expect(screen.queryByText('internal error')).toBeInTheDocument();
 
   expect(global.fetch).toHaveBeenCalledTimes(3);
   expect(global.fetch).toHaveBeenNthCalledWith(

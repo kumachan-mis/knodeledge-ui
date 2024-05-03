@@ -242,7 +242,7 @@ test('should show error message when internal error occured', async () => {
 
   (global.fetch as jest.Mock)
     .mockResolvedValueOnce(createOkResponse({ projects: [] }))
-    .mockResolvedValueOnce(createInternalErrorResponse({ message: 'Internal Server Error' }));
+    .mockResolvedValueOnce(createInternalErrorResponse({ message: 'internal error' }));
 
   const screen = render(
     <div>
@@ -279,7 +279,7 @@ test('should show error message when internal error occured', async () => {
   await waitFor(() => {
     expect(screen.queryByText('Fatal Error Occured')).toBeInTheDocument();
   });
-  expect(screen.queryByText('Internal Server Error')).toBeInTheDocument();
+  expect(screen.queryByText('internal error')).toBeInTheDocument();
 
   expect(global.fetch).toHaveBeenCalledTimes(2);
   expect(global.fetch).toHaveBeenNthCalledWith(

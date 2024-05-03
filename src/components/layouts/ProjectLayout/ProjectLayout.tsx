@@ -9,13 +9,21 @@ import React from 'react';
 
 export type ProjectLayoutComponentProps = {
   readonly user: Claims;
-  readonly DrawerHeader?: React.FC<{ readonly user: Claims }>;
-  readonly DrawerContent?: React.FC<{ readonly user: Claims }>;
+  readonly projectId: string;
+  readonly DrawerHeader?: React.FC<{
+    readonly user: Claims;
+    readonly projectId: string;
+  }>;
+  readonly DrawerContent?: React.FC<{
+    readonly user: Claims;
+    readonly projectId: string;
+  }>;
   readonly children?: React.ReactNode;
 };
 
 const ProjectLayoutComponent: React.FC<ProjectLayoutComponentProps> = ({
   user,
+  projectId,
   DrawerHeader,
   DrawerContent,
   children,
@@ -26,12 +34,12 @@ const ProjectLayoutComponent: React.FC<ProjectLayoutComponentProps> = ({
     <AppContainer>
       <AppDrawerHeader authorized={!!user} onToggleMobileDrawer={handleMobileToggle} username={user.name} />
       <AppDrawer
-        header={DrawerHeader && <DrawerHeader user={user} />}
+        header={DrawerHeader && <DrawerHeader projectId={projectId} user={user} />}
         mobileOpen={mobileOpen}
         onMobileClose={handleMobileClose}
         onMobileTransitionEnd={handleMobileTransitionEnd}
       >
-        {DrawerContent && <DrawerContent user={user} />}
+        {DrawerContent && <DrawerContent projectId={projectId} user={user} />}
       </AppDrawer>
       <AppDrawerMain>{children}</AppDrawerMain>
     </AppContainer>

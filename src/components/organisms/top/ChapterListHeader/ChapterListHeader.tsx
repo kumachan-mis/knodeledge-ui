@@ -1,3 +1,4 @@
+'use client';
 import ChapterDialog from '@/components/organisms/dialog/ChapterDialog';
 import { ChapterActionError, LoadableChapterList } from '@/contexts/chapters';
 import { LoadableAction } from '@/contexts/openapi';
@@ -11,13 +12,13 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import React from 'react';
 
-export type ProjectDrawerHeaderComponentProps = {
+export type ChapterListHeaderComponentProps = {
   readonly loadableProject: LoadableProject;
   readonly loadableChapterList: LoadableChapterList;
   readonly onCreateChapter: (chapter: ChapterWithoutAutofield) => Promise<LoadableAction<ChapterActionError>>;
 };
 
-const ProjectDrawerHeaderComponent: React.FC<ProjectDrawerHeaderComponentProps> = ({
+const ChapterListHeaderComponent: React.FC<ChapterListHeaderComponentProps> = ({
   loadableProject,
   loadableChapterList,
   onCreateChapter,
@@ -54,4 +55,4 @@ const ProjectDrawerHeaderComponent: React.FC<ProjectDrawerHeaderComponentProps> 
   );
 };
 
-export default ProjectDrawerHeaderComponent;
+export default ChapterListHeaderComponent;

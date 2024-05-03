@@ -1,6 +1,7 @@
 'use client';
 import { createChapter } from '@/actions/chapters/createChapter';
 import { listChapter } from '@/actions/chapters/listChapter';
+import { updateChapter } from '@/actions/chapters/updateChapter';
 import { Chapter, ChapterWithoutAutofield, ChapterWithoutAutofieldError, ProjectOnlyId, UserOnlyId } from '@/openapi';
 
 import { LoadableAction, LoadableData } from './openapi';
@@ -16,7 +17,12 @@ export type ChapterActionError = {
 };
 
 export type LoadableActionChapterCreate = (
-  project: ChapterWithoutAutofield,
+  chapter: ChapterWithoutAutofield,
+) => Promise<LoadableAction<ChapterActionError>>;
+
+export type LoadableActionChapterUpdate = (
+  id: string,
+  chapter: ChapterWithoutAutofield,
 ) => Promise<LoadableAction<ChapterActionError>>;
 
 const EMPTY_CHAPTER_ACTION_ERROR: ChapterActionError = {
@@ -91,6 +97,7 @@ export function useCreateChapterInList(user: UserOnlyId, project: ProjectOnlyId)
 
     setChapterList((prev) => {
       if (prev.state !== 'success') return prev;
+
       const data = [
         errorable.response.chapter,
         ...prev.data.map((chapter) => {
@@ -99,6 +106,62 @@ export function useCreateChapterInList(user: UserOnlyId, project: ProjectOnlyId)
         }),
       ];
       data.sort((a, b) => a.number - b.number);
+
+      return { state: 'success', data };
+    });
+    return { state: 'success', error: null };
+  };
+}
+
+export function useUpdateChapterInList(user: UserOnlyId, project: ProjectOnlyId): LoadableActionChapterUpdate {
+  const setPanic = useSetPanic();
+  const setChapterList = React.useContext(ChapterListSetContext);
+
+  return async (id, chapter) => {
+    const errorable = await updateChapter({ user, project, chapter: { id, ...chapter } });
+    if (errorable.state === 'panic') {
+      setPanic(errorable.error.message);
+      return { state: 'error', error: UNKNOWN_CHAPTER_ACTION_ERROR };
+    }
+
+    if (
+      errorable.state === 'error' &&
+      (!!errorable.error.user.id || !!errorable.error.project.id || !!errorable.error.chapter.id)
+    ) {
+      return { state: 'error', error: UNKNOWN_CHAPTER_ACTION_ERROR };
+    }
+
+    if (errorable.state === 'error') {
+      return {
+        state: 'error',
+        error: {
+          message: errorable.error.message ?? EMPTY_CHAPTER_ACTION_ERROR.message,
+          chapter: { ...EMPTY_CHAPTER_ACTION_ERROR.chapter, ...errorable.error.chapter },
+        },
+      };
+    }
+
+    setChapterList((prev) => {
+      if (prev.state !== 'success') return prev;
+      const prevChapter = prev.data.find((chapter) => chapter.id === id);
+      if (!prevChapter) return prev;
+
+      const prevChapters = prev.data
+        .filter((chapter) => chapter.id !== id)
+        .map((chapter) => {
+          if (chapter.number < prevChapter.number) return chapter;
+          return { ...chapter, number: chapter.number - 1 };
+        });
+
+      const data = [
+        errorable.response.chapter,
+        ...prevChapters.map((chapter) => {
+          if (chapter.number < errorable.response.chapter.number) return chapter;
+          return { ...chapter, number: chapter.number + 1 };
+        }),
+      ];
+      data.sort((a, b) => a.number - b.number);
+
       return { state: 'success', data };
     });
     return { state: 'success', error: null };

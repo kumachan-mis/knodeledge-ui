@@ -33,7 +33,7 @@ const EMPTY_PROJECT_ACTION_ERROR: ProjectActionError = {
   project: { name: '', description: '' },
 } as const;
 
-const UNKNOWN_PEOJECT_ACTION_ERROR: ProjectActionError = {
+const UNKNOWN_PROJECT_ACTION_ERROR: ProjectActionError = {
   message: 'unknown error',
   project: { name: 'unknown error', description: 'unknown error' },
 } as const;
@@ -87,11 +87,11 @@ export function useUpdateProject(user: UserOnlyId): LoadableActionProjectUpdate 
     const errorable = await updateProject({ user, project: { id, ...project } });
     if (errorable.state === 'panic') {
       setPanic(errorable.error.message);
-      return { state: 'error', error: UNKNOWN_PEOJECT_ACTION_ERROR };
+      return { state: 'error', error: UNKNOWN_PROJECT_ACTION_ERROR };
     }
 
     if (errorable.state === 'error' && (!!errorable.error.user?.id || !!errorable.error.project?.id)) {
-      return { state: 'error', error: UNKNOWN_PEOJECT_ACTION_ERROR };
+      return { state: 'error', error: UNKNOWN_PROJECT_ACTION_ERROR };
     }
     if (errorable.state === 'error') {
       return {
@@ -144,11 +144,11 @@ export function useCreateProjectInList(user: UserOnlyId): LoadableActionProjectC
     const errorable = await createProject({ user, project });
     if (errorable.state === 'panic') {
       setPanic(errorable.error.message);
-      return { state: 'error', error: UNKNOWN_PEOJECT_ACTION_ERROR };
+      return { state: 'error', error: UNKNOWN_PROJECT_ACTION_ERROR };
     }
 
     if (errorable.state === 'error' && !!errorable.error.user?.id) {
-      return { state: 'error', error: UNKNOWN_PEOJECT_ACTION_ERROR };
+      return { state: 'error', error: UNKNOWN_PROJECT_ACTION_ERROR };
     }
 
     if (errorable.state === 'error') {
@@ -177,11 +177,11 @@ export function useUpdateProjectInList(user: UserOnlyId): LoadableActionProjectU
     const errorable = await updateProject({ user, project: { id, ...project } });
     if (errorable.state === 'panic') {
       setPanic(errorable.error.message);
-      return { state: 'error', error: UNKNOWN_PEOJECT_ACTION_ERROR };
+      return { state: 'error', error: UNKNOWN_PROJECT_ACTION_ERROR };
     }
 
     if (errorable.state === 'error' && (!!errorable.error.user?.id || !!errorable.error.project?.id)) {
-      return { state: 'error', error: UNKNOWN_PEOJECT_ACTION_ERROR };
+      return { state: 'error', error: UNKNOWN_PROJECT_ACTION_ERROR };
     }
 
     if (errorable.state === 'error') {

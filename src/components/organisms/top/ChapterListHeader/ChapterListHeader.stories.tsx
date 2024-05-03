@@ -1,14 +1,14 @@
-import ProjectDrawerHeaderComponent from './ProjectDrawerHeader';
+import ChapterListHeaderComponent from './ChapterListHeader';
 
 import { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof ProjectDrawerHeaderComponent> = {
-  component: ProjectDrawerHeaderComponent,
+const meta: Meta<typeof ChapterListHeaderComponent> = {
+  component: ChapterListHeaderComponent,
 };
 
 export default meta;
 
-type Story = StoryObj<typeof ProjectDrawerHeaderComponent>;
+type Story = StoryObj<typeof ChapterListHeaderComponent>;
 
 export const Basic: Story = {
   args: {

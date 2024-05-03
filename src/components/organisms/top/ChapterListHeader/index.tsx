@@ -2,21 +2,22 @@
 import { useCreateChapterInList, useLoadableChapterList } from '@/contexts/chapters';
 import { useLoadableProject } from '@/contexts/projects';
 
-import ProjectDrawerHeaderComponent from './ProjectDrawerHeader';
+import ChapterListHeaderComponent from './ChapterListHeader';
 
 import { Claims } from '@auth0/nextjs-auth0';
 import React from 'react';
 
-export type ProjectDrawerHeaderProps = {
+export type ChapterListHeaderProps = {
   readonly user: Claims;
+  readonly projectId: string;
 };
 
-const ProjectDrawerHeader: React.FC<ProjectDrawerHeaderProps> = ({ user }) => {
+const ChapterListHeader: React.FC<ChapterListHeaderProps> = ({ user, projectId }) => {
   const loadableProject = useLoadableProject();
   const loadableChapterList = useLoadableChapterList();
-  const createChapter = useCreateChapterInList({ id: user.sub }, { id: loadableProject.data?.id ?? '' });
+  const createChapter = useCreateChapterInList({ id: user.sub }, { id: projectId });
   return (
-    <ProjectDrawerHeaderComponent
+    <ChapterListHeaderComponent
       loadableChapterList={loadableChapterList}
       loadableProject={loadableProject}
       onCreateChapter={createChapter}
@@ -24,4 +25,4 @@ const ProjectDrawerHeader: React.FC<ProjectDrawerHeaderProps> = ({ user }) => {
   );
 };
 
-export default ProjectDrawerHeader;
+export default ChapterListHeader;
