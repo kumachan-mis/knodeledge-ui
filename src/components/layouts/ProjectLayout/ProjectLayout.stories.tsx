@@ -8,21 +8,19 @@ import React from 'react';
 
 const meta: Meta<typeof ProjectLayout> = {
   component: ProjectLayout,
-  args: {
-    user: {
-      sub: 'auth0|1234567890',
-      name: 'Developer',
-      email: 'dev@knodeledge.run.app',
-    },
-  },
 };
 
 export default meta;
 
 type Story = StoryObj<typeof ProjectLayout>;
 
-export const Basic: Story = {
+export const Login: Story = {
   args: {
+    user: {
+      sub: 'auth0|1234567890',
+      name: 'Developer',
+      email: 'dev@knodeledge.run.app',
+    },
     DrawerHeader: () => (
       <ChapterListHeaderComponent
         loadableChapterList={{
@@ -77,8 +75,21 @@ export const Basic: Story = {
   },
 };
 
+export const Logout: Story = {
+  args: {
+    user: undefined,
+    DrawerHeader: Login.args?.DrawerHeader,
+    DrawerContent: Login.args?.DrawerContent,
+  },
+};
+
 export const Loading: Story = {
   args: {
+    user: {
+      sub: 'auth0|1234567890',
+      name: 'Developer',
+      email: 'dev@knodeledge.run.app',
+    },
     DrawerHeader: () => (
       <ChapterListHeaderComponent
         loadableChapterList={{
@@ -110,6 +121,11 @@ export const Loading: Story = {
 
 export const NotFound: Story = {
   args: {
+    user: {
+      sub: 'auth0|1234567890',
+      name: 'Developer',
+      email: 'dev@knodeledge.run.app',
+    },
     DrawerHeader: () => (
       <ChapterListHeaderComponent
         loadableChapterList={{

@@ -7,9 +7,9 @@ export type AppLayoutProps = {
   readonly children?: React.ReactNode;
 };
 
-const AppLayout: React.FC<AppLayoutProps> = async ({ children }) => {
+const AppLayout: React.FC<AppLayoutProps> = async (props) => {
   const session = await getSession();
-  return <AppLayoutComponent user={session?.user}>{children}</AppLayoutComponent>;
+  return <AppLayoutComponent {...props} user={session?.user} />;
 };
 
 export default AppLayout;
