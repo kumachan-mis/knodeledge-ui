@@ -1,12 +1,15 @@
-import ChapterDialog from '@/components/organisms/dialog/ChapterDialog';
+'use client';
 import { ChapterActionError } from '@/contexts/chapters';
 import { LoadableAction } from '@/contexts/openapi';
-import { useDialog } from '@/hooks/dialog';
+import { useMenu } from '@/hooks/menu';
 import { Chapter, ChapterWithoutAutofield } from '@/openapi';
+
+import ChapterListItemMenuComponent from './ChapterListItemMenu';
 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import IconButton from '@mui/material/IconButton';
 import ListItem from '@mui/material/ListItem';
+import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 import ListItemText from '@mui/material/ListItemText';
 import React from 'react';
 
@@ -22,29 +25,40 @@ const ChapterListItemComponent: React.FC<ChapterListItemComponentProps> = ({
   onUpdateChapter,
 }) => {
   const {
-    open: openUpdateChapterDialog,
-    onOpen: onOpenUpdateChapterDialog,
-    onClose: onCloseUpdateChapterDialog,
-  } = useDialog();
+    open: chapterMenuOpen,
+    anchorEl: chapterMenuAnchorEl,
+    onOpen: onOpenChapterMenu,
+    onClose: onCloseChapterMenu,
+  } = useMenu();
 
   return (
-    <ListItem
-      key={chapter.id}
-      secondaryAction={
-        <IconButton aria-label="chapter menu" edge="end" onClick={onOpenUpdateChapterDialog}>
+    <ListItem key={chapter.id}>
+      <ListItemText primaryTypographyProps={{ variant: 'subtitle1' }}>
+        {`#${chapter.number} ${chapter.name}`}
+      </ListItemText>
+
+      <ListItemSecondaryAction>
+        <IconButton
+          aria-controls={chapterMenuOpen ? 'chapter-list-item-menu' : undefined}
+          aria-expanded={chapterMenuOpen ? 'true' : undefined}
+          aria-haspopup="true"
+          aria-label="chapter menu"
+          edge="end"
+          id="chapter-list-item-buttom"
+          onClick={onOpenChapterMenu}
+        >
           <MoreVertIcon />
         </IconButton>
-      }
-    >
-      <ListItemText primary={`#${chapter.number} ${chapter.name}`} primaryTypographyProps={{ variant: 'subtitle1' }} />
-      <ChapterDialog
-        defaultValues={{ name: chapter.name, number: chapter.number.toString(10) }}
-        onClose={onCloseUpdateChapterDialog}
-        onSubmit={onUpdateChapter}
-        open={openUpdateChapterDialog}
-        submitText="Save Changes"
-        title="Update Chapter"
-        validates={{ number: (value) => parseInt(value, 10) <= maxChapterNumber || 'chapter number is too large' }}
+      </ListItemSecondaryAction>
+      <ChapterListItemMenuComponent
+        anchorEl={chapterMenuAnchorEl}
+        aria-labelledby="chapter-list-item-buttom"
+        chapter={chapter}
+        id="chapter-list-item-menu"
+        maxChapterNumber={maxChapterNumber}
+        onClose={onCloseChapterMenu}
+        onUpdateChapter={onUpdateChapter}
+        open={chapterMenuOpen}
       />
     </ListItem>
   );

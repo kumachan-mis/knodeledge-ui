@@ -4,6 +4,8 @@ import { Chapter, ChapterWithoutAutofield } from '@/openapi';
 
 import ChapterListItemComponent from './ChapterListItem';
 
+import React from 'react';
+
 export type ChapterListItemProps = {
   readonly chapter: Chapter;
   readonly maxChapterNumber: number;
