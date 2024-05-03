@@ -16,21 +16,9 @@ export type ProjectLayoutProps = {
   readonly children?: React.ReactNode;
 };
 
-const ProjectLayout: React.FC<ProjectLayoutProps> = async ({ projectId, DrawerHeader, DrawerContent, children }) => {
+const ProjectLayout: React.FC<ProjectLayoutProps> = async (props) => {
   const session = await getSession();
-
-  return (
-    session?.user && (
-      <ProjectLayoutComponent
-        DrawerContent={DrawerContent}
-        DrawerHeader={DrawerHeader}
-        projectId={projectId}
-        user={session.user}
-      >
-        {children}
-      </ProjectLayoutComponent>
-    )
-  );
+  return <ProjectLayoutComponent {...props} user={session?.user} />;
 };
 
 export default ProjectLayout;

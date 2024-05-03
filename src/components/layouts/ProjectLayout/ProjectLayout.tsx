@@ -8,7 +8,7 @@ import { Claims } from '@auth0/nextjs-auth0';
 import React from 'react';
 
 export type ProjectLayoutComponentProps = {
-  readonly user: Claims;
+  readonly user: Claims | undefined;
   readonly projectId: string;
   readonly DrawerHeader?: React.FC<{
     readonly user: Claims;
@@ -32,14 +32,14 @@ const ProjectLayoutComponent: React.FC<ProjectLayoutComponentProps> = ({
 
   return (
     <AppContainer>
-      <AppDrawerHeader authorized={!!user} onToggleMobileDrawer={handleMobileToggle} username={user.name} />
+      <AppDrawerHeader authorized={!!user} onToggleMobileDrawer={handleMobileToggle} username={user?.name} />
       <AppDrawer
-        header={DrawerHeader && <DrawerHeader projectId={projectId} user={user} />}
+        header={user && DrawerHeader && <DrawerHeader projectId={projectId} user={user} />}
         mobileOpen={mobileOpen}
         onMobileClose={handleMobileClose}
         onMobileTransitionEnd={handleMobileTransitionEnd}
       >
-        {DrawerContent && <DrawerContent projectId={projectId} user={user} />}
+        {user && DrawerContent && <DrawerContent projectId={projectId} user={user} />}
       </AppDrawer>
       <AppDrawerMain>{children}</AppDrawerMain>
     </AppContainer>
