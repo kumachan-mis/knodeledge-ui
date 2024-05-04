@@ -5,7 +5,7 @@ import { LoadableAction } from '@/contexts/openapi';
 import { useDialog } from '@/hooks/dialog';
 import { Chapter, ChapterWithoutAutofield } from '@/openapi';
 
-import EditIcon from '@mui/icons-material/Edit';
+import EditNoteIcon from '@mui/icons-material/EditNote';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Menu, { MenuProps } from '@mui/material/Menu';
@@ -34,7 +34,7 @@ const ChapterListItemMenuComponent: React.FC<ChapterListItemMenuComponentProps> 
     <Menu {...rest}>
       <MenuItem onClick={onOpenUpdateChapterDialog}>
         <ListItemIcon>
-          <EditIcon fontSize="small" />
+          <EditNoteIcon fontSize="small" />
         </ListItemIcon>
         <ListItemText>Update Chapter</ListItemText>
       </MenuItem>

@@ -5,7 +5,7 @@ import { ProjectActionError } from '@/contexts/projects';
 import { useDialog } from '@/hooks/dialog';
 import { Project, ProjectWithoutAutofield } from '@/openapi';
 
-import EditIcon from '@mui/icons-material/Edit';
+import EditNoteIcon from '@mui/icons-material/EditNote';
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardActions from '@mui/material/CardActions';
@@ -44,7 +44,7 @@ const ProjectCardComponent: React.FC<ProjectCardComponentProps> = ({ project, on
       </CardActionArea>
       <CardActions disableSpacing>
         <IconButton aria-label="update project" onClick={onOpenUpdateProjectDialog} size="small">
-          <EditIcon />
+          <EditNoteIcon />
         </IconButton>
         <ProjectDialog
           defaultValues={{ name: project.name, description: project.description ?? '' }}

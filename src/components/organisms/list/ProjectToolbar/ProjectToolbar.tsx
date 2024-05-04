@@ -5,6 +5,7 @@ import { ProjectActionError } from '@/contexts/projects';
 import { useDialog } from '@/hooks/dialog';
 import { ProjectWithoutAutofield } from '@/openapi';
 
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
 import React from 'react';
@@ -18,7 +19,7 @@ const ProjectToolbarComponent: React.FC<ProjectToolbarComponentProps> = ({ onCre
 
   return (
     <Toolbar sx={{ my: 1 }}>
-      <Button onClick={onOpenNewProjectDialog} variant="contained">
+      <Button onClick={onOpenNewProjectDialog} startIcon={<NoteAddIcon />} variant="contained">
         New Project
       </Button>
       <ProjectDialog
