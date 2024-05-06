@@ -1,6 +1,8 @@
 import ChapterListItemComponent from './ChapterListItem';
 
+import List from '@mui/material/List';
 import { Meta, StoryObj } from '@storybook/react';
+import React from 'react';
 
 const meta: Meta<typeof ChapterListItemComponent> = {
   component: ChapterListItemComponent,
@@ -10,6 +12,13 @@ const meta: Meta<typeof ChapterListItemComponent> = {
       return { state: 'success', error: null };
     },
   },
+  decorators: [
+    (Story) => (
+      <List>
+        <Story />
+      </List>
+    ),
+  ],
 };
 
 export default meta;

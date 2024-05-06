@@ -4,6 +4,7 @@ import { LoadableProject, ProjectActionError } from '@/contexts/projects';
 import { useDialog } from '@/hooks/dialog';
 import { ProjectWithoutAutofield } from '@/openapi';
 
+import EditNoteIcon from '@mui/icons-material/EditNote';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -42,7 +43,7 @@ const ProjectTopViewComponent: React.FC<ProjectTopViewComponentProps> = ({ loada
           {loadableProject.data.description}
         </Typography>
         <Box display="flex" justifyContent="center" my={6}>
-          <Button onClick={onOpenUpdateProjectDialog} variant="contained">
+          <Button onClick={onOpenUpdateProjectDialog} startIcon={<EditNoteIcon />} variant="contained">
             Update Project
           </Button>
         </Box>
