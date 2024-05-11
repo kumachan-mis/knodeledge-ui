@@ -28,8 +28,8 @@
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
-    "@mui/icons-material": "^5.15.16",
-    "@mui/material": "^5.15.16",
+    "@mui/icons-material": "^5.15.17",
+    "@mui/material": "^5.15.17",
     "@mui/material-nextjs": "^5.15.11",
     "google-auth-library": "^9.9.0",
     "next": "14.1.4",
@@ -39,16 +39,16 @@
   },
   "devDependencies": {
     "@babel/runtime": "^7.24.5",
-    "@storybook/addon-essentials": "^8.0.9",
-    "@storybook/builder-vite": "^8.0.9",
-    "@storybook/react": "^8.0.9",
-    "@storybook/react-vite": "^8.0.9",
+    "@storybook/addon-essentials": "^8.0.10",
+    "@storybook/builder-vite": "^8.0.10",
+    "@storybook/react": "^8.0.10",
+    "@storybook/react-vite": "^8.0.10",
     "@testing-library/dom": "^10.1.0",
-    "@testing-library/jest-dom": "^6.4.2",
-    "@testing-library/react": "^15.0.6",
+    "@testing-library/jest-dom": "^6.4.5",
+    "@testing-library/react": "^15.0.7",
     "@testing-library/user-event": "^14.5.2",
     "@types/jest": "^29.5.12",
-    "@types/node": "^20.12.8",
+    "@types/node": "^20.12.11",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^7.8.0",
@@ -65,9 +65,9 @@
     "lint-staged": "^15.2.2",
     "prettier": "^3.2.5",
     "sort-package-json": "^2.10.0",
-    "storybook": "^8.0.9",
+    "storybook": "^8.0.10",
     "typescript": "^5.4.5",
-    "vite": "^5.2.10"
+    "vite": "^5.2.11"
   },
-  "packageManager": "yarn@4.1.1"
+  "packageManager": "yarn@4.2.2"
 }
