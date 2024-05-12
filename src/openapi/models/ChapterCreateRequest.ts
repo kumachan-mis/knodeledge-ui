@@ -18,6 +18,12 @@ import {
   ChapterWithoutAutofieldFromJSONTyped,
   ChapterWithoutAutofieldToJSON,
 } from './ChapterWithoutAutofield';
+import type { PaperWithoutAutofield } from './PaperWithoutAutofield';
+import {
+  PaperWithoutAutofieldFromJSON,
+  PaperWithoutAutofieldFromJSONTyped,
+  PaperWithoutAutofieldToJSON,
+} from './PaperWithoutAutofield';
 import type { ProjectOnlyId } from './ProjectOnlyId';
 import { ProjectOnlyIdFromJSON, ProjectOnlyIdFromJSONTyped, ProjectOnlyIdToJSON } from './ProjectOnlyId';
 import type { UserOnlyId } from './UserOnlyId';
@@ -47,6 +53,12 @@ export interface ChapterCreateRequest {
    * @memberof ChapterCreateRequest
    */
   chapter: ChapterWithoutAutofield;
+  /**
+   *
+   * @type {PaperWithoutAutofield}
+   * @memberof ChapterCreateRequest
+   */
+  paper?: PaperWithoutAutofield;
 }
 
 /**
@@ -73,6 +85,7 @@ export function ChapterCreateRequestFromJSONTyped(json: any, ignoreDiscriminator
     user: UserOnlyIdFromJSON(json['user']),
     project: ProjectOnlyIdFromJSON(json['project']),
     chapter: ChapterWithoutAutofieldFromJSON(json['chapter']),
+    paper: !exists(json, 'paper') ? undefined : PaperWithoutAutofieldFromJSON(json['paper']),
   };
 }
 
@@ -87,5 +100,6 @@ export function ChapterCreateRequestToJSON(value?: ChapterCreateRequest | null):
     user: UserOnlyIdToJSON(value.user),
     project: ProjectOnlyIdToJSON(value.project),
     chapter: ChapterWithoutAutofieldToJSON(value.chapter),
+    paper: PaperWithoutAutofieldToJSON(value.paper),
   };
 }

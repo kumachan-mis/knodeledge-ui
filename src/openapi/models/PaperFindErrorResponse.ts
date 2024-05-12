@@ -12,8 +12,12 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { ChapterError } from './ChapterError';
-import { ChapterErrorFromJSON, ChapterErrorFromJSONTyped, ChapterErrorToJSON } from './ChapterError';
+import type { ChapterOnlyIdError } from './ChapterOnlyIdError';
+import {
+  ChapterOnlyIdErrorFromJSON,
+  ChapterOnlyIdErrorFromJSONTyped,
+  ChapterOnlyIdErrorToJSON,
+} from './ChapterOnlyIdError';
 import type { ProjectOnlyIdError } from './ProjectOnlyIdError';
 import {
   ProjectOnlyIdErrorFromJSON,
@@ -24,54 +28,51 @@ import type { UserOnlyIdError } from './UserOnlyIdError';
 import { UserOnlyIdErrorFromJSON, UserOnlyIdErrorFromJSONTyped, UserOnlyIdErrorToJSON } from './UserOnlyIdError';
 
 /**
- * Error Response Body for Chapter Create API
+ * Error Response Body for Paper Find API
  * @export
- * @interface ChapterUpdateErrorResponse
+ * @interface PaperFindErrorResponse
  */
-export interface ChapterUpdateErrorResponse {
+export interface PaperFindErrorResponse {
   /**
    * Error message when request body format is invalid
    * @type {string}
-   * @memberof ChapterUpdateErrorResponse
+   * @memberof PaperFindErrorResponse
    */
   message?: string;
   /**
    *
    * @type {UserOnlyIdError}
-   * @memberof ChapterUpdateErrorResponse
+   * @memberof PaperFindErrorResponse
    */
   user?: UserOnlyIdError;
   /**
    *
    * @type {ProjectOnlyIdError}
-   * @memberof ChapterUpdateErrorResponse
+   * @memberof PaperFindErrorResponse
    */
   project?: ProjectOnlyIdError;
   /**
    *
-   * @type {ChapterError}
-   * @memberof ChapterUpdateErrorResponse
+   * @type {ChapterOnlyIdError}
+   * @memberof PaperFindErrorResponse
    */
-  chapter?: ChapterError;
+  chapter?: ChapterOnlyIdError;
 }
 
 /**
- * Check if a given object implements the ChapterUpdateErrorResponse interface.
+ * Check if a given object implements the PaperFindErrorResponse interface.
  */
-export function instanceOfChapterUpdateErrorResponse(value: object): boolean {
+export function instanceOfPaperFindErrorResponse(value: object): boolean {
   let isInstance = true;
 
   return isInstance;
 }
 
-export function ChapterUpdateErrorResponseFromJSON(json: any): ChapterUpdateErrorResponse {
-  return ChapterUpdateErrorResponseFromJSONTyped(json, false);
+export function PaperFindErrorResponseFromJSON(json: any): PaperFindErrorResponse {
+  return PaperFindErrorResponseFromJSONTyped(json, false);
 }
 
-export function ChapterUpdateErrorResponseFromJSONTyped(
-  json: any,
-  ignoreDiscriminator: boolean,
-): ChapterUpdateErrorResponse {
+export function PaperFindErrorResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): PaperFindErrorResponse {
   if (json === undefined || json === null) {
     return json;
   }
@@ -79,11 +80,11 @@ export function ChapterUpdateErrorResponseFromJSONTyped(
     message: !exists(json, 'message') ? undefined : json['message'],
     user: !exists(json, 'user') ? undefined : UserOnlyIdErrorFromJSON(json['user']),
     project: !exists(json, 'project') ? undefined : ProjectOnlyIdErrorFromJSON(json['project']),
-    chapter: !exists(json, 'chapter') ? undefined : ChapterErrorFromJSON(json['chapter']),
+    chapter: !exists(json, 'chapter') ? undefined : ChapterOnlyIdErrorFromJSON(json['chapter']),
   };
 }
 
-export function ChapterUpdateErrorResponseToJSON(value?: ChapterUpdateErrorResponse | null): any {
+export function PaperFindErrorResponseToJSON(value?: PaperFindErrorResponse | null): any {
   if (value === undefined) {
     return undefined;
   }
@@ -94,6 +95,6 @@ export function ChapterUpdateErrorResponseToJSON(value?: ChapterUpdateErrorRespo
     message: value.message,
     user: UserOnlyIdErrorToJSON(value.user),
     project: ProjectOnlyIdErrorToJSON(value.project),
-    chapter: ChapterErrorToJSON(value.chapter),
+    chapter: ChapterOnlyIdErrorToJSON(value.chapter),
   };
 }
