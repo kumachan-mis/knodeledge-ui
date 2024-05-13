@@ -81,7 +81,7 @@ export function useCreateChapterInList(user: UserOnlyId, project: ProjectOnlyId)
       return { state: 'error', error: UNKNOWN_CHAPTER_ACTION_ERROR };
     }
 
-    if (errorable.state === 'error' && (!!errorable.error.user.id || !!errorable.error.project.id)) {
+    if (errorable.state === 'error' && (!!errorable.error.user?.id || !!errorable.error.project?.id)) {
       return { state: 'error', error: UNKNOWN_CHAPTER_ACTION_ERROR };
     }
 
@@ -126,7 +126,7 @@ export function useUpdateChapterInList(user: UserOnlyId, project: ProjectOnlyId)
 
     if (
       errorable.state === 'error' &&
-      (!!errorable.error.user.id || !!errorable.error.project.id || !!errorable.error.chapter.id)
+      (!!errorable.error.user?.id || !!errorable.error.project?.id || !!errorable.error.chapter?.id)
     ) {
       return { state: 'error', error: UNKNOWN_CHAPTER_ACTION_ERROR };
     }
