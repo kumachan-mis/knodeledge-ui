@@ -1,7 +1,7 @@
 'use client';
 import NotFoundError from '@/components/organisms/error/NotFoundError';
-import PaperView from '@/components/organisms/paper/PaperView';
 import ProjectTopView from '@/components/organisms/top/ProjectTopView';
+import PaperView from '@/components/organisms/view/PaperView';
 import { useInitChapterList } from '@/contexts/chapters';
 import { useInitPaper } from '@/contexts/papers';
 import { useInitProject, useLoadableProject } from '@/contexts/projects';
