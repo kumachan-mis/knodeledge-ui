@@ -9,6 +9,7 @@ import List from '@mui/material/List';
 import React from 'react';
 
 export type ChapterListComponentProps = {
+  readonly projectId: string;
   readonly loadableChapterList: LoadableChapterList;
   readonly onUpdateChapter: (
     id: string,
@@ -16,7 +17,11 @@ export type ChapterListComponentProps = {
   ) => Promise<LoadableAction<ChapterActionError>>;
 };
 
-const ChapterListComponent: React.FC<ChapterListComponentProps> = ({ loadableChapterList, onUpdateChapter }) =>
+const ChapterListComponent: React.FC<ChapterListComponentProps> = ({
+  projectId,
+  loadableChapterList,
+  onUpdateChapter,
+}) =>
   loadableChapterList.state === 'loading' ? (
     <Box display="flex" justifyContent="center" p={12}>
       <CircularProgress />
@@ -30,6 +35,7 @@ const ChapterListComponent: React.FC<ChapterListComponentProps> = ({ loadableCha
             key={chapter.id}
             maxChapterNumber={loadableChapterList.data.length}
             onUpdateChapter={(updatedChapter) => onUpdateChapter(chapter.id, updatedChapter)}
+            projectId={projectId}
           />
         ))}
       </List>

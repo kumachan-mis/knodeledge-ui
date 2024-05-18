@@ -23,7 +23,7 @@ const PaperViewComponent: React.FC<PaperViewComponentProps> = ({ loadablePaper, 
     </Container>
   ) : (
     loadablePaper.state === 'success' && (
-      <Container maxWidth="lg" sx={{ py: 2 }}>
+      <Container maxWidth="lg" sx={{ py: 1 }}>
         <PaperEditorComponent paper={loadablePaper.data} updatePaper={updatePaper} />
       </Container>
     )

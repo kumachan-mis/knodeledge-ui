@@ -14,6 +14,7 @@ test('should show chapter', () => {
       }}
       maxChapterNumber={3}
       onUpdateChapter={updateChapter}
+      projectId="PROJECT"
     />,
   );
 

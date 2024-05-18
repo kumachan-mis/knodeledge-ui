@@ -53,7 +53,7 @@ const ChapterDetailPageClient = ({ user, params }: AuthorizedPageProps<ChapterDe
     return <NotFoundError />;
   }
 
-  return <PaperView chapterId={params.chapterId} projectId={params.projectId} user={user} />;
+  return <PaperView chapterId={params.chapterId} key={params.chapterId} projectId={params.projectId} user={user} />;
 };
 
 export default ProjectDetailPageClient;

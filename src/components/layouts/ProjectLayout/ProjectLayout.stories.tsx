@@ -70,6 +70,7 @@ export const Login: Story = {
         onUpdateChapter={async () => {
           return { state: 'success', error: null };
         }}
+        projectId="PROJECT"
       />
     ),
   },
@@ -114,6 +115,7 @@ export const Loading: Story = {
         onUpdateChapter={async () => {
           return { state: 'success', error: null };
         }}
+        projectId="PROJECT"
       />
     ),
   },
@@ -150,6 +152,7 @@ export const NotFound: Story = {
         onUpdateChapter={async () => {
           return { state: 'success', error: null };
         }}
+        projectId="PROJECT"
       />
     ),
   },

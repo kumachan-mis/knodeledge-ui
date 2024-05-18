@@ -53,7 +53,7 @@ export function useInitPaper(user: UserOnlyId, projectId: string, chapterId: str
       return;
     }
 
-    setPaperMap(new Map(paperMap.set(chapterId, { state: 'loading', data: null })));
+    setPaperMap((prev) => new Map(prev.set(chapterId, { state: 'loading', data: null })));
 
     void (async () => {
       const errorable = await findPaper({ user, project: { id: projectId }, chapter: { id: chapterId } });
@@ -63,11 +63,11 @@ export function useInitPaper(user: UserOnlyId, projectId: string, chapterId: str
       }
 
       if (errorable.state === 'error') {
-        setPaperMap(new Map(paperMap.set(chapterId, { state: 'notfound', data: null })));
+        setPaperMap((prev) => new Map(prev.set(chapterId, { state: 'notfound', data: null })));
         return;
       }
 
-      setPaperMap(new Map(paperMap.set(chapterId, { state: 'success', data: errorable.response.paper })));
+      setPaperMap((prev) => new Map(prev.set(chapterId, { state: 'success', data: errorable.response.paper })));
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.id, projectId, chapterId]);
@@ -111,7 +111,7 @@ export function useUpdatePaper(user: UserOnlyId, projectId: string, chapterId: s
       };
     }
 
-    setPaperMap(new Map(paperMap.set(chapterId, { state: 'success', data: errorable.response.paper })));
+    setPaperMap((prev) => new Map(prev.set(chapterId, { state: 'success', data: errorable.response.paper })));
     return { state: 'success', error: null };
   };
 }

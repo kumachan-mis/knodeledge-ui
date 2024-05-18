@@ -10,4 +10,22 @@ export default meta;
 
 type Story = StoryObj<typeof PaperViewComponent>;
 
-export const Basic: Story = {};
+export const Basic: Story = {
+  args: {
+    loadablePaper: {
+      state: 'success',
+      data: {
+        id: 'PAPER',
+        content: 'This is paper content.',
+      },
+    },
+  },
+};
+export const Loading: Story = {
+  args: {
+    loadablePaper: {
+      state: 'loading',
+      data: null,
+    },
+  },
+};

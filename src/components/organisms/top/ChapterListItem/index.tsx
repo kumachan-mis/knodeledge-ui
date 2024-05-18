@@ -7,6 +7,7 @@ import ChapterListItemComponent from './ChapterListItem';
 import React from 'react';
 
 export type ChapterListItemProps = {
+  readonly projectId: string;
   readonly chapter: Chapter;
   readonly maxChapterNumber: number;
   readonly onUpdateChapter: (chapter: ChapterWithoutAutofield) => Promise<LoadableAction<ChapterActionError>>;

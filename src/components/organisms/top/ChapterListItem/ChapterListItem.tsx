@@ -14,12 +14,14 @@ import ListItemText from '@mui/material/ListItemText';
 import React from 'react';
 
 export type ChapterListItemComponentProps = {
+  readonly projectId: string;
   readonly chapter: Chapter;
   readonly maxChapterNumber: number;
   readonly onUpdateChapter: (chapter: ChapterWithoutAutofield) => Promise<LoadableAction<ChapterActionError>>;
 };
 
 const ChapterListItemComponent: React.FC<ChapterListItemComponentProps> = ({
+  projectId,
   chapter,
   maxChapterNumber,
   onUpdateChapter,
@@ -58,6 +60,7 @@ const ChapterListItemComponent: React.FC<ChapterListItemComponentProps> = ({
           onClose={onCloseChapterMenu}
           onUpdateChapter={onUpdateChapter}
           open={chapterMenuOpen}
+          projectId={projectId}
           transformOrigin={{ vertical: 'top', horizontal: 'center' }}
         />
       </ListItemSecondaryAction>

@@ -25,10 +25,11 @@ const PaperEditorComponent: React.FC<PaperEditorComponentProps> = ({ paper }) =>
   );
 };
 
-const PaperEditorRoot = styled(EditorRoot)({
+const PaperEditorRoot = styled(EditorRoot)(({ theme }) => ({
   '&&': {
     width: '100%',
+    height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px - ${theme.spacing(2)})`,
   },
-});
+}));
 
 export default PaperEditorComponent;
