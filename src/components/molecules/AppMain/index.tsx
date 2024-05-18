@@ -1,4 +1,4 @@
-import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import React from 'react';
 
@@ -7,10 +7,10 @@ export type AppMainProps = {
 };
 
 const AppMain: React.FC<AppMainProps> = ({ children }) => (
-  <Container component="main" maxWidth="lg" sx={{ my: 6 }}>
+  <Box component="main" sx={{ width: '100%' }}>
     <Toolbar variant="dense" />
     {children}
-  </Container>
+  </Box>
 );
 
 export default AppMain;

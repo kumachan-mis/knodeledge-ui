@@ -1,4 +1,5 @@
 import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import React from 'react';
 
@@ -10,7 +11,7 @@ export type AppErrorProps = {
 };
 
 const AppError: React.FC<AppErrorProps> = ({ statusCode, message, description, action }) => (
-  <Box sx={{ textAlign: 'center' }}>
+  <Container maxWidth="lg" sx={{ my: 6, textAlign: 'center' }}>
     <Typography my={8} variant="h1">
       {statusCode}
     </Typography>
@@ -21,7 +22,7 @@ const AppError: React.FC<AppErrorProps> = ({ statusCode, message, description, a
       {description}
     </Typography>
     <Box sx={{ my: 6 }}>{action}</Box>
-  </Box>
+  </Container>
 );
 
 export default AppError;
