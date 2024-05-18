@@ -9952,7 +9952,7 @@ __metadata:
     next: "npm:14.1.4"
     prettier: "npm:^3.2.5"
     react: "npm:^18.3.1"
-    react-clay-editor: "npm:^1.2.2"
+    react-clay-editor: "npm:^1.2.4"
     react-dom: "npm:^18.3.1"
     react-hook-form: "npm:7.51.0"
     sort-package-json: "npm:^2.10.0"
@@ -11474,16 +11474,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-clay-editor@npm:^1.2.2":
-  version: 1.2.2
-  resolution: "react-clay-editor@npm:1.2.2"
+"react-clay-editor@npm:^1.2.4":
+  version: 1.2.4
+  resolution: "react-clay-editor@npm:1.2.4"
   peerDependencies:
     "@emotion/react": ">=11.0.0"
     "@emotion/styled": ">=11.0.0"
     katex: ">=0.16.0"
     react: ">=18.0.0"
     react-dom: ">=18.0.0"
-  checksum: 10/bf468084bc01fa9428787ff8edb32d8412ac4043ebd5da269634db70db425027be33547738d7967e9340771bd0a63bf95737b3f4d4d217a3c2f9b7b454bdc8d1
+  checksum: 10/39bc1c24461fce7f3ebd7393a032b812a2d4cdb552ea5cea099e4cf4ffd58f31587f0ece890bb8c39458a24342fe687c20e3fec8b54c9bf3bc9207ec206b87f5
   languageName: node
   linkType: hard
 
