@@ -5,8 +5,9 @@ import ChapterList from '@/components/organisms/top/ChapterList';
 import { ChapterListContextProvider, useInitChapterList } from '@/contexts/chapters';
 import { PanicContextProvider } from '@/contexts/panic';
 
-import { waitFor } from '@testing-library/dom';
+import { waitFor, within } from '@testing-library/dom';
 import { render } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 
 const Wrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => (
   <PanicContextProvider>
@@ -31,6 +32,7 @@ beforeEach(() => {
 });
 
 test('should show chapter from Chapter List API', async () => {
+  const user = userEvent.setup();
   (global.fetch as jest.Mock).mockResolvedValueOnce(
     createOkResponse({
       chapters: [
@@ -56,6 +58,14 @@ test('should show chapter from Chapter List API', async () => {
     expect(screen.getByText('#1 Chapter One')).toBeInTheDocument();
   });
   expect(screen.getByText('#2 Chapter Two')).toBeInTheDocument();
+
+  await user.click(screen.getAllByLabelText('chapter menu')[0]);
+
+  const menu = within(await screen.findByRole('menu'));
+
+  expect(menu.getByRole('link')).toHaveAttribute('href', '/projects/PROJECT?chapter=CHAPTER_ONE');
+  expect(within(menu.getByRole('link')).getByText('Open Chapter')).toBeInTheDocument();
+  expect(menu.getByText('Update Chapter')).toBeInTheDocument();
 
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
