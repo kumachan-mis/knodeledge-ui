@@ -1,5 +1,5 @@
 import ThemeRegistry from '@/components/atoms/ThemeRegistry';
-import PanicError from '@/components/organisms/error/PanicError';
+import PanicError from '@/components/organisms/PanicError';
 import { PanicContextProvider } from '@/contexts/panic';
 import { ENVIRONMENT } from '@/utils/env';
 

@@ -1,5 +1,5 @@
-import ChapterListComponent from '@/components/organisms/top/ChapterList/ChapterList';
-import ChapterListHeaderComponent from '@/components/organisms/top/ChapterListHeader/ChapterListHeader';
+import ChapterListComponent from '@/components/organisms/ChapterList/ChapterList';
+import ChapterListHeaderComponent from '@/components/organisms/ChapterListHeader/ChapterListHeader';
 
 import ProjectLayout from './ProjectLayout';
 
