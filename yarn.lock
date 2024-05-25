@@ -4555,7 +4555,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/katex@npm:^0":
+"@types/katex@npm:^0.16.7":
   version: 0.16.7
   resolution: "@types/katex@npm:0.16.7"
   checksum: 10/4fd15d93553be97c02c064e16be18d7ccbabf66ec72a9dc7fd5bfa47f0c7581da2f942f693c7cb59499de4c843c2189796e49c9647d336cbd52b777b6722a95a
@@ -9949,7 +9949,7 @@ __metadata:
     "@testing-library/react": "npm:^15.0.7"
     "@testing-library/user-event": "npm:^14.5.2"
     "@types/jest": "npm:^29.5.12"
-    "@types/katex": "npm:^0"
+    "@types/katex": "npm:^0.16.7"
     "@types/node": "npm:^20.12.12"
     "@types/react": "npm:^18.3.3"
     "@types/react-dom": "npm:^18.3.0"
