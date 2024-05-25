@@ -1,6 +1,6 @@
 'use client';
 import AppLayout from '@/components/layouts/AppLayout';
-import InternalError from '@/components/organisms/error/InternalError';
+import InternalError from '@/components/organisms/InternalError';
 
 import { NextPage } from 'next';
 

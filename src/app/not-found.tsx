@@ -1,5 +1,5 @@
 import AppLayout from '@/components/layouts/AppLayout';
-import NotFoundError from '@/components/organisms/error/NotFoundError';
+import NotFoundError from '@/components/organisms/NotFoundError';
 
 import { NextPage } from 'next';
 

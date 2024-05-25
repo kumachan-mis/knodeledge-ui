@@ -1,8 +1,7 @@
 'use client';
-
-import ProjectCardList from '@/components/organisms/list/ProjectCardList';
-import ProjectTitle from '@/components/organisms/list/ProjectTitle';
-import ProjectToolbar from '@/components/organisms/list/ProjectToolbar';
+import ProjectCardList from '@/components/organisms/ProjectCardList';
+import ProjectTitle from '@/components/organisms/ProjectTitle';
+import ProjectToolbar from '@/components/organisms/ProjectToolbar';
 import { useInitProjectList } from '@/contexts/projects';
 import { AuthorizedPageProps } from '@/utils/page';
 
