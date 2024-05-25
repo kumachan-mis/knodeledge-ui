@@ -1,6 +1,6 @@
 'use client';
-import NotFoundError from '@/components/organisms/error/NotFoundError';
-import ProjectTopView from '@/components/organisms/top/ProjectTopView';
+import NotFoundError from '@/components/organisms/NotFoundError';
+import ProjectTopView from '@/components/organisms/ProjectTopView';
 import { useInitChapterList } from '@/contexts/chapters';
 import { useInitProject, useLoadableProject } from '@/contexts/projects';
 import { AuthorizedPageProps } from '@/utils/page';

@@ -1,4 +1,4 @@
-import UnauthorizedError from '@/components/organisms/error/UnauthorizedError';
+import UnauthorizedError from '@/components/organisms/UnauthorizedError';
 
 import ProjectListPageClient from './client';
 

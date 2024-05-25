@@ -1,6 +1,6 @@
 import ProjectLayout from '@/components/layouts/ProjectLayout';
-import ChapterList from '@/components/organisms/top/ChapterList';
-import ChapterListHeader from '@/components/organisms/top/ChapterListHeader';
+import ChapterList from '@/components/organisms/ChapterList';
+import ChapterListHeader from '@/components/organisms/ChapterListHeader';
 import { ChapterListContextProvider } from '@/contexts/chapters';
 import { ProjectContextProvider } from '@/contexts/projects';
 
