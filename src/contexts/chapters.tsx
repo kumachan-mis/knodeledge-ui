@@ -9,6 +9,8 @@ import { useSetPanic } from './panic';
 
 import React from 'react';
 
+export type LoadableChapter = LoadableData<Chapter>;
+
 export type LoadableChapterList = LoadableData<Chapter[]>;
 
 export type ChapterActionError = {
@@ -43,6 +45,15 @@ const ChapterListSetContext = React.createContext<React.Dispatch<React.SetStateA
 
 export function useLoadableChapterList(): LoadableChapterList {
   return React.useContext(ChapterListValueContext);
+}
+
+export function useLoadableChapterInList(chapterId: string): LoadableChapter {
+  const loadableChapterList = React.useContext(ChapterListValueContext);
+  if (loadableChapterList.state !== 'success') return { state: loadableChapterList.state, data: null };
+
+  const chapter = loadableChapterList.data.find((chapter) => chapter.id === chapterId);
+  if (!chapter) return { state: 'notfound', data: null };
+  return { state: 'success', data: chapter };
 }
 
 export function useInitChapterList(user: UserOnlyId, project: ProjectOnlyId): void {
