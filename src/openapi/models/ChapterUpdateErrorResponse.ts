@@ -40,19 +40,19 @@ export interface ChapterUpdateErrorResponse {
    * @type {UserOnlyIdError}
    * @memberof ChapterUpdateErrorResponse
    */
-  user: UserOnlyIdError;
+  user?: UserOnlyIdError;
   /**
    *
    * @type {ProjectOnlyIdError}
    * @memberof ChapterUpdateErrorResponse
    */
-  project: ProjectOnlyIdError;
+  project?: ProjectOnlyIdError;
   /**
    *
    * @type {ChapterError}
    * @memberof ChapterUpdateErrorResponse
    */
-  chapter: ChapterError;
+  chapter?: ChapterError;
 }
 
 /**
@@ -60,9 +60,6 @@ export interface ChapterUpdateErrorResponse {
  */
 export function instanceOfChapterUpdateErrorResponse(value: object): boolean {
   let isInstance = true;
-  isInstance = isInstance && 'user' in value;
-  isInstance = isInstance && 'project' in value;
-  isInstance = isInstance && 'chapter' in value;
 
   return isInstance;
 }
@@ -80,9 +77,9 @@ export function ChapterUpdateErrorResponseFromJSONTyped(
   }
   return {
     message: !exists(json, 'message') ? undefined : json['message'],
-    user: UserOnlyIdErrorFromJSON(json['user']),
-    project: ProjectOnlyIdErrorFromJSON(json['project']),
-    chapter: ChapterErrorFromJSON(json['chapter']),
+    user: !exists(json, 'user') ? undefined : UserOnlyIdErrorFromJSON(json['user']),
+    project: !exists(json, 'project') ? undefined : ProjectOnlyIdErrorFromJSON(json['project']),
+    chapter: !exists(json, 'chapter') ? undefined : ChapterErrorFromJSON(json['chapter']),
   };
 }
 

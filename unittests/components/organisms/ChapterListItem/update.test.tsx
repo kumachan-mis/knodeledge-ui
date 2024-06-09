@@ -17,6 +17,7 @@ test('should update chapter', async () => {
       }}
       maxChapterNumber={3}
       onUpdateChapter={updateChapter}
+      projectId="PROJECT"
     />,
   );
 
@@ -55,6 +56,7 @@ test('should close dialog to update chapter', async () => {
       }}
       maxChapterNumber={3}
       onUpdateChapter={updateChapter}
+      projectId="PROJECT"
     />,
   );
 
@@ -97,6 +99,7 @@ test('should show error when failed to update chapter', async () => {
       }}
       maxChapterNumber={3}
       onUpdateChapter={updateChapter}
+      projectId="PROJECT"
     />,
   );
 

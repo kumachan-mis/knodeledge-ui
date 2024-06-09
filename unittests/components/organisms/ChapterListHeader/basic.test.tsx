@@ -21,7 +21,7 @@ const Wrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => (
 
 const HooksWrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   useInitProject({ id: USER.sub }, 'PROJECT');
-  useInitChapterList({ id: USER.sub }, { id: 'PROJECT' });
+  useInitChapterList({ id: USER.sub }, 'PROJECT');
   return children;
 };
 
@@ -89,37 +89,73 @@ test('should show project name from Project Find API', async () => {
   );
 });
 
-test('should show nothing when not foud error occured', async () => {
-  (global.fetch as jest.Mock)
-    .mockResolvedValueOnce(createNotFoundResponse({ message: 'not found' }))
-    .mockResolvedValueOnce(createNotFoundResponse({ message: 'not found' }));
-
-  const screen = render(<ChapterListHeader projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
-
-  await waitFor(() => {
-    expect(global.fetch).toHaveBeenCalledTimes(2);
-  });
-
-  expect(screen.queryByText('Fatal Error Occured')).not.toBeInTheDocument();
-  expect(screen.queryByText('not found')).not.toBeInTheDocument();
-
-  expect(global.fetch).toHaveBeenNthCalledWith(
-    1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/projects/find`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
+test.each<{
+  name: string;
+  projectFindResponse: Partial<Response>;
+  chaptersListResponse: Partial<Response>;
+}>([
+  {
+    name: 'Project Find API',
+    projectFindResponse: createNotFoundResponse({ message: 'not found' }),
+    chaptersListResponse: createOkResponse({
+      chapters: [
+        {
+          id: 'CHAPTER_ONE',
+          name: 'Chapter One',
+          number: 1,
+          sections: [],
+        },
+      ],
     }),
-  );
-  expect(global.fetch).toHaveBeenNthCalledWith(
-    2,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/chapters/list`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
+  },
+  {
+    name: 'Chapters List API',
+    projectFindResponse: createOkResponse({
+      project: {
+        id: 'PROJECT',
+        name: 'Project Name',
+        description: 'Project Description',
+      },
     }),
-  );
-});
+    chaptersListResponse: createNotFoundResponse({ message: 'not found' }),
+  },
+  {
+    name: 'All APIs',
+    projectFindResponse: createNotFoundResponse({ message: 'not found' }),
+    chaptersListResponse: createNotFoundResponse({ message: 'not found' }),
+  },
+])(
+  'should show nothing when not found error occured ($name)',
+  async ({ projectFindResponse, chaptersListResponse }) => {
+    (global.fetch as jest.Mock).mockResolvedValueOnce(projectFindResponse).mockResolvedValueOnce(chaptersListResponse);
+
+    const screen = render(<ChapterListHeader projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
+
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledTimes(2);
+    });
+
+    expect(screen.queryByText('Fatal Error Occured')).not.toBeInTheDocument();
+    expect(screen.queryByText('not found')).not.toBeInTheDocument();
+
+    expect(global.fetch).toHaveBeenNthCalledWith(
+      1,
+      `${process.env.NEXT_PUBLIC_APP_URL}/api/projects/find`,
+      expect.objectContaining({
+        method: 'POST',
+        body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
+      }),
+    );
+    expect(global.fetch).toHaveBeenNthCalledWith(
+      2,
+      `${process.env.NEXT_PUBLIC_APP_URL}/api/chapters/list`,
+      expect.objectContaining({
+        method: 'POST',
+        body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
+      }),
+    );
+  },
+);
 
 test.each<{
   name: string;

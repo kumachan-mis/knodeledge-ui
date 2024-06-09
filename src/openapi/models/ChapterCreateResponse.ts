@@ -18,6 +18,8 @@ import {
   ChapterWithSectionsFromJSONTyped,
   ChapterWithSectionsToJSON,
 } from './ChapterWithSections';
+import type { Paper } from './Paper';
+import { PaperFromJSON, PaperFromJSONTyped, PaperToJSON } from './Paper';
 
 /**
  * Response Body for Chapter Create API
@@ -31,6 +33,12 @@ export interface ChapterCreateResponse {
    * @memberof ChapterCreateResponse
    */
   chapter: ChapterWithSections;
+  /**
+   *
+   * @type {Paper}
+   * @memberof ChapterCreateResponse
+   */
+  paper: Paper;
 }
 
 /**
@@ -39,6 +47,7 @@ export interface ChapterCreateResponse {
 export function instanceOfChapterCreateResponse(value: object): boolean {
   let isInstance = true;
   isInstance = isInstance && 'chapter' in value;
+  isInstance = isInstance && 'paper' in value;
 
   return isInstance;
 }
@@ -53,6 +62,7 @@ export function ChapterCreateResponseFromJSONTyped(json: any, ignoreDiscriminato
   }
   return {
     chapter: ChapterWithSectionsFromJSON(json['chapter']),
+    paper: PaperFromJSON(json['paper']),
   };
 }
 
@@ -65,5 +75,6 @@ export function ChapterCreateResponseToJSON(value?: ChapterCreateResponse | null
   }
   return {
     chapter: ChapterWithSectionsToJSON(value.chapter),
+    paper: PaperToJSON(value.paper),
   };
 }

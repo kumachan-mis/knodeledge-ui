@@ -8,8 +8,10 @@ import { ChapterWithoutAutofield } from '@/openapi';
 
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
+import Link from 'next/link';
 import React from 'react';
 
 export type ChapterListHeaderComponentProps = {
@@ -30,10 +32,17 @@ const ChapterListHeaderComponent: React.FC<ChapterListHeaderComponentProps> = ({
   }
 
   return (
-    <Box alignItems="center" display="flex" width="100%">
-      <Typography flexGrow={1} fontWeight="bold" noWrap variant="subtitle1">
-        {loadableProject.data.name}
-      </Typography>
+    <Box display="flex" width="100%">
+      <Button
+        LinkComponent={Link}
+        color="inherit"
+        href={`/projects/${loadableProject.data.id}`}
+        sx={{ flexGrow: 1, textTransform: 'none' }}
+      >
+        <Typography fontWeight="bold" noWrap variant="subtitle1">
+          {loadableProject.data.name}
+        </Typography>
+      </Button>
       <IconButton aria-label="new chapter" onClick={onOpenNewChapterDialog} size="small">
         <NoteAddIcon />
       </IconButton>

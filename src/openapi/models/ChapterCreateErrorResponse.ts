@@ -18,6 +18,12 @@ import {
   ChapterWithoutAutofieldErrorFromJSONTyped,
   ChapterWithoutAutofieldErrorToJSON,
 } from './ChapterWithoutAutofieldError';
+import type { PaperWithoutAutofieldError } from './PaperWithoutAutofieldError';
+import {
+  PaperWithoutAutofieldErrorFromJSON,
+  PaperWithoutAutofieldErrorFromJSONTyped,
+  PaperWithoutAutofieldErrorToJSON,
+} from './PaperWithoutAutofieldError';
 import type { ProjectOnlyIdError } from './ProjectOnlyIdError';
 import {
   ProjectOnlyIdErrorFromJSON,
@@ -44,19 +50,25 @@ export interface ChapterCreateErrorResponse {
    * @type {UserOnlyIdError}
    * @memberof ChapterCreateErrorResponse
    */
-  user: UserOnlyIdError;
+  user?: UserOnlyIdError;
   /**
    *
    * @type {ProjectOnlyIdError}
    * @memberof ChapterCreateErrorResponse
    */
-  project: ProjectOnlyIdError;
+  project?: ProjectOnlyIdError;
   /**
    *
    * @type {ChapterWithoutAutofieldError}
    * @memberof ChapterCreateErrorResponse
    */
-  chapter: ChapterWithoutAutofieldError;
+  chapter?: ChapterWithoutAutofieldError;
+  /**
+   *
+   * @type {PaperWithoutAutofieldError}
+   * @memberof ChapterCreateErrorResponse
+   */
+  paper?: PaperWithoutAutofieldError;
 }
 
 /**
@@ -64,9 +76,6 @@ export interface ChapterCreateErrorResponse {
  */
 export function instanceOfChapterCreateErrorResponse(value: object): boolean {
   let isInstance = true;
-  isInstance = isInstance && 'user' in value;
-  isInstance = isInstance && 'project' in value;
-  isInstance = isInstance && 'chapter' in value;
 
   return isInstance;
 }
@@ -84,9 +93,10 @@ export function ChapterCreateErrorResponseFromJSONTyped(
   }
   return {
     message: !exists(json, 'message') ? undefined : json['message'],
-    user: UserOnlyIdErrorFromJSON(json['user']),
-    project: ProjectOnlyIdErrorFromJSON(json['project']),
-    chapter: ChapterWithoutAutofieldErrorFromJSON(json['chapter']),
+    user: !exists(json, 'user') ? undefined : UserOnlyIdErrorFromJSON(json['user']),
+    project: !exists(json, 'project') ? undefined : ProjectOnlyIdErrorFromJSON(json['project']),
+    chapter: !exists(json, 'chapter') ? undefined : ChapterWithoutAutofieldErrorFromJSON(json['chapter']),
+    paper: !exists(json, 'paper') ? undefined : PaperWithoutAutofieldErrorFromJSON(json['paper']),
   };
 }
 
@@ -102,5 +112,6 @@ export function ChapterCreateErrorResponseToJSON(value?: ChapterCreateErrorRespo
     user: UserOnlyIdErrorToJSON(value.user),
     project: ProjectOnlyIdErrorToJSON(value.project),
     chapter: ChapterWithoutAutofieldErrorToJSON(value.chapter),
+    paper: PaperWithoutAutofieldErrorToJSON(value.paper),
   };
 }

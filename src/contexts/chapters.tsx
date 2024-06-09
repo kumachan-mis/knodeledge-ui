@@ -9,6 +9,8 @@ import { useSetPanic } from './panic';
 
 import React from 'react';
 
+export type LoadableChapter = LoadableData<Chapter>;
+
 export type LoadableChapterList = LoadableData<Chapter[]>;
 
 export type ChapterActionError = {
@@ -45,7 +47,16 @@ export function useLoadableChapterList(): LoadableChapterList {
   return React.useContext(ChapterListValueContext);
 }
 
-export function useInitChapterList(user: UserOnlyId, project: ProjectOnlyId): void {
+export function useLoadableChapterInList(chapterId: string): LoadableChapter {
+  const loadableChapterList = React.useContext(ChapterListValueContext);
+  if (loadableChapterList.state !== 'success') return { state: loadableChapterList.state, data: null };
+
+  const chapter = loadableChapterList.data.find((chapter) => chapter.id === chapterId);
+  if (!chapter) return { state: 'notfound', data: null };
+  return { state: 'success', data: chapter };
+}
+
+export function useInitChapterList(user: UserOnlyId, projectId: string): void {
   const setChapterList = React.useContext(ChapterListSetContext);
   const setPanic = useSetPanic();
 
@@ -53,7 +64,7 @@ export function useInitChapterList(user: UserOnlyId, project: ProjectOnlyId): vo
     setChapterList({ state: 'loading', data: null });
 
     void (async () => {
-      const errorable = await listChapter({ user, project });
+      const errorable = await listChapter({ user, project: { id: projectId } });
       if (errorable.state === 'panic') {
         setPanic(errorable.error.message);
         return;
@@ -67,7 +78,7 @@ export function useInitChapterList(user: UserOnlyId, project: ProjectOnlyId): vo
       setChapterList({ state: 'success', data: errorable.response.chapters });
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user.id, project.id]);
+  }, [user.id, projectId]);
 }
 
 export function useCreateChapterInList(user: UserOnlyId, project: ProjectOnlyId): LoadableActionChapterCreate {
@@ -81,7 +92,7 @@ export function useCreateChapterInList(user: UserOnlyId, project: ProjectOnlyId)
       return { state: 'error', error: UNKNOWN_CHAPTER_ACTION_ERROR };
     }
 
-    if (errorable.state === 'error' && (!!errorable.error.user.id || !!errorable.error.project.id)) {
+    if (errorable.state === 'error' && (!!errorable.error.user?.id || !!errorable.error.project?.id)) {
       return { state: 'error', error: UNKNOWN_CHAPTER_ACTION_ERROR };
     }
 
@@ -126,7 +137,7 @@ export function useUpdateChapterInList(user: UserOnlyId, project: ProjectOnlyId)
 
     if (
       errorable.state === 'error' &&
-      (!!errorable.error.user.id || !!errorable.error.project.id || !!errorable.error.chapter.id)
+      (!!errorable.error.user?.id || !!errorable.error.project?.id || !!errorable.error.chapter?.id)
     ) {
       return { state: 'error', error: UNKNOWN_CHAPTER_ACTION_ERROR };
     }

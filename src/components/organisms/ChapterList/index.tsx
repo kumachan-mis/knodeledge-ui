@@ -14,7 +14,13 @@ export type ChapterListProps = {
 const ChapterList: React.FC<ChapterListProps> = ({ user, projectId }) => {
   const loadableChapterList = useLoadableChapterList();
   const updateChapter = useUpdateChapterInList({ id: user.sub }, { id: projectId });
-  return <ChapterListComponent loadableChapterList={loadableChapterList} onUpdateChapter={updateChapter} />;
+  return (
+    <ChapterListComponent
+      loadableChapterList={loadableChapterList}
+      onUpdateChapter={updateChapter}
+      projectId={projectId}
+    />
+  );
 };
 
 export default ChapterList;
