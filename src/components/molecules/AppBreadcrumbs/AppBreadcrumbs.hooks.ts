@@ -1,21 +1,49 @@
 import React from 'react';
 
+export type SaveResult =
+  | {
+      readonly success: true;
+    }
+  | {
+      readonly success: false;
+      readonly error: string;
+    };
+
 export type AppBreadcrumbsSavingProps = {
-  readonly isDirty?: boolean;
+  readonly isDirty: boolean;
   readonly message?: string;
-  readonly onSave?: () => void;
+  readonly onSave: () => Promise<SaveResult>;
+};
+
+export type AppBreadcrumbsSavingReturn = {
+  readonly savingError: string;
+  readonly onSaveClick: () => void;
+  readonly onClearSavingError: () => void;
 };
 
 export function useAppBreadcrumbsSaving({
   isDirty,
   message = 'You have unsaved changes, are you sure?',
   onSave,
-}: AppBreadcrumbsSavingProps): void {
+}: AppBreadcrumbsSavingProps): AppBreadcrumbsSavingReturn {
+  const [savingError, setSavingError] = React.useState<string>('');
+
+  const onSaveClick = React.useCallback(() => {
+    void onSave().then((result) => {
+      if (result.success) return;
+      setSavingError(result.error);
+    });
+  }, [onSave]);
+
+  const onClearSavingError = () => {
+    setSavingError('');
+  };
+
   React.useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (saveShortcutCommandFired(event)) {
         event.preventDefault();
-        onSave?.();
+        onSaveClick();
       }
     };
 
@@ -24,14 +52,14 @@ export function useAppBreadcrumbsSaving({
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [onSave]);
+  }, [onSaveClick]);
 
   React.useEffect(() => {
     const handleClick = (event: MouseEvent) => {
       if (
         isDirty &&
         event.target instanceof Element &&
-        event.target.closest('a:not([target="_blank"]') &&
+        event.target.closest('a:not([target="_blank"])') &&
         !window.confirm(message)
       ) {
         event.preventDefault();
@@ -59,6 +87,8 @@ export function useAppBreadcrumbsSaving({
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, [isDirty, message]);
+
+  return { savingError, onSaveClick, onClearSavingError };
 }
 
 function saveShortcutCommandFired(event: KeyboardEvent): boolean {

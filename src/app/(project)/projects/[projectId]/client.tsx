@@ -2,7 +2,7 @@
 import NotFoundError from '@/components/organisms/NotFoundError';
 import PaperView from '@/components/organisms/PaperView';
 import ProjectTopView from '@/components/organisms/ProjectTopView';
-import { useInitChapterList } from '@/contexts/chapters';
+import { useInitChapterList, useLoadableChapterInList } from '@/contexts/chapters';
 import { useInitPaper } from '@/contexts/papers';
 import { useInitProject, useLoadableProject } from '@/contexts/projects';
 import { AuthorizedPageProps } from '@/utils/page';
@@ -28,7 +28,7 @@ const ProjectDetailPageClient: NextPage<AuthorizedPageProps<ProjectDetailPageCli
   const searchParams = useSearchParams();
 
   useInitProject({ id: user.sub }, params.projectId);
-  useInitChapterList({ id: user.sub }, { id: params.projectId });
+  useInitChapterList({ id: user.sub }, params.projectId);
 
   const loadableProject = useLoadableProject();
 
@@ -47,9 +47,9 @@ const ProjectDetailPageClient: NextPage<AuthorizedPageProps<ProjectDetailPageCli
 const ChapterDetailPageClient = ({ user, params }: AuthorizedPageProps<ChapterDetailPageClientProps>) => {
   useInitPaper({ id: user.sub }, params.projectId, params.chapterId);
 
-  const loadableProject = useLoadableProject();
+  const loadableChapter = useLoadableChapterInList(params.chapterId);
 
-  if (loadableProject.state === 'notfound') {
+  if (loadableChapter.state === 'notfound') {
     return <NotFoundError />;
   }
 

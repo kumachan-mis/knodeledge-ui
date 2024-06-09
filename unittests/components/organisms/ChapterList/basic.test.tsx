@@ -19,7 +19,7 @@ const Wrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => (
 );
 
 const HooksWrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
-  useInitChapterList({ id: USER.sub }, { id: 'PROJECT' });
+  useInitChapterList({ id: USER.sub }, 'PROJECT');
   return children;
 };
 
@@ -78,7 +78,7 @@ test('should show chapter from Chapter List API', async () => {
   );
 });
 
-test('should show nothing when not foud error occured', async () => {
+test('should show nothing when not found error occured', async () => {
   (global.fetch as jest.Mock).mockResolvedValueOnce(createNotFoundResponse({ message: 'not found' }));
 
   const screen = render(<ChapterList projectId="PROJECT" user={USER} />, { wrapper: Wrapper });

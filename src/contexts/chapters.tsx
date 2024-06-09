@@ -56,7 +56,7 @@ export function useLoadableChapterInList(chapterId: string): LoadableChapter {
   return { state: 'success', data: chapter };
 }
 
-export function useInitChapterList(user: UserOnlyId, project: ProjectOnlyId): void {
+export function useInitChapterList(user: UserOnlyId, projectId: string): void {
   const setChapterList = React.useContext(ChapterListSetContext);
   const setPanic = useSetPanic();
 
@@ -64,7 +64,7 @@ export function useInitChapterList(user: UserOnlyId, project: ProjectOnlyId): vo
     setChapterList({ state: 'loading', data: null });
 
     void (async () => {
-      const errorable = await listChapter({ user, project });
+      const errorable = await listChapter({ user, project: { id: projectId } });
       if (errorable.state === 'panic') {
         setPanic(errorable.error.message);
         return;
@@ -78,7 +78,7 @@ export function useInitChapterList(user: UserOnlyId, project: ProjectOnlyId): vo
       setChapterList({ state: 'success', data: errorable.response.chapters });
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user.id, project.id]);
+  }, [user.id, projectId]);
 }
 
 export function useCreateChapterInList(user: UserOnlyId, project: ProjectOnlyId): LoadableActionChapterCreate {

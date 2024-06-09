@@ -25,9 +25,16 @@ const PaperViewBreadcrumbsComponent: React.FC<PaperViewBreadcrumbsComponentProps
     <AppBreadcrumbs
       chapter={{ id: chapter.id, name: chapter.name }}
       isDirty={isDirty}
-      onSave={() => {
-        if (!isDirty) return;
-        void updatePaper(paper.id, { content });
+      onSave={async () => {
+        if (!isDirty) return { success: true };
+        const loadableAction = await updatePaper(paper.id, { content });
+        if (loadableAction.state === 'success') {
+          return { success: true };
+        }
+        if (!loadableAction.error.paper.content) {
+          return { success: false, error: loadableAction.error.message };
+        }
+        return { success: false, error: `${loadableAction.error.message}: ${loadableAction.error.paper.content}` };
       }}
       project={{ id: project.id, name: project.name }}
     />

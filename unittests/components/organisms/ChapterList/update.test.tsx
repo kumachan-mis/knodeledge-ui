@@ -24,7 +24,7 @@ const Wrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => (
 );
 
 const HooksWrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
-  useInitChapterList({ id: USER.sub }, { id: 'PROJECT' });
+  useInitChapterList({ id: USER.sub }, 'PROJECT');
   return children;
 };
 

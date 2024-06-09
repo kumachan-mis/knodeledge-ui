@@ -85,7 +85,7 @@ test('should show project with description from Project Find API', async () => {
   );
 });
 
-test('should show nothing when not foud error occured', async () => {
+test('should show nothing when not found error occured', async () => {
   (global.fetch as jest.Mock).mockResolvedValueOnce(createNotFoundResponse({ message: 'not found' }));
 
   const screen = render(<ProjectTopView user={USER} />, { wrapper: Wrapper });

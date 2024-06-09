@@ -1,9 +1,11 @@
-import { useAppBreadcrumbsSaving } from './AppBreadcrumbs.hooks';
+import { SaveResult, useAppBreadcrumbsSaving } from './AppBreadcrumbs.hooks';
 
 import SaveIcon from '@mui/icons-material/Save';
+import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Button from '@mui/material/Button';
+import Snackbar from '@mui/material/Snackbar';
 import Typography from '@mui/material/Typography';
 import Link from 'next/link';
 import React from 'react';
@@ -16,15 +18,15 @@ type BreadcrumbItem = {
 type AppBreadcrumbsProps = {
   readonly project: BreadcrumbItem;
   readonly chapter: BreadcrumbItem;
-  readonly isDirty?: boolean;
-  readonly onSave?: () => void;
+  readonly isDirty: boolean;
+  readonly onSave: () => Promise<SaveResult>;
 };
 
 const AppBreadcrumbs: React.FC<AppBreadcrumbsProps> = ({ project, chapter, onSave, isDirty }) => {
-  useAppBreadcrumbsSaving({ isDirty, onSave });
+  const { savingError, onSaveClick, onClearSavingError } = useAppBreadcrumbsSaving({ isDirty, onSave });
 
   return (
-    <Box sx={{ width: '100%', display: 'flex', my: onSave ? 0 : 1 }}>
+    <Box sx={{ width: '100%', display: 'flex' }}>
       <Breadcrumbs
         aria-label="breadcrumb"
         sx={{
@@ -45,11 +47,14 @@ const AppBreadcrumbs: React.FC<AppBreadcrumbsProps> = ({ project, chapter, onSav
           {`${chapter.name}${isDirty ? ' *' : ''}`}
         </Typography>
       </Breadcrumbs>
-      {onSave && (
-        <Button onClick={onSave} size="small" startIcon={<SaveIcon />} variant="text">
-          Save
-        </Button>
-      )}
+      <Button onClick={onSaveClick} size="small" startIcon={<SaveIcon />} variant="text">
+        Save
+      </Button>
+      <Snackbar onClose={onClearSavingError} open={!!savingError}>
+        <Alert onClose={onClearSavingError} severity="error" sx={{ width: '100%' }} variant="filled">
+          {savingError}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
