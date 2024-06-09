@@ -65,7 +65,7 @@ const RAW_RUNTIME_STATE =
           ["next", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:14.1.4"],\
           ["prettier", "npm:3.2.5"],\
           ["react", "npm:18.3.1"],\
-          ["react-clay-editor", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:1.2.4"],\
+          ["react-clay-editor", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:1.2.5"],\
           ["react-dom", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:18.3.1"],\
           ["react-hook-form", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:7.51.0"],\
           ["sort-package-json", "npm:2.10.0"],\
@@ -14020,7 +14020,7 @@ const RAW_RUNTIME_STATE =
           ["next", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:14.1.4"],\
           ["prettier", "npm:3.2.5"],\
           ["react", "npm:18.3.1"],\
-          ["react-clay-editor", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:1.2.4"],\
+          ["react-clay-editor", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:1.2.5"],\
           ["react-dom", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:18.3.1"],\
           ["react-hook-form", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:7.51.0"],\
           ["sort-package-json", "npm:2.10.0"],\
@@ -15762,17 +15762,17 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["react-clay-editor", [\
-      ["npm:1.2.4", {\
-        "packageLocation": "./.yarn/cache/react-clay-editor-npm-1.2.4-524878442d-39bc1c2446.zip/node_modules/react-clay-editor/",\
+      ["npm:1.2.5", {\
+        "packageLocation": "./.yarn/cache/react-clay-editor-npm-1.2.5-bb599d9e4d-682b7bd8d4.zip/node_modules/react-clay-editor/",\
         "packageDependencies": [\
-          ["react-clay-editor", "npm:1.2.4"]\
+          ["react-clay-editor", "npm:1.2.5"]\
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:1.2.4", {\
-        "packageLocation": "./.yarn/__virtual__/react-clay-editor-virtual-8e3f622811/0/cache/react-clay-editor-npm-1.2.4-524878442d-39bc1c2446.zip/node_modules/react-clay-editor/",\
+      ["virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:1.2.5", {\
+        "packageLocation": "./.yarn/__virtual__/react-clay-editor-virtual-80c1b48847/0/cache/react-clay-editor-npm-1.2.5-bb599d9e4d-682b7bd8d4.zip/node_modules/react-clay-editor/",\
         "packageDependencies": [\
-          ["react-clay-editor", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:1.2.4"],\
+          ["react-clay-editor", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:1.2.5"],\
           ["@emotion/react", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:11.11.4"],\
           ["@emotion/styled", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:11.11.5"],\
           ["@types/emotion__react", null],\
