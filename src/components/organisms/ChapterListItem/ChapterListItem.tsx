@@ -9,7 +9,6 @@ import ChapterListItemMenuComponent from './ChapterListItemMenu';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import IconButton from '@mui/material/IconButton';
 import ListItem from '@mui/material/ListItem';
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 import ListItemText from '@mui/material/ListItemText';
 import React from 'react';
 
@@ -34,11 +33,9 @@ const ChapterListItemComponent: React.FC<ChapterListItemComponentProps> = ({
   } = useMenu();
 
   return (
-    <ListItem key={chapter.id}>
-      <ListItemText primaryTypographyProps={{ variant: 'subtitle1' }}>
-        {`#${chapter.number} ${chapter.name}`}
-      </ListItemText>
-      <ListItemSecondaryAction>
+    <ListItem
+      key={chapter.id}
+      secondaryAction={
         <IconButton
           aria-controls={chapterMenuOpen ? `chapter-list-item-menu-${chapter.number}` : undefined}
           aria-expanded={chapterMenuOpen ? 'true' : undefined}
@@ -50,20 +47,24 @@ const ChapterListItemComponent: React.FC<ChapterListItemComponentProps> = ({
         >
           <MoreVertIcon />
         </IconButton>
-        <ChapterListItemMenuComponent
-          anchorEl={chapterMenuAnchorEl}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-          aria-labelledby={`chapter-list-item-buttom-${chapter.number}`}
-          chapter={chapter}
-          id={`chapter-list-item-menu-${chapter.number}`}
-          maxChapterNumber={maxChapterNumber}
-          onClose={onCloseChapterMenu}
-          onUpdateChapter={onUpdateChapter}
-          open={chapterMenuOpen}
-          projectId={projectId}
-          transformOrigin={{ vertical: 'top', horizontal: 'center' }}
-        />
-      </ListItemSecondaryAction>
+      }
+    >
+      <ListItemText primaryTypographyProps={{ variant: 'subtitle1' }}>
+        {`#${chapter.number} ${chapter.name}`}
+      </ListItemText>
+      <ChapterListItemMenuComponent
+        anchorEl={chapterMenuAnchorEl}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        aria-labelledby={`chapter-list-item-buttom-${chapter.number}`}
+        chapter={chapter}
+        id={`chapter-list-item-menu-${chapter.number}`}
+        maxChapterNumber={maxChapterNumber}
+        onClose={onCloseChapterMenu}
+        onUpdateChapter={onUpdateChapter}
+        open={chapterMenuOpen}
+        projectId={projectId}
+        transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+      />
     </ListItem>
   );
 };
