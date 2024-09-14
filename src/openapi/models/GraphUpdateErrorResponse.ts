@@ -12,8 +12,18 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { PaperError } from './PaperError';
-import { PaperErrorFromJSON, PaperErrorFromJSONTyped, PaperErrorToJSON } from './PaperError';
+import type { ChapterOnlyIdError } from './ChapterOnlyIdError';
+import {
+  ChapterOnlyIdErrorFromJSON,
+  ChapterOnlyIdErrorFromJSONTyped,
+  ChapterOnlyIdErrorToJSON,
+} from './ChapterOnlyIdError';
+import type { GraphContentError } from './GraphContentError';
+import {
+  GraphContentErrorFromJSON,
+  GraphContentErrorFromJSONTyped,
+  GraphContentErrorToJSON,
+} from './GraphContentError';
 import type { ProjectOnlyIdError } from './ProjectOnlyIdError';
 import {
   ProjectOnlyIdErrorFromJSON,
@@ -24,54 +34,60 @@ import type { UserOnlyIdError } from './UserOnlyIdError';
 import { UserOnlyIdErrorFromJSON, UserOnlyIdErrorFromJSONTyped, UserOnlyIdErrorToJSON } from './UserOnlyIdError';
 
 /**
- * Error Response Body for Paper Update API
+ * Error Response Body for Graph Update API
  * @export
- * @interface PaperUpdateErrorResponse
+ * @interface GraphUpdateErrorResponse
  */
-export interface PaperUpdateErrorResponse {
+export interface GraphUpdateErrorResponse {
   /**
    * Error message when request body format is invalid
    * @type {string}
-   * @memberof PaperUpdateErrorResponse
+   * @memberof GraphUpdateErrorResponse
    */
   message?: string;
   /**
    *
    * @type {UserOnlyIdError}
-   * @memberof PaperUpdateErrorResponse
+   * @memberof GraphUpdateErrorResponse
    */
   user?: UserOnlyIdError;
   /**
    *
    * @type {ProjectOnlyIdError}
-   * @memberof PaperUpdateErrorResponse
+   * @memberof GraphUpdateErrorResponse
    */
   project?: ProjectOnlyIdError;
   /**
    *
-   * @type {PaperError}
-   * @memberof PaperUpdateErrorResponse
+   * @type {ChapterOnlyIdError}
+   * @memberof GraphUpdateErrorResponse
    */
-  paper?: PaperError;
+  chapter?: ChapterOnlyIdError;
+  /**
+   *
+   * @type {GraphContentError}
+   * @memberof GraphUpdateErrorResponse
+   */
+  graph?: GraphContentError;
 }
 
 /**
- * Check if a given object implements the PaperUpdateErrorResponse interface.
+ * Check if a given object implements the GraphUpdateErrorResponse interface.
  */
-export function instanceOfPaperUpdateErrorResponse(value: object): boolean {
+export function instanceOfGraphUpdateErrorResponse(value: object): boolean {
   let isInstance = true;
 
   return isInstance;
 }
 
-export function PaperUpdateErrorResponseFromJSON(json: any): PaperUpdateErrorResponse {
-  return PaperUpdateErrorResponseFromJSONTyped(json, false);
+export function GraphUpdateErrorResponseFromJSON(json: any): GraphUpdateErrorResponse {
+  return GraphUpdateErrorResponseFromJSONTyped(json, false);
 }
 
-export function PaperUpdateErrorResponseFromJSONTyped(
+export function GraphUpdateErrorResponseFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
-): PaperUpdateErrorResponse {
+): GraphUpdateErrorResponse {
   if (json === undefined || json === null) {
     return json;
   }
@@ -79,11 +95,12 @@ export function PaperUpdateErrorResponseFromJSONTyped(
     message: !exists(json, 'message') ? undefined : json['message'],
     user: !exists(json, 'user') ? undefined : UserOnlyIdErrorFromJSON(json['user']),
     project: !exists(json, 'project') ? undefined : ProjectOnlyIdErrorFromJSON(json['project']),
-    paper: !exists(json, 'paper') ? undefined : PaperErrorFromJSON(json['paper']),
+    chapter: !exists(json, 'chapter') ? undefined : ChapterOnlyIdErrorFromJSON(json['chapter']),
+    graph: !exists(json, 'graph') ? undefined : GraphContentErrorFromJSON(json['graph']),
   };
 }
 
-export function PaperUpdateErrorResponseToJSON(value?: PaperUpdateErrorResponse | null): any {
+export function GraphUpdateErrorResponseToJSON(value?: GraphUpdateErrorResponse | null): any {
   if (value === undefined) {
     return undefined;
   }
@@ -94,6 +111,7 @@ export function PaperUpdateErrorResponseToJSON(value?: PaperUpdateErrorResponse 
     message: value.message,
     user: UserOnlyIdErrorToJSON(value.user),
     project: ProjectOnlyIdErrorToJSON(value.project),
-    paper: PaperErrorToJSON(value.paper),
+    chapter: ChapterOnlyIdErrorToJSON(value.chapter),
+    graph: GraphContentErrorToJSON(value.graph),
   };
 }

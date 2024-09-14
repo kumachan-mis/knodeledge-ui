@@ -13,33 +13,33 @@
 
 import { exists, mapValues } from '../runtime';
 /**
- * Error Message for ChapterOnlyId object
+ * Error Message for SectionOnlyId object
  * @export
- * @interface ChapterOnlyIdError
+ * @interface SectionOnlyIdError
  */
-export interface ChapterOnlyIdError {
+export interface SectionOnlyIdError {
   /**
-   * Error message for chapter ID
+   * Error message for section ID
    * @type {string}
-   * @memberof ChapterOnlyIdError
+   * @memberof SectionOnlyIdError
    */
   id?: string;
 }
 
 /**
- * Check if a given object implements the ChapterOnlyIdError interface.
+ * Check if a given object implements the SectionOnlyIdError interface.
  */
-export function instanceOfChapterOnlyIdError(value: object): boolean {
+export function instanceOfSectionOnlyIdError(value: object): boolean {
   let isInstance = true;
 
   return isInstance;
 }
 
-export function ChapterOnlyIdErrorFromJSON(json: any): ChapterOnlyIdError {
-  return ChapterOnlyIdErrorFromJSONTyped(json, false);
+export function SectionOnlyIdErrorFromJSON(json: any): SectionOnlyIdError {
+  return SectionOnlyIdErrorFromJSONTyped(json, false);
 }
 
-export function ChapterOnlyIdErrorFromJSONTyped(json: any, ignoreDiscriminator: boolean): ChapterOnlyIdError {
+export function SectionOnlyIdErrorFromJSONTyped(json: any, ignoreDiscriminator: boolean): SectionOnlyIdError {
   if (json === undefined || json === null) {
     return json;
   }
@@ -48,7 +48,7 @@ export function ChapterOnlyIdErrorFromJSONTyped(json: any, ignoreDiscriminator: 
   };
 }
 
-export function ChapterOnlyIdErrorToJSON(value?: ChapterOnlyIdError | null): any {
+export function SectionOnlyIdErrorToJSON(value?: SectionOnlyIdError | null): any {
   if (value === undefined) {
     return undefined;
   }

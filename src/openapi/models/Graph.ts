@@ -13,51 +13,59 @@
 
 import { exists, mapValues } from '../runtime';
 /**
- * Section object
+ * Graph object
  * @export
- * @interface Section
+ * @interface Graph
  */
-export interface Section {
+export interface Graph {
   /**
    * Auto-generated section ID
    * @type {string}
-   * @memberof Section
+   * @memberof Graph
    */
   id: string;
   /**
-   * Section name
+   * Graph name
    * @type {string}
-   * @memberof Section
+   * @memberof Graph
    */
   name: string;
+  /**
+   * Graph paragraph
+   * @type {string}
+   * @memberof Graph
+   */
+  paragraph: string;
 }
 
 /**
- * Check if a given object implements the Section interface.
+ * Check if a given object implements the Graph interface.
  */
-export function instanceOfSection(value: object): boolean {
+export function instanceOfGraph(value: object): boolean {
   let isInstance = true;
   isInstance = isInstance && 'id' in value;
   isInstance = isInstance && 'name' in value;
+  isInstance = isInstance && 'paragraph' in value;
 
   return isInstance;
 }
 
-export function SectionFromJSON(json: any): Section {
-  return SectionFromJSONTyped(json, false);
+export function GraphFromJSON(json: any): Graph {
+  return GraphFromJSONTyped(json, false);
 }
 
-export function SectionFromJSONTyped(json: any, ignoreDiscriminator: boolean): Section {
+export function GraphFromJSONTyped(json: any, ignoreDiscriminator: boolean): Graph {
   if (json === undefined || json === null) {
     return json;
   }
   return {
     id: json['id'],
     name: json['name'],
+    paragraph: json['paragraph'],
   };
 }
 
-export function SectionToJSON(value?: Section | null): any {
+export function GraphToJSON(value?: Graph | null): any {
   if (value === undefined) {
     return undefined;
   }
@@ -67,5 +75,6 @@ export function SectionToJSON(value?: Section | null): any {
   return {
     id: value.id,
     name: value.name,
+    paragraph: value.paragraph,
   };
 }
