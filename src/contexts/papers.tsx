@@ -98,7 +98,7 @@ export function useUpdatePaper(user: UserOnlyId, projectId: string, chapterId: s
       return { state: 'error', error: UNKNOWN_PAPER_ACTION_ERROR };
     }
 
-    if (errorable.state === 'error' && (!!errorable.error.user.id || !!errorable.error.project.id)) {
+    if (errorable.state === 'error' && (!!errorable.error.user?.id || !!errorable.error.project?.id)) {
       return { state: 'error', error: UNKNOWN_PAPER_ACTION_ERROR };
     }
     if (errorable.state === 'error') {
