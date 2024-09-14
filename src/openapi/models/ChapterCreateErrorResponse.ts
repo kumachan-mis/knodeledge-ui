@@ -18,12 +18,6 @@ import {
   ChapterWithoutAutofieldErrorFromJSONTyped,
   ChapterWithoutAutofieldErrorToJSON,
 } from './ChapterWithoutAutofieldError';
-import type { PaperWithoutAutofieldError } from './PaperWithoutAutofieldError';
-import {
-  PaperWithoutAutofieldErrorFromJSON,
-  PaperWithoutAutofieldErrorFromJSONTyped,
-  PaperWithoutAutofieldErrorToJSON,
-} from './PaperWithoutAutofieldError';
 import type { ProjectOnlyIdError } from './ProjectOnlyIdError';
 import {
   ProjectOnlyIdErrorFromJSON,
@@ -63,12 +57,6 @@ export interface ChapterCreateErrorResponse {
    * @memberof ChapterCreateErrorResponse
    */
   chapter?: ChapterWithoutAutofieldError;
-  /**
-   *
-   * @type {PaperWithoutAutofieldError}
-   * @memberof ChapterCreateErrorResponse
-   */
-  paper?: PaperWithoutAutofieldError;
 }
 
 /**
@@ -96,7 +84,6 @@ export function ChapterCreateErrorResponseFromJSONTyped(
     user: !exists(json, 'user') ? undefined : UserOnlyIdErrorFromJSON(json['user']),
     project: !exists(json, 'project') ? undefined : ProjectOnlyIdErrorFromJSON(json['project']),
     chapter: !exists(json, 'chapter') ? undefined : ChapterWithoutAutofieldErrorFromJSON(json['chapter']),
-    paper: !exists(json, 'paper') ? undefined : PaperWithoutAutofieldErrorFromJSON(json['paper']),
   };
 }
 
@@ -112,6 +99,5 @@ export function ChapterCreateErrorResponseToJSON(value?: ChapterCreateErrorRespo
     user: UserOnlyIdErrorToJSON(value.user),
     project: ProjectOnlyIdErrorToJSON(value.project),
     chapter: ChapterWithoutAutofieldErrorToJSON(value.chapter),
-    paper: PaperWithoutAutofieldErrorToJSON(value.paper),
   };
 }

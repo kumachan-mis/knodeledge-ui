@@ -19,7 +19,7 @@ import { exists, mapValues } from '../runtime';
  */
 export interface ChapterError {
   /**
-   * Error message for chapter id
+   * Error message for chapter ID
    * @type {string}
    * @memberof ChapterError
    */

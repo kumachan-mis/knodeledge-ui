@@ -12,8 +12,8 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { Section } from './Section';
-import { SectionFromJSON, SectionFromJSONTyped, SectionToJSON } from './Section';
+import type { SectionOfChapter } from './SectionOfChapter';
+import { SectionOfChapterFromJSON, SectionOfChapterFromJSONTyped, SectionOfChapterToJSON } from './SectionOfChapter';
 
 /**
  * ChapterWithSections object
@@ -41,10 +41,10 @@ export interface ChapterWithSections {
   number: number;
   /**
    *
-   * @type {Array<Section>}
+   * @type {Array<SectionOfChapter>}
    * @memberof ChapterWithSections
    */
-  sections: Array<Section>;
+  sections: Array<SectionOfChapter>;
 }
 
 /**
@@ -72,7 +72,7 @@ export function ChapterWithSectionsFromJSONTyped(json: any, ignoreDiscriminator:
     id: json['id'],
     name: json['name'],
     number: json['number'],
-    sections: (json['sections'] as Array<any>).map(SectionFromJSON),
+    sections: (json['sections'] as Array<any>).map(SectionOfChapterFromJSON),
   };
 }
 
@@ -87,6 +87,6 @@ export function ChapterWithSectionsToJSON(value?: ChapterWithSections | null): a
     id: value.id,
     name: value.name,
     number: value.number,
-    sections: (value.sections as Array<any>).map(SectionToJSON),
+    sections: (value.sections as Array<any>).map(SectionOfChapterToJSON),
   };
 }

@@ -19,7 +19,7 @@ import { exists, mapValues } from '../runtime';
  */
 export interface ProjectError {
   /**
-   * Error message for project id
+   * Error message for project ID
    * @type {string}
    * @memberof ProjectError
    */

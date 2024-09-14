@@ -12,71 +12,77 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { ChapterWithoutAutofield } from './ChapterWithoutAutofield';
-import {
-  ChapterWithoutAutofieldFromJSON,
-  ChapterWithoutAutofieldFromJSONTyped,
-  ChapterWithoutAutofieldToJSON,
-} from './ChapterWithoutAutofield';
+import type { ChapterOnlyId } from './ChapterOnlyId';
+import { ChapterOnlyIdFromJSON, ChapterOnlyIdFromJSONTyped, ChapterOnlyIdToJSON } from './ChapterOnlyId';
+import type { GraphContent } from './GraphContent';
+import { GraphContentFromJSON, GraphContentFromJSONTyped, GraphContentToJSON } from './GraphContent';
 import type { ProjectOnlyId } from './ProjectOnlyId';
 import { ProjectOnlyIdFromJSON, ProjectOnlyIdFromJSONTyped, ProjectOnlyIdToJSON } from './ProjectOnlyId';
 import type { UserOnlyId } from './UserOnlyId';
 import { UserOnlyIdFromJSON, UserOnlyIdFromJSONTyped, UserOnlyIdToJSON } from './UserOnlyId';
 
 /**
- * Request Body for Chapter Create API
+ * Request Body for Graph Update API
  * @export
- * @interface ChapterCreateRequest
+ * @interface GraphUpdateRequest
  */
-export interface ChapterCreateRequest {
+export interface GraphUpdateRequest {
   /**
    *
    * @type {UserOnlyId}
-   * @memberof ChapterCreateRequest
+   * @memberof GraphUpdateRequest
    */
   user: UserOnlyId;
   /**
    *
    * @type {ProjectOnlyId}
-   * @memberof ChapterCreateRequest
+   * @memberof GraphUpdateRequest
    */
   project: ProjectOnlyId;
   /**
    *
-   * @type {ChapterWithoutAutofield}
-   * @memberof ChapterCreateRequest
+   * @type {ChapterOnlyId}
+   * @memberof GraphUpdateRequest
    */
-  chapter: ChapterWithoutAutofield;
+  chapter: ChapterOnlyId;
+  /**
+   *
+   * @type {GraphContent}
+   * @memberof GraphUpdateRequest
+   */
+  graph: GraphContent;
 }
 
 /**
- * Check if a given object implements the ChapterCreateRequest interface.
+ * Check if a given object implements the GraphUpdateRequest interface.
  */
-export function instanceOfChapterCreateRequest(value: object): boolean {
+export function instanceOfGraphUpdateRequest(value: object): boolean {
   let isInstance = true;
   isInstance = isInstance && 'user' in value;
   isInstance = isInstance && 'project' in value;
   isInstance = isInstance && 'chapter' in value;
+  isInstance = isInstance && 'graph' in value;
 
   return isInstance;
 }
 
-export function ChapterCreateRequestFromJSON(json: any): ChapterCreateRequest {
-  return ChapterCreateRequestFromJSONTyped(json, false);
+export function GraphUpdateRequestFromJSON(json: any): GraphUpdateRequest {
+  return GraphUpdateRequestFromJSONTyped(json, false);
 }
 
-export function ChapterCreateRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): ChapterCreateRequest {
+export function GraphUpdateRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): GraphUpdateRequest {
   if (json === undefined || json === null) {
     return json;
   }
   return {
     user: UserOnlyIdFromJSON(json['user']),
     project: ProjectOnlyIdFromJSON(json['project']),
-    chapter: ChapterWithoutAutofieldFromJSON(json['chapter']),
+    chapter: ChapterOnlyIdFromJSON(json['chapter']),
+    graph: GraphContentFromJSON(json['graph']),
   };
 }
 
-export function ChapterCreateRequestToJSON(value?: ChapterCreateRequest | null): any {
+export function GraphUpdateRequestToJSON(value?: GraphUpdateRequest | null): any {
   if (value === undefined) {
     return undefined;
   }
@@ -86,6 +92,7 @@ export function ChapterCreateRequestToJSON(value?: ChapterCreateRequest | null):
   return {
     user: UserOnlyIdToJSON(value.user),
     project: ProjectOnlyIdToJSON(value.project),
-    chapter: ChapterWithoutAutofieldToJSON(value.chapter),
+    chapter: ChapterOnlyIdToJSON(value.chapter),
+    graph: GraphContentToJSON(value.graph),
   };
 }

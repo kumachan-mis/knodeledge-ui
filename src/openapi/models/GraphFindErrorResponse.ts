@@ -12,66 +12,79 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { PaperError } from './PaperError';
-import { PaperErrorFromJSON, PaperErrorFromJSONTyped, PaperErrorToJSON } from './PaperError';
+import type { ChapterOnlyIdError } from './ChapterOnlyIdError';
+import {
+  ChapterOnlyIdErrorFromJSON,
+  ChapterOnlyIdErrorFromJSONTyped,
+  ChapterOnlyIdErrorToJSON,
+} from './ChapterOnlyIdError';
 import type { ProjectOnlyIdError } from './ProjectOnlyIdError';
 import {
   ProjectOnlyIdErrorFromJSON,
   ProjectOnlyIdErrorFromJSONTyped,
   ProjectOnlyIdErrorToJSON,
 } from './ProjectOnlyIdError';
+import type { SectionOnlyIdError } from './SectionOnlyIdError';
+import {
+  SectionOnlyIdErrorFromJSON,
+  SectionOnlyIdErrorFromJSONTyped,
+  SectionOnlyIdErrorToJSON,
+} from './SectionOnlyIdError';
 import type { UserOnlyIdError } from './UserOnlyIdError';
 import { UserOnlyIdErrorFromJSON, UserOnlyIdErrorFromJSONTyped, UserOnlyIdErrorToJSON } from './UserOnlyIdError';
 
 /**
- * Error Response Body for Paper Update API
+ * Error Response Body for Graph Find API
  * @export
- * @interface PaperUpdateErrorResponse
+ * @interface GraphFindErrorResponse
  */
-export interface PaperUpdateErrorResponse {
+export interface GraphFindErrorResponse {
   /**
    * Error message when request body format is invalid
    * @type {string}
-   * @memberof PaperUpdateErrorResponse
+   * @memberof GraphFindErrorResponse
    */
   message?: string;
   /**
    *
    * @type {UserOnlyIdError}
-   * @memberof PaperUpdateErrorResponse
+   * @memberof GraphFindErrorResponse
    */
   user?: UserOnlyIdError;
   /**
    *
    * @type {ProjectOnlyIdError}
-   * @memberof PaperUpdateErrorResponse
+   * @memberof GraphFindErrorResponse
    */
   project?: ProjectOnlyIdError;
   /**
    *
-   * @type {PaperError}
-   * @memberof PaperUpdateErrorResponse
+   * @type {ChapterOnlyIdError}
+   * @memberof GraphFindErrorResponse
    */
-  paper?: PaperError;
+  chapter?: ChapterOnlyIdError;
+  /**
+   *
+   * @type {SectionOnlyIdError}
+   * @memberof GraphFindErrorResponse
+   */
+  section?: SectionOnlyIdError;
 }
 
 /**
- * Check if a given object implements the PaperUpdateErrorResponse interface.
+ * Check if a given object implements the GraphFindErrorResponse interface.
  */
-export function instanceOfPaperUpdateErrorResponse(value: object): boolean {
+export function instanceOfGraphFindErrorResponse(value: object): boolean {
   let isInstance = true;
 
   return isInstance;
 }
 
-export function PaperUpdateErrorResponseFromJSON(json: any): PaperUpdateErrorResponse {
-  return PaperUpdateErrorResponseFromJSONTyped(json, false);
+export function GraphFindErrorResponseFromJSON(json: any): GraphFindErrorResponse {
+  return GraphFindErrorResponseFromJSONTyped(json, false);
 }
 
-export function PaperUpdateErrorResponseFromJSONTyped(
-  json: any,
-  ignoreDiscriminator: boolean,
-): PaperUpdateErrorResponse {
+export function GraphFindErrorResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): GraphFindErrorResponse {
   if (json === undefined || json === null) {
     return json;
   }
@@ -79,11 +92,12 @@ export function PaperUpdateErrorResponseFromJSONTyped(
     message: !exists(json, 'message') ? undefined : json['message'],
     user: !exists(json, 'user') ? undefined : UserOnlyIdErrorFromJSON(json['user']),
     project: !exists(json, 'project') ? undefined : ProjectOnlyIdErrorFromJSON(json['project']),
-    paper: !exists(json, 'paper') ? undefined : PaperErrorFromJSON(json['paper']),
+    chapter: !exists(json, 'chapter') ? undefined : ChapterOnlyIdErrorFromJSON(json['chapter']),
+    section: !exists(json, 'section') ? undefined : SectionOnlyIdErrorFromJSON(json['section']),
   };
 }
 
-export function PaperUpdateErrorResponseToJSON(value?: PaperUpdateErrorResponse | null): any {
+export function GraphFindErrorResponseToJSON(value?: GraphFindErrorResponse | null): any {
   if (value === undefined) {
     return undefined;
   }
@@ -94,6 +108,7 @@ export function PaperUpdateErrorResponseToJSON(value?: PaperUpdateErrorResponse 
     message: value.message,
     user: UserOnlyIdErrorToJSON(value.user),
     project: ProjectOnlyIdErrorToJSON(value.project),
-    paper: PaperErrorToJSON(value.paper),
+    chapter: ChapterOnlyIdErrorToJSON(value.chapter),
+    section: SectionOnlyIdErrorToJSON(value.section),
   };
 }

@@ -19,7 +19,7 @@ import { exists, mapValues } from '../runtime';
  */
 export interface PaperError {
   /**
-   * Error message for paper id
+   * Error message for paper ID
    * @type {string}
    * @memberof PaperError
    */
