@@ -3,7 +3,6 @@ import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Link from 'next/link';
-import React from 'react';
 
 export type AppToolbarProps = {
   readonly authorized: boolean;

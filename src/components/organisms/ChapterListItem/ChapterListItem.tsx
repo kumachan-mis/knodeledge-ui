@@ -10,7 +10,6 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import IconButton from '@mui/material/IconButton';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import React from 'react';
 
 export type ChapterListItemComponentProps = {
   readonly projectId: string;

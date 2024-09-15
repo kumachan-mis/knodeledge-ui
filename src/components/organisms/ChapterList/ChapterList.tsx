@@ -6,7 +6,6 @@ import { ChapterWithoutAutofield } from '@/openapi';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import List from '@mui/material/List';
-import React from 'react';
 
 export type ChapterListComponentProps = {
   readonly projectId: string;

@@ -1,7 +1,6 @@
 import AppLayoutComponent from './AppLayout';
 
 import { getSession } from '@auth0/nextjs-auth0';
-import React from 'react';
 
 export type AppLayoutProps = {
   readonly children?: React.ReactNode;

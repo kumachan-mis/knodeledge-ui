@@ -4,9 +4,7 @@ import { ProjectWithoutAutofield, Project } from '@/openapi';
 
 import ProjectCardComponent from './ProjectCard';
 
-import React from 'react';
-
-type ProjectCardProps = {
+export type ProjectCardProps = {
   readonly project: Project;
   readonly onUpdateProject: (project: ProjectWithoutAutofield) => Promise<LoadableAction<ProjectActionError>>;
 };

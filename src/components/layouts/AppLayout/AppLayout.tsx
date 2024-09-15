@@ -3,7 +3,6 @@ import AppHeader from '@/components/molecules/AppHeader';
 import AppMain from '@/components/molecules/AppMain';
 
 import { Claims } from '@auth0/nextjs-auth0';
-import React from 'react';
 
 export type AppLayoutComponentProps = {
   readonly user: Claims | undefined;

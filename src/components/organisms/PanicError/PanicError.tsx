@@ -6,7 +6,6 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import React from 'react';
 
 export type PanicErrorComponentProps = {
   readonly panic: Panic;

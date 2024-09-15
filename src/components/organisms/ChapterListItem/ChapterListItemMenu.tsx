@@ -13,7 +13,6 @@ import ListItemText from '@mui/material/ListItemText';
 import Menu, { MenuProps } from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Link from 'next/link';
-import React from 'react';
 
 export type ChapterListItemMenuComponentProps = {
   readonly projectId: string;

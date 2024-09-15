@@ -5,7 +5,6 @@ import { useLoadableProject } from '@/contexts/projects';
 import ChapterListHeaderComponent from './ChapterListHeader';
 
 import { Claims } from '@auth0/nextjs-auth0';
-import React from 'react';
 
 export type ChapterListHeaderProps = {
   readonly user: Claims;

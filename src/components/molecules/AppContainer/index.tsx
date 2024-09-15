@@ -1,5 +1,4 @@
 import Box from '@mui/material/Box';
-import React from 'react';
 
 export type AppContainerProps = {
   readonly children: React.ReactNode;

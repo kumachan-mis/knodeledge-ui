@@ -1,5 +1,4 @@
 import { Typography } from '@mui/material';
-import React from 'react';
 
 export type ProjectTitleComponentProps = {
   readonly children?: React.ReactNode;

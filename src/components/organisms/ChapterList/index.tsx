@@ -4,7 +4,6 @@ import { useLoadableChapterList, useUpdateChapterInList } from '@/contexts/chapt
 import ChapterListComponent from './ChapterList';
 
 import { Claims } from '@auth0/nextjs-auth0';
-import React from 'react';
 
 export type ChapterListProps = {
   readonly user: Claims;

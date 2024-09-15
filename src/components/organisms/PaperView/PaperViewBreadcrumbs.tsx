@@ -4,8 +4,6 @@ import { PaperActionError } from '@/contexts/papers';
 import { usePaperContent } from '@/contexts/views';
 import { Chapter, Paper, PaperWithoutAutofield, Project } from '@/openapi';
 
-import React from 'react';
-
 export type PaperViewBreadcrumbsComponentProps = {
   readonly project: Project;
   readonly chapter: Chapter;
