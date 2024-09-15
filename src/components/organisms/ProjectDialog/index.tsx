@@ -5,8 +5,6 @@ import { ProjectWithoutAutofield } from '@/openapi';
 import ProjectDialogComponent from './ProjectDialog';
 import { ProjectFieldValidates, ProjectFieldValues } from './ProjectDialogForm';
 
-import React from 'react';
-
 export type ProjectDialogProps = {
   readonly open: boolean;
   readonly title: string;

@@ -4,7 +4,6 @@ import ChapterListHeaderComponent from '@/components/organisms/ChapterListHeader
 import ProjectLayout from './ProjectLayout';
 
 import { Meta, StoryObj } from '@storybook/react';
-import React from 'react';
 
 const meta: Meta<typeof ProjectLayout> = {
   component: ProjectLayout,

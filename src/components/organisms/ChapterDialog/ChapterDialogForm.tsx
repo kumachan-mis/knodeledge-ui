@@ -8,7 +8,6 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import FormHelperText from '@mui/material/FormHelperText';
 import TextField from '@mui/material/TextField';
-import React from 'react';
 import { Controller, useForm, Validate } from 'react-hook-form';
 
 export type ChapterDialogFormComponentProps = {

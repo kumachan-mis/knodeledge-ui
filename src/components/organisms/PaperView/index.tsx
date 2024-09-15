@@ -5,7 +5,6 @@ import { useLoadableProject } from '@/contexts/projects';
 import PaperViewComponent from './PaperView';
 
 import { Claims } from '@auth0/nextjs-auth0';
-import React from 'react';
 
 export type PaperViewProps = {
   readonly user: Claims;

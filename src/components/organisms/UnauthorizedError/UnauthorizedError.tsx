@@ -1,7 +1,6 @@
 import AppError from '@/components/molecules/AppError';
 
 import Button from '@mui/material/Button';
-import React from 'react';
 
 const UnauthorizedErrorComponent: React.FC = () => (
   <AppError

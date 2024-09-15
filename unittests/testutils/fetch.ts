@@ -1,4 +1,4 @@
-export function createOkResponse<T>(data: T): Partial<Response> {
+export function createOkResponse(data: unknown): Partial<Response> {
   return {
     ok: true,
     status: 200,
@@ -6,7 +6,7 @@ export function createOkResponse<T>(data: T): Partial<Response> {
   };
 }
 
-export function createBadRequestResponse<T>(data: T): Partial<Response> {
+export function createBadRequestResponse(data: unknown): Partial<Response> {
   return {
     ok: false,
     status: 400,
@@ -14,7 +14,7 @@ export function createBadRequestResponse<T>(data: T): Partial<Response> {
   };
 }
 
-export function createNotFoundResponse<T>(data: T): Partial<Response> {
+export function createNotFoundResponse(data: unknown): Partial<Response> {
   return {
     ok: false,
     status: 404,
@@ -22,7 +22,7 @@ export function createNotFoundResponse<T>(data: T): Partial<Response> {
   };
 }
 
-export function createInternalErrorResponse<T>(data: T): Partial<Response> {
+export function createInternalErrorResponse(data: unknown): Partial<Response> {
   return {
     ok: false,
     status: 500,

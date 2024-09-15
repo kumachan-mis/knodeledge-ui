@@ -5,7 +5,6 @@ import AppDrawerHeader from '@/components/molecules/AppDrawerHeader';
 import AppDrawerMain from '@/components/molecules/AppDrawerMain';
 
 import { Claims } from '@auth0/nextjs-auth0';
-import React from 'react';
 
 export type ProjectLayoutComponentProps = {
   readonly user: Claims | undefined;

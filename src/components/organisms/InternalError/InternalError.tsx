@@ -2,7 +2,6 @@ import AppError from '@/components/molecules/AppError';
 
 import Button from '@mui/material/Button';
 import Link from 'next/link';
-import React from 'react';
 
 const InternalErrorComponent: React.FC = () => (
   <AppError

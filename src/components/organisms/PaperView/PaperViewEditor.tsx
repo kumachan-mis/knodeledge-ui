@@ -2,7 +2,6 @@
 import { usePaperContent, useSetPaperContent } from '@/contexts/views';
 
 import { styled } from '@mui/material/styles';
-import React from 'react';
 import { EditorRoot, EditorSyntaxMenu, Divider, EditorTextFieldRoot, EditorTextFieldBody } from 'react-clay-editor';
 import 'katex/dist/katex.min.css';
 

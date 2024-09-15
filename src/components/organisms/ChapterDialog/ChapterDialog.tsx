@@ -7,7 +7,6 @@ import ChapterDialogFormComponent, { ChapterFieldValidates, ChapterFieldValues }
 
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
-import React from 'react';
 
 export type ChapterDialogComponentProps = {
   readonly open: boolean;

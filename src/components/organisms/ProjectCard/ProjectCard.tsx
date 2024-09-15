@@ -14,9 +14,8 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import Link from 'next/link';
-import React from 'react';
 
-type ProjectCardComponentProps = {
+export type ProjectCardComponentProps = {
   readonly project: Project;
   readonly onUpdateProject: (project: ProjectWithoutAutofield) => Promise<LoadableAction<ProjectActionError>>;
 };

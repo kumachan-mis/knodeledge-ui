@@ -5,8 +5,6 @@ import { ChapterWithoutAutofield } from '@/openapi';
 import ChapterDialogComponent from './ChapterDialog';
 import { ChapterFieldValidates, ChapterFieldValues } from './ChapterDialogForm';
 
-import React from 'react';
-
 export type ChapterDialogProps = {
   readonly open: boolean;
   readonly title: string;

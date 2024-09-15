@@ -1,7 +1,6 @@
 import AppToolbar from '@/components/molecules/AppToolbar';
 
 import AppBar from '@mui/material/AppBar';
-import React from 'react';
 
 export type AppHeaderProps = {
   readonly authorized: boolean;

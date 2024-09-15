@@ -8,14 +8,13 @@ import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
 import Typography from '@mui/material/Typography';
 import Link from 'next/link';
-import React from 'react';
 
 type BreadcrumbItem = {
   readonly id: string;
   readonly name: string;
 };
 
-type AppBreadcrumbsProps = {
+export type AppBreadcrumbsProps = {
   readonly project: BreadcrumbItem;
   readonly chapter: BreadcrumbItem;
   readonly isDirty: boolean;

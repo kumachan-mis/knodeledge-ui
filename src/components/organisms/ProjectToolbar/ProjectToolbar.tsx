@@ -8,7 +8,6 @@ import { ProjectWithoutAutofield } from '@/openapi';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
-import React from 'react';
 
 export type ProjectToolbarComponentProps = {
   readonly onCreateProject: (project: ProjectWithoutAutofield) => Promise<LoadableAction<ProjectActionError>>;

@@ -4,7 +4,6 @@ import { useLoadableProjectList, useUpdateProjectInList } from '@/contexts/proje
 import ProjectCardListComponent from './ProjectCardList';
 
 import { Claims } from '@auth0/nextjs-auth0';
-import React from 'react';
 
 export type ProjectCardListProps = {
   readonly user: Claims;

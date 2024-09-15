@@ -12,7 +12,6 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Link from 'next/link';
-import React from 'react';
 
 export type ChapterListHeaderComponentProps = {
   readonly loadableProject: LoadableProject;

@@ -1,7 +1,6 @@
 import ProjectLayoutComponent from './ProjectLayout';
 
 import { Claims, getSession } from '@auth0/nextjs-auth0';
-import React from 'react';
 
 export type ProjectLayoutProps = {
   readonly projectId: string;
