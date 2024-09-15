@@ -3,7 +3,7 @@ import ChapterDialog from '@/components/organisms/ChapterDialog';
 import { ChapterActionError } from '@/contexts/chapters';
 import { LoadableAction } from '@/contexts/openapi';
 import { useDialog } from '@/hooks/dialog';
-import { Chapter, ChapterWithoutAutofield } from '@/openapi';
+import { ChapterWithSections, ChapterWithoutAutofield } from '@/openapi';
 import { CHAPTER_ID_PARAM_KEY } from '@/utils/params';
 
 import OpenNoteIcon from '@mui/icons-material/Description';
@@ -16,7 +16,7 @@ import Link from 'next/link';
 
 export type ChapterListItemMenuComponentProps = {
   readonly projectId: string;
-  readonly chapter: Chapter;
+  readonly chapter: ChapterWithSections;
   readonly maxChapterNumber: number;
   readonly onUpdateChapter: (chapter: ChapterWithoutAutofield) => Promise<LoadableAction<ChapterActionError>>;
 } & MenuProps;

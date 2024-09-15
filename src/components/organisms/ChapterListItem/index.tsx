@@ -1,12 +1,12 @@
 import { ChapterActionError } from '@/contexts/chapters';
 import { LoadableAction } from '@/contexts/openapi';
-import { Chapter, ChapterWithoutAutofield } from '@/openapi';
+import { ChapterWithoutAutofield, ChapterWithSections } from '@/openapi';
 
 import ChapterListItemComponent from './ChapterListItem';
 
 export type ChapterListItemProps = {
   readonly projectId: string;
-  readonly chapter: Chapter;
+  readonly chapter: ChapterWithSections;
   readonly maxChapterNumber: number;
   readonly onUpdateChapter: (chapter: ChapterWithoutAutofield) => Promise<LoadableAction<ChapterActionError>>;
 };

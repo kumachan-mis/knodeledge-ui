@@ -5,7 +5,7 @@ import { ProjectWithoutAutofield } from '@/openapi';
 
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
 
 export type ProjectCardListComponentProps = {
@@ -30,7 +30,7 @@ const ProjectCardListComponent: React.FC<ProjectCardListComponentProps> = ({ loa
   ) : (
     <Grid container spacing={4}>
       {loadableProjectList.data.map((project) => (
-        <Grid item key={project.id} md={4} sm={6} xl={3} xs={12}>
+        <Grid key={project.id} size={{ xs: 12, sm: 6, md: 4, xl: 3 }}>
           <ProjectCard
             onUpdateProject={(updatedProject) => onUpdateProject(project.id, updatedProject)}
             project={project}

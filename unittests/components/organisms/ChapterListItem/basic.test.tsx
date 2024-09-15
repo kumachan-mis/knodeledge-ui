@@ -12,6 +12,7 @@ test('should show chapter', () => {
         id: 'CHAPTER',
         name: 'Chapter Name',
         number: 1,
+        sections: [],
       }}
       maxChapterNumber={3}
       onUpdateChapter={updateChapter}
@@ -34,6 +35,7 @@ test('should show chapter menu', async () => {
         id: 'CHAPTER',
         name: 'Chapter Name',
         number: 1,
+        sections: [],
       }}
       maxChapterNumber={3}
       onUpdateChapter={updateChapter}

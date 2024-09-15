@@ -29,11 +29,31 @@ export const Login: Story = {
               id: 'CHAPTER_ONE',
               number: 1,
               name: 'Chapter One',
+              sections: [
+                {
+                  id: 'SECTION_ONE',
+                  name: 'Section One',
+                },
+                {
+                  id: 'SECTION_TWO',
+                  name: 'Section Two',
+                },
+              ],
             },
             {
               id: 'CHAPTER_TWO',
               number: 2,
               name: 'Chapter Two',
+              sections: [
+                {
+                  id: 'SECTION_THREE',
+                  name: 'Section Three',
+                },
+                {
+                  id: 'SECTION_FOUR',
+                  name: 'Section Four',
+                },
+              ],
             },
           ],
         }}
@@ -57,11 +77,31 @@ export const Login: Story = {
               id: 'CHAPTER_ONE',
               number: 1,
               name: 'Chapter One',
+              sections: [
+                {
+                  id: 'SECTION_ONE',
+                  name: 'Section One',
+                },
+                {
+                  id: 'SECTION_TWO',
+                  name: 'Section Two',
+                },
+              ],
             },
             {
               id: 'CHAPTER_TWO',
               number: 2,
               name: 'Chapter Two',
+              sections: [
+                {
+                  id: 'SECTION_THREE',
+                  name: 'Section Three',
+                },
+                {
+                  id: 'SECTION_FOUR',
+                  name: 'Section Four',
+                },
+              ],
             },
           ],
         }}
