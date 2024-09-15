@@ -2,16 +2,22 @@
 import { createChapter } from '@/actions/chapters/createChapter';
 import { listChapter } from '@/actions/chapters/listChapter';
 import { updateChapter } from '@/actions/chapters/updateChapter';
-import { Chapter, ChapterWithoutAutofield, ChapterWithoutAutofieldError, ProjectOnlyId, UserOnlyId } from '@/openapi';
+import {
+  ChapterWithSections,
+  ChapterWithoutAutofield,
+  ChapterWithoutAutofieldError,
+  ProjectOnlyId,
+  UserOnlyId,
+} from '@/openapi';
 
 import { LoadableAction, LoadableData } from './openapi';
 import { useSetPanic } from './panic';
 
 import React from 'react';
 
-export type LoadableChapter = LoadableData<Chapter>;
+export type LoadableChapter = LoadableData<ChapterWithSections>;
 
-export type LoadableChapterList = LoadableData<Chapter[]>;
+export type LoadableChapterList = LoadableData<ChapterWithSections[]>;
 
 export type ChapterActionError = {
   message: string;

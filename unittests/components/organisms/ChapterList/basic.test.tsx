@@ -40,13 +40,31 @@ test('should show chapter from Chapter List API', async () => {
           id: 'CHAPTER_ONE',
           number: 1,
           name: 'Chapter One',
-          sections: [],
+          sections: [
+            {
+              id: 'SECTION_ONE',
+              name: 'Section One',
+            },
+            {
+              id: 'SECTION_TWO',
+              name: 'Section Two',
+            },
+          ],
         },
         {
           id: 'CHAPTER_TWO',
           number: 2,
           name: 'Chapter Two',
-          sections: [],
+          sections: [
+            {
+              id: 'SECTION_THREE',
+              name: 'Section Three',
+            },
+            {
+              id: 'SECTION_FOUR',
+              name: 'Section Four',
+            },
+          ],
         },
       ],
     }),
@@ -57,7 +75,12 @@ test('should show chapter from Chapter List API', async () => {
   await waitFor(() => {
     expect(screen.getByText('#1 Chapter One')).toBeInTheDocument();
   });
+  expect(screen.getByText('Section One')).toBeInTheDocument();
+  expect(screen.getByText('Section Two')).toBeInTheDocument();
+
   expect(screen.getByText('#2 Chapter Two')).toBeInTheDocument();
+  expect(screen.getByText('Section Three')).toBeInTheDocument();
+  expect(screen.getByText('Section Four')).toBeInTheDocument();
 
   await user.click(screen.getAllByLabelText('chapter menu')[0]);
 

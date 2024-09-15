@@ -1,8 +1,9 @@
 'use client';
+import SectionList from '../SectionList';
 import { ChapterActionError } from '@/contexts/chapters';
 import { LoadableAction } from '@/contexts/openapi';
 import { useMenu } from '@/hooks/menu';
-import { Chapter, ChapterWithoutAutofield } from '@/openapi';
+import { ChapterWithoutAutofield, ChapterWithSections } from '@/openapi';
 
 import ChapterListItemMenuComponent from './ChapterListItemMenu';
 
@@ -13,7 +14,7 @@ import ListItemText from '@mui/material/ListItemText';
 
 export type ChapterListItemComponentProps = {
   readonly projectId: string;
-  readonly chapter: Chapter;
+  readonly chapter: ChapterWithSections;
   readonly maxChapterNumber: number;
   readonly onUpdateChapter: (chapter: ChapterWithoutAutofield) => Promise<LoadableAction<ChapterActionError>>;
 };
@@ -32,39 +33,42 @@ const ChapterListItemComponent: React.FC<ChapterListItemComponentProps> = ({
   } = useMenu();
 
   return (
-    <ListItem
-      key={chapter.id}
-      secondaryAction={
-        <IconButton
-          aria-controls={chapterMenuOpen ? `chapter-list-item-menu-${chapter.number}` : undefined}
-          aria-expanded={chapterMenuOpen ? 'true' : undefined}
-          aria-haspopup="true"
-          aria-label="chapter menu"
-          edge="end"
-          id={`chapter-list-item-buttom-${chapter.number}`}
-          onClick={onOpenChapterMenu}
-        >
-          <MoreVertIcon />
-        </IconButton>
-      }
-    >
-      <ListItemText primaryTypographyProps={{ variant: 'subtitle1' }}>
-        {`#${chapter.number} ${chapter.name}`}
-      </ListItemText>
-      <ChapterListItemMenuComponent
-        anchorEl={chapterMenuAnchorEl}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        aria-labelledby={`chapter-list-item-buttom-${chapter.number}`}
-        chapter={chapter}
-        id={`chapter-list-item-menu-${chapter.number}`}
-        maxChapterNumber={maxChapterNumber}
-        onClose={onCloseChapterMenu}
-        onUpdateChapter={onUpdateChapter}
-        open={chapterMenuOpen}
-        projectId={projectId}
-        transformOrigin={{ vertical: 'top', horizontal: 'center' }}
-      />
-    </ListItem>
+    <div>
+      <ListItem
+        key={chapter.id}
+        secondaryAction={
+          <IconButton
+            aria-controls={chapterMenuOpen ? `chapter-list-item-menu-${chapter.number}` : undefined}
+            aria-expanded={chapterMenuOpen ? 'true' : undefined}
+            aria-haspopup="true"
+            aria-label="chapter menu"
+            edge="end"
+            id={`chapter-list-item-buttom-${chapter.number}`}
+            onClick={onOpenChapterMenu}
+          >
+            <MoreVertIcon />
+          </IconButton>
+        }
+      >
+        <ListItemText primaryTypographyProps={{ variant: 'subtitle1' }}>
+          {`#${chapter.number} ${chapter.name}`}
+        </ListItemText>
+        <ChapterListItemMenuComponent
+          anchorEl={chapterMenuAnchorEl}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+          aria-labelledby={`chapter-list-item-buttom-${chapter.number}`}
+          chapter={chapter}
+          id={`chapter-list-item-menu-${chapter.number}`}
+          maxChapterNumber={maxChapterNumber}
+          onClose={onCloseChapterMenu}
+          onUpdateChapter={onUpdateChapter}
+          open={chapterMenuOpen}
+          projectId={projectId}
+          transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+        />
+      </ListItem>
+      <SectionList chapterId={chapter.id} projectId={projectId} sections={chapter.sections} />
+    </div>
   );
 };
 

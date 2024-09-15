@@ -6,7 +6,7 @@ import { useInitChapterList, useLoadableChapterInList } from '@/contexts/chapter
 import { useInitPaper } from '@/contexts/papers';
 import { useInitProject, useLoadableProject } from '@/contexts/projects';
 import { AuthorizedPageProps } from '@/utils/page';
-import { CHAPTER_ID_PARAM_KEY } from '@/utils/params';
+import { CHAPTER_ID_PARAM_KEY, SECTION_ID_PARAM_KEY } from '@/utils/params';
 
 import { NextPage } from 'next';
 import { useSearchParams } from 'next/navigation';
@@ -21,6 +21,14 @@ export type ChapterDetailPageClientProps = {
   readonly params: {
     readonly projectId: string;
     readonly chapterId: string;
+  };
+};
+
+export type SectionDetailPageClientProps = {
+  readonly params: {
+    readonly projectId: string;
+    readonly chapterId: string;
+    readonly sectionId: string;
   };
 };
 
@@ -45,6 +53,8 @@ const ProjectDetailPageClient: NextPage<AuthorizedPageProps<ProjectDetailPageCli
 };
 
 const ChapterDetailPageClient = ({ user, params }: AuthorizedPageProps<ChapterDetailPageClientProps>) => {
+  const searchParams = useSearchParams();
+
   useInitPaper({ id: user.sub }, params.projectId, params.chapterId);
 
   const loadableChapter = useLoadableChapterInList(params.chapterId);
@@ -53,7 +63,16 @@ const ChapterDetailPageClient = ({ user, params }: AuthorizedPageProps<ChapterDe
     return <NotFoundError />;
   }
 
+  const sectionId = searchParams.get(SECTION_ID_PARAM_KEY);
+  if (sectionId) {
+    return <SectionDetailPageClient params={{ ...params, chapterId: params.chapterId, sectionId }} user={user} />;
+  }
+
   return <PaperView chapterId={params.chapterId} key={params.chapterId} projectId={params.projectId} user={user} />;
+};
+
+const SectionDetailPageClient = ({ params }: AuthorizedPageProps<SectionDetailPageClientProps>) => {
+  return <div>{`SectionDetailPageClient: ${params.sectionId}`}</div>;
 };
 
 export default ProjectDetailPageClient;
