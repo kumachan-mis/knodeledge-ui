@@ -25,6 +25,16 @@ export const Basic: Story = {
         id: 'CHAPTER',
         name: 'Chapter Name',
         number: 1,
+        sections: [
+          {
+            id: 'SECTION_ONE',
+            name: 'Section One',
+          },
+          {
+            id: 'SECTION_TWO',
+            name: 'Section Two',
+          },
+        ],
       },
     },
     loadablePaper: {
