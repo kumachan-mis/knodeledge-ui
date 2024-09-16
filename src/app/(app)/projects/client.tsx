@@ -9,7 +9,7 @@ import Container from '@mui/material/Container';
 import { NextPage } from 'next';
 
 const ProjectListPageClient: NextPage<AuthorizedPageProps> = ({ user }) => {
-  useInitProjectList({ id: user.sub });
+  useInitProjectList(user.sub);
 
   return (
     <Container maxWidth="lg" sx={{ my: 6 }}>

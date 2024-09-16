@@ -43,7 +43,7 @@ export function useLoadablePaper(chapterId: string): LoadablePaper {
   return paperMap.get(chapterId) ?? { state: 'loading', data: null };
 }
 
-export function useInitPaper(user: UserOnlyId, projectId: string, chapterId: string): void {
+export function useInitPaper(userId: string, projectId: string, chapterId: string): void {
   const paperMap = React.useContext(PaperMapValueContext);
   const setPaperMap = React.useContext(PaperMapSetContext);
   const setPanic = useSetPanic();
@@ -56,7 +56,11 @@ export function useInitPaper(user: UserOnlyId, projectId: string, chapterId: str
     setPaperMap((prev) => new Map(prev.set(chapterId, { state: 'loading', data: null })));
 
     void (async () => {
-      const errorable = await findPaper({ user, project: { id: projectId }, chapter: { id: chapterId } });
+      const errorable = await findPaper({
+        user: { id: userId },
+        project: { id: projectId },
+        chapter: { id: chapterId },
+      });
       if (errorable.state === 'panic') {
         setPanic(errorable.error.message);
         return;
@@ -70,7 +74,7 @@ export function useInitPaper(user: UserOnlyId, projectId: string, chapterId: str
       setPaperMap((prev) => new Map(prev.set(chapterId, { state: 'success', data: errorable.response.paper })));
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user.id, projectId, chapterId]);
+  }, [userId, projectId, chapterId]);
 }
 
 export const PaperContextProvider: React.FC<{ readonly children?: React.ReactNode }> = ({ children }) => {

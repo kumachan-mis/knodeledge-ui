@@ -35,8 +35,8 @@ export type SectionDetailPageClientProps = {
 const ProjectDetailPageClient: NextPage<AuthorizedPageProps<ProjectDetailPageClientProps>> = ({ user, params }) => {
   const searchParams = useSearchParams();
 
-  useInitProject({ id: user.sub }, params.projectId);
-  useInitChapterList({ id: user.sub }, params.projectId);
+  useInitProject(user.sub, params.projectId);
+  useInitChapterList(user.sub, params.projectId);
 
   const loadableProject = useLoadableProject();
 
@@ -55,7 +55,7 @@ const ProjectDetailPageClient: NextPage<AuthorizedPageProps<ProjectDetailPageCli
 const ChapterDetailPageClient = ({ user, params }: AuthorizedPageProps<ChapterDetailPageClientProps>) => {
   const searchParams = useSearchParams();
 
-  useInitPaper({ id: user.sub }, params.projectId, params.chapterId);
+  useInitPaper(user.sub, params.projectId, params.chapterId);
 
   const loadableChapter = useLoadableChapterInList(params.chapterId);
 

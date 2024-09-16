@@ -54,7 +54,7 @@ export function useLoadableProject(): LoadableProject {
   return React.useContext(ProjectValueContext);
 }
 
-export function useInitProject(user: UserOnlyId, projectId: string): void {
+export function useInitProject(userId: string, projectId: string): void {
   const setProject = React.useContext(ProjectSetContext);
   const setPanic = useSetPanic();
 
@@ -62,7 +62,7 @@ export function useInitProject(user: UserOnlyId, projectId: string): void {
     setProject({ state: 'loading', data: null });
 
     void (async () => {
-      const errorable = await findProject({ user, project: { id: projectId } });
+      const errorable = await findProject({ user: { id: userId }, project: { id: projectId } });
       if (errorable.state === 'panic') {
         setPanic(errorable.error.message);
         return;
@@ -76,7 +76,7 @@ export function useInitProject(user: UserOnlyId, projectId: string): void {
       setProject({ state: 'success', data: errorable.response.project });
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user.id, projectId]);
+  }, [userId, projectId]);
 }
 
 export function useUpdateProject(user: UserOnlyId): LoadableActionProjectUpdate {
@@ -112,7 +112,7 @@ export function useLoadableProjectList(): LoadableProjectList {
   return React.useContext(ProjectListValueContext);
 }
 
-export function useInitProjectList(user: UserOnlyId): void {
+export function useInitProjectList(userId: string): void {
   const setProjectList = React.useContext(ProjectListSetContext);
   const setPanic = useSetPanic();
 
@@ -120,7 +120,7 @@ export function useInitProjectList(user: UserOnlyId): void {
     setProjectList({ state: 'loading', data: null });
 
     void (async () => {
-      const errorable = await listProject({ user });
+      const errorable = await listProject({ user: { id: userId } });
       if (errorable.state === 'panic') {
         setPanic(errorable.error.message);
         return;
@@ -133,7 +133,7 @@ export function useInitProjectList(user: UserOnlyId): void {
       setProjectList({ state: 'success', data: errorable.response.projects });
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user.id]);
+  }, [userId]);
 }
 
 export function useCreateProjectInList(user: UserOnlyId): LoadableActionProjectCreate {

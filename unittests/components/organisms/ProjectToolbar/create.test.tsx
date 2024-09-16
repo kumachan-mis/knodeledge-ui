@@ -19,7 +19,7 @@ const Wrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => (
 );
 
 const HooksWrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
-  useInitProjectList({ id: USER.sub });
+  useInitProjectList(USER.sub);
   return children;
 };
 
