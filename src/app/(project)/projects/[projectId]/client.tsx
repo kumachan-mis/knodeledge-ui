@@ -2,7 +2,9 @@
 import ChapterView from '@/components/organisms/ChapterView';
 import NotFoundError from '@/components/organisms/NotFoundError';
 import ProjectView from '@/components/organisms/ProjectView';
-import { useInitChapterList, useLoadableChapterInList } from '@/contexts/chapters';
+import SectionView from '@/components/organisms/SectionView';
+import { useInitChapterList, useLoadableChapterInList, useLoadableSectionInChapter } from '@/contexts/chapters';
+import { useInitGraph } from '@/contexts/graphs';
 import { useInitPaper } from '@/contexts/papers';
 import { useInitProject, useLoadableProject } from '@/contexts/projects';
 import { AuthorizedPageProps } from '@/utils/page';
@@ -45,6 +47,12 @@ const ProjectDetailPageClient: NextPage<AuthorizedPageProps<ProjectDetailPageCli
   }
 
   const chapterId = searchParams.get(CHAPTER_ID_PARAM_KEY);
+  const sectionId = searchParams.get(SECTION_ID_PARAM_KEY);
+
+  if (chapterId && sectionId) {
+    return <SectionDetailPageClient params={{ ...params, chapterId, sectionId }} user={user} />;
+  }
+
   if (chapterId) {
     return <ChapterDetailPageClient params={{ ...params, chapterId }} user={user} />;
   }
@@ -53,8 +61,6 @@ const ProjectDetailPageClient: NextPage<AuthorizedPageProps<ProjectDetailPageCli
 };
 
 const ChapterDetailPageClient = ({ user, params }: AuthorizedPageProps<ChapterDetailPageClientProps>) => {
-  const searchParams = useSearchParams();
-
   useInitPaper(user.sub, params.projectId, params.chapterId);
 
   const loadableChapter = useLoadableChapterInList(params.chapterId);
@@ -63,16 +69,27 @@ const ChapterDetailPageClient = ({ user, params }: AuthorizedPageProps<ChapterDe
     return <NotFoundError />;
   }
 
-  const sectionId = searchParams.get(SECTION_ID_PARAM_KEY);
-  if (sectionId) {
-    return <SectionDetailPageClient params={{ ...params, chapterId: params.chapterId, sectionId }} user={user} />;
-  }
-
   return <ChapterView chapterId={params.chapterId} key={params.chapterId} projectId={params.projectId} user={user} />;
 };
 
-const SectionDetailPageClient = ({ params }: AuthorizedPageProps<SectionDetailPageClientProps>) => {
-  return <div>{`SectionDetailPageClient: ${params.sectionId}`}</div>;
+const SectionDetailPageClient = ({ user, params }: AuthorizedPageProps<SectionDetailPageClientProps>) => {
+  useInitGraph(user.sub, params.projectId, params.chapterId, params.sectionId);
+
+  const loadableSection = useLoadableSectionInChapter(params.chapterId, params.sectionId);
+
+  if (loadableSection.state === 'notfound') {
+    return <NotFoundError />;
+  }
+
+  return (
+    <SectionView
+      chapterId={params.chapterId}
+      key={params.sectionId}
+      projectId={params.projectId}
+      sectionId={params.sectionId}
+      user={user}
+    />
+  );
 };
 
 export default ProjectDetailPageClient;

@@ -1,42 +1,42 @@
 'use client';
-import { usePaperContent, useSetPaperContent } from '@/contexts/views';
+import { useGraphContent, useSetGraphContent } from '@/contexts/views';
 
 import { styled } from '@mui/material/styles';
 import React from 'react';
 import { EditorRoot, EditorSyntaxMenu, Divider, EditorTextFieldRoot, EditorTextFieldBody } from 'react-clay-editor';
 import 'katex/dist/katex.min.css';
 
-const ChapterViewEditorComponent: React.FC = () => {
-  const paper = usePaperContent();
-  const setPaper = useSetPaperContent();
+const SectionViewEditorComponent: React.FC = () => {
+  const graph = useGraphContent();
+  const setGraph = useSetGraphContent();
 
   const setText = React.useCallback(
     (value: React.SetStateAction<string>) => {
       if (typeof value === 'function') {
-        setPaper((prev) => ({ ...prev, content: value(prev.content) }));
+        setGraph((prev) => ({ ...prev, paragraph: value(prev.paragraph) }));
         return;
       }
-      setPaper({ content: value });
+      setGraph({ paragraph: value });
     },
-    [setPaper],
+    [setGraph],
   );
 
   return (
-    <ChapterViewEditorRoot setText={setText} text={paper.content}>
+    <SectionViewEditorRoot setText={setText} text={graph.paragraph}>
       <EditorSyntaxMenu />
       <Divider />
       <EditorTextFieldRoot>
         <EditorTextFieldBody />
       </EditorTextFieldRoot>
-    </ChapterViewEditorRoot>
+    </SectionViewEditorRoot>
   );
 };
 
-const ChapterViewEditorRoot = styled(EditorRoot)(({ theme }) => ({
+const SectionViewEditorRoot = styled(EditorRoot)(({ theme }) => ({
   '&&': {
     width: '100%',
     height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px - ${theme.spacing(5)})`,
   },
 }));
 
-export default ChapterViewEditorComponent;
+export default SectionViewEditorComponent;

@@ -77,16 +77,6 @@ export function useInitPaper(userId: string, projectId: string, chapterId: strin
   }, [userId, projectId, chapterId]);
 }
 
-export const PaperContextProvider: React.FC<{ readonly children?: React.ReactNode }> = ({ children }) => {
-  const [paperMap, setPaperMap] = React.useState<LoadablePaperMap>(new Map());
-
-  return (
-    <PaperMapValueContext.Provider value={paperMap}>
-      <PaperMapSetContext.Provider value={setPaperMap}>{children}</PaperMapSetContext.Provider>
-    </PaperMapValueContext.Provider>
-  );
-};
-
 export function useUpdatePaper(user: UserOnlyId, projectId: string, chapterId: string): LoadableActionPaperUpdate {
   const setPanic = useSetPanic();
   const paperMap = React.useContext(PaperMapValueContext);
@@ -119,3 +109,13 @@ export function useUpdatePaper(user: UserOnlyId, projectId: string, chapterId: s
     return { state: 'success', error: null };
   };
 }
+
+export const PaperContextProvider: React.FC<{ readonly children?: React.ReactNode }> = ({ children }) => {
+  const [paperMap, setPaperMap] = React.useState<LoadablePaperMap>(new Map());
+
+  return (
+    <PaperMapValueContext.Provider value={paperMap}>
+      <PaperMapSetContext.Provider value={setPaperMap}>{children}</PaperMapSetContext.Provider>
+    </PaperMapValueContext.Provider>
+  );
+};

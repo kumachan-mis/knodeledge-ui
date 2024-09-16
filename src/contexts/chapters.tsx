@@ -7,6 +7,7 @@ import {
   ChapterWithoutAutofield,
   ChapterWithoutAutofieldError,
   ProjectOnlyId,
+  SectionOfChapter,
   UserOnlyId,
 } from '@/openapi';
 
@@ -14,6 +15,8 @@ import { LoadableAction, LoadableData } from './openapi';
 import { useSetPanic } from './panic';
 
 import React from 'react';
+
+export type LoadableSection = LoadableData<SectionOfChapter>;
 
 export type LoadableChapter = LoadableData<ChapterWithSections>;
 
@@ -60,6 +63,15 @@ export function useLoadableChapterInList(chapterId: string): LoadableChapter {
   const chapter = loadableChapterList.data.find((chapter) => chapter.id === chapterId);
   if (!chapter) return { state: 'notfound', data: null };
   return { state: 'success', data: chapter };
+}
+
+export function useLoadableSectionInChapter(chapterId: string, sectionId: string): LoadableSection {
+  const loadableChapter = useLoadableChapterInList(chapterId);
+  if (loadableChapter.state !== 'success') return { state: loadableChapter.state, data: null };
+
+  const section = loadableChapter.data.sections.find((section) => section.id === sectionId);
+  if (!section) return { state: 'notfound', data: null };
+  return { state: 'success', data: section };
 }
 
 export function useInitChapterList(userId: string, projectId: string): void {

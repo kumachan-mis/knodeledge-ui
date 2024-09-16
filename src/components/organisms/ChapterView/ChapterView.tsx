@@ -35,7 +35,7 @@ const ChapterViewComponent: React.FC<ChapterViewComponentProps> = ({
     loadableProject.state === 'success' &&
     loadableChapter.state === 'success' &&
     loadablePaper.state === 'success' && (
-      <PaperContentProvider initialContent={loadablePaper.data.content}>
+      <PaperContentProvider initialContent={loadablePaper.data}>
         <Container maxWidth="lg" sx={{ py: 1 }}>
           <ChapterViewBreadcrumbsComponent
             chapter={loadableChapter.data}
