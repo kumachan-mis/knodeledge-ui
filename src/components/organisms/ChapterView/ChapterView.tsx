@@ -5,21 +5,21 @@ import { LoadableProject } from '@/contexts/projects';
 import { PaperContentProvider } from '@/contexts/views';
 import { PaperWithoutAutofield } from '@/openapi';
 
-import PaperViewBreadcrumbsComponent from './PaperViewBreadcrumbs';
-import PaperViewEditorComponent from './PaperViewEditor';
+import ChapterViewBreadcrumbsComponent from './ChapterViewBreadcrumbs';
+import ChapterViewEditorComponent from './ChapterViewEditor';
 
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import Container from '@mui/material/Container';
 
-export type PaperViewComponentProps = {
+export type ChapterViewComponentProps = {
   readonly loadableProject: LoadableProject;
   readonly loadableChapter: LoadableChapter;
   readonly loadablePaper: LoadablePaper;
   readonly updatePaper: (id: string, paper: PaperWithoutAutofield) => Promise<LoadableAction<PaperActionError>>;
 };
 
-const PaperViewComponent: React.FC<PaperViewComponentProps> = ({
+const ChapterViewComponent: React.FC<ChapterViewComponentProps> = ({
   loadableChapter,
   loadableProject,
   loadablePaper,
@@ -37,16 +37,16 @@ const PaperViewComponent: React.FC<PaperViewComponentProps> = ({
     loadablePaper.state === 'success' && (
       <PaperContentProvider initialContent={loadablePaper.data.content}>
         <Container maxWidth="lg" sx={{ py: 1 }}>
-          <PaperViewBreadcrumbsComponent
+          <ChapterViewBreadcrumbsComponent
             chapter={loadableChapter.data}
             paper={loadablePaper.data}
             project={loadableProject.data}
             updatePaper={updatePaper}
           />
-          <PaperViewEditorComponent />
+          <ChapterViewEditorComponent />
         </Container>
       </PaperContentProvider>
     )
   );
 
-export default PaperViewComponent;
+export default ChapterViewComponent;

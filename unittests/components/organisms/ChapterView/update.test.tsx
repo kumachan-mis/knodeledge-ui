@@ -5,8 +5,8 @@ import {
   createOkResponse,
 } from '../../../testutils/fetch';
 import { USER } from '../../../testutils/user';
+import ChapterView from '@/components/organisms/ChapterView';
 import PanicError from '@/components/organisms/PanicError';
-import PaperView from '@/components/organisms/PaperView';
 import { ChapterListContextProvider, useInitChapterList } from '@/contexts/chapters';
 import { PanicContextProvider } from '@/contexts/panic';
 import { PaperContextProvider, useInitPaper } from '@/contexts/papers';
@@ -86,7 +86,7 @@ test('should update project with Project Update API', async () => {
       }),
     );
 
-  const screen = render(<PaperView chapterId="CHAPTER" projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ChapterView chapterId="CHAPTER" projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.container.querySelector('[data-selectid="text-field"]')).toHaveTextContent('Paper Content');
@@ -202,7 +202,7 @@ test('should show error message when paper update failed', async () => {
       }),
     );
 
-  const screen = render(<PaperView chapterId="CHAPTER" projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ChapterView chapterId="CHAPTER" projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.container.querySelector('[data-selectid="text-field"]')).toHaveTextContent('Paper Content');
@@ -316,7 +316,7 @@ test('should show error message when paper to be updated does not exist', async 
       }),
     );
 
-  const screen = render(<PaperView chapterId="CHAPTER" projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ChapterView chapterId="CHAPTER" projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.container.querySelector('[data-selectid="text-field"]')).toHaveTextContent('Paper Content');
@@ -427,7 +427,7 @@ test('should show error message when internal error occured', async () => {
       }),
     );
 
-  const screen = render(<PaperView chapterId="CHAPTER" projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ChapterView chapterId="CHAPTER" projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.container.querySelector('[data-selectid="text-field"]')).toHaveTextContent('Paper Content');

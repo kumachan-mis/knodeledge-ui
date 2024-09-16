@@ -1,7 +1,7 @@
 import { createInternalErrorResponse, createNotFoundResponse, createOkResponse } from '../../../testutils/fetch';
 import { USER } from '../../../testutils/user';
+import ChapterView from '@/components/organisms/ChapterView';
 import PanicError from '@/components/organisms/PanicError';
-import PaperView from '@/components/organisms/PaperView';
 import { ChapterListContextProvider, useInitChapterList } from '@/contexts/chapters';
 import { PanicContextProvider } from '@/contexts/panic';
 import { PaperContextProvider, useInitPaper } from '@/contexts/papers';
@@ -70,7 +70,7 @@ test('should show paper content from Paper Find API', async () => {
       }),
     );
 
-  const screen = render(<PaperView chapterId="CHAPTER" projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ChapterView chapterId="CHAPTER" projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.container.querySelector('[data-selectid="text-field"]')).toHaveTextContent('Paper Content');
@@ -185,7 +185,7 @@ test.each<{
       .mockResolvedValueOnce(chaptersListResponse)
       .mockResolvedValueOnce(paperFindResponse);
 
-    const screen = render(<PaperView chapterId="CHAPTER" projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
+    const screen = render(<ChapterView chapterId="CHAPTER" projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
 
     await waitFor(() => {
       expect(screen.container.querySelector('[data-selectid="text-field"]')).not.toBeInTheDocument();
@@ -300,7 +300,7 @@ test.each<{
       .mockResolvedValueOnce(chaptersListResponse)
       .mockResolvedValueOnce(paperFindResponse);
 
-    const screen = render(<PaperView chapterId="CHAPTER" projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
+    const screen = render(<ChapterView chapterId="CHAPTER" projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
 
     await waitFor(() => {
       expect(screen.getByText('Fatal Error Occured')).toBeInTheDocument();

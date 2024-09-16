@@ -4,14 +4,14 @@ import { PaperActionError } from '@/contexts/papers';
 import { usePaperContent } from '@/contexts/views';
 import { ChapterWithSections, Paper, PaperWithoutAutofield, Project } from '@/openapi';
 
-export type PaperViewBreadcrumbsComponentProps = {
+export type ChapterViewBreadcrumbsComponentProps = {
   readonly project: Project;
   readonly chapter: ChapterWithSections;
   readonly paper: Paper;
   readonly updatePaper: (id: string, paper: PaperWithoutAutofield) => Promise<LoadableAction<PaperActionError>>;
 };
 
-const PaperViewBreadcrumbsComponent: React.FC<PaperViewBreadcrumbsComponentProps> = ({
+const ChapterViewBreadcrumbsComponent: React.FC<ChapterViewBreadcrumbsComponentProps> = ({
   project,
   chapter,
   paper,
@@ -39,4 +39,4 @@ const PaperViewBreadcrumbsComponent: React.FC<PaperViewBreadcrumbsComponentProps
   );
 };
 
-export default PaperViewBreadcrumbsComponent;
+export default ChapterViewBreadcrumbsComponent;

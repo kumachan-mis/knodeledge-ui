@@ -6,7 +6,7 @@ import {
 } from '../../../testutils/fetch';
 import { USER } from '../../../testutils/user';
 import PanicError from '@/components/organisms/PanicError';
-import ProjectTopView from '@/components/organisms/ProjectTopView';
+import ProjectView from '@/components/organisms/ProjectView';
 import { PanicContextProvider } from '@/contexts/panic';
 import { ProjectContextProvider, useInitProject } from '@/contexts/projects';
 
@@ -57,7 +57,7 @@ test('should update project with Project Update API', async () => {
       }),
     );
 
-  const screen = render(<ProjectTopView user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ProjectView user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.getByText('Project Name')).toBeInTheDocument();
@@ -120,7 +120,7 @@ test('should show error message when project update failed', async () => {
     )
     .mockResolvedValueOnce(createBadRequestResponse({ user: {}, project: { name: 'name error' } }));
 
-  const screen = render(<ProjectTopView user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ProjectView user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.getByText('Project Name')).toBeInTheDocument();
@@ -181,7 +181,7 @@ test('should show error message when project to be updated does not exist', asyn
     )
     .mockResolvedValueOnce(createNotFoundResponse({ message: 'not found' }));
 
-  const screen = render(<ProjectTopView user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ProjectView user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.getByText('Project Name')).toBeInTheDocument();
@@ -240,7 +240,7 @@ test('should show error message when internal error occured', async () => {
     )
     .mockResolvedValueOnce(createInternalErrorResponse({ message: 'internal error' }));
 
-  const screen = render(<ProjectTopView user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ProjectView user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.getByText('Project Name')).toBeInTheDocument();

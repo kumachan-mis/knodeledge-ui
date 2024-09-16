@@ -11,7 +11,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 
-export type ProjectTopViewComponentProps = {
+export type ProjectViewComponentProps = {
   readonly loadableProject: LoadableProject;
   readonly onUpdateProject: (
     id: string,
@@ -19,7 +19,7 @@ export type ProjectTopViewComponentProps = {
   ) => Promise<LoadableAction<ProjectActionError>>;
 };
 
-const ProjectTopViewComponent: React.FC<ProjectTopViewComponentProps> = ({ loadableProject, onUpdateProject }) => {
+const ProjectViewComponent: React.FC<ProjectViewComponentProps> = ({ loadableProject, onUpdateProject }) => {
   const {
     open: openUpdateProjectDialog,
     onOpen: onOpenUpdateProjectDialog,
@@ -59,4 +59,4 @@ const ProjectTopViewComponent: React.FC<ProjectTopViewComponentProps> = ({ loada
   );
 };
 
-export default ProjectTopViewComponent;
+export default ProjectViewComponent;

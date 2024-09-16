@@ -1,7 +1,7 @@
 'use client';
+import ChapterView from '@/components/organisms/ChapterView';
 import NotFoundError from '@/components/organisms/NotFoundError';
-import PaperView from '@/components/organisms/PaperView';
-import ProjectTopView from '@/components/organisms/ProjectTopView';
+import ProjectView from '@/components/organisms/ProjectView';
 import { useInitChapterList, useLoadableChapterInList } from '@/contexts/chapters';
 import { useInitPaper } from '@/contexts/papers';
 import { useInitProject, useLoadableProject } from '@/contexts/projects';
@@ -49,7 +49,7 @@ const ProjectDetailPageClient: NextPage<AuthorizedPageProps<ProjectDetailPageCli
     return <ChapterDetailPageClient params={{ ...params, chapterId }} user={user} />;
   }
 
-  return <ProjectTopView user={user} />;
+  return <ProjectView user={user} />;
 };
 
 const ChapterDetailPageClient = ({ user, params }: AuthorizedPageProps<ChapterDetailPageClientProps>) => {
@@ -68,7 +68,7 @@ const ChapterDetailPageClient = ({ user, params }: AuthorizedPageProps<ChapterDe
     return <SectionDetailPageClient params={{ ...params, chapterId: params.chapterId, sectionId }} user={user} />;
   }
 
-  return <PaperView chapterId={params.chapterId} key={params.chapterId} projectId={params.projectId} user={user} />;
+  return <ChapterView chapterId={params.chapterId} key={params.chapterId} projectId={params.projectId} user={user} />;
 };
 
 const SectionDetailPageClient = ({ params }: AuthorizedPageProps<SectionDetailPageClientProps>) => {
