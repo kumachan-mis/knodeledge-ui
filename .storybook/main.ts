@@ -25,7 +25,7 @@ const config: StorybookConfig = {
           NEXT_PUBLIC_ENVIRONMENT: 'storybook',
         },
       },
-      plugins: [react({ jsxRuntime: 'automatic' })],
+      plugins: [react()],
     }),
 };
 export default config;

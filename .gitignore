@@ -4,6 +4,7 @@
 ### Project Settings ###
 .env*
 !.env.development
+storybook-static/
 tmp/
 
 
