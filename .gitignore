@@ -5,6 +5,7 @@
 .env*
 !.env.development
 tmp/
+storybook-static/
 
 
 ### NextJS ###
