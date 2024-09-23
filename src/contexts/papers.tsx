@@ -49,7 +49,8 @@ export function useInitPaper(userId: string, projectId: string, chapterId: strin
   const setPanic = useSetPanic();
 
   React.useEffect(() => {
-    if (paperMap.get(chapterId)?.state === 'success') {
+    const loadablePaper = paperMap.get(chapterId);
+    if (loadablePaper?.state === 'success') {
       return;
     }
 
@@ -83,7 +84,8 @@ export function useUpdatePaper(user: UserOnlyId, projectId: string, chapterId: s
   const setPaperMap = React.useContext(PaperMapSetContext);
 
   return async (id, paper) => {
-    if (paperMap.get(chapterId)?.state !== 'success') {
+    const loadablePaper = paperMap.get(chapterId);
+    if (loadablePaper?.state !== 'success') {
       return { state: 'error', error: UNKNOWN_PAPER_ACTION_ERROR };
     }
     const errorable = await updatePaper({ user, project: { id: projectId }, paper: { id, ...paper } });

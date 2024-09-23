@@ -1,7 +1,9 @@
 import { LoadableChapter, LoadableSection } from '@/contexts/chapters';
-import { LoadableGraph } from '@/contexts/graphs';
+import { GraphActionError, LoadableGraph } from '@/contexts/graphs';
+import { LoadableAction } from '@/contexts/openapi';
 import { LoadableProject } from '@/contexts/projects';
 import { GraphContentProvider } from '@/contexts/views';
+import { GraphContentWithoutAutofield } from '@/openapi';
 
 import SectionViewBreadcrumbsComponent from './SectionViewBreadcrumbs';
 import SectionViewEditorComponent from './SectionViewEditor';
@@ -15,6 +17,7 @@ export type SectionViewComponentProps = {
   readonly loadableChapter: LoadableChapter;
   readonly loadableSection: LoadableSection;
   readonly loadableGraph: LoadableGraph;
+  readonly updateGraph: (id: string, graph: GraphContentWithoutAutofield) => Promise<LoadableAction<GraphActionError>>;
 };
 
 const SectionViewComponent: React.FC<SectionViewComponentProps> = ({
@@ -22,6 +25,7 @@ const SectionViewComponent: React.FC<SectionViewComponentProps> = ({
   loadableChapter,
   loadableSection,
   loadableGraph,
+  updateGraph,
 }) =>
   loadableProject.state === 'loading' ||
   loadableChapter.state === 'loading' ||
@@ -44,6 +48,7 @@ const SectionViewComponent: React.FC<SectionViewComponentProps> = ({
             graph={loadableGraph.data}
             project={loadableProject.data}
             section={loadableSection.data}
+            updateGraph={updateGraph}
           />
           <SectionViewEditorComponent />
         </Container>
