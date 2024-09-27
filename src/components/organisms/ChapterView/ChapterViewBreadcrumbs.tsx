@@ -2,30 +2,30 @@ import AppBreadcrumbs from '@/components/molecules/AppBreadcrumbs';
 import { LoadableAction } from '@/contexts/openapi';
 import { PaperActionError } from '@/contexts/papers';
 import { usePaperContent } from '@/contexts/views';
-import { ChapterWithSections, Paper, PaperWithoutAutofield, Project } from '@/openapi';
+import { Chapter, Paper, PaperWithoutAutofield, Project } from '@/openapi';
 
-export type PaperViewBreadcrumbsComponentProps = {
+export type ChapterViewBreadcrumbsComponentProps = {
   readonly project: Project;
-  readonly chapter: ChapterWithSections;
+  readonly chapter: Chapter;
   readonly paper: Paper;
   readonly updatePaper: (id: string, paper: PaperWithoutAutofield) => Promise<LoadableAction<PaperActionError>>;
 };
 
-const PaperViewBreadcrumbsComponent: React.FC<PaperViewBreadcrumbsComponentProps> = ({
+const ChapterViewBreadcrumbsComponent: React.FC<ChapterViewBreadcrumbsComponentProps> = ({
   project,
   chapter,
   paper,
   updatePaper,
 }) => {
-  const content = usePaperContent();
-  const isDirty = content !== paper.content;
+  const unsavedPaper = usePaperContent();
+  const isDirty = unsavedPaper.content !== paper.content;
   return (
     <AppBreadcrumbs
       chapter={{ id: chapter.id, name: chapter.name }}
       isDirty={isDirty}
       onSave={async () => {
         if (!isDirty) return { success: true };
-        const loadableAction = await updatePaper(paper.id, { content });
+        const loadableAction = await updatePaper(paper.id, unsavedPaper);
         if (loadableAction.state === 'success') {
           return { success: true };
         }
@@ -39,4 +39,4 @@ const PaperViewBreadcrumbsComponent: React.FC<PaperViewBreadcrumbsComponentProps
   );
 };
 
-export default PaperViewBreadcrumbsComponent;
+export default ChapterViewBreadcrumbsComponent;

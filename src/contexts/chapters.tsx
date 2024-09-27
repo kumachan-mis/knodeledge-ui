@@ -7,6 +7,7 @@ import {
   ChapterWithoutAutofield,
   ChapterWithoutAutofieldError,
   ProjectOnlyId,
+  SectionOfChapter,
   UserOnlyId,
 } from '@/openapi';
 
@@ -14,6 +15,8 @@ import { LoadableAction, LoadableData } from './openapi';
 import { useSetPanic } from './panic';
 
 import React from 'react';
+
+export type LoadableSection = LoadableData<SectionOfChapter>;
 
 export type LoadableChapter = LoadableData<ChapterWithSections>;
 
@@ -62,7 +65,16 @@ export function useLoadableChapterInList(chapterId: string): LoadableChapter {
   return { state: 'success', data: chapter };
 }
 
-export function useInitChapterList(user: UserOnlyId, projectId: string): void {
+export function useLoadableSectionInChapter(chapterId: string, sectionId: string): LoadableSection {
+  const loadableChapter = useLoadableChapterInList(chapterId);
+  if (loadableChapter.state !== 'success') return { state: loadableChapter.state, data: null };
+
+  const section = loadableChapter.data.sections.find((section) => section.id === sectionId);
+  if (!section) return { state: 'notfound', data: null };
+  return { state: 'success', data: section };
+}
+
+export function useInitChapterList(userId: string, projectId: string): void {
   const setChapterList = React.useContext(ChapterListSetContext);
   const setPanic = useSetPanic();
 
@@ -70,7 +82,7 @@ export function useInitChapterList(user: UserOnlyId, projectId: string): void {
     setChapterList({ state: 'loading', data: null });
 
     void (async () => {
-      const errorable = await listChapter({ user, project: { id: projectId } });
+      const errorable = await listChapter({ user: { id: userId }, project: { id: projectId } });
       if (errorable.state === 'panic') {
         setPanic(errorable.error.message);
         return;
@@ -84,7 +96,7 @@ export function useInitChapterList(user: UserOnlyId, projectId: string): void {
       setChapterList({ state: 'success', data: errorable.response.chapters });
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user.id, projectId]);
+  }, [userId, projectId]);
 }
 
 export function useCreateChapterInList(user: UserOnlyId, project: ProjectOnlyId): LoadableActionChapterCreate {

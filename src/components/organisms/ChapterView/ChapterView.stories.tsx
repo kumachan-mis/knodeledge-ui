@@ -1,14 +1,14 @@
-import PaperViewComponent from './PaperView';
+import ChapterViewComponent from './ChapterView';
 
 import { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof PaperViewComponent> = {
-  component: PaperViewComponent,
+const meta: Meta<typeof ChapterViewComponent> = {
+  component: ChapterViewComponent,
 };
 
 export default meta;
 
-type Story = StoryObj<typeof PaperViewComponent>;
+type Story = StoryObj<typeof ChapterViewComponent>;
 
 export const Basic: Story = {
   args: {

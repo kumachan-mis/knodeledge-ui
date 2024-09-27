@@ -1,7 +1,7 @@
 import { createInternalErrorResponse, createNotFoundResponse, createOkResponse } from '../../../testutils/fetch';
 import { USER } from '../../../testutils/user';
 import PanicError from '@/components/organisms/PanicError';
-import ProjectTopView from '@/components/organisms/ProjectTopView';
+import ProjectView from '@/components/organisms/ProjectView';
 import { PanicContextProvider } from '@/contexts/panic';
 import { ProjectContextProvider, useInitProject } from '@/contexts/projects';
 
@@ -17,7 +17,7 @@ const Wrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => (
 );
 
 const HooksWrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
-  useInitProject({ id: USER.sub }, 'PROJECT');
+  useInitProject(USER.sub, 'PROJECT');
   return children;
 };
 
@@ -39,7 +39,7 @@ test('should show project without description from Project Find API', async () =
     }),
   );
 
-  const screen = render(<ProjectTopView user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ProjectView user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.getByText('Project Without Description')).toBeInTheDocument();
@@ -67,7 +67,7 @@ test('should show project with description from Project Find API', async () => {
     }),
   );
 
-  const screen = render(<ProjectTopView user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ProjectView user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.getByText('Project With Description')).toBeInTheDocument();
@@ -88,7 +88,7 @@ test('should show project with description from Project Find API', async () => {
 test('should show nothing when not found error occured', async () => {
   (global.fetch as jest.Mock).mockResolvedValueOnce(createNotFoundResponse({ message: 'not found' }));
 
-  const screen = render(<ProjectTopView user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ProjectView user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -110,7 +110,7 @@ test('should show nothing when not found error occured', async () => {
 test('should show error message when internal error occured', async () => {
   (global.fetch as jest.Mock).mockResolvedValueOnce(createInternalErrorResponse({ message: 'internal error' }));
 
-  const screen = render(<ProjectTopView user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ProjectView user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.getByText('Fatal Error Occured')).toBeInTheDocument();

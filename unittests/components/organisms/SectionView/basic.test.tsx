@@ -1,10 +1,10 @@
 import { createInternalErrorResponse, createNotFoundResponse, createOkResponse } from '../../../testutils/fetch';
 import { USER } from '../../../testutils/user';
 import PanicError from '@/components/organisms/PanicError';
-import PaperView from '@/components/organisms/PaperView';
+import SectionView from '@/components/organisms/SectionView';
 import { ChapterListContextProvider, useInitChapterList } from '@/contexts/chapters';
+import { GraphContextProvider, useInitGraph } from '@/contexts/graphs';
 import { PanicContextProvider } from '@/contexts/panic';
-import { PaperContextProvider, useInitPaper } from '@/contexts/papers';
 import { ProjectContextProvider, useInitProject } from '@/contexts/projects';
 
 import { render, waitFor } from '@testing-library/react';
@@ -14,18 +14,18 @@ const Wrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => (
     <PanicError />
     <ProjectContextProvider>
       <ChapterListContextProvider>
-        <PaperContextProvider>
+        <GraphContextProvider>
           <HooksWrapper>{children}</HooksWrapper>
-        </PaperContextProvider>
+        </GraphContextProvider>
       </ChapterListContextProvider>
     </ProjectContextProvider>
   </PanicContextProvider>
 );
 
 const HooksWrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
-  useInitProject({ id: USER.sub }, 'PROJECT');
-  useInitChapterList({ id: USER.sub }, 'PROJECT');
-  useInitPaper({ id: USER.sub }, 'PROJECT', 'CHAPTER');
+  useInitProject(USER.sub, 'PROJECT');
+  useInitChapterList(USER.sub, 'PROJECT');
+  useInitGraph(USER.sub, 'PROJECT', 'CHAPTER', 'SECTION');
 
   return children;
 };
@@ -38,7 +38,7 @@ beforeEach(() => {
   (global.fetch as jest.Mock).mockRestore();
 });
 
-test('should show paper content from Paper Find API', async () => {
+test('should show graph paragraph from Graph Find API', async () => {
   (global.fetch as jest.Mock)
     .mockResolvedValueOnce(
       createOkResponse({
@@ -56,28 +56,36 @@ test('should show paper content from Paper Find API', async () => {
             id: 'CHAPTER',
             name: 'Chapter Name',
             number: 1,
-            sections: [],
+            sections: [
+              {
+                id: 'SECTION',
+                name: 'Section Name',
+              },
+            ],
           },
         ],
       }),
     )
     .mockResolvedValueOnce(
       createOkResponse({
-        paper: {
-          id: 'PAPER',
-          content: 'Paper Content',
+        graph: {
+          id: 'GRAPH',
+          paragraph: 'Graph Paragraph',
         },
       }),
     );
 
-  const screen = render(<PaperView chapterId="CHAPTER" projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
+  const screen = render(<SectionView chapterId="CHAPTER" projectId="PROJECT" sectionId="SECTION" user={USER} />, {
+    wrapper: Wrapper,
+  });
 
   await waitFor(() => {
-    expect(screen.container.querySelector('[data-selectid="text-field"]')).toHaveTextContent('Paper Content');
+    expect(screen.container.querySelector('[data-selectid="text-field"]')).toHaveTextContent('Graph Paragraph');
   });
 
   expect(screen.getByText('Project Name')).toBeInTheDocument();
   expect(screen.getByText('Chapter Name')).toBeInTheDocument();
+  expect(screen.getByText('Section Name')).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
 
   expect(global.fetch).toHaveBeenCalledTimes(3);
@@ -99,10 +107,15 @@ test('should show paper content from Paper Find API', async () => {
   );
   expect(global.fetch).toHaveBeenNthCalledWith(
     3,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/papers/find`,
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/find`,
     expect.objectContaining({
       method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' }, chapter: { id: 'CHAPTER' } }),
+      body: JSON.stringify({
+        user: { id: USER.sub },
+        project: { id: 'PROJECT' },
+        chapter: { id: 'CHAPTER' },
+        section: { id: 'SECTION' },
+      }),
     }),
   );
 });
@@ -111,7 +124,7 @@ test.each<{
   name: string;
   projectFindResponse: Partial<Response>;
   chaptersListResponse: Partial<Response>;
-  paperFindResponse: Partial<Response>;
+  graphFindResponse: Partial<Response>;
 }>([
   {
     name: 'Project Find API',
@@ -122,14 +135,19 @@ test.each<{
           id: 'CHAPTER',
           name: 'Chapter Name',
           number: 1,
-          sections: [],
+          sections: [
+            {
+              id: 'SECTION',
+              name: 'Section Name',
+            },
+          ],
         },
       ],
     }),
-    paperFindResponse: createOkResponse({
-      paper: {
-        id: 'PAPER',
-        content: 'Paper Content',
+    graphFindResponse: createOkResponse({
+      graph: {
+        id: 'SECTION',
+        content: 'Graph Paragraph',
       },
     }),
   },
@@ -143,15 +161,15 @@ test.each<{
       },
     }),
     chaptersListResponse: createNotFoundResponse({ message: 'not found' }),
-    paperFindResponse: createOkResponse({
-      paper: {
-        id: 'PAPER',
-        content: 'Paper Content',
+    graphFindResponse: createOkResponse({
+      graph: {
+        id: 'GRAPH',
+        content: 'Graph Paragraph',
       },
     }),
   },
   {
-    name: 'Paper Find API',
+    name: 'Graph Find API',
     projectFindResponse: createOkResponse({
       project: {
         id: 'PROJECT',
@@ -165,27 +183,34 @@ test.each<{
           id: 'CHAPTER',
           name: 'Chapter Name',
           number: 1,
-          sections: [],
+          sections: [
+            {
+              id: 'SECTION',
+              name: 'Section Name',
+            },
+          ],
         },
       ],
     }),
-    paperFindResponse: createNotFoundResponse({ message: 'not found' }),
+    graphFindResponse: createNotFoundResponse({ message: 'not found' }),
   },
   {
     name: 'All APIs ',
     projectFindResponse: createNotFoundResponse({ message: 'not found' }),
     chaptersListResponse: createNotFoundResponse({ message: 'not found' }),
-    paperFindResponse: createNotFoundResponse({ message: 'not found' }),
+    graphFindResponse: createNotFoundResponse({ message: 'not found' }),
   },
 ])(
   'should show nothing when not found error occured ($name)',
-  async ({ projectFindResponse, chaptersListResponse, paperFindResponse }) => {
+  async ({ projectFindResponse, chaptersListResponse, graphFindResponse }) => {
     (global.fetch as jest.Mock)
       .mockResolvedValueOnce(projectFindResponse)
       .mockResolvedValueOnce(chaptersListResponse)
-      .mockResolvedValueOnce(paperFindResponse);
+      .mockResolvedValueOnce(graphFindResponse);
 
-    const screen = render(<PaperView chapterId="CHAPTER" projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
+    const screen = render(<SectionView chapterId="CHAPTER" projectId="PROJECT" sectionId="SECTION" user={USER} />, {
+      wrapper: Wrapper,
+    });
 
     await waitFor(() => {
       expect(screen.container.querySelector('[data-selectid="text-field"]')).not.toBeInTheDocument();
@@ -193,6 +218,7 @@ test.each<{
 
     expect(screen.queryByText('Project Name')).not.toBeInTheDocument();
     expect(screen.queryByText('Chapter Name')).not.toBeInTheDocument();
+    expect(screen.queryByText('Section Name')).not.toBeInTheDocument();
 
     expect(global.fetch).toHaveBeenCalledTimes(3);
     expect(global.fetch).toHaveBeenNthCalledWith(
@@ -213,10 +239,15 @@ test.each<{
     );
     expect(global.fetch).toHaveBeenNthCalledWith(
       3,
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/papers/find`,
+      `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/find`,
       expect.objectContaining({
         method: 'POST',
-        body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' }, chapter: { id: 'CHAPTER' } }),
+        body: JSON.stringify({
+          user: { id: USER.sub },
+          project: { id: 'PROJECT' },
+          chapter: { id: 'CHAPTER' },
+          section: { id: 'SECTION' },
+        }),
       }),
     );
   },
@@ -226,7 +257,7 @@ test.each<{
   name: string;
   projectFindResponse: Partial<Response>;
   chaptersListResponse: Partial<Response>;
-  paperFindResponse: Partial<Response>;
+  graphFindResponse: Partial<Response>;
 }>([
   {
     name: 'Project Find API',
@@ -237,14 +268,19 @@ test.each<{
           id: 'CHAPTER',
           name: 'Chapter Name',
           number: 1,
-          sections: [],
+          sections: [
+            {
+              id: 'SECTION',
+              name: 'Section Name',
+            },
+          ],
         },
       ],
     }),
-    paperFindResponse: createOkResponse({
-      paper: {
-        id: 'PAPER',
-        content: 'Paper Content',
+    graphFindResponse: createOkResponse({
+      graph: {
+        id: 'GRAPH',
+        content: 'Graph Paragraph',
       },
     }),
   },
@@ -258,15 +294,15 @@ test.each<{
       },
     }),
     chaptersListResponse: createInternalErrorResponse({ message: 'internal error' }),
-    paperFindResponse: createOkResponse({
-      paper: {
-        id: 'PAPER',
-        content: 'Paper Content',
+    graphFindResponse: createOkResponse({
+      graph: {
+        id: 'GRAPH',
+        content: 'Graph Paragraph',
       },
     }),
   },
   {
-    name: 'Paper Find API',
+    name: 'Graph Find API',
     projectFindResponse: createOkResponse({
       project: {
         id: 'PROJECT',
@@ -277,30 +313,37 @@ test.each<{
     chaptersListResponse: createOkResponse({
       chapters: [
         {
-          id: 'CHAPTER',
+          id: 'GRAPH',
           name: 'Chapter Name',
           number: 1,
-          sections: [],
+          sections: [
+            {
+              id: 'SECTION',
+              name: 'Section Name',
+            },
+          ],
         },
       ],
     }),
-    paperFindResponse: createInternalErrorResponse({ message: 'internal error' }),
+    graphFindResponse: createInternalErrorResponse({ message: 'internal error' }),
   },
   {
     name: 'All APIs',
     projectFindResponse: createInternalErrorResponse({ message: 'internal error' }),
     chaptersListResponse: createInternalErrorResponse({ message: 'internal error' }),
-    paperFindResponse: createInternalErrorResponse({ message: 'internal error' }),
+    graphFindResponse: createInternalErrorResponse({ message: 'internal error' }),
   },
 ])(
   'should show error message when internal error occured ($name)',
-  async ({ projectFindResponse, chaptersListResponse, paperFindResponse }) => {
+  async ({ projectFindResponse, chaptersListResponse, graphFindResponse }) => {
     (global.fetch as jest.Mock)
       .mockResolvedValueOnce(projectFindResponse)
       .mockResolvedValueOnce(chaptersListResponse)
-      .mockResolvedValueOnce(paperFindResponse);
+      .mockResolvedValueOnce(graphFindResponse);
 
-    const screen = render(<PaperView chapterId="CHAPTER" projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
+    const screen = render(<SectionView chapterId="CHAPTER" projectId="PROJECT" sectionId="SECTION" user={USER} />, {
+      wrapper: Wrapper,
+    });
 
     await waitFor(() => {
       expect(screen.getByText('Fatal Error Occured')).toBeInTheDocument();
@@ -309,6 +352,7 @@ test.each<{
 
     expect(screen.queryByText('Project Name')).not.toBeInTheDocument();
     expect(screen.queryByText('Chapter Name')).not.toBeInTheDocument();
+    expect(screen.queryByText('Section Name')).not.toBeInTheDocument();
     expect(screen.container.querySelector('[data-selectid="text-field"]')).not.toBeInTheDocument();
 
     expect(global.fetch).toHaveBeenCalledTimes(3);
@@ -330,10 +374,15 @@ test.each<{
     );
     expect(global.fetch).toHaveBeenNthCalledWith(
       3,
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/papers/find`,
+      `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/find`,
       expect.objectContaining({
         method: 'POST',
-        body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' }, chapter: { id: 'CHAPTER' } }),
+        body: JSON.stringify({
+          user: { id: USER.sub },
+          project: { id: 'PROJECT' },
+          chapter: { id: 'CHAPTER' },
+          section: { id: 'SECTION' },
+        }),
       }),
     );
   },

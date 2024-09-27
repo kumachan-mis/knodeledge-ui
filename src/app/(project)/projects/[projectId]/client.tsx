@@ -1,8 +1,10 @@
 'use client';
+import ChapterView from '@/components/organisms/ChapterView';
 import NotFoundError from '@/components/organisms/NotFoundError';
-import PaperView from '@/components/organisms/PaperView';
-import ProjectTopView from '@/components/organisms/ProjectTopView';
-import { useInitChapterList, useLoadableChapterInList } from '@/contexts/chapters';
+import ProjectView from '@/components/organisms/ProjectView';
+import SectionView from '@/components/organisms/SectionView';
+import { useInitChapterList, useLoadableChapterInList, useLoadableSectionInChapter } from '@/contexts/chapters';
+import { useInitGraph } from '@/contexts/graphs';
 import { useInitPaper } from '@/contexts/papers';
 import { useInitProject, useLoadableProject } from '@/contexts/projects';
 import { AuthorizedPageProps } from '@/utils/page';
@@ -35,8 +37,8 @@ export type SectionDetailPageClientProps = {
 const ProjectDetailPageClient: NextPage<AuthorizedPageProps<ProjectDetailPageClientProps>> = ({ user, params }) => {
   const searchParams = useSearchParams();
 
-  useInitProject({ id: user.sub }, params.projectId);
-  useInitChapterList({ id: user.sub }, params.projectId);
+  useInitProject(user.sub, params.projectId);
+  useInitChapterList(user.sub, params.projectId);
 
   const loadableProject = useLoadableProject();
 
@@ -45,17 +47,21 @@ const ProjectDetailPageClient: NextPage<AuthorizedPageProps<ProjectDetailPageCli
   }
 
   const chapterId = searchParams.get(CHAPTER_ID_PARAM_KEY);
+  const sectionId = searchParams.get(SECTION_ID_PARAM_KEY);
+
+  if (chapterId && sectionId) {
+    return <SectionDetailPageClient params={{ ...params, chapterId, sectionId }} user={user} />;
+  }
+
   if (chapterId) {
     return <ChapterDetailPageClient params={{ ...params, chapterId }} user={user} />;
   }
 
-  return <ProjectTopView user={user} />;
+  return <ProjectView user={user} />;
 };
 
 const ChapterDetailPageClient = ({ user, params }: AuthorizedPageProps<ChapterDetailPageClientProps>) => {
-  const searchParams = useSearchParams();
-
-  useInitPaper({ id: user.sub }, params.projectId, params.chapterId);
+  useInitPaper(user.sub, params.projectId, params.chapterId);
 
   const loadableChapter = useLoadableChapterInList(params.chapterId);
 
@@ -63,16 +69,27 @@ const ChapterDetailPageClient = ({ user, params }: AuthorizedPageProps<ChapterDe
     return <NotFoundError />;
   }
 
-  const sectionId = searchParams.get(SECTION_ID_PARAM_KEY);
-  if (sectionId) {
-    return <SectionDetailPageClient params={{ ...params, chapterId: params.chapterId, sectionId }} user={user} />;
-  }
-
-  return <PaperView chapterId={params.chapterId} key={params.chapterId} projectId={params.projectId} user={user} />;
+  return <ChapterView chapterId={params.chapterId} key={params.chapterId} projectId={params.projectId} user={user} />;
 };
 
-const SectionDetailPageClient = ({ params }: AuthorizedPageProps<SectionDetailPageClientProps>) => {
-  return <div>{`SectionDetailPageClient: ${params.sectionId}`}</div>;
+const SectionDetailPageClient = ({ user, params }: AuthorizedPageProps<SectionDetailPageClientProps>) => {
+  useInitGraph(user.sub, params.projectId, params.chapterId, params.sectionId);
+
+  const loadableSection = useLoadableSectionInChapter(params.chapterId, params.sectionId);
+
+  if (loadableSection.state === 'notfound') {
+    return <NotFoundError />;
+  }
+
+  return (
+    <SectionView
+      chapterId={params.chapterId}
+      key={params.sectionId}
+      projectId={params.projectId}
+      sectionId={params.sectionId}
+      user={user}
+    />
+  );
 };
 
 export default ProjectDetailPageClient;

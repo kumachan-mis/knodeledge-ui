@@ -1,9 +1,9 @@
-import ProjectTopViewComponent from './ProjectTopView';
+import ProjectViewComponent from './ProjectView';
 
 import { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof ProjectTopViewComponent> = {
-  component: ProjectTopViewComponent,
+const meta: Meta<typeof ProjectViewComponent> = {
+  component: ProjectViewComponent,
   args: {
     // eslint-disable-next-line @typescript-eslint/require-await
     onUpdateProject: async () => {
@@ -14,7 +14,7 @@ const meta: Meta<typeof ProjectTopViewComponent> = {
 
 export default meta;
 
-type Story = StoryObj<typeof ProjectTopViewComponent>;
+type Story = StoryObj<typeof ProjectViewComponent>;
 
 export const WithoutDescription: Story = {
   args: {

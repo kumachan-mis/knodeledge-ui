@@ -5,8 +5,8 @@ import {
   createOkResponse,
 } from '../../../testutils/fetch';
 import { USER } from '../../../testutils/user';
+import ChapterView from '@/components/organisms/ChapterView';
 import PanicError from '@/components/organisms/PanicError';
-import PaperView from '@/components/organisms/PaperView';
 import { ChapterListContextProvider, useInitChapterList } from '@/contexts/chapters';
 import { PanicContextProvider } from '@/contexts/panic';
 import { PaperContextProvider, useInitPaper } from '@/contexts/papers';
@@ -29,9 +29,9 @@ const Wrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => (
 );
 
 const HooksWrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
-  useInitProject({ id: USER.sub }, 'PROJECT');
-  useInitChapterList({ id: USER.sub }, 'PROJECT');
-  useInitPaper({ id: USER.sub }, 'PROJECT', 'CHAPTER');
+  useInitProject(USER.sub, 'PROJECT');
+  useInitChapterList(USER.sub, 'PROJECT');
+  useInitPaper(USER.sub, 'PROJECT', 'CHAPTER');
 
   return children;
 };
@@ -44,7 +44,7 @@ beforeEach(() => {
   (global.fetch as jest.Mock).mockRestore();
 });
 
-test('should update project with Project Update API', async () => {
+test('should update paper with Paper Update API', async () => {
   const user = userEvent.setup();
 
   (global.fetch as jest.Mock)
@@ -86,7 +86,7 @@ test('should update project with Project Update API', async () => {
       }),
     );
 
-  const screen = render(<PaperView chapterId="CHAPTER" projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ChapterView chapterId="CHAPTER" projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.container.querySelector('[data-selectid="text-field"]')).toHaveTextContent('Paper Content');
@@ -135,6 +135,7 @@ test('should update project with Project Update API', async () => {
 
   await user.keyboard(' Updated');
 
+  expect(screen.getByText('Project Name')).toBeInTheDocument();
   expect(screen.getByText('Chapter Name *')).toBeInTheDocument();
 
   await user.click(screen.getByRole('button', { name: 'Save' }));
@@ -202,7 +203,7 @@ test('should show error message when paper update failed', async () => {
       }),
     );
 
-  const screen = render(<PaperView chapterId="CHAPTER" projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ChapterView chapterId="CHAPTER" projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.container.querySelector('[data-selectid="text-field"]')).toHaveTextContent('Paper Content');
@@ -251,6 +252,7 @@ test('should show error message when paper update failed', async () => {
 
   await user.keyboard(' Updated');
 
+  expect(screen.getByText('Project Name')).toBeInTheDocument();
   expect(screen.getByText('Chapter Name *')).toBeInTheDocument();
 
   await user.click(screen.getByRole('button', { name: 'Save' }));
@@ -316,7 +318,7 @@ test('should show error message when paper to be updated does not exist', async 
       }),
     );
 
-  const screen = render(<PaperView chapterId="CHAPTER" projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ChapterView chapterId="CHAPTER" projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.container.querySelector('[data-selectid="text-field"]')).toHaveTextContent('Paper Content');
@@ -365,6 +367,7 @@ test('should show error message when paper to be updated does not exist', async 
 
   await user.keyboard(' Updated');
 
+  expect(screen.getByText('Project Name')).toBeInTheDocument();
   expect(screen.getByText('Chapter Name *')).toBeInTheDocument();
 
   await user.click(screen.getByRole('button', { name: 'Save' }));
@@ -427,7 +430,7 @@ test('should show error message when internal error occured', async () => {
       }),
     );
 
-  const screen = render(<PaperView chapterId="CHAPTER" projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
+  const screen = render(<ChapterView chapterId="CHAPTER" projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
 
   await waitFor(() => {
     expect(screen.container.querySelector('[data-selectid="text-field"]')).toHaveTextContent('Paper Content');
@@ -476,6 +479,7 @@ test('should show error message when internal error occured', async () => {
 
   await user.keyboard(' Updated');
 
+  expect(screen.getByText('Project Name')).toBeInTheDocument();
   expect(screen.getByText('Chapter Name *')).toBeInTheDocument();
 
   await user.click(screen.getByRole('button', { name: 'Save' }));

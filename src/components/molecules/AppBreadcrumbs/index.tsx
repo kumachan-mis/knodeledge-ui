@@ -17,11 +17,12 @@ type BreadcrumbItem = {
 export type AppBreadcrumbsProps = {
   readonly project: BreadcrumbItem;
   readonly chapter: BreadcrumbItem;
+  readonly section?: BreadcrumbItem;
   readonly isDirty: boolean;
   readonly onSave: () => Promise<SaveResult>;
 };
 
-const AppBreadcrumbs: React.FC<AppBreadcrumbsProps> = ({ project, chapter, onSave, isDirty }) => {
+const AppBreadcrumbs: React.FC<AppBreadcrumbsProps> = ({ project, chapter, section, onSave, isDirty }) => {
   const { savingError, onSaveClick, onClearSavingError } = useAppBreadcrumbsSaving({ isDirty, onSave });
 
   return (
@@ -42,9 +43,20 @@ const AppBreadcrumbs: React.FC<AppBreadcrumbsProps> = ({ project, chapter, onSav
         <Link href={`/projects/${project.id}`}>
           <Typography color="inherit">{project.name}</Typography>
         </Link>
-        <Typography color="inherit" fontStyle={isDirty ? 'italic' : undefined}>
-          {`${chapter.name}${isDirty ? ' *' : ''}`}
-        </Typography>
+        {section ? (
+          <Link href={`/projects/${project.id}/chapters/${chapter.id}`}>
+            <Typography color="inherit">{chapter.name}</Typography>
+          </Link>
+        ) : (
+          <Typography color="inherit" fontStyle={isDirty ? 'italic' : undefined}>
+            {`${chapter.name}${isDirty ? ' *' : ''}`}
+          </Typography>
+        )}
+        {section && (
+          <Typography color="inherit" fontStyle={isDirty ? 'italic' : undefined}>
+            {`${section.name}${isDirty ? ' *' : ''}`}
+          </Typography>
+        )}
       </Breadcrumbs>
       <Button onClick={onSaveClick} size="small" startIcon={<SaveIcon />} variant="text">
         Save
