@@ -1,9 +1,9 @@
-import { LoadableChapter } from '@/contexts/chapters';
+import { LoadableChapter, SectionsActionError } from '@/contexts/chapters';
 import { LoadableAction } from '@/contexts/openapi';
 import { LoadablePaper, PaperActionError } from '@/contexts/papers';
 import { LoadableProject } from '@/contexts/projects';
 import { PaperContentProvider } from '@/contexts/views';
-import { PaperWithoutAutofield } from '@/openapi';
+import { PaperWithoutAutofield, SectionWithoutAutofield } from '@/openapi';
 
 import ChapterViewBreadcrumbsComponent from './ChapterViewBreadcrumbs';
 import ChapterViewEditorComponent from './ChapterViewEditor';
@@ -19,6 +19,7 @@ export type ChapterViewComponentProps = {
   readonly loadableChapter: LoadableChapter;
   readonly loadablePaper: LoadablePaper;
   readonly updatePaper: (id: string, paper: PaperWithoutAutofield) => Promise<LoadableAction<PaperActionError>>;
+  readonly sectionalizePaper: (sections: SectionWithoutAutofield[]) => Promise<LoadableAction<SectionsActionError>>;
 };
 
 const ChapterViewComponent: React.FC<ChapterViewComponentProps> = ({
@@ -26,6 +27,7 @@ const ChapterViewComponent: React.FC<ChapterViewComponentProps> = ({
   loadableProject,
   loadablePaper,
   updatePaper,
+  sectionalizePaper,
 }) =>
   loadableProject.state === 'loading' || loadableChapter.state === 'loading' || loadablePaper.state === 'loading' ? (
     <Container maxWidth="sm">
@@ -55,8 +57,7 @@ const ChapterViewComponent: React.FC<ChapterViewComponentProps> = ({
             <ChapterViewEditorComponent />
           </Container>
           <Divider variant="fullWidth" />
-          {/* eslint-disable-next-line @typescript-eslint/require-await */}
-          <ChapterViewFooterComponent onNextStep={async () => ({ state: 'success', error: null })} />
+          <ChapterViewFooterComponent sectionalizePaper={sectionalizePaper} />
         </Box>
       </PaperContentProvider>
     )
