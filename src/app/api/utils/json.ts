@@ -1,11 +1,6 @@
-import { ENV_GCP } from '../utils/env';
+import { ENV_GCP } from '../../../utils/env';
 
-import { GoogleAuth } from 'google-auth-library';
-
-const IDTOKEN_TARGET_AUDIENCE = process.env.API_URL ?? '';
-const IDTOKEN_AUTH_HEADER = 'X-Serverless-Authorization';
-
-const googleAuth = new GoogleAuth();
+import { fetchGoogleAuthHeaderValue, GOOGLE_AUTH_HEADER_NAME } from './auth';
 
 export async function JSON_ROUTE(path: string, method: string, request: Request): Promise<Response> {
   const headers = new Headers(request.headers);
@@ -13,8 +8,8 @@ export async function JSON_ROUTE(path: string, method: string, request: Request)
 
   if (ENV_GCP) {
     try {
-      const idTokenAuthHeaderValue = await fetchIdtokenAuthHeader();
-      headers.set(IDTOKEN_AUTH_HEADER, idTokenAuthHeaderValue);
+      const googleAuthHeaderValue = await fetchGoogleAuthHeaderValue();
+      headers.set(GOOGLE_AUTH_HEADER_NAME, googleAuthHeaderValue);
     } catch (e) {
       console.warn(e);
       return Response.json({ message: 'forbidden' }, { status: 403 });
@@ -32,10 +27,4 @@ export async function JSON_ROUTE(path: string, method: string, request: Request)
     console.warn(e);
     return Response.json({ message: 'connection error' }, { status: 500 });
   }
-}
-
-async function fetchIdtokenAuthHeader(): Promise<string> {
-  const client = await googleAuth.getIdTokenClient(IDTOKEN_TARGET_AUDIENCE);
-  const clientHeaders = await client.getRequestHeaders();
-  return clientHeaders.Authorization;
 }
