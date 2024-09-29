@@ -1,4 +1,4 @@
-import { ENV_GCP } from '../../../utils/env';
+import { ENV_GCP } from '@/utils/env';
 
 import { fetchGoogleAuthHeaderValue, GOOGLE_AUTH_HEADER_NAME } from './auth';
 
