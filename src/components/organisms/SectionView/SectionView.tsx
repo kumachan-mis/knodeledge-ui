@@ -42,16 +42,24 @@ const SectionViewComponent: React.FC<SectionViewComponentProps> = ({
     loadableSection.state === 'success' &&
     loadableGraph.state === 'success' && (
       <GraphContentProvider initialContent={loadableGraph.data}>
-        <Container maxWidth="lg" sx={{ py: 1 }}>
-          <SectionViewBreadcrumbsComponent
-            chapter={loadableChapter.data}
-            graph={loadableGraph.data}
-            project={loadableProject.data}
-            section={loadableSection.data}
-            updateGraph={updateGraph}
-          />
-          <SectionViewEditorComponent />
-        </Container>
+        <Box
+          sx={(theme) => ({
+            height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px)`,
+            display: 'flex',
+            flexDirection: 'column',
+          })}
+        >
+          <Container maxWidth="lg" sx={{ height: '100%', display: 'flex', flexDirection: 'column', py: 1 }}>
+            <SectionViewBreadcrumbsComponent
+              chapter={loadableChapter.data}
+              graph={loadableGraph.data}
+              project={loadableProject.data}
+              section={loadableSection.data}
+              updateGraph={updateGraph}
+            />
+            <SectionViewEditorComponent />
+          </Container>
+        </Box>
       </GraphContentProvider>
     )
   );

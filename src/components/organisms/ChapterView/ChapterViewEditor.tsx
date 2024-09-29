@@ -32,11 +32,11 @@ const ChapterViewEditorComponent: React.FC = () => {
   );
 };
 
-const ChapterViewEditorRoot = styled(EditorRoot)(({ theme }) => ({
+const ChapterViewEditorRoot = styled(EditorRoot)({
   '&&': {
     width: '100%',
-    height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px - ${theme.spacing(5)})`,
+    height: '100%',
   },
-}));
+});
 
 export default ChapterViewEditorComponent;
