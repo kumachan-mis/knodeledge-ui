@@ -1,3 +1,3 @@
-import { handleAuth } from '@auth0/nextjs-auth0';
+import { AppRouteHandlerFn, handleAuth } from '@auth0/nextjs-auth0';
 
-export const GET = handleAuth() as (req: Request) => Promise<Response>;
+export const GET = handleAuth() as AppRouteHandlerFn;
