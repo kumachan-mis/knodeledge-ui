@@ -6,18 +6,18 @@ import { getSession } from '@auth0/nextjs-auth0';
 import { NextPage } from 'next';
 
 export type ProjectDetailPageProps = {
-  readonly params: Promise<{
+  readonly params: {
     readonly projectId: string;
-  }>;
+  };
 };
 
-const ProjectDetailPage: NextPage<ProjectDetailPageProps> = async ({ params }) => {
+const ProjectDetailPage: NextPage<ProjectDetailPageProps> = async (props) => {
   const session = await getSession();
   if (!session) {
     return <UnauthorizedError />;
   }
 
-  return <ProjectDetailPageClient params={await params} user={session.user} />;
+  return <ProjectDetailPageClient user={session.user} {...props} />;
 };
 
 export default ProjectDetailPage;
