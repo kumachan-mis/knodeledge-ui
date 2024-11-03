@@ -6,17 +6,19 @@ import { GraphContextProvider } from '@/contexts/graphs';
 import { PaperContextProvider } from '@/contexts/papers';
 import { ProjectContextProvider } from '@/contexts/projects';
 
-import { ProjectDetailPageClientProps } from './client';
+export type LayoutProps = {
+  readonly params: Promise<{
+    readonly projectId: string;
+  }>;
+  readonly children: React.ReactNode;
+};
 
-const Layout: React.FC<{ children: React.ReactNode } & ProjectDetailPageClientProps> = ({
-  children,
-  params: { projectId },
-}) => (
+const Layout: React.FC<LayoutProps> = async ({ children, params }) => (
   <ProjectContextProvider>
     <ChapterListContextProvider>
       <PaperContextProvider>
         <GraphContextProvider>
-          <ProjectLayout DrawerContent={ChapterList} DrawerHeader={ChapterListHeader} projectId={projectId}>
+          <ProjectLayout DrawerContent={ChapterList} DrawerHeader={ChapterListHeader} {...await params}>
             {children}
           </ProjectLayout>
         </GraphContextProvider>
