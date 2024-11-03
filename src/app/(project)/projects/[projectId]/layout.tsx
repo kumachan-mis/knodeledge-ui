@@ -5,13 +5,14 @@ import { ChapterListContextProvider } from '@/contexts/chapters';
 import { GraphContextProvider } from '@/contexts/graphs';
 import { PaperContextProvider } from '@/contexts/papers';
 import { ProjectContextProvider } from '@/contexts/projects';
+export type LayoutProps = {
+  readonly params: {
+    readonly projectId: string;
+  };
+  readonly children: React.ReactNode;
+};
 
-import { ProjectDetailPageClientProps } from './client';
-
-const Layout: React.FC<{ children: React.ReactNode } & ProjectDetailPageClientProps> = ({
-  children,
-  params: { projectId },
-}) => (
+const Layout: React.FC<LayoutProps> = ({ children, params: { projectId } }) => (
   <ProjectContextProvider>
     <ChapterListContextProvider>
       <PaperContextProvider>
