@@ -35,7 +35,7 @@ const SectionViewEditorComponent: React.FC = () => {
 const SectionViewEditorRoot = styled(EditorRoot)({
   '&&': {
     width: '100%',
-    height: '100%',
+    flexGrow: 1,
   },
 });
 

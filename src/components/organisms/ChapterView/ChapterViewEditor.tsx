@@ -35,7 +35,7 @@ const ChapterViewEditorComponent: React.FC = () => {
 const ChapterViewEditorRoot = styled(EditorRoot)({
   '&&': {
     width: '100%',
-    height: '100%',
+    flexGrow: 1,
   },
 });
 
