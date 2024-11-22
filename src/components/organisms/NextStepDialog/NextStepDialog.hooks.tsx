@@ -10,14 +10,18 @@ export function usePaperSections(): [SectionWithoutAutofield[], number, React.Di
 
   const [page, setPage] = React.useState(1);
 
-  if (nodes.length === 0 || nodes[0].type !== 'heading') {
+  if (
+    nodes.length === 0 ||
+    nodes[0].type !== 'heading' ||
+    nodes.some((node) => node.type === 'heading' && node.children[0].config.size === 'largest')
+  ) {
     setPage(0);
     return [[], page, setPage];
   }
 
   const sections: SectionWithoutAutofield[] = [];
   for (const node of nodes) {
-    if (node.type === 'heading') {
+    if (node.type === 'heading' && node.children[0].config.size === 'larger') {
       sections.push({ name: headingContent(node), content: '' });
       continue;
     }

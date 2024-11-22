@@ -46,7 +46,7 @@ const NextStepDialogFormComponent: React.FC<NextStepDialogFormComponentProps> = 
     >
       <DialogContent>
         <FormHelperText error>
-          {`${errors.root?.message ?? ''}${errors.root?.sections?.message ? `: ${errors.root.sections.message}` : ''}`}
+          {[errors.root?.message, errors.root?.sections?.message].filter((message) => !!message).join(': ')}
         </FormHelperText>
         <NextStepDialogViewerComponent section={sections[page - 1]} />
       </DialogContent>
