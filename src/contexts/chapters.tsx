@@ -2,12 +2,16 @@
 import { createChapter } from '@/actions/chapters/createChapter';
 import { listChapter } from '@/actions/chapters/listChapter';
 import { updateChapter } from '@/actions/chapters/updateChapter';
+import { sectionalizeIntoGraphs } from '@/actions/graphs/sectionallizeIntoGraphs';
 import {
+  ChapterOnlyId,
   ChapterWithSections,
   ChapterWithoutAutofield,
   ChapterWithoutAutofieldError,
   ProjectOnlyId,
   SectionOfChapter,
+  SectionWithoutAutofield,
+  SectionWithoutAutofieldListError,
   UserOnlyId,
 } from '@/openapi';
 
@@ -27,6 +31,11 @@ export type ChapterActionError = {
   chapter: Required<ChapterWithoutAutofieldError>;
 };
 
+export type SectionsActionError = {
+  message: string;
+  sections: Required<SectionWithoutAutofieldListError>;
+};
+
 export type LoadableActionChapterCreate = (
   chapter: ChapterWithoutAutofield,
 ) => Promise<LoadableAction<ChapterActionError>>;
@@ -36,6 +45,10 @@ export type LoadableActionChapterUpdate = (
   chapter: ChapterWithoutAutofield,
 ) => Promise<LoadableAction<ChapterActionError>>;
 
+export type LoadableActionSectionalizePaper = (
+  sections: SectionWithoutAutofield[],
+) => Promise<LoadableAction<SectionsActionError>>;
+
 const EMPTY_CHAPTER_ACTION_ERROR: ChapterActionError = {
   message: '',
   chapter: { name: '', number: '' },
@@ -44,6 +57,16 @@ const EMPTY_CHAPTER_ACTION_ERROR: ChapterActionError = {
 const UNKNOWN_CHAPTER_ACTION_ERROR: ChapterActionError = {
   message: 'unknown error',
   chapter: { name: 'unknown error', number: 'unknown error' },
+} as const;
+
+const EMPTY_SECTIONS_ACTION_ERROR: SectionsActionError = {
+  message: '',
+  sections: { message: '', items: [] },
+} as const;
+
+const UNKNOWN_SECTIONS_ACTION_ERROR: SectionsActionError = {
+  message: 'unknown error',
+  sections: { message: 'unknown error', items: [] },
 } as const;
 
 const ChapterListValueContext = React.createContext<LoadableChapterList>({ state: 'loading', data: null });
@@ -191,6 +214,55 @@ export function useUpdateChapterInList(user: UserOnlyId, project: ProjectOnlyId)
       ];
       data.sort((a, b) => a.number - b.number);
 
+      return { state: 'success', data };
+    });
+    return { state: 'success', error: null };
+  };
+}
+
+export function useSectionalizePaper(
+  user: UserOnlyId,
+  project: ProjectOnlyId,
+  chapter: ChapterOnlyId,
+): LoadableActionSectionalizePaper {
+  const setPanic = useSetPanic();
+  const setChapterList = React.useContext(ChapterListSetContext);
+
+  return async (sections) => {
+    const errorable = await sectionalizeIntoGraphs({ user, project, chapter, sections });
+    if (errorable.state === 'panic') {
+      setPanic(errorable.error.message);
+      return { state: 'error', error: UNKNOWN_SECTIONS_ACTION_ERROR };
+    }
+
+    if (
+      errorable.state === 'error' &&
+      (!!errorable.error.user?.id || !!errorable.error.project?.id || !!errorable.error.chapter?.id)
+    ) {
+      return { state: 'error', error: UNKNOWN_SECTIONS_ACTION_ERROR };
+    }
+
+    if (errorable.state === 'error') {
+      return {
+        state: 'error',
+        error: {
+          message: errorable.error.message ?? EMPTY_SECTIONS_ACTION_ERROR.message,
+          sections: { ...EMPTY_SECTIONS_ACTION_ERROR.sections, ...errorable.error.sections },
+        },
+      };
+    }
+
+    setChapterList((prev) => {
+      if (prev.state !== 'success') return prev;
+
+      const prevChapter = prev.data.find((ch) => ch.id === chapter.id);
+      if (!prevChapter) return prev;
+
+      const data = prev.data.map((ch) => {
+        if (ch.id !== chapter.id) return ch;
+        const sections = errorable.response.graphs.map((graph) => ({ id: graph.id, name: graph.name }));
+        return { ...ch, sections };
+      });
       return { state: 'success', data };
     });
     return { state: 'success', error: null };
