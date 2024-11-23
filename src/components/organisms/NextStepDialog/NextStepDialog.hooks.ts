@@ -15,7 +15,7 @@ export function usePaperSections(): [SectionWithoutAutofield[], number, React.Di
     nodes[0].type !== 'heading' ||
     nodes.some((node) => node.type === 'heading' && node.children[0].config.size === 'largest')
   ) {
-    setPage(0);
+    if (page !== 0) setPage(0);
     return [[], page, setPage];
   }
 
