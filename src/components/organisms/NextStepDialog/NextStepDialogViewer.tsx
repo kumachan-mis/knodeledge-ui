@@ -1,17 +1,21 @@
-import { SectionWithoutAutofield } from '@/openapi';
-
 import styled from '@emotion/styled';
 import React from 'react';
 import { ViewerTextFieldRoot, ViewerTextFieldBody, ViewerRoot, ViewerHeader } from 'react-clay-editor';
 
 type NextStepDialogViewerComponentProps = {
-  readonly section: SectionWithoutAutofield;
+  readonly headerSize?: 'normal' | 'larger' | 'largest';
+  readonly header?: string;
+  readonly content: string;
 };
 
-const NextStepDialogViewerComponent: React.FC<NextStepDialogViewerComponentProps> = ({ section }) => (
-  <NextStepDialogViewerRoot text={section.content}>
+const NextStepDialogViewerComponent: React.FC<NextStepDialogViewerComponentProps> = ({
+  headerSize,
+  header,
+  content,
+}) => (
+  <NextStepDialogViewerRoot text={content}>
     <ViewerTextFieldRoot>
-      <ViewerHeader header={section.name} />
+      {header && <ViewerHeader header={header} size={headerSize} />}
       <ViewerTextFieldBody />
     </ViewerTextFieldRoot>
   </NextStepDialogViewerRoot>

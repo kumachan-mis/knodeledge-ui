@@ -1,28 +1,43 @@
-import { usePaperContent } from '@/contexts/views';
-import { SectionWithoutAutofield } from '@/openapi';
+import { PaperWithoutAutofield, SectionWithoutAutofield } from '@/openapi';
 
 import React from 'react';
 import { headingContent, parseText, textNodeToString } from 'react-clay-editor';
 
-export function usePaperSections(): [SectionWithoutAutofield[], number, React.Dispatch<React.SetStateAction<number>>] {
-  const paper = usePaperContent();
+export type UsePaperSectionsProps = {
+  paper: PaperWithoutAutofield;
+};
+
+export type UsePaperSectionsReturn = {
+  sections: SectionWithoutAutofield[];
+  page: number;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
+  errorMessage: string;
+};
+
+export function usePaperSections({ paper }: UsePaperSectionsProps): UsePaperSectionsReturn {
   const nodes = React.useMemo(() => parseText(paper.content, {}), [paper.content]);
 
   const [page, setPage] = React.useState(1);
 
-  if (
-    nodes.length === 0 ||
-    nodes[0].type !== 'heading' ||
-    nodes.some((node) => node.type === 'heading' && node.children[0].config.size === 'largest')
-  ) {
-    if (page !== 0) setPage(0);
-    return [[], page, setPage];
+  if (nodes.length === 0 || nodes[0].type !== 'heading' || nodes[0].children[0].config.size !== 'larger') {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    return { sections: [], page: 0, setPage: () => {}, errorMessage: 'content should start with a section heading' };
+  }
+
+  if (nodes.some((node) => node.type === 'heading' && node.children[0].config.size === 'largest')) {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    return { sections: [], page: 0, setPage: () => {}, errorMessage: 'content should not have chapter headings' };
   }
 
   const sections: SectionWithoutAutofield[] = [];
   for (const node of nodes) {
     if (node.type === 'heading' && node.children[0].config.size === 'larger') {
-      sections.push({ name: headingContent(node), content: '' });
+      const sectionName = headingContent(node);
+      if (!sectionName) {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        return { sections: [], page: 0, setPage: () => {}, errorMessage: 'section name should not be empty' };
+      }
+      sections.push({ name: sectionName, content: '' });
       continue;
     }
 
@@ -31,5 +46,10 @@ export function usePaperSections(): [SectionWithoutAutofield[], number, React.Di
     section.content += textNodeToString(node);
   }
 
-  return [sections, page, setPage];
+  if (sections.length !== new Set(sections.map((section) => section.name)).size) {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    return { sections: [], page: 0, setPage: () => {}, errorMessage: 'section name should not be duplicated' };
+  }
+
+  return { sections, page, setPage, errorMessage: '' };
 }

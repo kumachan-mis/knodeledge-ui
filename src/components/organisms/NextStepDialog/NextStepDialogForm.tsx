@@ -1,6 +1,7 @@
 'use client';
 import { SectionsActionError } from '@/contexts/chapters';
 import { LoadableAction } from '@/contexts/openapi';
+import { usePaperContent } from '@/contexts/views';
 import { SectionWithoutAutofield } from '@/openapi';
 
 import { usePaperSections } from './NextStepDialog.hooks';
@@ -25,7 +26,9 @@ const NextStepDialogFormComponent: React.FC<NextStepDialogFormComponentProps> = 
     formState: { isSubmitting, errors },
   } = useForm();
 
-  const [sections, page, setPage] = usePaperSections();
+  const paper = usePaperContent();
+  const { sections, page, setPage, errorMessage } = usePaperSections({ paper });
+  const section = sections[page - 1] as SectionWithoutAutofield | undefined;
 
   const handleSubmitForm = handleSubmit(async () => {
     const result = await onSubmit(sections);
@@ -37,6 +40,10 @@ const NextStepDialogFormComponent: React.FC<NextStepDialogFormComponentProps> = 
     setError('root.sections', { type: 'server', message: result.error.sections.message });
   });
 
+  const serverErrorMessage = [errors.root?.message, errors.root?.sections?.message]
+    .filter((message) => !!message)
+    .join(': ');
+
   return (
     <form
       onSubmit={(event) => {
@@ -45,10 +52,12 @@ const NextStepDialogFormComponent: React.FC<NextStepDialogFormComponentProps> = 
       }}
     >
       <DialogContent>
-        <FormHelperText error>
-          {[errors.root?.message, errors.root?.sections?.message].filter((message) => !!message).join(': ')}
-        </FormHelperText>
-        {1 <= page && page <= sections.length && <NextStepDialogViewerComponent section={sections[page - 1]} />}
+        <FormHelperText error>{errorMessage ? errorMessage : serverErrorMessage}</FormHelperText>
+        {!section ? (
+          <NextStepDialogViewerComponent content={paper.content} />
+        ) : (
+          <NextStepDialogViewerComponent content={section.content} header={section.name} headerSize="larger" />
+        )}
       </DialogContent>
       <DialogActions>
         <Pagination
@@ -62,7 +71,7 @@ const NextStepDialogFormComponent: React.FC<NextStepDialogFormComponentProps> = 
         <Button disabled={isSubmitting} onClick={onClose} variant="outlined">
           Close
         </Button>
-        <Button disabled={isSubmitting} type="submit" variant="contained">
+        <Button disabled={!!errorMessage || isSubmitting} type="submit" variant="contained">
           Go to Next Step
         </Button>
       </DialogActions>
