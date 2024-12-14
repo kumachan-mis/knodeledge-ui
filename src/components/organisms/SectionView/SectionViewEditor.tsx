@@ -32,11 +32,11 @@ const SectionViewEditorComponent: React.FC = () => {
   );
 };
 
-const SectionViewEditorRoot = styled(EditorRoot)(({ theme }) => ({
+const SectionViewEditorRoot = styled(EditorRoot)({
   '&&': {
     width: '100%',
-    height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px - ${theme.spacing(5)})`,
+    flexGrow: 1,
   },
-}));
+});
 
 export default SectionViewEditorComponent;

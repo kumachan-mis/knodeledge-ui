@@ -79,6 +79,7 @@ test('should show paper content from Paper Find API', async () => {
   expect(screen.getByText('Project Name')).toBeInTheDocument();
   expect(screen.getByText('Chapter Name')).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Go to Next Step' })).toBeInTheDocument();
 
   expect(global.fetch).toHaveBeenCalledTimes(3);
   expect(global.fetch).toHaveBeenNthCalledWith(

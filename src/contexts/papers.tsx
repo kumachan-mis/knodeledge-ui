@@ -1,7 +1,14 @@
 'use client';
 import { findPaper } from '@/actions/papers/findPaper';
 import { updatePaper } from '@/actions/papers/updatePaper';
-import { Paper, PaperWithoutAutofield, PaperWithoutAutofieldError, UserOnlyId } from '@/openapi';
+import {
+  ChapterOnlyId,
+  Paper,
+  PaperWithoutAutofield,
+  PaperWithoutAutofieldError,
+  ProjectOnlyId,
+  UserOnlyId,
+} from '@/openapi';
 
 import { LoadableAction, LoadableData } from './openapi';
 import { useSetPanic } from './panic';
@@ -78,17 +85,21 @@ export function useInitPaper(userId: string, projectId: string, chapterId: strin
   }, [userId, projectId, chapterId]);
 }
 
-export function useUpdatePaper(user: UserOnlyId, projectId: string, chapterId: string): LoadableActionPaperUpdate {
+export function useUpdatePaper(
+  user: UserOnlyId,
+  project: ProjectOnlyId,
+  chapter: ChapterOnlyId,
+): LoadableActionPaperUpdate {
   const setPanic = useSetPanic();
   const paperMap = React.useContext(PaperMapValueContext);
   const setPaperMap = React.useContext(PaperMapSetContext);
 
   return async (id, paper) => {
-    const loadablePaper = paperMap.get(chapterId);
+    const loadablePaper = paperMap.get(chapter.id);
     if (loadablePaper?.state !== 'success') {
       return { state: 'error', error: UNKNOWN_PAPER_ACTION_ERROR };
     }
-    const errorable = await updatePaper({ user, project: { id: projectId }, paper: { id, ...paper } });
+    const errorable = await updatePaper({ user, project, paper: { id, ...paper } });
     if (errorable.state === 'panic') {
       setPanic(errorable.error.message);
       return { state: 'error', error: UNKNOWN_PAPER_ACTION_ERROR };
@@ -107,7 +118,7 @@ export function useUpdatePaper(user: UserOnlyId, projectId: string, chapterId: s
       };
     }
 
-    setPaperMap((prev) => new Map(prev.set(chapterId, { state: 'success', data: errorable.response.paper })));
+    setPaperMap((prev) => new Map(prev.set(chapter.id, { state: 'success', data: errorable.response.paper })));
     return { state: 'success', error: null };
   };
 }

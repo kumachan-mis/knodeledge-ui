@@ -34,7 +34,7 @@ test('should update project', async () => {
   expect(updateProject).toHaveBeenCalledWith({ name: 'Project Name Updated', description: '' });
 });
 
-test('should close dialog to update project', async () => {
+test('should close dialog', async () => {
   const user = userEvent.setup();
 
   const updateProject = jest.fn().mockResolvedValueOnce({ state: 'success', error: null });

@@ -1,3 +1,5 @@
+import { PaperContentProvider } from '@/contexts/views';
+
 import ChapterViewComponent from './ChapterView';
 
 import { Meta, StoryObj } from '@storybook/react';
@@ -45,7 +47,15 @@ export const Basic: Story = {
       },
     },
   },
+  decorators: [
+    (Story) => (
+      <PaperContentProvider initialContent={{ content: 'This is paper content.' }}>
+        <Story />
+      </PaperContentProvider>
+    ),
+  ],
 };
+
 export const Loading: Story = {
   args: {
     loadableProject: {
