@@ -83,13 +83,13 @@ test('should sectionalize paper', async () => {
     },
   ]);
 
-  expect(onClose).toHaveBeenNthCalledWith(1);
+  expect(onClose).toHaveBeenCalledTimes(1);
 });
 
-test('should close dialog to sectionalize paper', async () => {
+test('should close dialog', async () => {
   const user = userEvent.setup();
 
-  const onSubmit = jest.fn().mockResolvedValueOnce({ state: 'success', error: null });
+  const onSubmit = jest.fn();
   const onClose = jest.fn();
 
   const screen = render(<NextStepDialog onClose={onClose} onSubmit={onSubmit} open />, {
@@ -114,7 +114,7 @@ test('should close dialog to sectionalize paper', async () => {
   await user.click(dialog.getByRole('button', { name: 'Close' }));
 
   expect(onSubmit).toHaveBeenCalledTimes(0);
-  expect(onClose).toHaveBeenNthCalledWith(1);
+  expect(onClose).toHaveBeenCalledTimes(1);
 });
 
 test.each<{
@@ -215,7 +215,7 @@ test.each<{
 ])('should show error when failed to sectionalize paper (#name)', async ({ error, errorMessage }) => {
   const user = userEvent.setup();
 
-  const onSubmit = jest.fn().mockResolvedValueOnce({ state: 'success', error });
+  const onSubmit = jest.fn().mockResolvedValueOnce({ state: 'error', error });
   const onClose = jest.fn();
 
   const screen = render(<NextStepDialog onClose={onClose} onSubmit={onSubmit} open />, {
@@ -240,7 +240,7 @@ test.each<{
   await user.click(dialog.getByRole('button', { name: 'Go to Next Step' }));
 
   await waitFor(() => {
-    expect(dialog.getAllByText(errorMessage)).toBeInTheDocument();
+    expect(dialog.getByText(errorMessage)).toBeInTheDocument();
   });
 
   expect(onSubmit).toHaveBeenCalledTimes(1);
@@ -255,5 +255,5 @@ test.each<{
     },
   ]);
 
-  expect(onClose).toHaveBeenNthCalledWith(0);
+  expect(onClose).toHaveBeenCalledTimes(0);
 });

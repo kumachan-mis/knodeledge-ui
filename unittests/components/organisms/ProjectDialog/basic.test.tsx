@@ -348,7 +348,5 @@ test('should close dialog', async () => {
 
   await user.click(dialog.getByRole('button', { name: 'Close' }));
 
-  await waitFor(() => {
-    expect(onClose).toHaveBeenCalledTimes(1);
-  });
+  expect(onClose).toHaveBeenCalledTimes(1);
 });

@@ -43,7 +43,7 @@ test('should update chapter', async () => {
   expect(updateChapter).toHaveBeenCalledWith({ name: 'Chapter Name Updated', number: 2 });
 });
 
-test('should close dialog to update chapter', async () => {
+test('should close dialog', async () => {
   const user = userEvent.setup();
 
   const updateChapter = jest.fn().mockResolvedValueOnce({ state: 'success', error: null });
