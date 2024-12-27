@@ -40,7 +40,7 @@ const NextStepDialogFormComponent: React.FC<NextStepDialogFormComponentProps> = 
     setError('root.sections', { type: 'server', message: result.error.sections.message });
   });
 
-  const serverErrorMessage = [errors.root?.message, errors.root?.sections?.message]
+  const serverErrorMessage = [errors.root?.message, errors.root?.sections.message]
     .filter((message) => !!message)
     .join(': ');
 

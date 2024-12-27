@@ -50,7 +50,7 @@ const ChapterListItemComponent: React.FC<ChapterListItemComponentProps> = ({
           </IconButton>
         }
       >
-        <ListItemText primaryTypographyProps={{ variant: 'subtitle1' }}>
+        <ListItemText slotProps={{ primary: { variant: 'subtitle1' } }}>
           {`#${chapter.number} ${chapter.name}`}
         </ListItemText>
         <ChapterListItemMenuComponent
