@@ -18,7 +18,7 @@ const SectionListItem: React.FC<SectionListItemProps> = ({ projectId, chapterId,
       LinkComponent={Link}
       href={`/projects/${projectId}?${CHAPTER_ID_PARAM_KEY}=${chapterId}&${SECTION_ID_PARAM_KEY}=${section.id}`}
     >
-      <ListItemText primaryTypographyProps={{ variant: 'subtitle2' }}>{section.name}</ListItemText>
+      <ListItemText slotProps={{ primary: { variant: 'subtitle2' } }}>{section.name}</ListItemText>
     </ListItemButton>
   </ListItem>
 );
