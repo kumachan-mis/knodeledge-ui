@@ -16,20 +16,20 @@ import { CHAPTER_ID_PARAM_KEY, SECTION_ID_PARAM_KEY } from '@/utils/params';
 import { useSearchParams } from 'next/navigation';
 import React from 'react';
 
-export type ProjectDetailPageClientProps = {
+export type ProjectDetailPageContentProps = {
   readonly params: {
     readonly projectId: string;
   };
 };
 
-type ChapterDetailPageClientProps = {
+type ChapterDetailPageContentProps = {
   readonly params: {
     readonly projectId: string;
     readonly chapterId: string;
   };
 };
 
-type SectionDetailPageClientProps = {
+type SectionDetailPageContentProps = {
   readonly params: {
     readonly projectId: string;
     readonly chapterId: string;
@@ -37,24 +37,24 @@ type SectionDetailPageClientProps = {
   };
 };
 
-const ProjectDetailPageClient: React.FC<AuthorizedPageProps<ProjectDetailPageClientProps>> = ({ user, params }) => {
+const ProjectDetailPageContent: React.FC<AuthorizedPageProps<ProjectDetailPageContentProps>> = ({ user, params }) => {
   const searchParams = useSearchParams();
 
   const chapterId = searchParams.get(CHAPTER_ID_PARAM_KEY);
   const sectionId = searchParams.get(SECTION_ID_PARAM_KEY);
 
   if (chapterId && sectionId) {
-    return <SectionDetailPageClient params={{ ...params, chapterId, sectionId }} user={user} />;
+    return <SectionDetailPageContent params={{ ...params, chapterId, sectionId }} user={user} />;
   }
 
   if (chapterId) {
-    return <ChapterDetailPageClient params={{ ...params, chapterId }} user={user} />;
+    return <ChapterDetailPageContent params={{ ...params, chapterId }} user={user} />;
   }
 
   return <ProjectView user={user} />;
 };
 
-const ChapterDetailPageClient: React.FC<AuthorizedPageProps<ChapterDetailPageClientProps>> = ({ user, params }) => {
+const ChapterDetailPageContent: React.FC<AuthorizedPageProps<ChapterDetailPageContentProps>> = ({ user, params }) => {
   useInitPaper(user.sub, params.projectId, params.chapterId);
 
   const loadableChapterList = useLoadableChapterList();
@@ -71,7 +71,7 @@ const ChapterDetailPageClient: React.FC<AuthorizedPageProps<ChapterDetailPageCli
   );
 };
 
-const SectionDetailPageClient: React.FC<AuthorizedPageProps<SectionDetailPageClientProps>> = ({ user, params }) => {
+const SectionDetailPageContent: React.FC<AuthorizedPageProps<SectionDetailPageContentProps>> = ({ user, params }) => {
   useInitGraph(user.sub, params.projectId, params.chapterId, params.sectionId);
 
   const loadableChapterList = useLoadableChapterList();
@@ -101,4 +101,4 @@ const SectionDetailPageClient: React.FC<AuthorizedPageProps<SectionDetailPageCli
   );
 };
 
-export default ProjectDetailPageClient;
+export default ProjectDetailPageContent;

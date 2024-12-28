@@ -4,7 +4,7 @@ import InternalError from '@/components/organisms/InternalError';
 import UnauthorizedError from '@/components/organisms/UnauthorizedError';
 import { ProjectListContextProvider } from '@/contexts/projects';
 
-import ProjectListPageClient from './client';
+import ProjectListPageContent from './content';
 
 import { getSession } from '@auth0/nextjs-auth0';
 import { NextPage } from 'next';
@@ -32,7 +32,7 @@ const ProjectListPage: NextPage = async () => {
   return (
     <ProjectListContextProvider initialProjectList={errorableProjectList.response.projects}>
       <AppLayout>
-        <ProjectListPageClient user={session.user} />;
+        <ProjectListPageContent user={session.user} />;
       </AppLayout>
     </ProjectListContextProvider>
   );

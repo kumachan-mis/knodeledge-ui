@@ -11,7 +11,7 @@ import { CachedGraphContextProvider } from '@/contexts/graphs';
 import { CachedPaperContextProvider } from '@/contexts/papers';
 import { ProjectContextProvider } from '@/contexts/projects';
 
-import ProjectDetailPageClient from './client';
+import ProjectDetailPageContent from './content';
 
 import { getSession } from '@auth0/nextjs-auth0';
 import { NextPage } from 'next';
@@ -72,7 +72,7 @@ const ProjectDetailPage: NextPage<ProjectDetailPageProps> = async (props) => {
         <CachedPaperContextProvider>
           <CachedGraphContextProvider>
             <ProjectDetailPageLayout {...props}>
-              <ProjectDetailPageClient user={session.user} {...props} />
+              <ProjectDetailPageContent user={session.user} {...props} />
             </ProjectDetailPageLayout>
           </CachedGraphContextProvider>
         </CachedPaperContextProvider>
