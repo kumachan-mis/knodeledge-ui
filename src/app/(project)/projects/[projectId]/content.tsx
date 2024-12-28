@@ -66,7 +66,7 @@ const ChapterDetailPageContent: React.FC<AuthorizedPageProps<ChapterDetailPageCo
 
   return (
     <ActiveChapterContextProvider activeChapter={activeChapter}>
-      <ChapterView chapterId={params.chapterId} key={params.chapterId} projectId={params.projectId} user={user} />;
+      <ChapterView chapterId={params.chapterId} key={params.chapterId} projectId={params.projectId} user={user} />
     </ActiveChapterContextProvider>
   );
 };
