@@ -1,4 +1,4 @@
-import { useLoadableChapterInList, useLoadableSectionInChapter } from '@/contexts/chapters';
+import { useLoadableActiveChapterInList, useLoadableActiveSectionInList } from '@/contexts/chapters';
 import { useLoadableGraph, useUpdateGraph } from '@/contexts/graphs';
 import { useLoadableProject } from '@/contexts/projects';
 
@@ -15,16 +15,18 @@ export type SectionViewProps = {
 
 const SectionView: React.FC<SectionViewProps> = ({ user, projectId, chapterId, sectionId }) => {
   const loadableProject = useLoadableProject();
-  const loadableChapter = useLoadableChapterInList(chapterId);
-  const loadableSection = useLoadableSectionInChapter(chapterId, sectionId);
+  const loadableChapter = useLoadableActiveChapterInList();
+  const loadableSection = useLoadableActiveSectionInList();
   const loadableGraph = useLoadableGraph(sectionId);
+
   const updateGraph = useUpdateGraph({ id: user.sub }, projectId, chapterId, sectionId);
+
   return (
     <SectionViewComponent
-      loadableChapter={loadableChapter}
+      chapter={loadableChapter.data}
       loadableGraph={loadableGraph}
-      loadableProject={loadableProject}
-      loadableSection={loadableSection}
+      project={loadableProject.data}
+      section={loadableSection.data}
       updateGraph={updateGraph}
     />
   );

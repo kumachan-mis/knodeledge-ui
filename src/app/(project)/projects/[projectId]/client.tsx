@@ -3,15 +3,18 @@ import ChapterView from '@/components/organisms/ChapterView';
 import NotFoundError from '@/components/organisms/NotFoundError';
 import ProjectView from '@/components/organisms/ProjectView';
 import SectionView from '@/components/organisms/SectionView';
-import { useInitChapterList, useLoadableChapterInList, useLoadableSectionInChapter } from '@/contexts/chapters';
+import {
+  ActiveChapterContextProvider,
+  ActiveSectionContextProvider,
+  useLoadableChapterList,
+} from '@/contexts/chapters';
 import { useInitGraph } from '@/contexts/graphs';
 import { useInitPaper } from '@/contexts/papers';
-import { useInitProject, useLoadableProject } from '@/contexts/projects';
 import { AuthorizedPageProps } from '@/utils/page';
 import { CHAPTER_ID_PARAM_KEY, SECTION_ID_PARAM_KEY } from '@/utils/params';
 
-import { NextPage } from 'next';
 import { useSearchParams } from 'next/navigation';
+import React from 'react';
 
 export type ProjectDetailPageClientProps = {
   readonly params: {
@@ -19,14 +22,14 @@ export type ProjectDetailPageClientProps = {
   };
 };
 
-export type ChapterDetailPageClientProps = {
+type ChapterDetailPageClientProps = {
   readonly params: {
     readonly projectId: string;
     readonly chapterId: string;
   };
 };
 
-export type SectionDetailPageClientProps = {
+type SectionDetailPageClientProps = {
   readonly params: {
     readonly projectId: string;
     readonly chapterId: string;
@@ -34,17 +37,8 @@ export type SectionDetailPageClientProps = {
   };
 };
 
-const ProjectDetailPageClient: NextPage<AuthorizedPageProps<ProjectDetailPageClientProps>> = ({ user, params }) => {
+const ProjectDetailPageClient: React.FC<AuthorizedPageProps<ProjectDetailPageClientProps>> = ({ user, params }) => {
   const searchParams = useSearchParams();
-
-  useInitProject(user.sub, params.projectId);
-  useInitChapterList(user.sub, params.projectId);
-
-  const loadableProject = useLoadableProject();
-
-  if (loadableProject.state === 'notfound') {
-    return <NotFoundError />;
-  }
 
   const chapterId = searchParams.get(CHAPTER_ID_PARAM_KEY);
   const sectionId = searchParams.get(SECTION_ID_PARAM_KEY);
@@ -60,35 +54,50 @@ const ProjectDetailPageClient: NextPage<AuthorizedPageProps<ProjectDetailPageCli
   return <ProjectView user={user} />;
 };
 
-const ChapterDetailPageClient = ({ user, params }: AuthorizedPageProps<ChapterDetailPageClientProps>) => {
+const ChapterDetailPageClient: React.FC<AuthorizedPageProps<ChapterDetailPageClientProps>> = ({ user, params }) => {
   useInitPaper(user.sub, params.projectId, params.chapterId);
 
-  const loadableChapter = useLoadableChapterInList(params.chapterId);
+  const loadableChapterList = useLoadableChapterList();
 
-  if (loadableChapter.state === 'notfound') {
-    return <NotFoundError />;
-  }
-
-  return <ChapterView chapterId={params.chapterId} key={params.chapterId} projectId={params.projectId} user={user} />;
-};
-
-const SectionDetailPageClient = ({ user, params }: AuthorizedPageProps<SectionDetailPageClientProps>) => {
-  useInitGraph(user.sub, params.projectId, params.chapterId, params.sectionId);
-
-  const loadableSection = useLoadableSectionInChapter(params.chapterId, params.sectionId);
-
-  if (loadableSection.state === 'notfound') {
+  const activeChapter = loadableChapterList.data.find((chapter) => chapter.id === params.chapterId);
+  if (!activeChapter) {
     return <NotFoundError />;
   }
 
   return (
-    <SectionView
-      chapterId={params.chapterId}
-      key={params.sectionId}
-      projectId={params.projectId}
-      sectionId={params.sectionId}
-      user={user}
-    />
+    <ActiveChapterContextProvider activeChapter={activeChapter}>
+      <ChapterView chapterId={params.chapterId} key={params.chapterId} projectId={params.projectId} user={user} />;
+    </ActiveChapterContextProvider>
+  );
+};
+
+const SectionDetailPageClient: React.FC<AuthorizedPageProps<SectionDetailPageClientProps>> = ({ user, params }) => {
+  useInitGraph(user.sub, params.projectId, params.chapterId, params.sectionId);
+
+  const loadableChapterList = useLoadableChapterList();
+
+  const activeChapter = loadableChapterList.data.find((chapter) => chapter.id === params.chapterId);
+  if (!activeChapter) {
+    return <NotFoundError />;
+  }
+
+  const activeSection = activeChapter.sections.find((section) => section.id === params.sectionId);
+  if (!activeSection) {
+    return <NotFoundError />;
+  }
+
+  return (
+    <ActiveChapterContextProvider activeChapter={activeChapter}>
+      <ActiveSectionContextProvider activeSection={activeSection}>
+        <SectionView
+          chapterId={params.chapterId}
+          key={params.sectionId}
+          projectId={params.projectId}
+          sectionId={params.sectionId}
+          user={user}
+        />
+      </ActiveSectionContextProvider>
+    </ActiveChapterContextProvider>
   );
 };
 

@@ -17,9 +17,9 @@ const ChapterListHeader: React.FC<ChapterListHeaderProps> = ({ user, projectId }
   const createChapter = useCreateChapterInList({ id: user.sub }, { id: projectId });
   return (
     <ChapterListHeaderComponent
-      loadableChapterList={loadableChapterList}
-      loadableProject={loadableProject}
+      chapterList={loadableChapterList.data}
       onCreateChapter={createChapter}
+      project={loadableProject.data}
     />
   );
 };

@@ -1,16 +1,16 @@
-import { PaperContentProvider } from '@/contexts/views';
+import { GraphContentProvider } from '@/contexts/views';
 
-import ChapterViewComponent from './ChapterView';
+import SectionViewComponent from './SectionView';
 
 import { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof ChapterViewComponent> = {
-  component: ChapterViewComponent,
+const meta: Meta<typeof SectionViewComponent> = {
+  component: SectionViewComponent,
 };
 
 export default meta;
 
-type Story = StoryObj<typeof ChapterViewComponent>;
+type Story = StoryObj<typeof SectionViewComponent>;
 
 export const Basic: Story = {
   args: {
@@ -20,7 +20,7 @@ export const Basic: Story = {
     },
     chapter: {
       id: 'CHAPTER',
-      name: 'Chapter Name',
+      name: 'Section Name',
       number: 1,
       sections: [
         {
@@ -33,19 +33,24 @@ export const Basic: Story = {
         },
       ],
     },
-    loadablePaper: {
+    section: {
+      id: 'SECTION_ONE',
+      name: 'Section One',
+    },
+    loadableGraph: {
       state: 'success',
       data: {
-        id: 'PAPER',
-        content: 'This is paper content.',
+        id: 'GRAPH',
+        name: 'Section One',
+        paragraph: 'This is graph content.',
       },
     },
   },
   decorators: [
     (Story) => (
-      <PaperContentProvider initialContent={{ content: 'This is paper content.' }}>
+      <GraphContentProvider initialContent={{ paragraph: 'This is graph content.' }}>
         <Story />
-      </PaperContentProvider>
+      </GraphContentProvider>
     ),
   ],
 };
@@ -53,7 +58,7 @@ export const Basic: Story = {
 export const Loading: Story = {
   args: {
     ...Basic.args,
-    loadablePaper: {
+    loadableGraph: {
       state: 'loading',
       data: null,
     },

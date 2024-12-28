@@ -3,12 +3,12 @@ import { findGraph } from '@/actions/graphs/findGraph';
 import { updateGraph } from '@/actions/graphs/updateGraph';
 import { Graph, GraphContentWithoutAutofield, GraphContentWithoutAutofieldError, UserOnlyId } from '@/openapi';
 
-import { LoadableAction, LoadableData } from './openapi';
+import { LoadableAction, LoadableClientSideData } from './openapi';
 import { useSetPanic } from './panic';
 
 import React from 'react';
 
-export type LoadableGraph = LoadableData<Graph>;
+export type LoadableGraph = LoadableClientSideData<Graph>;
 
 export type LoadableGraphMap = Map<string, LoadableGraph>;
 
@@ -135,7 +135,7 @@ export function useUpdateGraph(
   };
 }
 
-export const GraphContextProvider: React.FC<{ readonly children?: React.ReactNode }> = ({ children }) => {
+export const CachedGraphContextProvider: React.FC<{ readonly children?: React.ReactNode }> = ({ children }) => {
   const [graphMap, setGraphMap] = React.useState<LoadableGraphMap>(new Map());
 
   return (

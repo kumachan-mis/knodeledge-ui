@@ -15,7 +15,7 @@ const ChapterList: React.FC<ChapterListProps> = ({ user, projectId }) => {
   const updateChapter = useUpdateChapterInList({ id: user.sub }, { id: projectId });
   return (
     <ChapterListComponent
-      loadableChapterList={loadableChapterList}
+      chapterList={loadableChapterList.data}
       onUpdateChapter={updateChapter}
       projectId={projectId}
     />

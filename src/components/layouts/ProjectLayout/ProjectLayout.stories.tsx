@@ -22,89 +22,80 @@ export const Login: Story = {
     },
     DrawerHeader: () => (
       <ChapterListHeaderComponent
-        loadableChapterList={{
-          state: 'success',
-          data: [
-            {
-              id: 'CHAPTER_ONE',
-              number: 1,
-              name: 'Chapter One',
-              sections: [
-                {
-                  id: 'SECTION_ONE',
-                  name: 'Section One',
-                },
-                {
-                  id: 'SECTION_TWO',
-                  name: 'Section Two',
-                },
-              ],
-            },
-            {
-              id: 'CHAPTER_TWO',
-              number: 2,
-              name: 'Chapter Two',
-              sections: [
-                {
-                  id: 'SECTION_THREE',
-                  name: 'Section Three',
-                },
-                {
-                  id: 'SECTION_FOUR',
-                  name: 'Section Four',
-                },
-              ],
-            },
-          ],
-        }}
-        loadableProject={{
-          state: 'success',
-          data: {
-            id: 'PROJECT',
-            name: 'Project Without Description',
+        chapterList={[
+          {
+            id: 'CHAPTER_ONE',
+            number: 1,
+            name: 'Chapter One',
+            sections: [
+              {
+                id: 'SECTION_ONE',
+                name: 'Section One',
+              },
+              {
+                id: 'SECTION_TWO',
+                name: 'Section Two',
+              },
+            ],
           },
-        }}
+          {
+            id: 'CHAPTER_TWO',
+            number: 2,
+            name: 'Chapter Two',
+            sections: [
+              {
+                id: 'SECTION_THREE',
+                name: 'Section Three',
+              },
+              {
+                id: 'SECTION_FOUR',
+                name: 'Section Four',
+              },
+            ],
+          },
+        ]}
         // eslint-disable-next-line @typescript-eslint/require-await
         onCreateChapter={async () => ({ state: 'success', data: [], error: null })}
+        project={{
+          id: 'PROJECT',
+          name: 'Project Without Description',
+        }}
       />
     ),
     DrawerContent: () => (
       <ChapterListComponent
-        loadableChapterList={{
-          state: 'success',
-          data: [
-            {
-              id: 'CHAPTER_ONE',
-              number: 1,
-              name: 'Chapter One',
-              sections: [
-                {
-                  id: 'SECTION_ONE',
-                  name: 'Section One',
-                },
-                {
-                  id: 'SECTION_TWO',
-                  name: 'Section Two',
-                },
-              ],
-            },
-            {
-              id: 'CHAPTER_TWO',
-              number: 2,
-              name: 'Chapter Two',
-              sections: [
-                {
-                  id: 'SECTION_THREE',
-                  name: 'Section Three',
-                },
-                {
-                  id: 'SECTION_FOUR',
-                  name: 'Section Four',
-                },
-              ],
-            },
-          ],
-        }}
+        chapterList={[
+          {
+            id: 'CHAPTER_ONE',
+            number: 1,
+            name: 'Chapter One',
+            sections: [
+              {
+                id: 'SECTION_ONE',
+                name: 'Section One',
+              },
+              {
+                id: 'SECTION_TWO',
+                name: 'Section Two',
+              },
+            ],
+          },
+          {
+            id: 'CHAPTER_TWO',
+            number: 2,
+            name: 'Chapter Two',
+            sections: [
+              {
+                id: 'SECTION_THREE',
+                name: 'Section Three',
+              },
+              {
+                id: 'SECTION_FOUR',
+                name: 'Section Four',
+              },
+            ],
+          },
+        ]}
         // eslint-disable-next-line @typescript-eslint/require-await
         onUpdateChapter={async () => {
           return { state: 'success', error: null };
@@ -120,79 +111,5 @@ export const Logout: Story = {
     user: undefined,
     DrawerHeader: Login.args?.DrawerHeader,
     DrawerContent: Login.args?.DrawerContent,
-  },
-};
-
-export const Loading: Story = {
-  args: {
-    user: {
-      sub: 'auth0|1234567890',
-      name: 'Developer',
-      email: 'dev@knodeledge.run.app',
-    },
-    DrawerHeader: () => (
-      <ChapterListHeaderComponent
-        loadableChapterList={{
-          state: 'loading',
-          data: null,
-        }}
-        loadableProject={{
-          state: 'loading',
-          data: null,
-        }}
-        // eslint-disable-next-line @typescript-eslint/require-await
-        onCreateChapter={async () => ({ state: 'success', data: [], error: null })}
-      />
-    ),
-    DrawerContent: () => (
-      <ChapterListComponent
-        loadableChapterList={{
-          state: 'loading',
-          data: null,
-        }}
-        // eslint-disable-next-line @typescript-eslint/require-await
-        onUpdateChapter={async () => {
-          return { state: 'success', error: null };
-        }}
-        projectId="PROJECT"
-      />
-    ),
-  },
-};
-
-export const NotFound: Story = {
-  args: {
-    user: {
-      sub: 'auth0|1234567890',
-      name: 'Developer',
-      email: 'dev@knodeledge.run.app',
-    },
-    DrawerHeader: () => (
-      <ChapterListHeaderComponent
-        loadableChapterList={{
-          state: 'notfound',
-          data: null,
-        }}
-        loadableProject={{
-          state: 'notfound',
-          data: null,
-        }}
-        // eslint-disable-next-line @typescript-eslint/require-await
-        onCreateChapter={async () => ({ state: 'success', data: [], error: null })}
-      />
-    ),
-    DrawerContent: () => (
-      <ChapterListComponent
-        loadableChapterList={{
-          state: 'notfound',
-          data: null,
-        }}
-        // eslint-disable-next-line @typescript-eslint/require-await
-        onUpdateChapter={async () => {
-          return { state: 'success', error: null };
-        }}
-        projectId="PROJECT"
-      />
-    ),
   },
 };

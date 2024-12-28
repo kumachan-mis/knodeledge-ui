@@ -1,6 +1,5 @@
 'use client';
 import { createChapter } from '@/actions/chapters/createChapter';
-import { listChapter } from '@/actions/chapters/listChapter';
 import { updateChapter } from '@/actions/chapters/updateChapter';
 import { sectionalizeIntoGraphs } from '@/actions/graphs/sectionallizeIntoGraphs';
 import {
@@ -15,16 +14,16 @@ import {
   UserOnlyId,
 } from '@/openapi';
 
-import { LoadableAction, LoadableData } from './openapi';
+import { LoadableAction, LoadableServerSideData } from './openapi';
 import { useSetPanic } from './panic';
 
 import React from 'react';
 
-export type LoadableSection = LoadableData<SectionOfChapter>;
+export type LoadableSection = LoadableServerSideData<SectionOfChapter>;
 
-export type LoadableChapter = LoadableData<ChapterWithSections>;
+export type LoadableChapter = LoadableServerSideData<ChapterWithSections>;
 
-export type LoadableChapterList = LoadableData<ChapterWithSections[]>;
+export type LoadableChapterList = LoadableServerSideData<ChapterWithSections[]>;
 
 export type ChapterActionError = {
   message: string;
@@ -69,57 +68,32 @@ const UNKNOWN_SECTIONS_ACTION_ERROR: SectionsActionError = {
   sections: { message: 'unknown error', items: [] },
 } as const;
 
-const ChapterListValueContext = React.createContext<LoadableChapterList>({ state: 'loading', data: null });
+const ChapterListValueContext = React.createContext<LoadableChapterList>({ state: 'success', data: [] });
 
 const ChapterListSetContext = React.createContext<React.Dispatch<React.SetStateAction<LoadableChapterList>>>(() => {
   // Do nothing
+});
+
+const ActiveChapterValueContext = React.createContext<LoadableChapter>({
+  state: 'success',
+  data: { id: '', name: '', number: 0, sections: [] },
+});
+
+const AtiveSectionValueContext = React.createContext<LoadableSection>({
+  state: 'success',
+  data: { id: '', name: '' },
 });
 
 export function useLoadableChapterList(): LoadableChapterList {
   return React.useContext(ChapterListValueContext);
 }
 
-export function useLoadableChapterInList(chapterId: string): LoadableChapter {
-  const loadableChapterList = React.useContext(ChapterListValueContext);
-  if (loadableChapterList.state !== 'success') return { state: loadableChapterList.state, data: null };
-
-  const chapter = loadableChapterList.data.find((chapter) => chapter.id === chapterId);
-  if (!chapter) return { state: 'notfound', data: null };
-  return { state: 'success', data: chapter };
+export function useLoadableActiveChapterInList(): LoadableChapter {
+  return React.useContext(ActiveChapterValueContext);
 }
 
-export function useLoadableSectionInChapter(chapterId: string, sectionId: string): LoadableSection {
-  const loadableChapter = useLoadableChapterInList(chapterId);
-  if (loadableChapter.state !== 'success') return { state: loadableChapter.state, data: null };
-
-  const section = loadableChapter.data.sections.find((section) => section.id === sectionId);
-  if (!section) return { state: 'notfound', data: null };
-  return { state: 'success', data: section };
-}
-
-export function useInitChapterList(userId: string, projectId: string): void {
-  const setChapterList = React.useContext(ChapterListSetContext);
-  const setPanic = useSetPanic();
-
-  React.useEffect(() => {
-    setChapterList({ state: 'loading', data: null });
-
-    void (async () => {
-      const errorable = await listChapter({ user: { id: userId }, project: { id: projectId } });
-      if (errorable.state === 'panic') {
-        setPanic(errorable.error.message);
-        return;
-      }
-
-      if (errorable.state === 'error') {
-        setChapterList({ state: 'notfound', data: null });
-        return;
-      }
-
-      setChapterList({ state: 'success', data: errorable.response.chapters });
-    })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId, projectId]);
+export function useLoadableActiveSectionInList(): LoadableSection {
+  return React.useContext(AtiveSectionValueContext);
 }
 
 export function useCreateChapterInList(user: UserOnlyId, project: ProjectOnlyId): LoadableActionChapterCreate {
@@ -148,8 +122,6 @@ export function useCreateChapterInList(user: UserOnlyId, project: ProjectOnlyId)
     }
 
     setChapterList((prev) => {
-      if (prev.state !== 'success') return prev;
-
       const data = [
         errorable.response.chapter,
         ...prev.data.map((chapter) => {
@@ -194,7 +166,6 @@ export function useUpdateChapterInList(user: UserOnlyId, project: ProjectOnlyId)
     }
 
     setChapterList((prev) => {
-      if (prev.state !== 'success') return prev;
       const prevChapter = prev.data.find((chapter) => chapter.id === id);
       if (!prevChapter) return prev;
 
@@ -253,8 +224,6 @@ export function useSectionalizePaper(
     }
 
     setChapterList((prev) => {
-      if (prev.state !== 'success') return prev;
-
       const prevChapter = prev.data.find((ch) => ch.id === chapter.id);
       if (!prevChapter) return prev;
 
@@ -269,8 +238,14 @@ export function useSectionalizePaper(
   };
 }
 
-export const ChapterListContextProvider: React.FC<{ readonly children?: React.ReactNode }> = ({ children }) => {
-  const [chapterList, setChapterList] = React.useState<LoadableChapterList>({ state: 'loading', data: null });
+export const ChapterListContextProvider: React.FC<{
+  readonly initialChapterList: ChapterWithSections[];
+  readonly children?: React.ReactNode;
+}> = ({ initialChapterList, children }) => {
+  const [chapterList, setChapterList] = React.useState<LoadableChapterList>({
+    state: 'success',
+    data: initialChapterList,
+  });
 
   return (
     <ChapterListValueContext.Provider value={chapterList}>
@@ -278,3 +253,21 @@ export const ChapterListContextProvider: React.FC<{ readonly children?: React.Re
     </ChapterListValueContext.Provider>
   );
 };
+
+export const ActiveChapterContextProvider: React.FC<{
+  readonly activeChapter: ChapterWithSections;
+  readonly children?: React.ReactNode;
+}> = ({ activeChapter, children }) => (
+  <ActiveChapterValueContext.Provider value={{ state: 'success', data: activeChapter }}>
+    {children}
+  </ActiveChapterValueContext.Provider>
+);
+
+export const ActiveSectionContextProvider: React.FC<{
+  readonly activeSection: SectionOfChapter;
+  readonly children?: React.ReactNode;
+}> = ({ activeSection, children }) => (
+  <AtiveSectionValueContext.Provider value={{ state: 'success', data: activeSection }}>
+    {children}
+  </AtiveSectionValueContext.Provider>
+);
