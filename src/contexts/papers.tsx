@@ -69,13 +69,8 @@ export function useInitPaper(userId: string, projectId: string, chapterId: strin
         project: { id: projectId },
         chapter: { id: chapterId },
       });
-      if (errorable.state === 'panic') {
+      if (errorable.state === 'panic' || errorable.state === 'error') {
         setPanic(errorable.error.message);
-        return;
-      }
-
-      if (errorable.state === 'error') {
-        setPaperMap((prev) => new Map(prev.set(chapterId, { state: 'notfound', data: null })));
         return;
       }
 
@@ -112,7 +107,7 @@ export function useUpdatePaper(
       return {
         state: 'error',
         error: {
-          message: errorable.error.message ?? EMPTY_PAPER_ACTION_ERROR.message,
+          message: errorable.error.message,
           paper: { ...EMPTY_PAPER_ACTION_ERROR.paper, ...errorable.error.paper },
         },
       };

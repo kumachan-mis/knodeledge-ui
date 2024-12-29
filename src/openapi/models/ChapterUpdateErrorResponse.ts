@@ -11,17 +11,28 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
-import type { ChapterError } from './ChapterError';
-import { ChapterErrorFromJSON, ChapterErrorFromJSONTyped, ChapterErrorToJSON } from './ChapterError';
+import { mapValues } from '../runtime';
 import type { ProjectOnlyIdError } from './ProjectOnlyIdError';
 import {
   ProjectOnlyIdErrorFromJSON,
   ProjectOnlyIdErrorFromJSONTyped,
   ProjectOnlyIdErrorToJSON,
+  ProjectOnlyIdErrorToJSONTyped,
 } from './ProjectOnlyIdError';
 import type { UserOnlyIdError } from './UserOnlyIdError';
-import { UserOnlyIdErrorFromJSON, UserOnlyIdErrorFromJSONTyped, UserOnlyIdErrorToJSON } from './UserOnlyIdError';
+import {
+  UserOnlyIdErrorFromJSON,
+  UserOnlyIdErrorFromJSONTyped,
+  UserOnlyIdErrorToJSON,
+  UserOnlyIdErrorToJSONTyped,
+} from './UserOnlyIdError';
+import type { ChapterError } from './ChapterError';
+import {
+  ChapterErrorFromJSON,
+  ChapterErrorFromJSONTyped,
+  ChapterErrorToJSON,
+  ChapterErrorToJSONTyped,
+} from './ChapterError';
 
 /**
  * Error Response Body for Chapter Create API
@@ -34,7 +45,7 @@ export interface ChapterUpdateErrorResponse {
    * @type {string}
    * @memberof ChapterUpdateErrorResponse
    */
-  message?: string;
+  message: string;
   /**
    *
    * @type {UserOnlyIdError}
@@ -58,10 +69,9 @@ export interface ChapterUpdateErrorResponse {
 /**
  * Check if a given object implements the ChapterUpdateErrorResponse interface.
  */
-export function instanceOfChapterUpdateErrorResponse(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfChapterUpdateErrorResponse(value: object): value is ChapterUpdateErrorResponse {
+  if (!('message' in value) || value['message'] === undefined) return false;
+  return true;
 }
 
 export function ChapterUpdateErrorResponseFromJSON(json: any): ChapterUpdateErrorResponse {
@@ -72,28 +82,33 @@ export function ChapterUpdateErrorResponseFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
 ): ChapterUpdateErrorResponse {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    message: !exists(json, 'message') ? undefined : json['message'],
-    user: !exists(json, 'user') ? undefined : UserOnlyIdErrorFromJSON(json['user']),
-    project: !exists(json, 'project') ? undefined : ProjectOnlyIdErrorFromJSON(json['project']),
-    chapter: !exists(json, 'chapter') ? undefined : ChapterErrorFromJSON(json['chapter']),
+    message: json['message'],
+    user: json['user'] == null ? undefined : UserOnlyIdErrorFromJSON(json['user']),
+    project: json['project'] == null ? undefined : ProjectOnlyIdErrorFromJSON(json['project']),
+    chapter: json['chapter'] == null ? undefined : ChapterErrorFromJSON(json['chapter']),
   };
 }
 
-export function ChapterUpdateErrorResponseToJSON(value?: ChapterUpdateErrorResponse | null): any {
-  if (value === undefined) {
-    return undefined;
+export function ChapterUpdateErrorResponseToJSON(json: any): ChapterUpdateErrorResponse {
+  return ChapterUpdateErrorResponseToJSONTyped(json, false);
+}
+
+export function ChapterUpdateErrorResponseToJSONTyped(
+  value?: ChapterUpdateErrorResponse | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    message: value.message,
-    user: UserOnlyIdErrorToJSON(value.user),
-    project: ProjectOnlyIdErrorToJSON(value.project),
-    chapter: ChapterErrorToJSON(value.chapter),
+    message: value['message'],
+    user: UserOnlyIdErrorToJSON(value['user']),
+    project: ProjectOnlyIdErrorToJSON(value['project']),
+    chapter: ChapterErrorToJSON(value['chapter']),
   };
 }

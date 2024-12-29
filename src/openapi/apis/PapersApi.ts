@@ -69,7 +69,7 @@ export class PapersApi extends runtime.BaseAPI {
         method: 'POST',
         headers: headerParameters,
         query: queryParameters,
-        body: PaperFindRequestToJSON(requestParameters.paperFindRequest),
+        body: PaperFindRequestToJSON(requestParameters['paperFindRequest']),
       },
       initOverrides,
     );
@@ -107,7 +107,7 @@ export class PapersApi extends runtime.BaseAPI {
         method: 'POST',
         headers: headerParameters,
         query: queryParameters,
-        body: PaperUpdateRequestToJSON(requestParameters.paperUpdateRequest),
+        body: PaperUpdateRequestToJSON(requestParameters['paperUpdateRequest']),
       },
       initOverrides,
     );

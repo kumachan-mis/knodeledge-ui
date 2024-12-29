@@ -11,7 +11,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * Error Message for Project object
  * @export
@@ -41,10 +41,8 @@ export interface ProjectError {
 /**
  * Check if a given object implements the ProjectError interface.
  */
-export function instanceOfProjectError(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfProjectError(value: object): value is ProjectError {
+  return true;
 }
 
 export function ProjectErrorFromJSON(json: any): ProjectError {
@@ -52,26 +50,28 @@ export function ProjectErrorFromJSON(json: any): ProjectError {
 }
 
 export function ProjectErrorFromJSONTyped(json: any, ignoreDiscriminator: boolean): ProjectError {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    id: !exists(json, 'id') ? undefined : json['id'],
-    name: !exists(json, 'name') ? undefined : json['name'],
-    description: !exists(json, 'description') ? undefined : json['description'],
+    id: json['id'] == null ? undefined : json['id'],
+    name: json['name'] == null ? undefined : json['name'],
+    description: json['description'] == null ? undefined : json['description'],
   };
 }
 
-export function ProjectErrorToJSON(value?: ProjectError | null): any {
-  if (value === undefined) {
-    return undefined;
+export function ProjectErrorToJSON(json: any): ProjectError {
+  return ProjectErrorToJSONTyped(json, false);
+}
+
+export function ProjectErrorToJSONTyped(value?: ProjectError | null, ignoreDiscriminator: boolean = false): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    id: value.id,
-    name: value.name,
-    description: value.description,
+    id: value['id'],
+    name: value['name'],
+    description: value['description'],
   };
 }

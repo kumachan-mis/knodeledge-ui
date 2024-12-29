@@ -11,7 +11,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * User object with only ID
  * @export
@@ -29,11 +29,9 @@ export interface UserOnlyId {
 /**
  * Check if a given object implements the UserOnlyId interface.
  */
-export function instanceOfUserOnlyId(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'id' in value;
-
-  return isInstance;
+export function instanceOfUserOnlyId(value: object): value is UserOnlyId {
+  if (!('id' in value) || value['id'] === undefined) return false;
+  return true;
 }
 
 export function UserOnlyIdFromJSON(json: any): UserOnlyId {
@@ -41,7 +39,7 @@ export function UserOnlyIdFromJSON(json: any): UserOnlyId {
 }
 
 export function UserOnlyIdFromJSONTyped(json: any, ignoreDiscriminator: boolean): UserOnlyId {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -49,14 +47,16 @@ export function UserOnlyIdFromJSONTyped(json: any, ignoreDiscriminator: boolean)
   };
 }
 
-export function UserOnlyIdToJSON(value?: UserOnlyId | null): any {
-  if (value === undefined) {
-    return undefined;
+export function UserOnlyIdToJSON(json: any): UserOnlyId {
+  return UserOnlyIdToJSONTyped(json, false);
+}
+
+export function UserOnlyIdToJSONTyped(value?: UserOnlyId | null, ignoreDiscriminator: boolean = false): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    id: value.id,
+    id: value['id'],
   };
 }

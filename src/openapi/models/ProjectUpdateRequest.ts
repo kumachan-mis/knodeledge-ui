@@ -11,11 +11,11 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { Project } from './Project';
-import { ProjectFromJSON, ProjectFromJSONTyped, ProjectToJSON } from './Project';
+import { ProjectFromJSON, ProjectFromJSONTyped, ProjectToJSON, ProjectToJSONTyped } from './Project';
 import type { UserOnlyId } from './UserOnlyId';
-import { UserOnlyIdFromJSON, UserOnlyIdFromJSONTyped, UserOnlyIdToJSON } from './UserOnlyId';
+import { UserOnlyIdFromJSON, UserOnlyIdFromJSONTyped, UserOnlyIdToJSON, UserOnlyIdToJSONTyped } from './UserOnlyId';
 
 /**
  * Request Body for Project Update API
@@ -40,12 +40,10 @@ export interface ProjectUpdateRequest {
 /**
  * Check if a given object implements the ProjectUpdateRequest interface.
  */
-export function instanceOfProjectUpdateRequest(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'user' in value;
-  isInstance = isInstance && 'project' in value;
-
-  return isInstance;
+export function instanceOfProjectUpdateRequest(value: object): value is ProjectUpdateRequest {
+  if (!('user' in value) || value['user'] === undefined) return false;
+  if (!('project' in value) || value['project'] === undefined) return false;
+  return true;
 }
 
 export function ProjectUpdateRequestFromJSON(json: any): ProjectUpdateRequest {
@@ -53,7 +51,7 @@ export function ProjectUpdateRequestFromJSON(json: any): ProjectUpdateRequest {
 }
 
 export function ProjectUpdateRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): ProjectUpdateRequest {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -62,15 +60,20 @@ export function ProjectUpdateRequestFromJSONTyped(json: any, ignoreDiscriminator
   };
 }
 
-export function ProjectUpdateRequestToJSON(value?: ProjectUpdateRequest | null): any {
-  if (value === undefined) {
-    return undefined;
+export function ProjectUpdateRequestToJSON(json: any): ProjectUpdateRequest {
+  return ProjectUpdateRequestToJSONTyped(json, false);
+}
+
+export function ProjectUpdateRequestToJSONTyped(
+  value?: ProjectUpdateRequest | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    user: UserOnlyIdToJSON(value.user),
-    project: ProjectToJSON(value.project),
+    user: UserOnlyIdToJSON(value['user']),
+    project: ProjectToJSON(value['project']),
   };
 }

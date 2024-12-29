@@ -11,7 +11,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * Error Message for SectionOnlyId object
  * @export
@@ -29,10 +29,8 @@ export interface SectionOnlyIdError {
 /**
  * Check if a given object implements the SectionOnlyIdError interface.
  */
-export function instanceOfSectionOnlyIdError(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfSectionOnlyIdError(value: object): value is SectionOnlyIdError {
+  return true;
 }
 
 export function SectionOnlyIdErrorFromJSON(json: any): SectionOnlyIdError {
@@ -40,22 +38,27 @@ export function SectionOnlyIdErrorFromJSON(json: any): SectionOnlyIdError {
 }
 
 export function SectionOnlyIdErrorFromJSONTyped(json: any, ignoreDiscriminator: boolean): SectionOnlyIdError {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    id: !exists(json, 'id') ? undefined : json['id'],
+    id: json['id'] == null ? undefined : json['id'],
   };
 }
 
-export function SectionOnlyIdErrorToJSON(value?: SectionOnlyIdError | null): any {
-  if (value === undefined) {
-    return undefined;
+export function SectionOnlyIdErrorToJSON(json: any): SectionOnlyIdError {
+  return SectionOnlyIdErrorToJSONTyped(json, false);
+}
+
+export function SectionOnlyIdErrorToJSONTyped(
+  value?: SectionOnlyIdError | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    id: value.id,
+    id: value['id'],
   };
 }

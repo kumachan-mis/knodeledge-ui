@@ -11,17 +11,23 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { ProjectOnlyId } from './ProjectOnlyId';
+import {
+  ProjectOnlyIdFromJSON,
+  ProjectOnlyIdFromJSONTyped,
+  ProjectOnlyIdToJSON,
+  ProjectOnlyIdToJSONTyped,
+} from './ProjectOnlyId';
 import type { ChapterWithoutAutofield } from './ChapterWithoutAutofield';
 import {
   ChapterWithoutAutofieldFromJSON,
   ChapterWithoutAutofieldFromJSONTyped,
   ChapterWithoutAutofieldToJSON,
+  ChapterWithoutAutofieldToJSONTyped,
 } from './ChapterWithoutAutofield';
-import type { ProjectOnlyId } from './ProjectOnlyId';
-import { ProjectOnlyIdFromJSON, ProjectOnlyIdFromJSONTyped, ProjectOnlyIdToJSON } from './ProjectOnlyId';
 import type { UserOnlyId } from './UserOnlyId';
-import { UserOnlyIdFromJSON, UserOnlyIdFromJSONTyped, UserOnlyIdToJSON } from './UserOnlyId';
+import { UserOnlyIdFromJSON, UserOnlyIdFromJSONTyped, UserOnlyIdToJSON, UserOnlyIdToJSONTyped } from './UserOnlyId';
 
 /**
  * Request Body for Chapter Create API
@@ -52,13 +58,11 @@ export interface ChapterCreateRequest {
 /**
  * Check if a given object implements the ChapterCreateRequest interface.
  */
-export function instanceOfChapterCreateRequest(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'user' in value;
-  isInstance = isInstance && 'project' in value;
-  isInstance = isInstance && 'chapter' in value;
-
-  return isInstance;
+export function instanceOfChapterCreateRequest(value: object): value is ChapterCreateRequest {
+  if (!('user' in value) || value['user'] === undefined) return false;
+  if (!('project' in value) || value['project'] === undefined) return false;
+  if (!('chapter' in value) || value['chapter'] === undefined) return false;
+  return true;
 }
 
 export function ChapterCreateRequestFromJSON(json: any): ChapterCreateRequest {
@@ -66,7 +70,7 @@ export function ChapterCreateRequestFromJSON(json: any): ChapterCreateRequest {
 }
 
 export function ChapterCreateRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): ChapterCreateRequest {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -76,16 +80,21 @@ export function ChapterCreateRequestFromJSONTyped(json: any, ignoreDiscriminator
   };
 }
 
-export function ChapterCreateRequestToJSON(value?: ChapterCreateRequest | null): any {
-  if (value === undefined) {
-    return undefined;
+export function ChapterCreateRequestToJSON(json: any): ChapterCreateRequest {
+  return ChapterCreateRequestToJSONTyped(json, false);
+}
+
+export function ChapterCreateRequestToJSONTyped(
+  value?: ChapterCreateRequest | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    user: UserOnlyIdToJSON(value.user),
-    project: ProjectOnlyIdToJSON(value.project),
-    chapter: ChapterWithoutAutofieldToJSON(value.chapter),
+    user: UserOnlyIdToJSON(value['user']),
+    project: ProjectOnlyIdToJSON(value['project']),
+    chapter: ChapterWithoutAutofieldToJSON(value['chapter']),
   };
 }

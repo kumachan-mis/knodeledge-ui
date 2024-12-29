@@ -11,7 +11,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * Graph object with only content fields without auto-generated fields
  * @export
@@ -29,11 +29,9 @@ export interface GraphContentWithoutAutofield {
 /**
  * Check if a given object implements the GraphContentWithoutAutofield interface.
  */
-export function instanceOfGraphContentWithoutAutofield(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'paragraph' in value;
-
-  return isInstance;
+export function instanceOfGraphContentWithoutAutofield(value: object): value is GraphContentWithoutAutofield {
+  if (!('paragraph' in value) || value['paragraph'] === undefined) return false;
+  return true;
 }
 
 export function GraphContentWithoutAutofieldFromJSON(json: any): GraphContentWithoutAutofield {
@@ -44,7 +42,7 @@ export function GraphContentWithoutAutofieldFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
 ): GraphContentWithoutAutofield {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -52,14 +50,19 @@ export function GraphContentWithoutAutofieldFromJSONTyped(
   };
 }
 
-export function GraphContentWithoutAutofieldToJSON(value?: GraphContentWithoutAutofield | null): any {
-  if (value === undefined) {
-    return undefined;
+export function GraphContentWithoutAutofieldToJSON(json: any): GraphContentWithoutAutofield {
+  return GraphContentWithoutAutofieldToJSONTyped(json, false);
+}
+
+export function GraphContentWithoutAutofieldToJSONTyped(
+  value?: GraphContentWithoutAutofield | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    paragraph: value.paragraph,
+    paragraph: value['paragraph'],
   };
 }

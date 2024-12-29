@@ -11,7 +11,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * Error Message for SectionWithoutAutofield object
  * @export
@@ -35,10 +35,8 @@ export interface SectionWithoutAutofieldError {
 /**
  * Check if a given object implements the SectionWithoutAutofieldError interface.
  */
-export function instanceOfSectionWithoutAutofieldError(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfSectionWithoutAutofieldError(value: object): value is SectionWithoutAutofieldError {
+  return true;
 }
 
 export function SectionWithoutAutofieldErrorFromJSON(json: any): SectionWithoutAutofieldError {
@@ -49,24 +47,29 @@ export function SectionWithoutAutofieldErrorFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
 ): SectionWithoutAutofieldError {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    name: !exists(json, 'name') ? undefined : json['name'],
-    content: !exists(json, 'content') ? undefined : json['content'],
+    name: json['name'] == null ? undefined : json['name'],
+    content: json['content'] == null ? undefined : json['content'],
   };
 }
 
-export function SectionWithoutAutofieldErrorToJSON(value?: SectionWithoutAutofieldError | null): any {
-  if (value === undefined) {
-    return undefined;
+export function SectionWithoutAutofieldErrorToJSON(json: any): SectionWithoutAutofieldError {
+  return SectionWithoutAutofieldErrorToJSONTyped(json, false);
+}
+
+export function SectionWithoutAutofieldErrorToJSONTyped(
+  value?: SectionWithoutAutofieldError | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    name: value.name,
-    content: value.content,
+    name: value['name'],
+    content: value['content'],
   };
 }

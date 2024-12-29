@@ -11,7 +11,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * Common error response for application
  * @export
@@ -29,11 +29,9 @@ export interface ApplicationErrorResponse {
 /**
  * Check if a given object implements the ApplicationErrorResponse interface.
  */
-export function instanceOfApplicationErrorResponse(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'message' in value;
-
-  return isInstance;
+export function instanceOfApplicationErrorResponse(value: object): value is ApplicationErrorResponse {
+  if (!('message' in value) || value['message'] === undefined) return false;
+  return true;
 }
 
 export function ApplicationErrorResponseFromJSON(json: any): ApplicationErrorResponse {
@@ -44,7 +42,7 @@ export function ApplicationErrorResponseFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
 ): ApplicationErrorResponse {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -52,14 +50,19 @@ export function ApplicationErrorResponseFromJSONTyped(
   };
 }
 
-export function ApplicationErrorResponseToJSON(value?: ApplicationErrorResponse | null): any {
-  if (value === undefined) {
-    return undefined;
+export function ApplicationErrorResponseToJSON(json: any): ApplicationErrorResponse {
+  return ApplicationErrorResponseToJSONTyped(json, false);
+}
+
+export function ApplicationErrorResponseToJSONTyped(
+  value?: ApplicationErrorResponse | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    message: value.message,
+    message: value['message'],
   };
 }

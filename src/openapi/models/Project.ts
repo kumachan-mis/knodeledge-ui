@@ -11,7 +11,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * Project object
  * @export
@@ -41,12 +41,10 @@ export interface Project {
 /**
  * Check if a given object implements the Project interface.
  */
-export function instanceOfProject(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'id' in value;
-  isInstance = isInstance && 'name' in value;
-
-  return isInstance;
+export function instanceOfProject(value: object): value is Project {
+  if (!('id' in value) || value['id'] === undefined) return false;
+  if (!('name' in value) || value['name'] === undefined) return false;
+  return true;
 }
 
 export function ProjectFromJSON(json: any): Project {
@@ -54,26 +52,28 @@ export function ProjectFromJSON(json: any): Project {
 }
 
 export function ProjectFromJSONTyped(json: any, ignoreDiscriminator: boolean): Project {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
     id: json['id'],
     name: json['name'],
-    description: !exists(json, 'description') ? undefined : json['description'],
+    description: json['description'] == null ? undefined : json['description'],
   };
 }
 
-export function ProjectToJSON(value?: Project | null): any {
-  if (value === undefined) {
-    return undefined;
+export function ProjectToJSON(json: any): Project {
+  return ProjectToJSONTyped(json, false);
+}
+
+export function ProjectToJSONTyped(value?: Project | null, ignoreDiscriminator: boolean = false): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    id: value.id,
-    name: value.name,
-    description: value.description,
+    id: value['id'],
+    name: value['name'],
+    description: value['description'],
   };
 }

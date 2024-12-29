@@ -11,9 +11,9 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { Project } from './Project';
-import { ProjectFromJSON, ProjectFromJSONTyped, ProjectToJSON } from './Project';
+import { ProjectFromJSON, ProjectFromJSONTyped, ProjectToJSON, ProjectToJSONTyped } from './Project';
 
 /**
  * Response Body for Project Find API
@@ -32,11 +32,9 @@ export interface ProjectFindResponse {
 /**
  * Check if a given object implements the ProjectFindResponse interface.
  */
-export function instanceOfProjectFindResponse(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'project' in value;
-
-  return isInstance;
+export function instanceOfProjectFindResponse(value: object): value is ProjectFindResponse {
+  if (!('project' in value) || value['project'] === undefined) return false;
+  return true;
 }
 
 export function ProjectFindResponseFromJSON(json: any): ProjectFindResponse {
@@ -44,7 +42,7 @@ export function ProjectFindResponseFromJSON(json: any): ProjectFindResponse {
 }
 
 export function ProjectFindResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): ProjectFindResponse {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -52,14 +50,19 @@ export function ProjectFindResponseFromJSONTyped(json: any, ignoreDiscriminator:
   };
 }
 
-export function ProjectFindResponseToJSON(value?: ProjectFindResponse | null): any {
-  if (value === undefined) {
-    return undefined;
+export function ProjectFindResponseToJSON(json: any): ProjectFindResponse {
+  return ProjectFindResponseToJSONTyped(json, false);
+}
+
+export function ProjectFindResponseToJSONTyped(
+  value?: ProjectFindResponse | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    project: ProjectToJSON(value.project),
+    project: ProjectToJSON(value['project']),
   };
 }

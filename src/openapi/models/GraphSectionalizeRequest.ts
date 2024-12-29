@@ -11,19 +11,30 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
-import type { ChapterOnlyId } from './ChapterOnlyId';
-import { ChapterOnlyIdFromJSON, ChapterOnlyIdFromJSONTyped, ChapterOnlyIdToJSON } from './ChapterOnlyId';
+import { mapValues } from '../runtime';
 import type { ProjectOnlyId } from './ProjectOnlyId';
-import { ProjectOnlyIdFromJSON, ProjectOnlyIdFromJSONTyped, ProjectOnlyIdToJSON } from './ProjectOnlyId';
+import {
+  ProjectOnlyIdFromJSON,
+  ProjectOnlyIdFromJSONTyped,
+  ProjectOnlyIdToJSON,
+  ProjectOnlyIdToJSONTyped,
+} from './ProjectOnlyId';
+import type { ChapterOnlyId } from './ChapterOnlyId';
+import {
+  ChapterOnlyIdFromJSON,
+  ChapterOnlyIdFromJSONTyped,
+  ChapterOnlyIdToJSON,
+  ChapterOnlyIdToJSONTyped,
+} from './ChapterOnlyId';
 import type { SectionWithoutAutofield } from './SectionWithoutAutofield';
 import {
   SectionWithoutAutofieldFromJSON,
   SectionWithoutAutofieldFromJSONTyped,
   SectionWithoutAutofieldToJSON,
+  SectionWithoutAutofieldToJSONTyped,
 } from './SectionWithoutAutofield';
 import type { UserOnlyId } from './UserOnlyId';
-import { UserOnlyIdFromJSON, UserOnlyIdFromJSONTyped, UserOnlyIdToJSON } from './UserOnlyId';
+import { UserOnlyIdFromJSON, UserOnlyIdFromJSONTyped, UserOnlyIdToJSON, UserOnlyIdToJSONTyped } from './UserOnlyId';
 
 /**
  * Request Body for Graph Sectionalize API
@@ -60,14 +71,12 @@ export interface GraphSectionalizeRequest {
 /**
  * Check if a given object implements the GraphSectionalizeRequest interface.
  */
-export function instanceOfGraphSectionalizeRequest(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'user' in value;
-  isInstance = isInstance && 'project' in value;
-  isInstance = isInstance && 'chapter' in value;
-  isInstance = isInstance && 'sections' in value;
-
-  return isInstance;
+export function instanceOfGraphSectionalizeRequest(value: object): value is GraphSectionalizeRequest {
+  if (!('user' in value) || value['user'] === undefined) return false;
+  if (!('project' in value) || value['project'] === undefined) return false;
+  if (!('chapter' in value) || value['chapter'] === undefined) return false;
+  if (!('sections' in value) || value['sections'] === undefined) return false;
+  return true;
 }
 
 export function GraphSectionalizeRequestFromJSON(json: any): GraphSectionalizeRequest {
@@ -78,7 +87,7 @@ export function GraphSectionalizeRequestFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
 ): GraphSectionalizeRequest {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -89,17 +98,22 @@ export function GraphSectionalizeRequestFromJSONTyped(
   };
 }
 
-export function GraphSectionalizeRequestToJSON(value?: GraphSectionalizeRequest | null): any {
-  if (value === undefined) {
-    return undefined;
+export function GraphSectionalizeRequestToJSON(json: any): GraphSectionalizeRequest {
+  return GraphSectionalizeRequestToJSONTyped(json, false);
+}
+
+export function GraphSectionalizeRequestToJSONTyped(
+  value?: GraphSectionalizeRequest | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    user: UserOnlyIdToJSON(value.user),
-    project: ProjectOnlyIdToJSON(value.project),
-    chapter: ChapterOnlyIdToJSON(value.chapter),
-    sections: (value.sections as Array<any>).map(SectionWithoutAutofieldToJSON),
+    user: UserOnlyIdToJSON(value['user']),
+    project: ProjectOnlyIdToJSON(value['project']),
+    chapter: ChapterOnlyIdToJSON(value['chapter']),
+    sections: (value['sections'] as Array<any>).map(SectionWithoutAutofieldToJSON),
   };
 }

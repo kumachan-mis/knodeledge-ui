@@ -11,9 +11,9 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { UserOnlyId } from './UserOnlyId';
-import { UserOnlyIdFromJSON, UserOnlyIdFromJSONTyped, UserOnlyIdToJSON } from './UserOnlyId';
+import { UserOnlyIdFromJSON, UserOnlyIdFromJSONTyped, UserOnlyIdToJSON, UserOnlyIdToJSONTyped } from './UserOnlyId';
 
 /**
  * Request Body for Project List API
@@ -32,11 +32,9 @@ export interface ProjectListRequest {
 /**
  * Check if a given object implements the ProjectListRequest interface.
  */
-export function instanceOfProjectListRequest(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'user' in value;
-
-  return isInstance;
+export function instanceOfProjectListRequest(value: object): value is ProjectListRequest {
+  if (!('user' in value) || value['user'] === undefined) return false;
+  return true;
 }
 
 export function ProjectListRequestFromJSON(json: any): ProjectListRequest {
@@ -44,7 +42,7 @@ export function ProjectListRequestFromJSON(json: any): ProjectListRequest {
 }
 
 export function ProjectListRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): ProjectListRequest {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -52,14 +50,19 @@ export function ProjectListRequestFromJSONTyped(json: any, ignoreDiscriminator: 
   };
 }
 
-export function ProjectListRequestToJSON(value?: ProjectListRequest | null): any {
-  if (value === undefined) {
-    return undefined;
+export function ProjectListRequestToJSON(json: any): ProjectListRequest {
+  return ProjectListRequestToJSONTyped(json, false);
+}
+
+export function ProjectListRequestToJSONTyped(
+  value?: ProjectListRequest | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    user: UserOnlyIdToJSON(value.user),
+    user: UserOnlyIdToJSON(value['user']),
   };
 }

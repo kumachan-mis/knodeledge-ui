@@ -64,13 +64,8 @@ export function useInitGraph(userId: string, projectId: string, chapterId: strin
         section: { id: sectionId },
       });
 
-      if (errorable.state === 'panic') {
+      if (errorable.state === 'panic' || errorable.state === 'error') {
         setPanic(errorable.error.message);
-        return;
-      }
-
-      if (errorable.state === 'error') {
-        setGraphMap((prev) => new Map(prev.set(sectionId, { state: 'notfound', data: null })));
         return;
       }
 
@@ -116,7 +111,7 @@ export function useUpdateGraph(
       return {
         state: 'error',
         error: {
-          message: errorable.error.message ?? EMPTY_GRAPH_ACTION_ERROR.message,
+          message: errorable.error.message,
           graph: { ...EMPTY_GRAPH_ACTION_ERROR.graph, ...errorable.error.graph },
         },
       };

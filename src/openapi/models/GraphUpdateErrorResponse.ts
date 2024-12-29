@@ -11,27 +11,35 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
-import type { ChapterOnlyIdError } from './ChapterOnlyIdError';
-import {
-  ChapterOnlyIdErrorFromJSON,
-  ChapterOnlyIdErrorFromJSONTyped,
-  ChapterOnlyIdErrorToJSON,
-} from './ChapterOnlyIdError';
-import type { GraphContentError } from './GraphContentError';
-import {
-  GraphContentErrorFromJSON,
-  GraphContentErrorFromJSONTyped,
-  GraphContentErrorToJSON,
-} from './GraphContentError';
+import { mapValues } from '../runtime';
 import type { ProjectOnlyIdError } from './ProjectOnlyIdError';
 import {
   ProjectOnlyIdErrorFromJSON,
   ProjectOnlyIdErrorFromJSONTyped,
   ProjectOnlyIdErrorToJSON,
+  ProjectOnlyIdErrorToJSONTyped,
 } from './ProjectOnlyIdError';
 import type { UserOnlyIdError } from './UserOnlyIdError';
-import { UserOnlyIdErrorFromJSON, UserOnlyIdErrorFromJSONTyped, UserOnlyIdErrorToJSON } from './UserOnlyIdError';
+import {
+  UserOnlyIdErrorFromJSON,
+  UserOnlyIdErrorFromJSONTyped,
+  UserOnlyIdErrorToJSON,
+  UserOnlyIdErrorToJSONTyped,
+} from './UserOnlyIdError';
+import type { GraphContentError } from './GraphContentError';
+import {
+  GraphContentErrorFromJSON,
+  GraphContentErrorFromJSONTyped,
+  GraphContentErrorToJSON,
+  GraphContentErrorToJSONTyped,
+} from './GraphContentError';
+import type { ChapterOnlyIdError } from './ChapterOnlyIdError';
+import {
+  ChapterOnlyIdErrorFromJSON,
+  ChapterOnlyIdErrorFromJSONTyped,
+  ChapterOnlyIdErrorToJSON,
+  ChapterOnlyIdErrorToJSONTyped,
+} from './ChapterOnlyIdError';
 
 /**
  * Error Response Body for Graph Update API
@@ -44,7 +52,7 @@ export interface GraphUpdateErrorResponse {
    * @type {string}
    * @memberof GraphUpdateErrorResponse
    */
-  message?: string;
+  message: string;
   /**
    *
    * @type {UserOnlyIdError}
@@ -74,10 +82,9 @@ export interface GraphUpdateErrorResponse {
 /**
  * Check if a given object implements the GraphUpdateErrorResponse interface.
  */
-export function instanceOfGraphUpdateErrorResponse(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfGraphUpdateErrorResponse(value: object): value is GraphUpdateErrorResponse {
+  if (!('message' in value) || value['message'] === undefined) return false;
+  return true;
 }
 
 export function GraphUpdateErrorResponseFromJSON(json: any): GraphUpdateErrorResponse {
@@ -88,30 +95,35 @@ export function GraphUpdateErrorResponseFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
 ): GraphUpdateErrorResponse {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    message: !exists(json, 'message') ? undefined : json['message'],
-    user: !exists(json, 'user') ? undefined : UserOnlyIdErrorFromJSON(json['user']),
-    project: !exists(json, 'project') ? undefined : ProjectOnlyIdErrorFromJSON(json['project']),
-    chapter: !exists(json, 'chapter') ? undefined : ChapterOnlyIdErrorFromJSON(json['chapter']),
-    graph: !exists(json, 'graph') ? undefined : GraphContentErrorFromJSON(json['graph']),
+    message: json['message'],
+    user: json['user'] == null ? undefined : UserOnlyIdErrorFromJSON(json['user']),
+    project: json['project'] == null ? undefined : ProjectOnlyIdErrorFromJSON(json['project']),
+    chapter: json['chapter'] == null ? undefined : ChapterOnlyIdErrorFromJSON(json['chapter']),
+    graph: json['graph'] == null ? undefined : GraphContentErrorFromJSON(json['graph']),
   };
 }
 
-export function GraphUpdateErrorResponseToJSON(value?: GraphUpdateErrorResponse | null): any {
-  if (value === undefined) {
-    return undefined;
+export function GraphUpdateErrorResponseToJSON(json: any): GraphUpdateErrorResponse {
+  return GraphUpdateErrorResponseToJSONTyped(json, false);
+}
+
+export function GraphUpdateErrorResponseToJSONTyped(
+  value?: GraphUpdateErrorResponse | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    message: value.message,
-    user: UserOnlyIdErrorToJSON(value.user),
-    project: ProjectOnlyIdErrorToJSON(value.project),
-    chapter: ChapterOnlyIdErrorToJSON(value.chapter),
-    graph: GraphContentErrorToJSON(value.graph),
+    message: value['message'],
+    user: UserOnlyIdErrorToJSON(value['user']),
+    project: ProjectOnlyIdErrorToJSON(value['project']),
+    chapter: ChapterOnlyIdErrorToJSON(value['chapter']),
+    graph: GraphContentErrorToJSON(value['graph']),
   };
 }

@@ -11,7 +11,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * Graph object
  * @export
@@ -41,13 +41,11 @@ export interface Graph {
 /**
  * Check if a given object implements the Graph interface.
  */
-export function instanceOfGraph(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'id' in value;
-  isInstance = isInstance && 'name' in value;
-  isInstance = isInstance && 'paragraph' in value;
-
-  return isInstance;
+export function instanceOfGraph(value: object): value is Graph {
+  if (!('id' in value) || value['id'] === undefined) return false;
+  if (!('name' in value) || value['name'] === undefined) return false;
+  if (!('paragraph' in value) || value['paragraph'] === undefined) return false;
+  return true;
 }
 
 export function GraphFromJSON(json: any): Graph {
@@ -55,7 +53,7 @@ export function GraphFromJSON(json: any): Graph {
 }
 
 export function GraphFromJSONTyped(json: any, ignoreDiscriminator: boolean): Graph {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -65,16 +63,18 @@ export function GraphFromJSONTyped(json: any, ignoreDiscriminator: boolean): Gra
   };
 }
 
-export function GraphToJSON(value?: Graph | null): any {
-  if (value === undefined) {
-    return undefined;
+export function GraphToJSON(json: any): Graph {
+  return GraphToJSONTyped(json, false);
+}
+
+export function GraphToJSONTyped(value?: Graph | null, ignoreDiscriminator: boolean = false): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    id: value.id,
-    name: value.name,
-    paragraph: value.paragraph,
+    id: value['id'],
+    name: value['name'],
+    paragraph: value['paragraph'],
   };
 }

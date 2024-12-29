@@ -11,11 +11,21 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { ProjectError } from './ProjectError';
-import { ProjectErrorFromJSON, ProjectErrorFromJSONTyped, ProjectErrorToJSON } from './ProjectError';
+import {
+  ProjectErrorFromJSON,
+  ProjectErrorFromJSONTyped,
+  ProjectErrorToJSON,
+  ProjectErrorToJSONTyped,
+} from './ProjectError';
 import type { UserOnlyIdError } from './UserOnlyIdError';
-import { UserOnlyIdErrorFromJSON, UserOnlyIdErrorFromJSONTyped, UserOnlyIdErrorToJSON } from './UserOnlyIdError';
+import {
+  UserOnlyIdErrorFromJSON,
+  UserOnlyIdErrorFromJSONTyped,
+  UserOnlyIdErrorToJSON,
+  UserOnlyIdErrorToJSONTyped,
+} from './UserOnlyIdError';
 
 /**
  * Error Response Body for Project Update API
@@ -28,7 +38,7 @@ export interface ProjectUpdateErrorResponse {
    * @type {string}
    * @memberof ProjectUpdateErrorResponse
    */
-  message?: string;
+  message: string;
   /**
    *
    * @type {UserOnlyIdError}
@@ -46,10 +56,9 @@ export interface ProjectUpdateErrorResponse {
 /**
  * Check if a given object implements the ProjectUpdateErrorResponse interface.
  */
-export function instanceOfProjectUpdateErrorResponse(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfProjectUpdateErrorResponse(value: object): value is ProjectUpdateErrorResponse {
+  if (!('message' in value) || value['message'] === undefined) return false;
+  return true;
 }
 
 export function ProjectUpdateErrorResponseFromJSON(json: any): ProjectUpdateErrorResponse {
@@ -60,26 +69,31 @@ export function ProjectUpdateErrorResponseFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
 ): ProjectUpdateErrorResponse {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    message: !exists(json, 'message') ? undefined : json['message'],
-    user: !exists(json, 'user') ? undefined : UserOnlyIdErrorFromJSON(json['user']),
-    project: !exists(json, 'project') ? undefined : ProjectErrorFromJSON(json['project']),
+    message: json['message'],
+    user: json['user'] == null ? undefined : UserOnlyIdErrorFromJSON(json['user']),
+    project: json['project'] == null ? undefined : ProjectErrorFromJSON(json['project']),
   };
 }
 
-export function ProjectUpdateErrorResponseToJSON(value?: ProjectUpdateErrorResponse | null): any {
-  if (value === undefined) {
-    return undefined;
+export function ProjectUpdateErrorResponseToJSON(json: any): ProjectUpdateErrorResponse {
+  return ProjectUpdateErrorResponseToJSONTyped(json, false);
+}
+
+export function ProjectUpdateErrorResponseToJSONTyped(
+  value?: ProjectUpdateErrorResponse | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    message: value.message,
-    user: UserOnlyIdErrorToJSON(value.user),
-    project: ProjectErrorToJSON(value.project),
+    message: value['message'],
+    user: UserOnlyIdErrorToJSON(value['user']),
+    project: ProjectErrorToJSON(value['project']),
   };
 }

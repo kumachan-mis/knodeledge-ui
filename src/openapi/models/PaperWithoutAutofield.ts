@@ -11,7 +11,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * Paper object without auto-generated fields
  * @export
@@ -29,11 +29,9 @@ export interface PaperWithoutAutofield {
 /**
  * Check if a given object implements the PaperWithoutAutofield interface.
  */
-export function instanceOfPaperWithoutAutofield(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'content' in value;
-
-  return isInstance;
+export function instanceOfPaperWithoutAutofield(value: object): value is PaperWithoutAutofield {
+  if (!('content' in value) || value['content'] === undefined) return false;
+  return true;
 }
 
 export function PaperWithoutAutofieldFromJSON(json: any): PaperWithoutAutofield {
@@ -41,7 +39,7 @@ export function PaperWithoutAutofieldFromJSON(json: any): PaperWithoutAutofield 
 }
 
 export function PaperWithoutAutofieldFromJSONTyped(json: any, ignoreDiscriminator: boolean): PaperWithoutAutofield {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -49,14 +47,19 @@ export function PaperWithoutAutofieldFromJSONTyped(json: any, ignoreDiscriminato
   };
 }
 
-export function PaperWithoutAutofieldToJSON(value?: PaperWithoutAutofield | null): any {
-  if (value === undefined) {
-    return undefined;
+export function PaperWithoutAutofieldToJSON(json: any): PaperWithoutAutofield {
+  return PaperWithoutAutofieldToJSONTyped(json, false);
+}
+
+export function PaperWithoutAutofieldToJSONTyped(
+  value?: PaperWithoutAutofield | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    content: value.content,
+    content: value['content'],
   };
 }

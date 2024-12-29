@@ -11,15 +11,30 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
-import type { ChapterOnlyId } from './ChapterOnlyId';
-import { ChapterOnlyIdFromJSON, ChapterOnlyIdFromJSONTyped, ChapterOnlyIdToJSON } from './ChapterOnlyId';
+import { mapValues } from '../runtime';
 import type { ProjectOnlyId } from './ProjectOnlyId';
-import { ProjectOnlyIdFromJSON, ProjectOnlyIdFromJSONTyped, ProjectOnlyIdToJSON } from './ProjectOnlyId';
+import {
+  ProjectOnlyIdFromJSON,
+  ProjectOnlyIdFromJSONTyped,
+  ProjectOnlyIdToJSON,
+  ProjectOnlyIdToJSONTyped,
+} from './ProjectOnlyId';
 import type { SectionOnlyId } from './SectionOnlyId';
-import { SectionOnlyIdFromJSON, SectionOnlyIdFromJSONTyped, SectionOnlyIdToJSON } from './SectionOnlyId';
+import {
+  SectionOnlyIdFromJSON,
+  SectionOnlyIdFromJSONTyped,
+  SectionOnlyIdToJSON,
+  SectionOnlyIdToJSONTyped,
+} from './SectionOnlyId';
+import type { ChapterOnlyId } from './ChapterOnlyId';
+import {
+  ChapterOnlyIdFromJSON,
+  ChapterOnlyIdFromJSONTyped,
+  ChapterOnlyIdToJSON,
+  ChapterOnlyIdToJSONTyped,
+} from './ChapterOnlyId';
 import type { UserOnlyId } from './UserOnlyId';
-import { UserOnlyIdFromJSON, UserOnlyIdFromJSONTyped, UserOnlyIdToJSON } from './UserOnlyId';
+import { UserOnlyIdFromJSON, UserOnlyIdFromJSONTyped, UserOnlyIdToJSON, UserOnlyIdToJSONTyped } from './UserOnlyId';
 
 /**
  * Request Body for Graph Find API
@@ -56,14 +71,12 @@ export interface GraphFindRequest {
 /**
  * Check if a given object implements the GraphFindRequest interface.
  */
-export function instanceOfGraphFindRequest(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'user' in value;
-  isInstance = isInstance && 'project' in value;
-  isInstance = isInstance && 'chapter' in value;
-  isInstance = isInstance && 'section' in value;
-
-  return isInstance;
+export function instanceOfGraphFindRequest(value: object): value is GraphFindRequest {
+  if (!('user' in value) || value['user'] === undefined) return false;
+  if (!('project' in value) || value['project'] === undefined) return false;
+  if (!('chapter' in value) || value['chapter'] === undefined) return false;
+  if (!('section' in value) || value['section'] === undefined) return false;
+  return true;
 }
 
 export function GraphFindRequestFromJSON(json: any): GraphFindRequest {
@@ -71,7 +84,7 @@ export function GraphFindRequestFromJSON(json: any): GraphFindRequest {
 }
 
 export function GraphFindRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): GraphFindRequest {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -82,17 +95,22 @@ export function GraphFindRequestFromJSONTyped(json: any, ignoreDiscriminator: bo
   };
 }
 
-export function GraphFindRequestToJSON(value?: GraphFindRequest | null): any {
-  if (value === undefined) {
-    return undefined;
+export function GraphFindRequestToJSON(json: any): GraphFindRequest {
+  return GraphFindRequestToJSONTyped(json, false);
+}
+
+export function GraphFindRequestToJSONTyped(
+  value?: GraphFindRequest | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    user: UserOnlyIdToJSON(value.user),
-    project: ProjectOnlyIdToJSON(value.project),
-    chapter: ChapterOnlyIdToJSON(value.chapter),
-    section: SectionOnlyIdToJSON(value.section),
+    user: UserOnlyIdToJSON(value['user']),
+    project: ProjectOnlyIdToJSON(value['project']),
+    chapter: ChapterOnlyIdToJSON(value['chapter']),
+    section: SectionOnlyIdToJSON(value['section']),
   };
 }

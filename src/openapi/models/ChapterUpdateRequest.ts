@@ -11,13 +11,18 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
-import type { Chapter } from './Chapter';
-import { ChapterFromJSON, ChapterFromJSONTyped, ChapterToJSON } from './Chapter';
+import { mapValues } from '../runtime';
 import type { ProjectOnlyId } from './ProjectOnlyId';
-import { ProjectOnlyIdFromJSON, ProjectOnlyIdFromJSONTyped, ProjectOnlyIdToJSON } from './ProjectOnlyId';
+import {
+  ProjectOnlyIdFromJSON,
+  ProjectOnlyIdFromJSONTyped,
+  ProjectOnlyIdToJSON,
+  ProjectOnlyIdToJSONTyped,
+} from './ProjectOnlyId';
+import type { Chapter } from './Chapter';
+import { ChapterFromJSON, ChapterFromJSONTyped, ChapterToJSON, ChapterToJSONTyped } from './Chapter';
 import type { UserOnlyId } from './UserOnlyId';
-import { UserOnlyIdFromJSON, UserOnlyIdFromJSONTyped, UserOnlyIdToJSON } from './UserOnlyId';
+import { UserOnlyIdFromJSON, UserOnlyIdFromJSONTyped, UserOnlyIdToJSON, UserOnlyIdToJSONTyped } from './UserOnlyId';
 
 /**
  * Request Body for Chapter Update API
@@ -48,13 +53,11 @@ export interface ChapterUpdateRequest {
 /**
  * Check if a given object implements the ChapterUpdateRequest interface.
  */
-export function instanceOfChapterUpdateRequest(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'user' in value;
-  isInstance = isInstance && 'project' in value;
-  isInstance = isInstance && 'chapter' in value;
-
-  return isInstance;
+export function instanceOfChapterUpdateRequest(value: object): value is ChapterUpdateRequest {
+  if (!('user' in value) || value['user'] === undefined) return false;
+  if (!('project' in value) || value['project'] === undefined) return false;
+  if (!('chapter' in value) || value['chapter'] === undefined) return false;
+  return true;
 }
 
 export function ChapterUpdateRequestFromJSON(json: any): ChapterUpdateRequest {
@@ -62,7 +65,7 @@ export function ChapterUpdateRequestFromJSON(json: any): ChapterUpdateRequest {
 }
 
 export function ChapterUpdateRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): ChapterUpdateRequest {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -72,16 +75,21 @@ export function ChapterUpdateRequestFromJSONTyped(json: any, ignoreDiscriminator
   };
 }
 
-export function ChapterUpdateRequestToJSON(value?: ChapterUpdateRequest | null): any {
-  if (value === undefined) {
-    return undefined;
+export function ChapterUpdateRequestToJSON(json: any): ChapterUpdateRequest {
+  return ChapterUpdateRequestToJSONTyped(json, false);
+}
+
+export function ChapterUpdateRequestToJSONTyped(
+  value?: ChapterUpdateRequest | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    user: UserOnlyIdToJSON(value.user),
-    project: ProjectOnlyIdToJSON(value.project),
-    chapter: ChapterToJSON(value.chapter),
+    user: UserOnlyIdToJSON(value['user']),
+    project: ProjectOnlyIdToJSON(value['project']),
+    chapter: ChapterToJSON(value['chapter']),
   };
 }

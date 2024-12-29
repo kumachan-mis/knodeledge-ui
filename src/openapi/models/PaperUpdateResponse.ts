@@ -11,9 +11,9 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { Paper } from './Paper';
-import { PaperFromJSON, PaperFromJSONTyped, PaperToJSON } from './Paper';
+import { PaperFromJSON, PaperFromJSONTyped, PaperToJSON, PaperToJSONTyped } from './Paper';
 
 /**
  * Response Body for Paper Update API
@@ -32,11 +32,9 @@ export interface PaperUpdateResponse {
 /**
  * Check if a given object implements the PaperUpdateResponse interface.
  */
-export function instanceOfPaperUpdateResponse(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'paper' in value;
-
-  return isInstance;
+export function instanceOfPaperUpdateResponse(value: object): value is PaperUpdateResponse {
+  if (!('paper' in value) || value['paper'] === undefined) return false;
+  return true;
 }
 
 export function PaperUpdateResponseFromJSON(json: any): PaperUpdateResponse {
@@ -44,7 +42,7 @@ export function PaperUpdateResponseFromJSON(json: any): PaperUpdateResponse {
 }
 
 export function PaperUpdateResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): PaperUpdateResponse {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -52,14 +50,19 @@ export function PaperUpdateResponseFromJSONTyped(json: any, ignoreDiscriminator:
   };
 }
 
-export function PaperUpdateResponseToJSON(value?: PaperUpdateResponse | null): any {
-  if (value === undefined) {
-    return undefined;
+export function PaperUpdateResponseToJSON(json: any): PaperUpdateResponse {
+  return PaperUpdateResponseToJSONTyped(json, false);
+}
+
+export function PaperUpdateResponseToJSONTyped(
+  value?: PaperUpdateResponse | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    paper: PaperToJSON(value.paper),
+    paper: PaperToJSON(value['paper']),
   };
 }

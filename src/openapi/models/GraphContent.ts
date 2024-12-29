@@ -11,7 +11,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * Graph object with only content fields
  * @export
@@ -35,12 +35,10 @@ export interface GraphContent {
 /**
  * Check if a given object implements the GraphContent interface.
  */
-export function instanceOfGraphContent(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'id' in value;
-  isInstance = isInstance && 'paragraph' in value;
-
-  return isInstance;
+export function instanceOfGraphContent(value: object): value is GraphContent {
+  if (!('id' in value) || value['id'] === undefined) return false;
+  if (!('paragraph' in value) || value['paragraph'] === undefined) return false;
+  return true;
 }
 
 export function GraphContentFromJSON(json: any): GraphContent {
@@ -48,7 +46,7 @@ export function GraphContentFromJSON(json: any): GraphContent {
 }
 
 export function GraphContentFromJSONTyped(json: any, ignoreDiscriminator: boolean): GraphContent {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -57,15 +55,17 @@ export function GraphContentFromJSONTyped(json: any, ignoreDiscriminator: boolea
   };
 }
 
-export function GraphContentToJSON(value?: GraphContent | null): any {
-  if (value === undefined) {
-    return undefined;
+export function GraphContentToJSON(json: any): GraphContent {
+  return GraphContentToJSONTyped(json, false);
+}
+
+export function GraphContentToJSONTyped(value?: GraphContent | null, ignoreDiscriminator: boolean = false): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    id: value.id,
-    paragraph: value.paragraph,
+    id: value['id'],
+    paragraph: value['paragraph'],
   };
 }

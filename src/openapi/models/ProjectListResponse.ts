@@ -11,9 +11,9 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { Project } from './Project';
-import { ProjectFromJSON, ProjectFromJSONTyped, ProjectToJSON } from './Project';
+import { ProjectFromJSON, ProjectFromJSONTyped, ProjectToJSON, ProjectToJSONTyped } from './Project';
 
 /**
  * Response Body for Project List API
@@ -32,11 +32,9 @@ export interface ProjectListResponse {
 /**
  * Check if a given object implements the ProjectListResponse interface.
  */
-export function instanceOfProjectListResponse(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'projects' in value;
-
-  return isInstance;
+export function instanceOfProjectListResponse(value: object): value is ProjectListResponse {
+  if (!('projects' in value) || value['projects'] === undefined) return false;
+  return true;
 }
 
 export function ProjectListResponseFromJSON(json: any): ProjectListResponse {
@@ -44,7 +42,7 @@ export function ProjectListResponseFromJSON(json: any): ProjectListResponse {
 }
 
 export function ProjectListResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): ProjectListResponse {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -52,14 +50,19 @@ export function ProjectListResponseFromJSONTyped(json: any, ignoreDiscriminator:
   };
 }
 
-export function ProjectListResponseToJSON(value?: ProjectListResponse | null): any {
-  if (value === undefined) {
-    return undefined;
+export function ProjectListResponseToJSON(json: any): ProjectListResponse {
+  return ProjectListResponseToJSONTyped(json, false);
+}
+
+export function ProjectListResponseToJSONTyped(
+  value?: ProjectListResponse | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    projects: (value.projects as Array<any>).map(ProjectToJSON),
+    projects: (value['projects'] as Array<any>).map(ProjectToJSON),
   };
 }

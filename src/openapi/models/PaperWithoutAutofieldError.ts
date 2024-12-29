@@ -11,7 +11,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * Error Message for PaperWithoutAutofield object
  * @export
@@ -29,10 +29,8 @@ export interface PaperWithoutAutofieldError {
 /**
  * Check if a given object implements the PaperWithoutAutofieldError interface.
  */
-export function instanceOfPaperWithoutAutofieldError(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfPaperWithoutAutofieldError(value: object): value is PaperWithoutAutofieldError {
+  return true;
 }
 
 export function PaperWithoutAutofieldErrorFromJSON(json: any): PaperWithoutAutofieldError {
@@ -43,22 +41,27 @@ export function PaperWithoutAutofieldErrorFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
 ): PaperWithoutAutofieldError {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    content: !exists(json, 'content') ? undefined : json['content'],
+    content: json['content'] == null ? undefined : json['content'],
   };
 }
 
-export function PaperWithoutAutofieldErrorToJSON(value?: PaperWithoutAutofieldError | null): any {
-  if (value === undefined) {
-    return undefined;
+export function PaperWithoutAutofieldErrorToJSON(json: any): PaperWithoutAutofieldError {
+  return PaperWithoutAutofieldErrorToJSONTyped(json, false);
+}
+
+export function PaperWithoutAutofieldErrorToJSONTyped(
+  value?: PaperWithoutAutofieldError | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    content: value.content,
+    content: value['content'],
   };
 }

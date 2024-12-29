@@ -11,15 +11,21 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { ProjectOnlyIdError } from './ProjectOnlyIdError';
 import {
   ProjectOnlyIdErrorFromJSON,
   ProjectOnlyIdErrorFromJSONTyped,
   ProjectOnlyIdErrorToJSON,
+  ProjectOnlyIdErrorToJSONTyped,
 } from './ProjectOnlyIdError';
 import type { UserOnlyIdError } from './UserOnlyIdError';
-import { UserOnlyIdErrorFromJSON, UserOnlyIdErrorFromJSONTyped, UserOnlyIdErrorToJSON } from './UserOnlyIdError';
+import {
+  UserOnlyIdErrorFromJSON,
+  UserOnlyIdErrorFromJSONTyped,
+  UserOnlyIdErrorToJSON,
+  UserOnlyIdErrorToJSONTyped,
+} from './UserOnlyIdError';
 
 /**
  * Error Response Body for Chapter List API
@@ -32,7 +38,7 @@ export interface ChapterListErrorResponse {
    * @type {string}
    * @memberof ChapterListErrorResponse
    */
-  message?: string;
+  message: string;
   /**
    *
    * @type {UserOnlyIdError}
@@ -50,10 +56,9 @@ export interface ChapterListErrorResponse {
 /**
  * Check if a given object implements the ChapterListErrorResponse interface.
  */
-export function instanceOfChapterListErrorResponse(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfChapterListErrorResponse(value: object): value is ChapterListErrorResponse {
+  if (!('message' in value) || value['message'] === undefined) return false;
+  return true;
 }
 
 export function ChapterListErrorResponseFromJSON(json: any): ChapterListErrorResponse {
@@ -64,26 +69,31 @@ export function ChapterListErrorResponseFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
 ): ChapterListErrorResponse {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    message: !exists(json, 'message') ? undefined : json['message'],
-    user: !exists(json, 'user') ? undefined : UserOnlyIdErrorFromJSON(json['user']),
-    project: !exists(json, 'project') ? undefined : ProjectOnlyIdErrorFromJSON(json['project']),
+    message: json['message'],
+    user: json['user'] == null ? undefined : UserOnlyIdErrorFromJSON(json['user']),
+    project: json['project'] == null ? undefined : ProjectOnlyIdErrorFromJSON(json['project']),
   };
 }
 
-export function ChapterListErrorResponseToJSON(value?: ChapterListErrorResponse | null): any {
-  if (value === undefined) {
-    return undefined;
+export function ChapterListErrorResponseToJSON(json: any): ChapterListErrorResponse {
+  return ChapterListErrorResponseToJSONTyped(json, false);
+}
+
+export function ChapterListErrorResponseToJSONTyped(
+  value?: ChapterListErrorResponse | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    message: value.message,
-    user: UserOnlyIdErrorToJSON(value.user),
-    project: ProjectOnlyIdErrorToJSON(value.project),
+    message: value['message'],
+    user: UserOnlyIdErrorToJSON(value['user']),
+    project: ProjectOnlyIdErrorToJSON(value['project']),
   };
 }
