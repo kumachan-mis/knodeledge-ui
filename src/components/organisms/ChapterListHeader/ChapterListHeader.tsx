@@ -1,10 +1,9 @@
 'use client';
 import ChapterDialog from '@/components/organisms/ChapterDialog';
-import { ChapterActionError, LoadableChapterList } from '@/contexts/chapters';
+import { ChapterActionError } from '@/contexts/chapters';
 import { LoadableAction } from '@/contexts/openapi';
-import { LoadableProject } from '@/contexts/projects';
 import { useDialog } from '@/hooks/dialog';
-import { ChapterWithoutAutofield } from '@/openapi';
+import { ChapterWithoutAutofield, ChapterWithSections, Project } from '@/openapi';
 
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import Box from '@mui/material/Box';
@@ -14,32 +13,28 @@ import Typography from '@mui/material/Typography';
 import Link from 'next/link';
 
 export type ChapterListHeaderComponentProps = {
-  readonly loadableProject: LoadableProject;
-  readonly loadableChapterList: LoadableChapterList;
+  readonly project: Project;
+  readonly chapterList: ChapterWithSections[];
   readonly onCreateChapter: (chapter: ChapterWithoutAutofield) => Promise<LoadableAction<ChapterActionError>>;
 };
 
 const ChapterListHeaderComponent: React.FC<ChapterListHeaderComponentProps> = ({
-  loadableProject,
-  loadableChapterList,
+  project,
+  chapterList,
   onCreateChapter,
 }) => {
   const { open: openNewChapterDialog, onOpen: onOpenNewChapterDialog, onClose: onCloseNewChapterDialog } = useDialog();
-
-  if (loadableProject.state !== 'success' || loadableChapterList.state !== 'success') {
-    return <Box alignItems="center" display="flex" width="100%" />;
-  }
 
   return (
     <Box display="flex" width="100%">
       <Button
         LinkComponent={Link}
         color="inherit"
-        href={`/projects/${loadableProject.data.id}`}
+        href={`/projects/${project.id}`}
         sx={{ flexGrow: 1, textTransform: 'none' }}
       >
         <Typography fontWeight="bold" noWrap variant="subtitle1">
-          {loadableProject.data.name}
+          {project.name}
         </Typography>
       </Button>
       <IconButton aria-label="new chapter" onClick={onOpenNewChapterDialog} size="small">
@@ -54,7 +49,7 @@ const ChapterListHeaderComponent: React.FC<ChapterListHeaderComponentProps> = ({
         title="New Chapter"
         validates={{
           number: (value) => {
-            const maxChapterNumber = loadableChapterList.data.length + 1;
+            const maxChapterNumber = chapterList.length + 1;
             return parseInt(value, 10) <= maxChapterNumber || 'chapter number is too large';
           },
         }}

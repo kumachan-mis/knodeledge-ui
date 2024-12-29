@@ -10,12 +10,12 @@ import {
   UserOnlyId,
 } from '@/openapi';
 
-import { LoadableAction, LoadableData } from './openapi';
+import { LoadableAction, LoadableClientSideData } from './openapi';
 import { useSetPanic } from './panic';
 
 import React from 'react';
 
-export type LoadablePaper = LoadableData<Paper>;
+export type LoadablePaper = LoadableClientSideData<Paper>;
 
 export type LoadablePaperMap = Map<string, LoadablePaper>;
 
@@ -123,7 +123,7 @@ export function useUpdatePaper(
   };
 }
 
-export const PaperContextProvider: React.FC<{ readonly children?: React.ReactNode }> = ({ children }) => {
+export const CachedPaperContextProvider: React.FC<{ readonly children?: React.ReactNode }> = ({ children }) => {
   const [paperMap, setPaperMap] = React.useState<LoadablePaperMap>(new Map());
 
   return (

@@ -12,7 +12,7 @@ export type ProjectViewProps = {
 const ProjectView: React.FC<ProjectViewProps> = ({ user }) => {
   const loadableProject = useLoadableProject();
   const updateProject = useUpdateProject({ id: user.sub });
-  return <ProjectViewComponent loadableProject={loadableProject} onUpdateProject={updateProject} />;
+  return <ProjectViewComponent onUpdateProject={updateProject} project={loadableProject.data} />;
 };
 
 export default ProjectView;

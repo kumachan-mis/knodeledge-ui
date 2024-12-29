@@ -1,18 +1,16 @@
 'use client';
 import { createProject } from '@/actions/projects/createProject';
-import { findProject } from '@/actions/projects/findProject';
-import { listProject } from '@/actions/projects/listProject';
 import { updateProject } from '@/actions/projects/updateProject';
 import { Project, ProjectWithoutAutofield, ProjectWithoutAutofieldError, UserOnlyId } from '@/openapi';
 
-import { LoadableAction, LoadableData } from './openapi';
+import { LoadableAction, LoadableServerSideData } from './openapi';
 import { useSetPanic } from './panic';
 
 import React from 'react';
 
-export type LoadableProject = LoadableData<Project>;
+export type LoadableProject = LoadableServerSideData<Project>;
 
-export type LoadableProjectList = LoadableData<Project[]>;
+export type LoadableProjectList = LoadableServerSideData<Project[]>;
 
 export type ProjectActionError = {
   message: string;
@@ -38,13 +36,13 @@ const UNKNOWN_PROJECT_ACTION_ERROR: ProjectActionError = {
   project: { name: 'unknown error', description: 'unknown error' },
 } as const;
 
-const ProjectValueContext = React.createContext<LoadableProject>({ state: 'loading', data: null });
+const ProjectValueContext = React.createContext<LoadableProject>({ state: 'success', data: { id: '', name: '' } });
 
 const ProjectSetContext = React.createContext<React.Dispatch<React.SetStateAction<LoadableProject>>>(() => {
   // Do nothing
 });
 
-const ProjectListValueContext = React.createContext<LoadableProjectList>({ state: 'loading', data: null });
+const ProjectListValueContext = React.createContext<LoadableProjectList>({ state: 'success', data: [] });
 
 const ProjectListSetContext = React.createContext<React.Dispatch<React.SetStateAction<LoadableProjectList>>>(() => {
   // Do nothing
@@ -52,31 +50,6 @@ const ProjectListSetContext = React.createContext<React.Dispatch<React.SetStateA
 
 export function useLoadableProject(): LoadableProject {
   return React.useContext(ProjectValueContext);
-}
-
-export function useInitProject(userId: string, projectId: string): void {
-  const setProject = React.useContext(ProjectSetContext);
-  const setPanic = useSetPanic();
-
-  React.useEffect(() => {
-    setProject({ state: 'loading', data: null });
-
-    void (async () => {
-      const errorable = await findProject({ user: { id: userId }, project: { id: projectId } });
-      if (errorable.state === 'panic') {
-        setPanic(errorable.error.message);
-        return;
-      }
-
-      if (errorable.state === 'error') {
-        setProject({ state: 'notfound', data: null });
-        return;
-      }
-
-      setProject({ state: 'success', data: errorable.response.project });
-    })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId, projectId]);
 }
 
 export function useUpdateProject(user: UserOnlyId): LoadableActionProjectUpdate {
@@ -112,30 +85,6 @@ export function useLoadableProjectList(): LoadableProjectList {
   return React.useContext(ProjectListValueContext);
 }
 
-export function useInitProjectList(userId: string): void {
-  const setProjectList = React.useContext(ProjectListSetContext);
-  const setPanic = useSetPanic();
-
-  React.useEffect(() => {
-    setProjectList({ state: 'loading', data: null });
-
-    void (async () => {
-      const errorable = await listProject({ user: { id: userId } });
-      if (errorable.state === 'panic') {
-        setPanic(errorable.error.message);
-        return;
-      }
-
-      if (errorable.state === 'error') {
-        return;
-      }
-
-      setProjectList({ state: 'success', data: errorable.response.projects });
-    })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId]);
-}
-
 export function useCreateProjectInList(user: UserOnlyId): LoadableActionProjectCreate {
   const setPanic = useSetPanic();
   const setProjectList = React.useContext(ProjectListSetContext);
@@ -161,10 +110,7 @@ export function useCreateProjectInList(user: UserOnlyId): LoadableActionProjectC
       };
     }
 
-    setProjectList((prev) => {
-      if (prev.state !== 'success') return prev;
-      return { state: 'success', data: [errorable.response.project, ...prev.data] };
-    });
+    setProjectList((prev) => ({ state: 'success', data: [errorable.response.project, ...prev.data] }));
     return { state: 'success', error: null };
   };
 }
@@ -194,21 +140,21 @@ export function useUpdateProjectInList(user: UserOnlyId): LoadableActionProjectU
       };
     }
 
-    setProjectList((prev) => {
-      if (prev.state !== 'success') return prev;
-      return {
-        state: 'success',
-        data: prev.data.map((project) =>
-          project.id === errorable.response.project.id ? errorable.response.project : project,
-        ),
-      };
-    });
+    setProjectList((prev) => ({
+      state: 'success',
+      data: prev.data.map((project) =>
+        project.id === errorable.response.project.id ? errorable.response.project : project,
+      ),
+    }));
     return { state: 'success', error: null };
   };
 }
 
-export const ProjectContextProvider: React.FC<{ readonly children?: React.ReactNode }> = ({ children }) => {
-  const [project, setProject] = React.useState<LoadableProject>({ state: 'loading', data: null });
+export const ProjectContextProvider: React.FC<{
+  readonly initialProject: Project;
+  readonly children?: React.ReactNode;
+}> = ({ initialProject, children }) => {
+  const [project, setProject] = React.useState<LoadableProject>({ state: 'success', data: initialProject });
 
   return (
     <ProjectValueContext.Provider value={project}>
@@ -217,8 +163,14 @@ export const ProjectContextProvider: React.FC<{ readonly children?: React.ReactN
   );
 };
 
-export const ProjectListContextProvider: React.FC<{ readonly children?: React.ReactNode }> = ({ children }) => {
-  const [projectList, setProjectList] = React.useState<LoadableProjectList>({ state: 'loading', data: null });
+export const ProjectListContextProvider: React.FC<{
+  readonly initialProjectList: Project[];
+  readonly children?: React.ReactNode;
+}> = ({ initialProjectList, children }) => {
+  const [projectList, setProjectList] = React.useState<LoadableProjectList>({
+    state: 'success',
+    data: initialProjectList,
+  });
 
   return (
     <ProjectListValueContext.Provider value={projectList}>

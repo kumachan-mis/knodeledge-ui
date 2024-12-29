@@ -1,14 +1,19 @@
-export type LoadableData<D> =
-  | {
-      state: 'loading';
-      data: null;
-    }
+export type LoadableServerSideData<D> = {
+  state: 'success';
+  data: D;
+};
+
+export type LoadableClientSideData<D> =
   | {
       state: 'success';
       data: D;
     }
   | {
       state: 'notfound';
+      data: null;
+    }
+  | {
+      state: 'loading';
       data: null;
     };
 

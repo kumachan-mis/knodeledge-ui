@@ -12,7 +12,7 @@ export type ProjectCardListProps = {
 const ProjectCardList: React.FC<ProjectCardListProps> = ({ user }) => {
   const loadableProjectList = useLoadableProjectList();
   const updateProject = useUpdateProjectInList({ id: user.sub });
-  return <ProjectCardListComponent loadableProjectList={loadableProjectList} onUpdateProject={updateProject} />;
+  return <ProjectCardListComponent onUpdateProject={updateProject} projectList={loadableProjectList.data} />;
 };
 
 export default ProjectCardList;

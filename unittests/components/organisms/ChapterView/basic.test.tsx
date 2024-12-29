@@ -2,32 +2,41 @@ import { createInternalErrorResponse, createNotFoundResponse, createOkResponse }
 import { USER } from '../../../testutils/user';
 import ChapterView from '@/components/organisms/ChapterView';
 import PanicError from '@/components/organisms/PanicError';
-import { ChapterListContextProvider, useInitChapterList } from '@/contexts/chapters';
+import { ActiveChapterContextProvider, ChapterListContextProvider } from '@/contexts/chapters';
 import { PanicContextProvider } from '@/contexts/panic';
-import { PaperContextProvider, useInitPaper } from '@/contexts/papers';
-import { ProjectContextProvider, useInitProject } from '@/contexts/projects';
+import { CachedPaperContextProvider, useInitPaper } from '@/contexts/papers';
+import { ProjectContextProvider } from '@/contexts/projects';
+import { ChapterWithSections, Project } from '@/openapi';
 
 import { render, waitFor } from '@testing-library/react';
 
-const Wrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => (
+const Wrapper: React.FC<{
+  project: Project;
+  chapterList: ChapterWithSections[];
+  children?: React.ReactNode;
+}> = ({ project, chapterList, children }) => (
   <PanicContextProvider>
     <PanicError />
-    <ProjectContextProvider>
-      <ChapterListContextProvider>
-        <PaperContextProvider>
-          <HooksWrapper>{children}</HooksWrapper>
-        </PaperContextProvider>
+    <ProjectContextProvider initialProject={project}>
+      <ChapterListContextProvider initialChapterList={chapterList}>
+        <CachedPaperContextProvider>
+          <HooksWrapper chapterList={chapterList}>{children}</HooksWrapper>
+        </CachedPaperContextProvider>
       </ChapterListContextProvider>
     </ProjectContextProvider>
   </PanicContextProvider>
 );
 
-const HooksWrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
-  useInitProject(USER.sub, 'PROJECT');
-  useInitChapterList(USER.sub, 'PROJECT');
+const HooksWrapper: React.FC<{
+  chapterList: ChapterWithSections[];
+  children?: React.ReactNode;
+}> = ({ chapterList, children }) => {
   useInitPaper(USER.sub, 'PROJECT', 'CHAPTER');
 
-  return children;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const activeChapter = chapterList.find((chapter) => chapter.id === 'CHAPTER')!;
+
+  return <ActiveChapterContextProvider activeChapter={activeChapter}>{children}</ActiveChapterContextProvider>;
 };
 
 beforeAll(() => {
@@ -39,38 +48,36 @@ beforeEach(() => {
 });
 
 test('should show paper content from Paper Find API', async () => {
-  (global.fetch as jest.Mock)
-    .mockResolvedValueOnce(
-      createOkResponse({
-        project: {
-          id: 'PROJECT',
-          name: 'Project Name',
-          description: 'Project Description',
-        },
-      }),
-    )
-    .mockResolvedValueOnce(
-      createOkResponse({
-        chapters: [
-          {
-            id: 'CHAPTER',
-            name: 'Chapter Name',
-            number: 1,
-            sections: [],
-          },
-        ],
-      }),
-    )
-    .mockResolvedValueOnce(
-      createOkResponse({
-        paper: {
-          id: 'PAPER',
-          content: 'Paper Content',
-        },
-      }),
-    );
+  const project: Project = {
+    id: 'PROJECT',
+    name: 'Project Name',
+    description: 'Project Description',
+  };
+  const chapterList: ChapterWithSections[] = [
+    {
+      id: 'CHAPTER',
+      number: 1,
+      name: 'Chapter Name',
+      sections: [],
+    },
+  ];
 
-  const screen = render(<ChapterView chapterId="CHAPTER" projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
+  (global.fetch as jest.Mock).mockResolvedValueOnce(
+    createOkResponse({
+      paper: {
+        id: 'PAPER',
+        content: 'Paper Content',
+      },
+    }),
+  );
+
+  const screen = render(<ChapterView chapterId="CHAPTER" projectId="PROJECT" user={USER} />, {
+    wrapper: ({ children }) => (
+      <Wrapper chapterList={chapterList} project={project}>
+        {children}
+      </Wrapper>
+    ),
+  });
 
   await waitFor(() => {
     expect(screen.container.querySelector('[data-selectid="text-field"]')).toHaveTextContent('Paper Content');
@@ -81,25 +88,9 @@ test('should show paper content from Paper Find API', async () => {
   expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Go to Next Step' })).toBeInTheDocument();
 
-  expect(global.fetch).toHaveBeenCalledTimes(3);
+  expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
     1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/projects/find`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-    }),
-  );
-  expect(global.fetch).toHaveBeenNthCalledWith(
-    2,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/chapters/list`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-    }),
-  );
-  expect(global.fetch).toHaveBeenNthCalledWith(
-    3,
     `${process.env.NEXT_PUBLIC_APP_URL}/api/papers/find`,
     expect.objectContaining({
       method: 'POST',
@@ -108,234 +99,90 @@ test('should show paper content from Paper Find API', async () => {
   );
 });
 
-test.each<{
-  name: string;
-  projectFindResponse: Partial<Response>;
-  chaptersListResponse: Partial<Response>;
-  paperFindResponse: Partial<Response>;
-}>([
-  {
-    name: 'Project Find API',
-    projectFindResponse: createNotFoundResponse({ message: 'not found' }),
-    chaptersListResponse: createOkResponse({
-      chapters: [
-        {
-          id: 'CHAPTER',
-          name: 'Chapter Name',
-          number: 1,
-          sections: [],
-        },
-      ],
-    }),
-    paperFindResponse: createOkResponse({
-      paper: {
-        id: 'PAPER',
-        content: 'Paper Content',
-      },
-    }),
-  },
-  {
-    name: 'Chapters List API',
-    projectFindResponse: createOkResponse({
-      project: {
-        id: 'PROJECT',
-        name: 'Project Name',
-        description: 'Project Description',
-      },
-    }),
-    chaptersListResponse: createNotFoundResponse({ message: 'not found' }),
-    paperFindResponse: createOkResponse({
-      paper: {
-        id: 'PAPER',
-        content: 'Paper Content',
-      },
-    }),
-  },
-  {
-    name: 'Paper Find API',
-    projectFindResponse: createOkResponse({
-      project: {
-        id: 'PROJECT',
-        name: 'Project Name',
-        description: 'Project Description',
-      },
-    }),
-    chaptersListResponse: createOkResponse({
-      chapters: [
-        {
-          id: 'CHAPTER',
-          name: 'Chapter Name',
-          number: 1,
-          sections: [],
-        },
-      ],
-    }),
-    paperFindResponse: createNotFoundResponse({ message: 'not found' }),
-  },
-  {
-    name: 'All APIs ',
-    projectFindResponse: createNotFoundResponse({ message: 'not found' }),
-    chaptersListResponse: createNotFoundResponse({ message: 'not found' }),
-    paperFindResponse: createNotFoundResponse({ message: 'not found' }),
-  },
-])(
-  'should show nothing when not found error occured ($name)',
-  async ({ projectFindResponse, chaptersListResponse, paperFindResponse }) => {
-    (global.fetch as jest.Mock)
-      .mockResolvedValueOnce(projectFindResponse)
-      .mockResolvedValueOnce(chaptersListResponse)
-      .mockResolvedValueOnce(paperFindResponse);
+test('should show nothing when not found error occured in Paper Find API', async () => {
+  const project: Project = {
+    id: 'PROJECT',
+    name: 'Project Name',
+    description: 'Project Description',
+  };
+  const chapterList: ChapterWithSections[] = [
+    {
+      id: 'CHAPTER',
+      number: 1,
+      name: 'Chapter Name',
+      sections: [],
+    },
+  ];
 
-    const screen = render(<ChapterView chapterId="CHAPTER" projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
+  (global.fetch as jest.Mock).mockResolvedValueOnce(createNotFoundResponse({ message: 'not found' }));
 
-    await waitFor(() => {
-      expect(screen.container.querySelector('[data-selectid="text-field"]')).not.toBeInTheDocument();
-    });
+  const screen = render(<ChapterView chapterId="CHAPTER" projectId="PROJECT" user={USER} />, {
+    wrapper: ({ children }) => (
+      <Wrapper chapterList={chapterList} project={project}>
+        {children}
+      </Wrapper>
+    ),
+  });
 
-    expect(screen.queryByText('Project Name')).not.toBeInTheDocument();
-    expect(screen.queryByText('Chapter Name')).not.toBeInTheDocument();
-
-    expect(global.fetch).toHaveBeenCalledTimes(3);
-    expect(global.fetch).toHaveBeenNthCalledWith(
-      1,
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/projects/find`,
-      expect.objectContaining({
-        method: 'POST',
-        body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-      }),
-    );
-    expect(global.fetch).toHaveBeenNthCalledWith(
-      2,
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/chapters/list`,
-      expect.objectContaining({
-        method: 'POST',
-        body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-      }),
-    );
-    expect(global.fetch).toHaveBeenNthCalledWith(
-      3,
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/papers/find`,
-      expect.objectContaining({
-        method: 'POST',
-        body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' }, chapter: { id: 'CHAPTER' } }),
-      }),
-    );
-  },
-);
-
-test.each<{
-  name: string;
-  projectFindResponse: Partial<Response>;
-  chaptersListResponse: Partial<Response>;
-  paperFindResponse: Partial<Response>;
-}>([
-  {
-    name: 'Project Find API',
-    projectFindResponse: createInternalErrorResponse({ message: 'internal error' }),
-    chaptersListResponse: createOkResponse({
-      chapters: [
-        {
-          id: 'CHAPTER',
-          name: 'Chapter Name',
-          number: 1,
-          sections: [],
-        },
-      ],
-    }),
-    paperFindResponse: createOkResponse({
-      paper: {
-        id: 'PAPER',
-        content: 'Paper Content',
-      },
-    }),
-  },
-  {
-    name: 'Chapters List API',
-    projectFindResponse: createOkResponse({
-      project: {
-        id: 'PROJECT',
-        name: 'Project Name',
-        description: 'Project Description',
-      },
-    }),
-    chaptersListResponse: createInternalErrorResponse({ message: 'internal error' }),
-    paperFindResponse: createOkResponse({
-      paper: {
-        id: 'PAPER',
-        content: 'Paper Content',
-      },
-    }),
-  },
-  {
-    name: 'Paper Find API',
-    projectFindResponse: createOkResponse({
-      project: {
-        id: 'PROJECT',
-        name: 'Project Name',
-        description: 'Project Description',
-      },
-    }),
-    chaptersListResponse: createOkResponse({
-      chapters: [
-        {
-          id: 'CHAPTER',
-          name: 'Chapter Name',
-          number: 1,
-          sections: [],
-        },
-      ],
-    }),
-    paperFindResponse: createInternalErrorResponse({ message: 'internal error' }),
-  },
-  {
-    name: 'All APIs',
-    projectFindResponse: createInternalErrorResponse({ message: 'internal error' }),
-    chaptersListResponse: createInternalErrorResponse({ message: 'internal error' }),
-    paperFindResponse: createInternalErrorResponse({ message: 'internal error' }),
-  },
-])(
-  'should show error message when internal error occured ($name)',
-  async ({ projectFindResponse, chaptersListResponse, paperFindResponse }) => {
-    (global.fetch as jest.Mock)
-      .mockResolvedValueOnce(projectFindResponse)
-      .mockResolvedValueOnce(chaptersListResponse)
-      .mockResolvedValueOnce(paperFindResponse);
-
-    const screen = render(<ChapterView chapterId="CHAPTER" projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
-
-    await waitFor(() => {
-      expect(screen.getByText('Fatal Error Occured')).toBeInTheDocument();
-    });
-    expect(screen.getByText('internal error')).toBeInTheDocument();
-
-    expect(screen.queryByText('Project Name')).not.toBeInTheDocument();
-    expect(screen.queryByText('Chapter Name')).not.toBeInTheDocument();
+  await waitFor(() => {
     expect(screen.container.querySelector('[data-selectid="text-field"]')).not.toBeInTheDocument();
+  });
 
-    expect(global.fetch).toHaveBeenCalledTimes(3);
-    expect(global.fetch).toHaveBeenNthCalledWith(
-      1,
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/projects/find`,
-      expect.objectContaining({
-        method: 'POST',
-        body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-      }),
-    );
-    expect(global.fetch).toHaveBeenNthCalledWith(
-      2,
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/chapters/list`,
-      expect.objectContaining({
-        method: 'POST',
-        body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-      }),
-    );
-    expect(global.fetch).toHaveBeenNthCalledWith(
-      3,
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/papers/find`,
-      expect.objectContaining({
-        method: 'POST',
-        body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' }, chapter: { id: 'CHAPTER' } }),
-      }),
-    );
-  },
-);
+  expect(screen.queryByText('Project Name')).not.toBeInTheDocument();
+  expect(screen.queryByText('Chapter Name')).not.toBeInTheDocument();
+
+  expect(global.fetch).toHaveBeenCalledTimes(1);
+  expect(global.fetch).toHaveBeenNthCalledWith(
+    1,
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/papers/find`,
+    expect.objectContaining({
+      method: 'POST',
+      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' }, chapter: { id: 'CHAPTER' } }),
+    }),
+  );
+});
+
+test('should show error message when internal error occured in Paper Find API', async () => {
+  const project: Project = {
+    id: 'PROJECT',
+    name: 'Project Name',
+    description: 'Project Description',
+  };
+  const chapterList: ChapterWithSections[] = [
+    {
+      id: 'CHAPTER',
+      number: 1,
+      name: 'Chapter Name',
+      sections: [],
+    },
+  ];
+
+  (global.fetch as jest.Mock).mockResolvedValueOnce(createInternalErrorResponse({ message: 'internal error' }));
+
+  const screen = render(<ChapterView chapterId="CHAPTER" projectId="PROJECT" user={USER} />, {
+    wrapper: ({ children }) => (
+      <Wrapper chapterList={chapterList} project={project}>
+        {children}
+      </Wrapper>
+    ),
+  });
+
+  await waitFor(() => {
+    expect(screen.getByText('Fatal Error Occured')).toBeInTheDocument();
+  });
+  expect(screen.getByText('internal error')).toBeInTheDocument();
+
+  expect(screen.queryByText('Project Name')).not.toBeInTheDocument();
+  expect(screen.queryByText('Chapter Name')).not.toBeInTheDocument();
+  expect(screen.container.querySelector('[data-selectid="text-field"]')).not.toBeInTheDocument();
+
+  expect(global.fetch).toHaveBeenCalledTimes(1);
+  expect(global.fetch).toHaveBeenNthCalledWith(
+    1,
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/papers/find`,
+    expect.objectContaining({
+      method: 'POST',
+      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' }, chapter: { id: 'CHAPTER' } }),
+    }),
+  );
+});

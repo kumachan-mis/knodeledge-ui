@@ -4,24 +4,21 @@ import PanicError from '@/components/organisms/PanicError';
 import ProjectCardList from '@/components/organisms/ProjectCardList';
 import ProjectToolbar from '@/components/organisms/ProjectToolbar';
 import { PanicContextProvider } from '@/contexts/panic';
-import { ProjectListContextProvider, useInitProjectList } from '@/contexts/projects';
+import { ProjectListContextProvider } from '@/contexts/projects';
+import { Project } from '@/openapi';
 
 import { render, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
-const Wrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => (
+const Wrapper: React.FC<{
+  projectList: Project[];
+  children?: React.ReactNode;
+}> = ({ projectList, children }) => (
   <PanicContextProvider>
     <PanicError />
-    <ProjectListContextProvider>
-      <HooksWrapper>{children}</HooksWrapper>
-    </ProjectListContextProvider>
+    <ProjectListContextProvider initialProjectList={projectList}>{children}</ProjectListContextProvider>
   </PanicContextProvider>
 );
-
-const HooksWrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
-  useInitProjectList(USER.sub);
-  return children;
-};
 
 beforeAll(() => {
   global.fetch = jest.fn();
@@ -34,51 +31,38 @@ beforeEach(() => {
 test('should create a project', async () => {
   const user = userEvent.setup();
 
-  (global.fetch as jest.Mock)
-    .mockResolvedValueOnce(
-      createOkResponse({
-        projects: [
-          {
-            id: 'PROJECT_WITHOUT_DESCRIPTION',
-            name: 'Project Without Description',
-          },
-          {
-            id: 'PROJECT_WITH_DESCRIPTION',
-            name: 'Project With Description',
-            description: 'Project Description',
-          },
-        ],
-      }),
-    )
-    .mockResolvedValueOnce(
-      createOkResponse({
-        project: {
-          id: 'TEST_PROJECT',
-          name: 'Test Project',
-          description: '',
-        },
-      }),
-    );
+  const projectList: Project[] = [
+    {
+      id: 'PROJECT_WITHOUT_DESCRIPTION',
+      name: 'Project Without Description',
+    },
+    {
+      id: 'PROJECT_WITH_DESCRIPTION',
+      name: 'Project With Description',
+      description: 'Project Description',
+    },
+  ];
+
+  (global.fetch as jest.Mock).mockResolvedValueOnce(
+    createOkResponse({
+      project: {
+        id: 'TEST_PROJECT',
+        name: 'Test Project',
+        description: '',
+      },
+    }),
+  );
 
   const screen = render(
     <div>
       <ProjectToolbar user={USER} />
       <ProjectCardList user={USER} />
     </div>,
-    { wrapper: Wrapper },
+    { wrapper: ({ children }) => <Wrapper projectList={projectList}>{children}</Wrapper> },
   );
 
-  await waitFor(() => {
-    expect(screen.queryByText('Project Without Description')).toBeInTheDocument();
-  });
+  expect(screen.queryByText('Project Without Description')).toBeInTheDocument();
   expect(screen.queryByText('Project With Description')).toBeInTheDocument();
-
-  expect(global.fetch).toHaveBeenCalledTimes(1);
-  expect(global.fetch).toHaveBeenNthCalledWith(
-    1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/projects/list`,
-    expect.objectContaining({ method: 'POST', body: JSON.stringify({ user: { id: USER.sub } }) }),
-  );
 
   await user.click(screen.getByRole('button', { name: 'New Project' }));
 
@@ -101,9 +85,9 @@ test('should create a project', async () => {
     expect(screen.queryByText('Test Project')).toBeInTheDocument();
   });
 
-  expect(global.fetch).toHaveBeenCalledTimes(2);
+  expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
-    2,
+    1,
     `${process.env.NEXT_PUBLIC_APP_URL}/api/projects/create`,
     expect.objectContaining({
       method: 'POST',
@@ -118,41 +102,30 @@ test('should create a project', async () => {
 test('should close dialog', async () => {
   const user = userEvent.setup();
 
-  (global.fetch as jest.Mock).mockResolvedValueOnce(
-    createOkResponse({
-      projects: [
-        {
-          id: 'PROJECT_WITHOUT_DESCRIPTION',
-          name: 'Project Without Description',
-        },
-        {
-          id: 'PROJECT_WITH_DESCRIPTION',
-          name: 'Project With Description',
-          description: 'Project Description',
-        },
-      ],
-    }),
-  );
+  const projectList: Project[] = [
+    {
+      id: 'PROJECT_WITHOUT_DESCRIPTION',
+      name: 'Project Without Description',
+    },
+    {
+      id: 'PROJECT_WITH_DESCRIPTION',
+      name: 'Project With Description',
+      description: 'Project Description',
+    },
+  ];
 
   const screen = render(
     <div>
       <ProjectToolbar user={USER} />
       <ProjectCardList user={USER} />
     </div>,
-    { wrapper: Wrapper },
+    { wrapper: ({ children }) => <Wrapper projectList={projectList}>{children}</Wrapper> },
   );
 
   await waitFor(() => {
     expect(screen.queryByText('Project Without Description')).toBeInTheDocument();
   });
   expect(screen.queryByText('Project With Description')).toBeInTheDocument();
-
-  expect(global.fetch).toHaveBeenCalledTimes(1);
-  expect(global.fetch).toHaveBeenNthCalledWith(
-    1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/projects/list`,
-    expect.objectContaining({ method: 'POST', body: JSON.stringify({ user: { id: USER.sub } }) }),
-  );
 
   await user.click(screen.getByRole('button', { name: 'New Project' }));
 
@@ -164,46 +137,31 @@ test('should close dialog', async () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
-  expect(global.fetch).toHaveBeenCalledTimes(1);
+  expect(global.fetch).toHaveBeenCalledTimes(0);
 });
 
 test('should show error message when project creation failed', async () => {
   const user = userEvent.setup();
 
-  (global.fetch as jest.Mock)
-    .mockResolvedValueOnce(
-      createOkResponse({
-        projects: [],
-      }),
-    )
-    .mockResolvedValueOnce(
-      createBadRequestResponse({
-        user: {},
-        project: {
-          name: 'name error',
-          description: 'description error',
-        },
-      }),
-    );
+  (global.fetch as jest.Mock).mockResolvedValueOnce(
+    createBadRequestResponse({
+      user: {},
+      project: {
+        name: 'name error',
+        description: 'description error',
+      },
+    }),
+  );
 
   const screen = render(
     <div>
       <ProjectToolbar user={USER} />
       <ProjectCardList user={USER} />
     </div>,
-    { wrapper: Wrapper },
+    { wrapper: ({ children }) => <Wrapper projectList={[]}>{children}</Wrapper> },
   );
 
-  await waitFor(() => {
-    expect(screen.queryByText('No Projects')).toBeInTheDocument();
-  });
-
-  expect(global.fetch).toHaveBeenCalledTimes(1);
-  expect(global.fetch).toHaveBeenNthCalledWith(
-    1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/projects/list`,
-    expect.objectContaining({ method: 'POST', body: JSON.stringify({ user: { id: USER.sub } }) }),
-  );
+  expect(screen.queryByText('No Projects')).toBeInTheDocument();
 
   await user.click(screen.getByRole('button', { name: 'New Project' }));
 
@@ -223,9 +181,9 @@ test('should show error message when project creation failed', async () => {
   });
   expect(dialog.queryByText('description error')).toBeInTheDocument();
 
-  expect(global.fetch).toHaveBeenCalledTimes(2);
+  expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
-    2,
+    1,
     `${process.env.NEXT_PUBLIC_APP_URL}/api/projects/create`,
     expect.objectContaining({
       method: 'POST',
@@ -240,28 +198,17 @@ test('should show error message when project creation failed', async () => {
 test('should show error message when internal error occured', async () => {
   const user = userEvent.setup();
 
-  (global.fetch as jest.Mock)
-    .mockResolvedValueOnce(createOkResponse({ projects: [] }))
-    .mockResolvedValueOnce(createInternalErrorResponse({ message: 'internal error' }));
+  (global.fetch as jest.Mock).mockResolvedValueOnce(createInternalErrorResponse({ message: 'internal error' }));
 
   const screen = render(
     <div>
       <ProjectToolbar user={USER} />
       <ProjectCardList user={USER} />
     </div>,
-    { wrapper: Wrapper },
+    { wrapper: ({ children }) => <Wrapper projectList={[]}>{children}</Wrapper> },
   );
 
-  await waitFor(() => {
-    expect(screen.queryByText('No Projects')).toBeInTheDocument();
-  });
-
-  expect(global.fetch).toHaveBeenCalledTimes(1);
-  expect(global.fetch).toHaveBeenNthCalledWith(
-    1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/projects/list`,
-    expect.objectContaining({ method: 'POST', body: JSON.stringify({ user: { id: USER.sub } }) }),
-  );
+  expect(screen.queryByText('No Projects')).toBeInTheDocument();
 
   await user.click(screen.getByRole('button', { name: 'New Project' }));
 
@@ -281,9 +228,9 @@ test('should show error message when internal error occured', async () => {
   });
   expect(screen.queryByText('internal error')).toBeInTheDocument();
 
-  expect(global.fetch).toHaveBeenCalledTimes(2);
+  expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
-    2,
+    1,
     `${process.env.NEXT_PUBLIC_APP_URL}/api/projects/create`,
     expect.objectContaining({
       method: 'POST',

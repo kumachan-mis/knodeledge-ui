@@ -1,4 +1,4 @@
-import { useLoadableChapterInList, useSectionalizePaper } from '@/contexts/chapters';
+import { useLoadableActiveChapterInList, useSectionalizePaper } from '@/contexts/chapters';
 import { useLoadablePaper, useUpdatePaper } from '@/contexts/papers';
 import { useLoadableProject } from '@/contexts/projects';
 
@@ -14,15 +14,17 @@ export type ChapterViewProps = {
 
 const ChapterView: React.FC<ChapterViewProps> = ({ user, projectId, chapterId }) => {
   const loadableProject = useLoadableProject();
-  const loadableChapter = useLoadableChapterInList(chapterId);
+  const loadableChapter = useLoadableActiveChapterInList();
   const loadablePaper = useLoadablePaper(chapterId);
+
   const updatePaper = useUpdatePaper({ id: user.sub }, { id: projectId }, { id: chapterId });
   const sectionalizePaper = useSectionalizePaper({ id: user.sub }, { id: projectId }, { id: chapterId });
+
   return (
     <ChapterViewComponent
-      loadableChapter={loadableChapter}
+      chapter={loadableChapter.data}
       loadablePaper={loadablePaper}
-      loadableProject={loadableProject}
+      project={loadableProject.data}
       sectionalizePaper={sectionalizePaper}
       updatePaper={updatePaper}
     />
