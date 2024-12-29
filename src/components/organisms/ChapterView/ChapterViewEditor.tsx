@@ -1,12 +1,15 @@
 'use client';
+import AppEditor from '@/components/molecules/AppEditor';
+import { LoadablePaper } from '@/contexts/papers';
 import { usePaperContent, useSetPaperContent } from '@/contexts/views';
 
-import { styled } from '@mui/material/styles';
 import React from 'react';
-import { EditorRoot, EditorSyntaxMenu, Divider, EditorTextFieldRoot, EditorTextFieldBody } from 'react-clay-editor';
-import 'katex/dist/katex.min.css';
 
-const ChapterViewEditorComponent: React.FC = () => {
+export type ChapterViewEditorComponentProps = {
+  readonly loadablePaper: LoadablePaper;
+};
+
+const ChapterViewEditorComponent: React.FC<ChapterViewEditorComponentProps> = ({ loadablePaper }) => {
   const paper = usePaperContent();
   const setPaper = useSetPaperContent();
 
@@ -21,22 +24,7 @@ const ChapterViewEditorComponent: React.FC = () => {
     [setPaper],
   );
 
-  return (
-    <ChapterViewEditorRoot setText={setText} text={paper.content}>
-      <EditorSyntaxMenu />
-      <Divider />
-      <EditorTextFieldRoot>
-        <EditorTextFieldBody />
-      </EditorTextFieldRoot>
-    </ChapterViewEditorRoot>
-  );
+  return <AppEditor loading={loadablePaper.state === 'loading'} setText={setText} text={paper.content} />;
 };
-
-const ChapterViewEditorRoot = styled(EditorRoot)({
-  '&&': {
-    width: '100%',
-    flexGrow: 1,
-  },
-});
 
 export default ChapterViewEditorComponent;

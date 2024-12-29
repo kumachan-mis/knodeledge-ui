@@ -69,8 +69,12 @@ export function useInitPaper(userId: string, projectId: string, chapterId: strin
         project: { id: projectId },
         chapter: { id: chapterId },
       });
-      if (errorable.state === 'panic' || errorable.state === 'error') {
+      if (errorable.state === 'panic') {
         setPanic(errorable.error.message);
+        return;
+      }
+
+      if (errorable.state === 'error') {
         return;
       }
 

@@ -10,7 +10,7 @@ export type SaveResult =
     };
 
 export type AppBreadcrumbsSavingProps = {
-  readonly isDirty: boolean;
+  readonly dirty: boolean;
   readonly message?: string;
   readonly onSave: () => Promise<SaveResult>;
 };
@@ -22,7 +22,7 @@ export type AppBreadcrumbsSavingReturn = {
 };
 
 export function useAppBreadcrumbsSaving({
-  isDirty,
+  dirty,
   message = 'You have unsaved changes, are you sure?',
   onSave,
 }: AppBreadcrumbsSavingProps): AppBreadcrumbsSavingReturn {
@@ -57,7 +57,7 @@ export function useAppBreadcrumbsSaving({
   React.useEffect(() => {
     const handleClick = (event: MouseEvent) => {
       if (
-        isDirty &&
+        dirty &&
         event.target instanceof Element &&
         event.target.closest('a:not([target="_blank"])') &&
         !window.confirm(message)
@@ -72,11 +72,11 @@ export function useAppBreadcrumbsSaving({
     return () => {
       window.removeEventListener('click', handleClick, true);
     };
-  }, [isDirty, message]);
+  }, [dirty, message]);
 
   React.useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      if (isDirty) {
+      if (dirty) {
         event.preventDefault();
       }
     };
@@ -86,7 +86,7 @@ export function useAppBreadcrumbsSaving({
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
-  }, [isDirty, message]);
+  }, [dirty, message]);
 
   return { savingError, onSaveClick, onClearSavingError };
 }

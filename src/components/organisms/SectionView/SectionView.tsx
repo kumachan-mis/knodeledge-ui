@@ -7,7 +7,6 @@ import SectionViewBreadcrumbsComponent from './SectionViewBreadcrumbs';
 import SectionViewEditorComponent from './SectionViewEditor';
 
 import Box from '@mui/material/Box';
-import CircularProgress from '@mui/material/CircularProgress';
 import Container from '@mui/material/Container';
 
 export type SectionViewComponentProps = {
@@ -24,34 +23,27 @@ const SectionViewComponent: React.FC<SectionViewComponentProps> = ({
   section,
   loadableGraph,
   updateGraph,
-}) =>
-  loadableGraph.state === 'loading' ? (
-    <Container maxWidth="sm">
-      <Box display="flex" justifyContent="center" p={12}>
-        <CircularProgress />
-      </Box>
-    </Container>
-  ) : loadableGraph.state === 'success' ? (
-    <GraphContentProvider initialContent={loadableGraph.data}>
-      <Box
-        sx={(theme) => ({
-          height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px)`,
-          display: 'flex',
-          flexDirection: 'column',
-        })}
-      >
-        <Container maxWidth="lg" sx={{ height: '100%', display: 'flex', flexDirection: 'column', py: 1 }}>
-          <SectionViewBreadcrumbsComponent
-            chapter={chapter}
-            graph={loadableGraph.data}
-            project={project}
-            section={section}
-            updateGraph={updateGraph}
-          />
-          <SectionViewEditorComponent />
-        </Container>
-      </Box>
-    </GraphContentProvider>
-  ) : null;
+}) => (
+  <GraphContentProvider loadableGraph={loadableGraph}>
+    <Box
+      sx={(theme) => ({
+        height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px)`,
+        display: 'flex',
+        flexDirection: 'column',
+      })}
+    >
+      <Container maxWidth="lg" sx={{ height: '100%', display: 'flex', flexDirection: 'column', py: 1 }}>
+        <SectionViewBreadcrumbsComponent
+          chapter={chapter}
+          loadableGraph={loadableGraph}
+          project={project}
+          section={section}
+          updateGraph={updateGraph}
+        />
+        <SectionViewEditorComponent loadableGraph={loadableGraph} />
+      </Container>
+    </Box>
+  </GraphContentProvider>
+);
 
 export default SectionViewComponent;

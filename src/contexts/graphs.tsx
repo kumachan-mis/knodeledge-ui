@@ -64,8 +64,12 @@ export function useInitGraph(userId: string, projectId: string, chapterId: strin
         section: { id: sectionId },
       });
 
-      if (errorable.state === 'panic' || errorable.state === 'error') {
+      if (errorable.state === 'panic') {
         setPanic(errorable.error.message);
+        return;
+      }
+
+      if (errorable.state === 'error') {
         return;
       }
 

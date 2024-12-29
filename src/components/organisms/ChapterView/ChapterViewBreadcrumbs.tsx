@@ -1,31 +1,33 @@
 import AppBreadcrumbs from '@/components/molecules/AppBreadcrumbs';
 import { LoadableAction } from '@/contexts/openapi';
-import { PaperActionError } from '@/contexts/papers';
+import { LoadablePaper, PaperActionError } from '@/contexts/papers';
 import { usePaperContent } from '@/contexts/views';
-import { Chapter, Paper, PaperWithoutAutofield, Project } from '@/openapi';
+import { Chapter, PaperWithoutAutofield, Project } from '@/openapi';
 
 export type ChapterViewBreadcrumbsComponentProps = {
   readonly project: Project;
   readonly chapter: Chapter;
-  readonly paper: Paper;
+  readonly loadablePaper: LoadablePaper;
   readonly updatePaper: (id: string, paper: PaperWithoutAutofield) => Promise<LoadableAction<PaperActionError>>;
 };
 
 const ChapterViewBreadcrumbsComponent: React.FC<ChapterViewBreadcrumbsComponentProps> = ({
   project,
   chapter,
-  paper,
+  loadablePaper,
   updatePaper,
 }) => {
   const unsavedPaper = usePaperContent();
-  const isDirty = unsavedPaper.content !== paper.content;
+  const dirty = loadablePaper.state === 'success' && unsavedPaper.content !== loadablePaper.data.content;
+  const saveDisabled = loadablePaper.state === 'loading';
+
   return (
     <AppBreadcrumbs
       chapter={{ id: chapter.id, name: chapter.name }}
-      isDirty={isDirty}
+      dirty={dirty}
       onSave={async () => {
-        if (!isDirty) return { success: true };
-        const loadableAction = await updatePaper(paper.id, unsavedPaper);
+        if (!dirty) return { success: true };
+        const loadableAction = await updatePaper(loadablePaper.data.id, unsavedPaper);
         if (loadableAction.state === 'success') {
           return { success: true };
         }
@@ -35,6 +37,7 @@ const ChapterViewBreadcrumbsComponent: React.FC<ChapterViewBreadcrumbsComponentP
         return { success: false, error: `${loadableAction.error.message}: ${loadableAction.error.paper.content}` };
       }}
       project={{ id: project.id, name: project.name }}
+      saveDisabled={saveDisabled}
     />
   );
 };

@@ -12,14 +12,18 @@ test('should render next step dialog', async () => {
   const screen = render(<NextStepDialog onClose={onClose} onSubmit={onSubmit} open />, {
     wrapper: ({ children }) => (
       <PaperContentProvider
-        initialContent={{
-          content: [
-            '[** Section 1]',
-            'section one text section one text',
-            '[** Section 2]',
-            'section two text section two text',
-            'section two text section two text',
-          ].join('\n'),
+        loadablePaper={{
+          data: {
+            id: 'PAPER',
+            content: [
+              '[** Section 1]',
+              'section one text section one text',
+              '[** Section 2]',
+              'section two text section two text',
+              'section two text section two text',
+            ].join('\n'),
+          },
+          state: 'success',
         }}
       >
         {children}
@@ -49,14 +53,18 @@ test('should sectionalize paper', async () => {
   const screen = render(<NextStepDialog onClose={onClose} onSubmit={onSubmit} open />, {
     wrapper: ({ children }) => (
       <PaperContentProvider
-        initialContent={{
-          content: [
-            '[** Section 1]',
-            'section one text section one text',
-            '[** Section 2]',
-            'section two text section two text',
-            'section two text section two text',
-          ].join('\n'),
+        loadablePaper={{
+          data: {
+            id: 'PAPER',
+            content: [
+              '[** Section 1]',
+              'section one text section one text',
+              '[** Section 2]',
+              'section two text section two text',
+              'section two text section two text',
+            ].join('\n'),
+          },
+          state: 'success',
         }}
       >
         {children}
@@ -95,14 +103,18 @@ test('should close dialog', async () => {
   const screen = render(<NextStepDialog onClose={onClose} onSubmit={onSubmit} open />, {
     wrapper: ({ children }) => (
       <PaperContentProvider
-        initialContent={{
-          content: [
-            '[** Section 1]',
-            'section one text section one text',
-            '[** Section 2]',
-            'section two text section two text',
-            'section two text section two text',
-          ].join('\n'),
+        loadablePaper={{
+          data: {
+            id: 'PAPER',
+            content: [
+              '[** Section 1]',
+              'section one text section one text',
+              '[** Section 2]',
+              'section two text section two text',
+              'section two text section two text',
+            ].join('\n'),
+          },
+          state: 'success',
         }}
       >
         {children}
@@ -172,7 +184,16 @@ test.each<{
   const onClose = jest.fn();
 
   const screen = render(<NextStepDialog onClose={onClose} onSubmit={onSubmit} open />, {
-    wrapper: ({ children }) => <PaperContentProvider initialContent={{ content }}>{children}</PaperContentProvider>,
+    wrapper: ({ children }) => (
+      <PaperContentProvider
+        loadablePaper={{
+          data: { id: 'PAPER', content },
+          state: 'success',
+        }}
+      >
+        {children}
+      </PaperContentProvider>
+    ),
   });
 
   const dialog = within(await screen.findByRole('dialog'));
@@ -221,14 +242,18 @@ test.each<{
   const screen = render(<NextStepDialog onClose={onClose} onSubmit={onSubmit} open />, {
     wrapper: ({ children }) => (
       <PaperContentProvider
-        initialContent={{
-          content: [
-            '[** Section 1]',
-            'section one text section one text',
-            '[** Section 2]',
-            'section two text section two text',
-            'section two text section two text',
-          ].join('\n'),
+        loadablePaper={{
+          data: {
+            id: 'PAPER',
+            content: [
+              '[** Section 1]',
+              'section one text section one text',
+              '[** Section 2]',
+              'section two text section two text',
+              'section two text section two text',
+            ].join('\n'),
+          },
+          state: 'success',
         }}
       >
         {children}
