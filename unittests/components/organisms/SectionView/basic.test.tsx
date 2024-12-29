@@ -2,32 +2,51 @@ import { createInternalErrorResponse, createNotFoundResponse, createOkResponse }
 import { USER } from '../../../testutils/user';
 import PanicError from '@/components/organisms/PanicError';
 import SectionView from '@/components/organisms/SectionView';
-import { ChapterListContextProvider, useInitChapterList } from '@/contexts/chapters';
-import { GraphContextProvider, useInitGraph } from '@/contexts/graphs';
+import {
+  ActiveChapterContextProvider,
+  ActiveSectionContextProvider,
+  ChapterListContextProvider,
+} from '@/contexts/chapters';
+import { CachedGraphContextProvider, useInitGraph } from '@/contexts/graphs';
 import { PanicContextProvider } from '@/contexts/panic';
-import { ProjectContextProvider, useInitProject } from '@/contexts/projects';
+import { ProjectContextProvider } from '@/contexts/projects';
+import { ChapterWithSections, Project } from '@/openapi';
 
 import { render, waitFor } from '@testing-library/react';
 
-const Wrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => (
+const Wrapper: React.FC<{
+  project: Project;
+  chapterList: ChapterWithSections[];
+  children?: React.ReactNode;
+}> = ({ project, chapterList, children }) => (
   <PanicContextProvider>
     <PanicError />
-    <ProjectContextProvider>
-      <ChapterListContextProvider>
-        <GraphContextProvider>
-          <HooksWrapper>{children}</HooksWrapper>
-        </GraphContextProvider>
+    <ProjectContextProvider initialProject={project}>
+      <ChapterListContextProvider initialChapterList={chapterList}>
+        <CachedGraphContextProvider>
+          <HooksWrapper chapterList={chapterList}>{children}</HooksWrapper>
+        </CachedGraphContextProvider>
       </ChapterListContextProvider>
     </ProjectContextProvider>
   </PanicContextProvider>
 );
 
-const HooksWrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
-  useInitProject(USER.sub, 'PROJECT');
-  useInitChapterList(USER.sub, 'PROJECT');
+const HooksWrapper: React.FC<{
+  chapterList: ChapterWithSections[];
+  children?: React.ReactNode;
+}> = ({ chapterList, children }) => {
   useInitGraph(USER.sub, 'PROJECT', 'CHAPTER', 'SECTION');
 
-  return children;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const activeChapter = chapterList.find((chapter) => chapter.id === 'CHAPTER')!;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const activeSection = activeChapter.sections.find((section) => section.id === 'SECTION')!;
+
+  return (
+    <ActiveChapterContextProvider activeChapter={activeChapter}>
+      <ActiveSectionContextProvider activeSection={activeSection}>{children}</ActiveSectionContextProvider>
+    </ActiveChapterContextProvider>
+  );
 };
 
 beforeAll(() => {
@@ -39,44 +58,40 @@ beforeEach(() => {
 });
 
 test('should show graph paragraph from Graph Find API', async () => {
-  (global.fetch as jest.Mock)
-    .mockResolvedValueOnce(
-      createOkResponse({
-        project: {
-          id: 'PROJECT',
-          name: 'Project Name',
-          description: 'Project Description',
+  const project: Project = {
+    id: 'PROJECT',
+    name: 'Project Name',
+    description: 'Project Description',
+  };
+  const chapterList: ChapterWithSections[] = [
+    {
+      id: 'CHAPTER',
+      number: 1,
+      name: 'Chapter Name',
+      sections: [
+        {
+          id: 'SECTION',
+          name: 'Section Name',
         },
-      }),
-    )
-    .mockResolvedValueOnce(
-      createOkResponse({
-        chapters: [
-          {
-            id: 'CHAPTER',
-            name: 'Chapter Name',
-            number: 1,
-            sections: [
-              {
-                id: 'SECTION',
-                name: 'Section Name',
-              },
-            ],
-          },
-        ],
-      }),
-    )
-    .mockResolvedValueOnce(
-      createOkResponse({
-        graph: {
-          id: 'GRAPH',
-          paragraph: 'Graph Paragraph',
-        },
-      }),
-    );
+      ],
+    },
+  ];
+
+  (global.fetch as jest.Mock).mockResolvedValueOnce(
+    createOkResponse({
+      graph: {
+        id: 'GRAPH',
+        paragraph: 'Graph Paragraph',
+      },
+    }),
+  );
 
   const screen = render(<SectionView chapterId="CHAPTER" projectId="PROJECT" sectionId="SECTION" user={USER} />, {
-    wrapper: Wrapper,
+    wrapper: ({ children }) => (
+      <Wrapper chapterList={chapterList} project={project}>
+        {children}
+      </Wrapper>
+    ),
   });
 
   await waitFor(() => {
@@ -88,25 +103,9 @@ test('should show graph paragraph from Graph Find API', async () => {
   expect(screen.getByText('Section Name')).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
 
-  expect(global.fetch).toHaveBeenCalledTimes(3);
+  expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
     1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/projects/find`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-    }),
-  );
-  expect(global.fetch).toHaveBeenNthCalledWith(
-    2,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/chapters/list`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-    }),
-  );
-  expect(global.fetch).toHaveBeenNthCalledWith(
-    3,
     `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/find`,
     expect.objectContaining({
       method: 'POST',
@@ -120,270 +119,112 @@ test('should show graph paragraph from Graph Find API', async () => {
   );
 });
 
-test.each<{
-  name: string;
-  projectFindResponse: Partial<Response>;
-  chaptersListResponse: Partial<Response>;
-  graphFindResponse: Partial<Response>;
-}>([
-  {
-    name: 'Project Find API',
-    projectFindResponse: createNotFoundResponse({ message: 'not found' }),
-    chaptersListResponse: createOkResponse({
-      chapters: [
+test('should show nothing when not found error occured in Graph Find API', async () => {
+  const project: Project = {
+    id: 'PROJECT',
+    name: 'Project Name',
+    description: 'Project Description',
+  };
+  const chapterList: ChapterWithSections[] = [
+    {
+      id: 'CHAPTER',
+      number: 1,
+      name: 'Chapter Name',
+      sections: [
         {
-          id: 'CHAPTER',
-          name: 'Chapter Name',
-          number: 1,
-          sections: [
-            {
-              id: 'SECTION',
-              name: 'Section Name',
-            },
-          ],
+          id: 'SECTION',
+          name: 'Section Name',
         },
       ],
-    }),
-    graphFindResponse: createOkResponse({
-      graph: {
-        id: 'SECTION',
-        content: 'Graph Paragraph',
-      },
-    }),
-  },
-  {
-    name: 'Chapters List API',
-    projectFindResponse: createOkResponse({
-      project: {
-        id: 'PROJECT',
-        name: 'Project Name',
-        description: 'Project Description',
-      },
-    }),
-    chaptersListResponse: createNotFoundResponse({ message: 'not found' }),
-    graphFindResponse: createOkResponse({
-      graph: {
-        id: 'GRAPH',
-        content: 'Graph Paragraph',
-      },
-    }),
-  },
-  {
-    name: 'Graph Find API',
-    projectFindResponse: createOkResponse({
-      project: {
-        id: 'PROJECT',
-        name: 'Project Name',
-        description: 'Project Description',
-      },
-    }),
-    chaptersListResponse: createOkResponse({
-      chapters: [
-        {
-          id: 'CHAPTER',
-          name: 'Chapter Name',
-          number: 1,
-          sections: [
-            {
-              id: 'SECTION',
-              name: 'Section Name',
-            },
-          ],
-        },
-      ],
-    }),
-    graphFindResponse: createNotFoundResponse({ message: 'not found' }),
-  },
-  {
-    name: 'All APIs ',
-    projectFindResponse: createNotFoundResponse({ message: 'not found' }),
-    chaptersListResponse: createNotFoundResponse({ message: 'not found' }),
-    graphFindResponse: createNotFoundResponse({ message: 'not found' }),
-  },
-])(
-  'should show nothing when not found error occured ($name)',
-  async ({ projectFindResponse, chaptersListResponse, graphFindResponse }) => {
-    (global.fetch as jest.Mock)
-      .mockResolvedValueOnce(projectFindResponse)
-      .mockResolvedValueOnce(chaptersListResponse)
-      .mockResolvedValueOnce(graphFindResponse);
+    },
+  ];
 
-    const screen = render(<SectionView chapterId="CHAPTER" projectId="PROJECT" sectionId="SECTION" user={USER} />, {
-      wrapper: Wrapper,
-    });
+  (global.fetch as jest.Mock).mockResolvedValueOnce(createNotFoundResponse({ message: 'not found' }));
 
-    await waitFor(() => {
-      expect(screen.container.querySelector('[data-selectid="text-field"]')).not.toBeInTheDocument();
-    });
+  const screen = render(<SectionView chapterId="CHAPTER" projectId="PROJECT" sectionId="SECTION" user={USER} />, {
+    wrapper: ({ children }) => (
+      <Wrapper chapterList={chapterList} project={project}>
+        {children}
+      </Wrapper>
+    ),
+  });
 
-    expect(screen.queryByText('Project Name')).not.toBeInTheDocument();
-    expect(screen.queryByText('Chapter Name')).not.toBeInTheDocument();
-    expect(screen.queryByText('Section Name')).not.toBeInTheDocument();
-
-    expect(global.fetch).toHaveBeenCalledTimes(3);
-    expect(global.fetch).toHaveBeenNthCalledWith(
-      1,
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/projects/find`,
-      expect.objectContaining({
-        method: 'POST',
-        body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-      }),
-    );
-    expect(global.fetch).toHaveBeenNthCalledWith(
-      2,
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/chapters/list`,
-      expect.objectContaining({
-        method: 'POST',
-        body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-      }),
-    );
-    expect(global.fetch).toHaveBeenNthCalledWith(
-      3,
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/find`,
-      expect.objectContaining({
-        method: 'POST',
-        body: JSON.stringify({
-          user: { id: USER.sub },
-          project: { id: 'PROJECT' },
-          chapter: { id: 'CHAPTER' },
-          section: { id: 'SECTION' },
-        }),
-      }),
-    );
-  },
-);
-
-test.each<{
-  name: string;
-  projectFindResponse: Partial<Response>;
-  chaptersListResponse: Partial<Response>;
-  graphFindResponse: Partial<Response>;
-}>([
-  {
-    name: 'Project Find API',
-    projectFindResponse: createInternalErrorResponse({ message: 'internal error' }),
-    chaptersListResponse: createOkResponse({
-      chapters: [
-        {
-          id: 'CHAPTER',
-          name: 'Chapter Name',
-          number: 1,
-          sections: [
-            {
-              id: 'SECTION',
-              name: 'Section Name',
-            },
-          ],
-        },
-      ],
-    }),
-    graphFindResponse: createOkResponse({
-      graph: {
-        id: 'GRAPH',
-        content: 'Graph Paragraph',
-      },
-    }),
-  },
-  {
-    name: 'Chapters List API',
-    projectFindResponse: createOkResponse({
-      project: {
-        id: 'PROJECT',
-        name: 'Project Name',
-        description: 'Project Description',
-      },
-    }),
-    chaptersListResponse: createInternalErrorResponse({ message: 'internal error' }),
-    graphFindResponse: createOkResponse({
-      graph: {
-        id: 'GRAPH',
-        content: 'Graph Paragraph',
-      },
-    }),
-  },
-  {
-    name: 'Graph Find API',
-    projectFindResponse: createOkResponse({
-      project: {
-        id: 'PROJECT',
-        name: 'Project Name',
-        description: 'Project Description',
-      },
-    }),
-    chaptersListResponse: createOkResponse({
-      chapters: [
-        {
-          id: 'GRAPH',
-          name: 'Chapter Name',
-          number: 1,
-          sections: [
-            {
-              id: 'SECTION',
-              name: 'Section Name',
-            },
-          ],
-        },
-      ],
-    }),
-    graphFindResponse: createInternalErrorResponse({ message: 'internal error' }),
-  },
-  {
-    name: 'All APIs',
-    projectFindResponse: createInternalErrorResponse({ message: 'internal error' }),
-    chaptersListResponse: createInternalErrorResponse({ message: 'internal error' }),
-    graphFindResponse: createInternalErrorResponse({ message: 'internal error' }),
-  },
-])(
-  'should show error message when internal error occured ($name)',
-  async ({ projectFindResponse, chaptersListResponse, graphFindResponse }) => {
-    (global.fetch as jest.Mock)
-      .mockResolvedValueOnce(projectFindResponse)
-      .mockResolvedValueOnce(chaptersListResponse)
-      .mockResolvedValueOnce(graphFindResponse);
-
-    const screen = render(<SectionView chapterId="CHAPTER" projectId="PROJECT" sectionId="SECTION" user={USER} />, {
-      wrapper: Wrapper,
-    });
-
-    await waitFor(() => {
-      expect(screen.getByText('Fatal Error Occured')).toBeInTheDocument();
-    });
-    expect(screen.getByText('internal error')).toBeInTheDocument();
-
-    expect(screen.queryByText('Project Name')).not.toBeInTheDocument();
-    expect(screen.queryByText('Chapter Name')).not.toBeInTheDocument();
-    expect(screen.queryByText('Section Name')).not.toBeInTheDocument();
+  await waitFor(() => {
     expect(screen.container.querySelector('[data-selectid="text-field"]')).not.toBeInTheDocument();
+  });
 
-    expect(global.fetch).toHaveBeenCalledTimes(3);
-    expect(global.fetch).toHaveBeenNthCalledWith(
-      1,
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/projects/find`,
-      expect.objectContaining({
-        method: 'POST',
-        body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
+  expect(screen.queryByText('Project Name')).not.toBeInTheDocument();
+  expect(screen.queryByText('Chapter Name')).not.toBeInTheDocument();
+  expect(screen.queryByText('Section Name')).not.toBeInTheDocument();
+
+  expect(global.fetch).toHaveBeenCalledTimes(1);
+  expect(global.fetch).toHaveBeenNthCalledWith(
+    1,
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/find`,
+    expect.objectContaining({
+      method: 'POST',
+      body: JSON.stringify({
+        user: { id: USER.sub },
+        project: { id: 'PROJECT' },
+        chapter: { id: 'CHAPTER' },
+        section: { id: 'SECTION' },
       }),
-    );
-    expect(global.fetch).toHaveBeenNthCalledWith(
-      2,
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/chapters/list`,
-      expect.objectContaining({
-        method: 'POST',
-        body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
+    }),
+  );
+});
+
+test('should show error message when internal error occured in Graph Find API', async () => {
+  const project: Project = {
+    id: 'PROJECT',
+    name: 'Project Name',
+    description: 'Project Description',
+  };
+  const chapterList: ChapterWithSections[] = [
+    {
+      id: 'CHAPTER',
+      number: 1,
+      name: 'Chapter Name',
+      sections: [
+        {
+          id: 'SECTION',
+          name: 'Section Name',
+        },
+      ],
+    },
+  ];
+
+  (global.fetch as jest.Mock).mockResolvedValueOnce(createInternalErrorResponse({ message: 'internal error' }));
+
+  const screen = render(<SectionView chapterId="CHAPTER" projectId="PROJECT" sectionId="SECTION" user={USER} />, {
+    wrapper: ({ children }) => (
+      <Wrapper chapterList={chapterList} project={project}>
+        {children}
+      </Wrapper>
+    ),
+  });
+
+  await waitFor(() => {
+    expect(screen.getByText('Fatal Error Occured')).toBeInTheDocument();
+  });
+  expect(screen.getByText('internal error')).toBeInTheDocument();
+
+  expect(screen.queryByText('Project Name')).not.toBeInTheDocument();
+  expect(screen.queryByText('Chapter Name')).not.toBeInTheDocument();
+  expect(screen.queryByText('Section Name')).not.toBeInTheDocument();
+  expect(screen.container.querySelector('[data-selectid="text-field"]')).not.toBeInTheDocument();
+
+  expect(global.fetch).toHaveBeenCalledTimes(1);
+  expect(global.fetch).toHaveBeenNthCalledWith(
+    1,
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/find`,
+    expect.objectContaining({
+      method: 'POST',
+      body: JSON.stringify({
+        user: { id: USER.sub },
+        project: { id: 'PROJECT' },
+        chapter: { id: 'CHAPTER' },
+        section: { id: 'SECTION' },
       }),
-    );
-    expect(global.fetch).toHaveBeenNthCalledWith(
-      3,
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/find`,
-      expect.objectContaining({
-        method: 'POST',
-        body: JSON.stringify({
-          user: { id: USER.sub },
-          project: { id: 'PROJECT' },
-          chapter: { id: 'CHAPTER' },
-          section: { id: 'SECTION' },
-        }),
-      }),
-    );
-  },
-);
+    }),
+  );
+});

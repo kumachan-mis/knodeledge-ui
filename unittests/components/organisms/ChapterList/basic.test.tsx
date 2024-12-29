@@ -1,27 +1,23 @@
-import { createInternalErrorResponse, createNotFoundResponse, createOkResponse } from '../../../testutils/fetch';
 import { USER } from '../../../testutils/user';
 import ChapterList from '@/components/organisms/ChapterList';
 import PanicError from '@/components/organisms/PanicError';
-import { ChapterListContextProvider, useInitChapterList } from '@/contexts/chapters';
+import { ChapterListContextProvider } from '@/contexts/chapters';
 import { PanicContextProvider } from '@/contexts/panic';
+import { ChapterWithSections } from '@/openapi';
 
-import { waitFor, within } from '@testing-library/dom';
+import { within } from '@testing-library/dom';
 import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
-const Wrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => (
+const Wrapper: React.FC<{
+  chapterList: ChapterWithSections[];
+  children?: React.ReactNode;
+}> = ({ chapterList, children }) => (
   <PanicContextProvider>
     <PanicError />
-    <ChapterListContextProvider>
-      <HooksWrapper>{children}</HooksWrapper>
-    </ChapterListContextProvider>
+    <ChapterListContextProvider initialChapterList={chapterList}>{children}</ChapterListContextProvider>
   </PanicContextProvider>
 );
-
-const HooksWrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
-  useInitChapterList(USER.sub, 'PROJECT');
-  return children;
-};
 
 beforeAll(() => {
   global.fetch = jest.fn();
@@ -31,50 +27,47 @@ beforeEach(() => {
   (global.fetch as jest.Mock).mockRestore();
 });
 
-test('should show chapter from Chapter List API', async () => {
+test('should show chapters', async () => {
   const user = userEvent.setup();
-  (global.fetch as jest.Mock).mockResolvedValueOnce(
-    createOkResponse({
-      chapters: [
+
+  const chapterList: ChapterWithSections[] = [
+    {
+      id: 'CHAPTER_ONE',
+      number: 1,
+      name: 'Chapter One',
+      sections: [
         {
-          id: 'CHAPTER_ONE',
-          number: 1,
-          name: 'Chapter One',
-          sections: [
-            {
-              id: 'SECTION_ONE',
-              name: 'Section One',
-            },
-            {
-              id: 'SECTION_TWO',
-              name: 'Section Two',
-            },
-          ],
+          id: 'SECTION_ONE',
+          name: 'Section One',
         },
         {
-          id: 'CHAPTER_TWO',
-          number: 2,
-          name: 'Chapter Two',
-          sections: [
-            {
-              id: 'SECTION_THREE',
-              name: 'Section Three',
-            },
-            {
-              id: 'SECTION_FOUR',
-              name: 'Section Four',
-            },
-          ],
+          id: 'SECTION_TWO',
+          name: 'Section Two',
         },
       ],
-    }),
-  );
+    },
+    {
+      id: 'CHAPTER_TWO',
+      number: 2,
+      name: 'Chapter Two',
+      sections: [
+        {
+          id: 'SECTION_THREE',
+          name: 'Section Three',
+        },
+        {
+          id: 'SECTION_FOUR',
+          name: 'Section Four',
+        },
+      ],
+    },
+  ];
 
-  const screen = render(<ChapterList projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
-
-  await waitFor(() => {
-    expect(screen.getByText('#1 Chapter One')).toBeInTheDocument();
+  const screen = render(<ChapterList projectId="PROJECT" user={USER} />, {
+    wrapper: ({ children }) => <Wrapper chapterList={chapterList}>{children}</Wrapper>,
   });
+
+  expect(screen.getByText('#1 Chapter One')).toBeInTheDocument();
   expect(screen.getByText('Section One')).toBeInTheDocument();
   expect(screen.getByText('Section Two')).toBeInTheDocument();
 
@@ -90,56 +83,5 @@ test('should show chapter from Chapter List API', async () => {
   expect(within(menu.getByRole('link')).getByText('Open Chapter')).toBeInTheDocument();
   expect(menu.getByText('Update Chapter')).toBeInTheDocument();
 
-  expect(global.fetch).toHaveBeenCalledTimes(1);
-  expect(global.fetch).toHaveBeenNthCalledWith(
-    1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/chapters/list`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-    }),
-  );
-});
-
-test('should show nothing when not found error occured', async () => {
-  (global.fetch as jest.Mock).mockResolvedValueOnce(createNotFoundResponse({ message: 'not found' }));
-
-  const screen = render(<ChapterList projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
-
-  await waitFor(() => {
-    expect(global.fetch).toHaveBeenCalledTimes(1);
-  });
-
-  expect(screen.queryByText('Fatal Error Occured')).not.toBeInTheDocument();
-  expect(screen.queryByText('not found')).not.toBeInTheDocument();
-
-  expect(global.fetch).toHaveBeenNthCalledWith(
-    1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/chapters/list`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-    }),
-  );
-});
-
-test('should show error message when internal error occured', async () => {
-  (global.fetch as jest.Mock).mockResolvedValueOnce(createInternalErrorResponse({ message: 'internal error' }));
-
-  const screen = render(<ChapterList projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
-
-  await waitFor(() => {
-    expect(screen.getByText('Fatal Error Occured')).toBeInTheDocument();
-  });
-  expect(screen.getByText('internal error')).toBeInTheDocument();
-
-  expect(global.fetch).toHaveBeenCalledTimes(1);
-  expect(global.fetch).toHaveBeenNthCalledWith(
-    1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/chapters/list`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-    }),
-  );
+  expect(global.fetch).toHaveBeenCalledTimes(0);
 });

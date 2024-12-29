@@ -3,30 +3,26 @@ import { USER } from '../../../testutils/user';
 import ChapterList from '@/components/organisms/ChapterList';
 import ChapterListHeader from '@/components/organisms/ChapterListHeader';
 import PanicError from '@/components/organisms/PanicError';
-import { ChapterListContextProvider, useInitChapterList } from '@/contexts/chapters';
+import { ChapterListContextProvider } from '@/contexts/chapters';
 import { PanicContextProvider } from '@/contexts/panic';
-import { ProjectContextProvider, useInitProject } from '@/contexts/projects';
-import { ChapterWithoutAutofield } from '@/openapi';
+import { ProjectContextProvider } from '@/contexts/projects';
+import { ChapterWithoutAutofield, ChapterWithSections, Project } from '@/openapi';
 
 import { render, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
-const Wrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => (
+const Wrapper: React.FC<{
+  project: Project;
+  chapterList: ChapterWithSections[];
+  children?: React.ReactNode;
+}> = ({ project, chapterList, children }) => (
   <PanicContextProvider>
     <PanicError />
-    <ProjectContextProvider>
-      <ChapterListContextProvider>
-        <HooksWrapper>{children}</HooksWrapper>
-      </ChapterListContextProvider>
+    <ProjectContextProvider initialProject={project}>
+      <ChapterListContextProvider initialChapterList={chapterList}>{children}</ChapterListContextProvider>
     </ProjectContextProvider>
   </PanicContextProvider>
 );
-
-const HooksWrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
-  useInitProject(USER.sub, 'PROJECT');
-  useInitChapterList(USER.sub, 'PROJECT');
-  return children;
-};
 
 beforeAll(() => {
   global.fetch = jest.fn();
@@ -68,75 +64,53 @@ test.each<{
 ])('should create a chapter ($name)', async ({ chapter, expectedChapterTexts }) => {
   const user = userEvent.setup();
 
-  (global.fetch as jest.Mock)
-    .mockResolvedValueOnce(
-      createOkResponse({
-        project: {
-          id: 'PROJECT',
-          name: 'Project Name',
-          description: 'Project Description',
-        },
-      }),
-    )
-    .mockResolvedValueOnce(
-      createOkResponse({
-        chapters: [
-          {
-            id: 'CHAPTER_ONE',
-            name: 'Chapter One',
-            number: 1,
-            sections: [],
-          },
-          {
-            id: 'CHAPTER_TWO',
-            name: 'Chapter Two',
-            number: 2,
-            sections: [],
-          },
-        ],
-      }),
-    )
-    .mockResolvedValueOnce(
-      createOkResponse({
-        chapter: {
-          id: 'NEW_CHAPTER',
-          name: chapter.name,
-          number: chapter.number,
-          sections: [],
-        },
-      }),
-    );
+  const project: Project = {
+    id: 'PROJECT',
+    name: 'Project Name',
+    description: 'Project Description',
+  };
+  const chapterList: ChapterWithSections[] = [
+    {
+      id: 'CHAPTER_ONE',
+      number: 1,
+      name: 'Chapter One',
+      sections: [],
+    },
+    {
+      id: 'CHAPTER_TWO',
+      number: 2,
+      name: 'Chapter Two',
+      sections: [],
+    },
+  ];
+
+  (global.fetch as jest.Mock).mockResolvedValueOnce(
+    createOkResponse({
+      chapter: {
+        id: 'NEW_CHAPTER',
+        name: chapter.name,
+        number: chapter.number,
+        sections: [],
+      },
+    }),
+  );
 
   const screen = render(
     <div>
       <ChapterListHeader projectId="PROJECT" user={USER} />
       <ChapterList projectId="PROJECT" user={USER} />
     </div>,
-    { wrapper: Wrapper },
+    {
+      wrapper: ({ children }) => (
+        <Wrapper chapterList={chapterList} project={project}>
+          {children}
+        </Wrapper>
+      ),
+    },
   );
 
-  await waitFor(() => {
-    expect(screen.getByText('Project Name')).toBeInTheDocument();
-  });
+  expect(screen.getByText('Project Name')).toBeInTheDocument();
   expect(screen.queryByText('Project Description')).not.toBeInTheDocument();
-
-  expect(global.fetch).toHaveBeenCalledTimes(2);
-  expect(global.fetch).toHaveBeenNthCalledWith(
-    1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/projects/find`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-    }),
-  );
-  expect(global.fetch).toHaveBeenNthCalledWith(
-    2,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/chapters/list`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-    }),
-  );
 
   await user.click(screen.getByLabelText('new chapter'));
 
@@ -158,9 +132,9 @@ test.each<{
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
-  expect(global.fetch).toHaveBeenCalledTimes(3);
+  expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
-    3,
+    1,
     `${process.env.NEXT_PUBLIC_APP_URL}/api/chapters/create`,
     expect.objectContaining({
       method: 'POST',
@@ -175,59 +149,36 @@ test.each<{
 test('should disable submission when chapter number is too large', async () => {
   const user = userEvent.setup();
 
-  (global.fetch as jest.Mock)
-    .mockResolvedValueOnce(
-      createOkResponse({
-        project: {
-          id: 'PROJECT',
-          name: 'Project Name',
-          description: 'Project Description',
-        },
-      }),
-    )
-    .mockResolvedValueOnce(
-      createOkResponse({
-        chapters: [
-          {
-            id: 'CHAPTER_ONE',
-            name: 'Chapter One',
-            number: 1,
-            sections: [],
-          },
-          {
-            id: 'CHAPTER_TWO',
-            name: 'Chapter Two',
-            number: 2,
-            sections: [],
-          },
-        ],
-      }),
-    );
+  const project: Project = {
+    id: 'PROJECT',
+    name: 'Project Name',
+    description: 'Project Description',
+  };
+  const chapterList: ChapterWithSections[] = [
+    {
+      id: 'CHAPTER_ONE',
+      number: 1,
+      name: 'Chapter One',
+      sections: [],
+    },
+    {
+      id: 'CHAPTER_TWO',
+      number: 2,
+      name: 'Chapter Two',
+      sections: [],
+    },
+  ];
 
-  const screen = render(<ChapterListHeader projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
-
-  await waitFor(() => {
-    expect(screen.getByText('Project Name')).toBeInTheDocument();
+  const screen = render(<ChapterListHeader projectId="PROJECT" user={USER} />, {
+    wrapper: ({ children }) => (
+      <Wrapper chapterList={chapterList} project={project}>
+        {children}
+      </Wrapper>
+    ),
   });
-  expect(screen.queryByText('Project Description')).not.toBeInTheDocument();
 
-  expect(global.fetch).toHaveBeenCalledTimes(2);
-  expect(global.fetch).toHaveBeenNthCalledWith(
-    1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/projects/find`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-    }),
-  );
-  expect(global.fetch).toHaveBeenNthCalledWith(
-    2,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/chapters/list`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-    }),
-  );
+  expect(screen.getByText('Project Name')).toBeInTheDocument();
+  expect(screen.queryByText('Project Description')).not.toBeInTheDocument();
 
   await user.click(screen.getByLabelText('new chapter'));
 
@@ -251,64 +202,43 @@ test('should disable submission when chapter number is too large', async () => {
   });
 
   expect(dialog.queryByText('chapter number is too large')).toBeInTheDocument();
+
+  expect(global.fetch).toHaveBeenCalledTimes(0);
 });
 
 test('should close dialog', async () => {
   const user = userEvent.setup();
 
-  (global.fetch as jest.Mock)
-    .mockResolvedValueOnce(
-      createOkResponse({
-        project: {
-          id: 'PROJECT',
-          name: 'Project Name',
-          description: 'Project Description',
-        },
-      }),
-    )
-    .mockResolvedValueOnce(
-      createOkResponse({
-        chapters: [
-          {
-            id: 'CHAPTER_ONE',
-            name: 'Chapter One',
-            number: 1,
-            sections: [],
-          },
-          {
-            id: 'CHAPTER_TWO',
-            name: 'Chapter Two',
-            number: 2,
-            sections: [],
-          },
-        ],
-      }),
-    );
+  const project: Project = {
+    id: 'PROJECT',
+    name: 'Project Name',
+    description: 'Project Description',
+  };
+  const chapterList: ChapterWithSections[] = [
+    {
+      id: 'CHAPTER_ONE',
+      number: 1,
+      name: 'Chapter One',
+      sections: [],
+    },
+    {
+      id: 'CHAPTER_TWO',
+      number: 2,
+      name: 'Chapter Two',
+      sections: [],
+    },
+  ];
 
-  const screen = render(<ChapterListHeader projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
-
-  await waitFor(() => {
-    expect(screen.getByText('Project Name')).toBeInTheDocument();
+  const screen = render(<ChapterListHeader projectId="PROJECT" user={USER} />, {
+    wrapper: ({ children }) => (
+      <Wrapper chapterList={chapterList} project={project}>
+        {children}
+      </Wrapper>
+    ),
   });
-  expect(screen.queryByText('Project Description')).not.toBeInTheDocument();
 
-  expect(global.fetch).toHaveBeenCalledTimes(2);
-  expect(global.fetch).toHaveBeenNthCalledWith(
-    1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/projects/find`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-    }),
-  );
-  expect(global.fetch).toHaveBeenNthCalledWith(
-    2,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/chapters/list`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-    }),
-  );
+  expect(screen.getByText('Project Name')).toBeInTheDocument();
+  expect(screen.queryByText('Project Description')).not.toBeInTheDocument();
 
   await user.click(screen.getByLabelText('new chapter'));
 
@@ -320,75 +250,53 @@ test('should close dialog', async () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
-  expect(global.fetch).toHaveBeenCalledTimes(2);
+  expect(global.fetch).toHaveBeenCalledTimes(0);
 });
 
 test('should show error message when chapter creation failed', async () => {
   const user = userEvent.setup();
 
-  (global.fetch as jest.Mock)
-    .mockResolvedValueOnce(
-      createOkResponse({
-        project: {
-          id: 'PROJECT',
-          name: 'Project Name',
-          description: 'Project Description',
-        },
-      }),
-    )
-    .mockResolvedValueOnce(
-      createOkResponse({
-        chapters: [
-          {
-            id: 'CHAPTER_ONE',
-            name: 'Chapter One',
-            number: 1,
-            sections: [],
-          },
-          {
-            id: 'CHAPTER_TWO',
-            name: 'Chapter Two',
-            number: 2,
-            sections: [],
-          },
-        ],
-      }),
-    )
-    .mockResolvedValueOnce(
-      createBadRequestResponse({
-        user: {},
-        project: {},
-        chapter: {
-          name: 'name error',
-          number: 'number error',
-        },
-      }),
-    );
+  const project: Project = {
+    id: 'PROJECT',
+    name: 'Project Name',
+    description: 'Project Description',
+  };
+  const chapterList: ChapterWithSections[] = [
+    {
+      id: 'CHAPTER_ONE',
+      number: 1,
+      name: 'Chapter One',
+      sections: [],
+    },
+    {
+      id: 'CHAPTER_TWO',
+      number: 2,
+      name: 'Chapter Two',
+      sections: [],
+    },
+  ];
 
-  const screen = render(<ChapterListHeader projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
+  (global.fetch as jest.Mock).mockResolvedValueOnce(
+    createBadRequestResponse({
+      user: {},
+      project: {},
+      chapter: {
+        name: 'name error',
+        number: 'number error',
+      },
+    }),
+  );
 
-  await waitFor(() => {
-    expect(screen.getByText('Project Name')).toBeInTheDocument();
+  const screen = render(<ChapterListHeader projectId="PROJECT" user={USER} />, {
+    wrapper: ({ children }) => (
+      <Wrapper chapterList={chapterList} project={project}>
+        {children}
+      </Wrapper>
+    ),
   });
-  expect(screen.queryByText('Project Description')).not.toBeInTheDocument();
 
-  expect(global.fetch).toHaveBeenCalledTimes(2);
-  expect(global.fetch).toHaveBeenNthCalledWith(
-    1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/projects/find`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-    }),
-  );
-  expect(global.fetch).toHaveBeenNthCalledWith(
-    2,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/chapters/list`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-    }),
-  );
+  expect(screen.getByText('Project Name')).toBeInTheDocument();
+  expect(screen.queryByText('Project Description')).not.toBeInTheDocument();
 
   await user.click(screen.getByLabelText('new chapter'));
 
@@ -411,9 +319,9 @@ test('should show error message when chapter creation failed', async () => {
   });
   expect(dialog.queryByText('number error')).toBeInTheDocument();
 
-  expect(global.fetch).toHaveBeenCalledTimes(3);
+  expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
-    3,
+    1,
     `${process.env.NEXT_PUBLIC_APP_URL}/api/chapters/create`,
     expect.objectContaining({
       method: 'POST',
@@ -429,60 +337,38 @@ test('should show error message when chapter creation failed', async () => {
 test('should show error message when internal error occured', async () => {
   const user = userEvent.setup();
 
-  (global.fetch as jest.Mock)
-    .mockResolvedValueOnce(
-      createOkResponse({
-        project: {
-          id: 'PROJECT',
-          name: 'Project Name',
-          description: 'Project Description',
-        },
-      }),
-    )
-    .mockResolvedValueOnce(
-      createOkResponse({
-        chapters: [
-          {
-            id: 'CHAPTER_ONE',
-            name: 'Chapter One',
-            number: 1,
-            sections: [],
-          },
-          {
-            id: 'CHAPTER_TWO',
-            name: 'Chapter Two',
-            number: 2,
-            sections: [],
-          },
-        ],
-      }),
-    )
-    .mockResolvedValueOnce(createInternalErrorResponse({ message: 'internal error' }));
+  const project: Project = {
+    id: 'PROJECT',
+    name: 'Project Name',
+    description: 'Project Description',
+  };
+  const chapterList: ChapterWithSections[] = [
+    {
+      id: 'CHAPTER_ONE',
+      number: 1,
+      name: 'Chapter One',
+      sections: [],
+    },
+    {
+      id: 'CHAPTER_TWO',
+      number: 2,
+      name: 'Chapter Two',
+      sections: [],
+    },
+  ];
 
-  const screen = render(<ChapterListHeader projectId="PROJECT" user={USER} />, { wrapper: Wrapper });
+  (global.fetch as jest.Mock).mockResolvedValueOnce(createInternalErrorResponse({ message: 'internal error' }));
 
-  await waitFor(() => {
-    expect(screen.getByText('Project Name')).toBeInTheDocument();
+  const screen = render(<ChapterListHeader projectId="PROJECT" user={USER} />, {
+    wrapper: ({ children }) => (
+      <Wrapper chapterList={chapterList} project={project}>
+        {children}
+      </Wrapper>
+    ),
   });
-  expect(screen.queryByText('Project Description')).not.toBeInTheDocument();
 
-  expect(global.fetch).toHaveBeenCalledTimes(2);
-  expect(global.fetch).toHaveBeenNthCalledWith(
-    1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/projects/find`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-    }),
-  );
-  expect(global.fetch).toHaveBeenNthCalledWith(
-    2,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/chapters/list`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-    }),
-  );
+  expect(screen.getByText('Project Name')).toBeInTheDocument();
+  expect(screen.queryByText('Project Description')).not.toBeInTheDocument();
 
   await user.click(screen.getByLabelText('new chapter'));
 
@@ -505,9 +391,9 @@ test('should show error message when internal error occured', async () => {
   });
   expect(screen.queryByText('internal error')).toBeInTheDocument();
 
-  expect(global.fetch).toHaveBeenCalledTimes(3);
+  expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
-    3,
+    1,
     `${process.env.NEXT_PUBLIC_APP_URL}/api/chapters/create`,
     expect.objectContaining({
       method: 'POST',

@@ -7,33 +7,52 @@ import {
 import { USER } from '../../../testutils/user';
 import PanicError from '@/components/organisms/PanicError';
 import SectionView from '@/components/organisms/SectionView';
-import { ChapterListContextProvider, useInitChapterList } from '@/contexts/chapters';
-import { GraphContextProvider, useInitGraph } from '@/contexts/graphs';
+import {
+  ActiveChapterContextProvider,
+  ActiveSectionContextProvider,
+  ChapterListContextProvider,
+} from '@/contexts/chapters';
+import { CachedGraphContextProvider, useInitGraph } from '@/contexts/graphs';
 import { PanicContextProvider } from '@/contexts/panic';
-import { ProjectContextProvider, useInitProject } from '@/contexts/projects';
+import { ProjectContextProvider } from '@/contexts/projects';
+import { ChapterWithSections, Project } from '@/openapi';
 
 import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
-const Wrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => (
+const Wrapper: React.FC<{
+  project: Project;
+  chapterList: ChapterWithSections[];
+  children?: React.ReactNode;
+}> = ({ project, chapterList, children }) => (
   <PanicContextProvider>
     <PanicError />
-    <ProjectContextProvider>
-      <ChapterListContextProvider>
-        <GraphContextProvider>
-          <HooksWrapper>{children}</HooksWrapper>
-        </GraphContextProvider>
+    <ProjectContextProvider initialProject={project}>
+      <ChapterListContextProvider initialChapterList={chapterList}>
+        <CachedGraphContextProvider>
+          <HooksWrapper chapterList={chapterList}>{children}</HooksWrapper>
+        </CachedGraphContextProvider>
       </ChapterListContextProvider>
     </ProjectContextProvider>
   </PanicContextProvider>
 );
 
-const HooksWrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
-  useInitProject(USER.sub, 'PROJECT');
-  useInitChapterList(USER.sub, 'PROJECT');
+const HooksWrapper: React.FC<{
+  chapterList: ChapterWithSections[];
+  children?: React.ReactNode;
+}> = ({ chapterList, children }) => {
   useInitGraph(USER.sub, 'PROJECT', 'CHAPTER', 'SECTION');
 
-  return children;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const activeChapter = chapterList.find((chapter) => chapter.id === 'CHAPTER')!;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const activeSection = activeChapter.sections.find((section) => section.id === 'SECTION')!;
+
+  return (
+    <ActiveChapterContextProvider activeChapter={activeChapter}>
+      <ActiveSectionContextProvider activeSection={activeSection}>{children}</ActiveSectionContextProvider>
+    </ActiveChapterContextProvider>
+  );
 };
 
 beforeAll(() => {
@@ -47,33 +66,26 @@ beforeEach(() => {
 test('should update graph with Graph Update API', async () => {
   const user = userEvent.setup();
 
-  (global.fetch as jest.Mock)
-    .mockResolvedValueOnce(
-      createOkResponse({
-        project: {
-          id: 'PROJECT',
-          name: 'Project Name',
-          description: 'Project Description',
+  const project: Project = {
+    id: 'PROJECT',
+    name: 'Project Name',
+    description: 'Project Description',
+  };
+  const chapterList: ChapterWithSections[] = [
+    {
+      id: 'CHAPTER',
+      number: 1,
+      name: 'Chapter Name',
+      sections: [
+        {
+          id: 'SECTION',
+          name: 'Section Name',
         },
-      }),
-    )
-    .mockResolvedValueOnce(
-      createOkResponse({
-        chapters: [
-          {
-            id: 'CHAPTER',
-            name: 'Chapter Name',
-            number: 1,
-            sections: [
-              {
-                id: 'SECTION',
-                name: 'Section Name',
-              },
-            ],
-          },
-        ],
-      }),
-    )
+      ],
+    },
+  ];
+
+  (global.fetch as jest.Mock)
     .mockResolvedValueOnce(
       createOkResponse({
         graph: {
@@ -92,7 +104,11 @@ test('should update graph with Graph Update API', async () => {
     );
 
   const screen = render(<SectionView chapterId="CHAPTER" projectId="PROJECT" sectionId="SECTION" user={USER} />, {
-    wrapper: Wrapper,
+    wrapper: ({ children }) => (
+      <Wrapper chapterList={chapterList} project={project}>
+        {children}
+      </Wrapper>
+    ),
   });
 
   await waitFor(() => {
@@ -104,25 +120,9 @@ test('should update graph with Graph Update API', async () => {
   expect(screen.getByText('Section Name')).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
 
-  expect(global.fetch).toHaveBeenCalledTimes(3);
+  expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
     1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/projects/find`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-    }),
-  );
-  expect(global.fetch).toHaveBeenNthCalledWith(
-    2,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/chapters/list`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-    }),
-  );
-  expect(global.fetch).toHaveBeenNthCalledWith(
-    3,
     `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/find`,
     expect.objectContaining({
       method: 'POST',
@@ -158,9 +158,9 @@ test('should update graph with Graph Update API', async () => {
     expect(screen.getByText('Section Name')).toBeInTheDocument();
   });
 
-  expect(global.fetch).toHaveBeenCalledTimes(4);
+  expect(global.fetch).toHaveBeenCalledTimes(2);
   expect(global.fetch).toHaveBeenNthCalledWith(
-    4,
+    2,
     `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/update`,
     expect.objectContaining({
       method: 'POST',
@@ -177,33 +177,26 @@ test('should update graph with Graph Update API', async () => {
 test('should show error message when graph update failed', async () => {
   const user = userEvent.setup();
 
-  (global.fetch as jest.Mock)
-    .mockResolvedValueOnce(
-      createOkResponse({
-        project: {
-          id: 'PROJECT',
-          name: 'Project Name',
-          description: 'Project Description',
+  const project: Project = {
+    id: 'PROJECT',
+    name: 'Project Name',
+    description: 'Project Description',
+  };
+  const chapterList: ChapterWithSections[] = [
+    {
+      id: 'CHAPTER',
+      number: 1,
+      name: 'Chapter Name',
+      sections: [
+        {
+          id: 'SECTION',
+          name: 'Section Name',
         },
-      }),
-    )
-    .mockResolvedValueOnce(
-      createOkResponse({
-        chapters: [
-          {
-            id: 'CHAPTER',
-            name: 'Chapter Name',
-            number: 1,
-            sections: [
-              {
-                id: 'SECTION',
-                name: 'Section Name',
-              },
-            ],
-          },
-        ],
-      }),
-    )
+      ],
+    },
+  ];
+
+  (global.fetch as jest.Mock)
     .mockResolvedValueOnce(
       createOkResponse({
         graph: {
@@ -224,7 +217,11 @@ test('should show error message when graph update failed', async () => {
     );
 
   const screen = render(<SectionView chapterId="CHAPTER" projectId="PROJECT" sectionId="SECTION" user={USER} />, {
-    wrapper: Wrapper,
+    wrapper: ({ children }) => (
+      <Wrapper chapterList={chapterList} project={project}>
+        {children}
+      </Wrapper>
+    ),
   });
 
   await waitFor(() => {
@@ -236,25 +233,9 @@ test('should show error message when graph update failed', async () => {
   expect(screen.getByText('Section Name')).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
 
-  expect(global.fetch).toHaveBeenCalledTimes(3);
+  expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
     1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/projects/find`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-    }),
-  );
-  expect(global.fetch).toHaveBeenNthCalledWith(
-    2,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/chapters/list`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-    }),
-  );
-  expect(global.fetch).toHaveBeenNthCalledWith(
-    3,
     `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/find`,
     expect.objectContaining({
       method: 'POST',
@@ -290,9 +271,9 @@ test('should show error message when graph update failed', async () => {
     expect(screen.getByText('invalid request value: paragraph error')).toBeInTheDocument();
   });
 
-  expect(global.fetch).toHaveBeenCalledTimes(4);
+  expect(global.fetch).toHaveBeenCalledTimes(2);
   expect(global.fetch).toHaveBeenNthCalledWith(
-    4,
+    2,
     `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/update`,
     expect.objectContaining({
       method: 'POST',
@@ -309,33 +290,26 @@ test('should show error message when graph update failed', async () => {
 test('should show error message when graph to be updated does not exist', async () => {
   const user = userEvent.setup();
 
-  (global.fetch as jest.Mock)
-    .mockResolvedValueOnce(
-      createOkResponse({
-        project: {
-          id: 'PROJECT',
-          name: 'Project Name',
-          description: 'Project Description',
+  const project: Project = {
+    id: 'PROJECT',
+    name: 'Project Name',
+    description: 'Project Description',
+  };
+  const chapterList: ChapterWithSections[] = [
+    {
+      id: 'CHAPTER',
+      number: 1,
+      name: 'Chapter Name',
+      sections: [
+        {
+          id: 'SECTION',
+          name: 'Section Name',
         },
-      }),
-    )
-    .mockResolvedValueOnce(
-      createOkResponse({
-        chapters: [
-          {
-            id: 'CHAPTER',
-            name: 'Chapter Name',
-            number: 1,
-            sections: [
-              {
-                id: 'SECTION',
-                name: 'Section Name',
-              },
-            ],
-          },
-        ],
-      }),
-    )
+      ],
+    },
+  ];
+
+  (global.fetch as jest.Mock)
     .mockResolvedValueOnce(
       createOkResponse({
         graph: {
@@ -354,7 +328,11 @@ test('should show error message when graph to be updated does not exist', async 
     );
 
   const screen = render(<SectionView chapterId="CHAPTER" projectId="PROJECT" sectionId="SECTION" user={USER} />, {
-    wrapper: Wrapper,
+    wrapper: ({ children }) => (
+      <Wrapper chapterList={chapterList} project={project}>
+        {children}
+      </Wrapper>
+    ),
   });
 
   await waitFor(() => {
@@ -366,25 +344,9 @@ test('should show error message when graph to be updated does not exist', async 
   expect(screen.getByText('Section Name')).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
 
-  expect(global.fetch).toHaveBeenCalledTimes(3);
+  expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
     1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/projects/find`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-    }),
-  );
-  expect(global.fetch).toHaveBeenNthCalledWith(
-    2,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/chapters/list`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-    }),
-  );
-  expect(global.fetch).toHaveBeenNthCalledWith(
-    3,
     `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/find`,
     expect.objectContaining({
       method: 'POST',
@@ -420,9 +382,9 @@ test('should show error message when graph to be updated does not exist', async 
     expect(screen.getByText('not found')).toBeInTheDocument();
   });
 
-  expect(global.fetch).toHaveBeenCalledTimes(4);
+  expect(global.fetch).toHaveBeenCalledTimes(2);
   expect(global.fetch).toHaveBeenNthCalledWith(
-    4,
+    2,
     `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/update`,
     expect.objectContaining({
       method: 'POST',
@@ -439,33 +401,26 @@ test('should show error message when graph to be updated does not exist', async 
 test('should show error message when internal error occured', async () => {
   const user = userEvent.setup();
 
-  (global.fetch as jest.Mock)
-    .mockResolvedValueOnce(
-      createOkResponse({
-        project: {
-          id: 'PROJECT',
-          name: 'Project Name',
-          description: 'Project Description',
+  const project: Project = {
+    id: 'PROJECT',
+    name: 'Project Name',
+    description: 'Project Description',
+  };
+  const chapterList: ChapterWithSections[] = [
+    {
+      id: 'CHAPTER',
+      number: 1,
+      name: 'Chapter Name',
+      sections: [
+        {
+          id: 'SECTION',
+          name: 'Section Name',
         },
-      }),
-    )
-    .mockResolvedValueOnce(
-      createOkResponse({
-        chapters: [
-          {
-            id: 'CHAPTER',
-            name: 'Chapter Name',
-            number: 1,
-            sections: [
-              {
-                id: 'SECTION',
-                name: 'Section Name',
-              },
-            ],
-          },
-        ],
-      }),
-    )
+      ],
+    },
+  ];
+
+  (global.fetch as jest.Mock)
     .mockResolvedValueOnce(
       createOkResponse({
         graph: {
@@ -481,7 +436,11 @@ test('should show error message when internal error occured', async () => {
     );
 
   const screen = render(<SectionView chapterId="CHAPTER" projectId="PROJECT" sectionId="SECTION" user={USER} />, {
-    wrapper: Wrapper,
+    wrapper: ({ children }) => (
+      <Wrapper chapterList={chapterList} project={project}>
+        {children}
+      </Wrapper>
+    ),
   });
 
   await waitFor(() => {
@@ -493,25 +452,9 @@ test('should show error message when internal error occured', async () => {
   expect(screen.getByText('Section Name')).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
 
-  expect(global.fetch).toHaveBeenCalledTimes(3);
+  expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
     1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/projects/find`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-    }),
-  );
-  expect(global.fetch).toHaveBeenNthCalledWith(
-    2,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/chapters/list`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' } }),
-    }),
-  );
-  expect(global.fetch).toHaveBeenNthCalledWith(
-    3,
     `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/find`,
     expect.objectContaining({
       method: 'POST',
@@ -548,9 +491,9 @@ test('should show error message when internal error occured', async () => {
   });
   expect(screen.queryByText('internal error')).toBeInTheDocument();
 
-  expect(global.fetch).toHaveBeenCalledTimes(4);
+  expect(global.fetch).toHaveBeenCalledTimes(2);
   expect(global.fetch).toHaveBeenNthCalledWith(
-    4,
+    2,
     `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/update`,
     expect.objectContaining({
       method: 'POST',
