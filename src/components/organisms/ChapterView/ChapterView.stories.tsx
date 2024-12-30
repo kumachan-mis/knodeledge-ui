@@ -43,7 +43,12 @@ export const Basic: Story = {
   },
   decorators: [
     (Story) => (
-      <PaperContentProvider initialContent={{ content: 'This is paper content.' }}>
+      <PaperContentProvider
+        loadablePaper={{
+          data: { id: 'PAPER', content: 'This is paper content.' },
+          state: 'success',
+        }}
+      >
         <Story />
       </PaperContentProvider>
     ),
@@ -55,6 +60,16 @@ export const Loading: Story = {
     ...Basic.args,
     loadablePaper: {
       state: 'loading',
+      data: null,
+    },
+  },
+};
+
+export const NotFound: Story = {
+  args: {
+    ...Basic.args,
+    loadablePaper: {
+      state: 'notfound',
       data: null,
     },
   },

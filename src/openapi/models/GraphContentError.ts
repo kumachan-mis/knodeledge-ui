@@ -11,7 +11,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * Error Message for GraphContent object
  * @export
@@ -35,10 +35,8 @@ export interface GraphContentError {
 /**
  * Check if a given object implements the GraphContentError interface.
  */
-export function instanceOfGraphContentError(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfGraphContentError(value: object): value is GraphContentError {
+  return true;
 }
 
 export function GraphContentErrorFromJSON(json: any): GraphContentError {
@@ -46,24 +44,29 @@ export function GraphContentErrorFromJSON(json: any): GraphContentError {
 }
 
 export function GraphContentErrorFromJSONTyped(json: any, ignoreDiscriminator: boolean): GraphContentError {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    id: !exists(json, 'id') ? undefined : json['id'],
-    paragraph: !exists(json, 'paragraph') ? undefined : json['paragraph'],
+    id: json['id'] == null ? undefined : json['id'],
+    paragraph: json['paragraph'] == null ? undefined : json['paragraph'],
   };
 }
 
-export function GraphContentErrorToJSON(value?: GraphContentError | null): any {
-  if (value === undefined) {
-    return undefined;
+export function GraphContentErrorToJSON(json: any): GraphContentError {
+  return GraphContentErrorToJSONTyped(json, false);
+}
+
+export function GraphContentErrorToJSONTyped(
+  value?: GraphContentError | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    id: value.id,
-    paragraph: value.paragraph,
+    id: value['id'],
+    paragraph: value['paragraph'],
   };
 }

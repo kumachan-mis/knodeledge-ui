@@ -125,11 +125,10 @@ test('should show nothing when not found error occured in Paper Find API', async
   });
 
   await waitFor(() => {
-    expect(screen.container.querySelector('[data-selectid="text-field"]')).not.toBeInTheDocument();
+    expect(screen.queryByText('Project Name')).toBeInTheDocument();
   });
-
-  expect(screen.queryByText('Project Name')).not.toBeInTheDocument();
-  expect(screen.queryByText('Chapter Name')).not.toBeInTheDocument();
+  expect(screen.queryByText('Chapter Name')).toBeInTheDocument();
+  expect(screen.container.querySelector('[data-selectid="text-field"]')).not.toBeInTheDocument();
 
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
@@ -172,8 +171,8 @@ test('should show error message when internal error occured in Paper Find API', 
   });
   expect(screen.getByText('internal error')).toBeInTheDocument();
 
-  expect(screen.queryByText('Project Name')).not.toBeInTheDocument();
-  expect(screen.queryByText('Chapter Name')).not.toBeInTheDocument();
+  expect(screen.queryByText('Project Name')).toBeInTheDocument();
+  expect(screen.queryByText('Chapter Name')).toBeInTheDocument();
   expect(screen.container.querySelector('[data-selectid="text-field"]')).not.toBeInTheDocument();
 
   expect(global.fetch).toHaveBeenCalledTimes(1);

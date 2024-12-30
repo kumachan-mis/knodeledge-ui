@@ -11,12 +11,13 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { ChapterWithSections } from './ChapterWithSections';
 import {
   ChapterWithSectionsFromJSON,
   ChapterWithSectionsFromJSONTyped,
   ChapterWithSectionsToJSON,
+  ChapterWithSectionsToJSONTyped,
 } from './ChapterWithSections';
 
 /**
@@ -36,11 +37,9 @@ export interface ChapterCreateResponse {
 /**
  * Check if a given object implements the ChapterCreateResponse interface.
  */
-export function instanceOfChapterCreateResponse(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'chapter' in value;
-
-  return isInstance;
+export function instanceOfChapterCreateResponse(value: object): value is ChapterCreateResponse {
+  if (!('chapter' in value) || value['chapter'] === undefined) return false;
+  return true;
 }
 
 export function ChapterCreateResponseFromJSON(json: any): ChapterCreateResponse {
@@ -48,7 +47,7 @@ export function ChapterCreateResponseFromJSON(json: any): ChapterCreateResponse 
 }
 
 export function ChapterCreateResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): ChapterCreateResponse {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -56,14 +55,19 @@ export function ChapterCreateResponseFromJSONTyped(json: any, ignoreDiscriminato
   };
 }
 
-export function ChapterCreateResponseToJSON(value?: ChapterCreateResponse | null): any {
-  if (value === undefined) {
-    return undefined;
+export function ChapterCreateResponseToJSON(json: any): ChapterCreateResponse {
+  return ChapterCreateResponseToJSONTyped(json, false);
+}
+
+export function ChapterCreateResponseToJSONTyped(
+  value?: ChapterCreateResponse | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    chapter: ChapterWithSectionsToJSON(value.chapter),
+    chapter: ChapterWithSectionsToJSON(value['chapter']),
   };
 }

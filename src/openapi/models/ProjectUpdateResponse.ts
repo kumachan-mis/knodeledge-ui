@@ -11,9 +11,9 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { Project } from './Project';
-import { ProjectFromJSON, ProjectFromJSONTyped, ProjectToJSON } from './Project';
+import { ProjectFromJSON, ProjectFromJSONTyped, ProjectToJSON, ProjectToJSONTyped } from './Project';
 
 /**
  * Response Body for Project Update API
@@ -32,11 +32,9 @@ export interface ProjectUpdateResponse {
 /**
  * Check if a given object implements the ProjectUpdateResponse interface.
  */
-export function instanceOfProjectUpdateResponse(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'project' in value;
-
-  return isInstance;
+export function instanceOfProjectUpdateResponse(value: object): value is ProjectUpdateResponse {
+  if (!('project' in value) || value['project'] === undefined) return false;
+  return true;
 }
 
 export function ProjectUpdateResponseFromJSON(json: any): ProjectUpdateResponse {
@@ -44,7 +42,7 @@ export function ProjectUpdateResponseFromJSON(json: any): ProjectUpdateResponse 
 }
 
 export function ProjectUpdateResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): ProjectUpdateResponse {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -52,14 +50,19 @@ export function ProjectUpdateResponseFromJSONTyped(json: any, ignoreDiscriminato
   };
 }
 
-export function ProjectUpdateResponseToJSON(value?: ProjectUpdateResponse | null): any {
-  if (value === undefined) {
-    return undefined;
+export function ProjectUpdateResponseToJSON(json: any): ProjectUpdateResponse {
+  return ProjectUpdateResponseToJSONTyped(json, false);
+}
+
+export function ProjectUpdateResponseToJSONTyped(
+  value?: ProjectUpdateResponse | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    project: ProjectToJSON(value.project),
+    project: ProjectToJSON(value['project']),
   };
 }

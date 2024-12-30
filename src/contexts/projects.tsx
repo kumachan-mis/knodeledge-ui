@@ -70,7 +70,7 @@ export function useUpdateProject(user: UserOnlyId): LoadableActionProjectUpdate 
       return {
         state: 'error',
         error: {
-          message: errorable.error.message ?? EMPTY_PROJECT_ACTION_ERROR.message,
+          message: errorable.error.message,
           project: { ...EMPTY_PROJECT_ACTION_ERROR.project, ...errorable.error.project },
         },
       };
@@ -104,7 +104,7 @@ export function useCreateProjectInList(user: UserOnlyId): LoadableActionProjectC
       return {
         state: 'error',
         error: {
-          message: errorable.error.message ?? EMPTY_PROJECT_ACTION_ERROR.message,
+          message: errorable.error.message,
           project: { ...EMPTY_PROJECT_ACTION_ERROR.project, ...errorable.error.project },
         },
       };
@@ -134,7 +134,7 @@ export function useUpdateProjectInList(user: UserOnlyId): LoadableActionProjectU
       return {
         state: 'error',
         error: {
-          message: errorable.error.message ?? EMPTY_PROJECT_ACTION_ERROR.message,
+          message: errorable.error.message,
           project: { ...EMPTY_PROJECT_ACTION_ERROR.project, ...errorable.error.project },
         },
       };

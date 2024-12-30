@@ -11,11 +11,16 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { ProjectOnlyId } from './ProjectOnlyId';
-import { ProjectOnlyIdFromJSON, ProjectOnlyIdFromJSONTyped, ProjectOnlyIdToJSON } from './ProjectOnlyId';
+import {
+  ProjectOnlyIdFromJSON,
+  ProjectOnlyIdFromJSONTyped,
+  ProjectOnlyIdToJSON,
+  ProjectOnlyIdToJSONTyped,
+} from './ProjectOnlyId';
 import type { UserOnlyId } from './UserOnlyId';
-import { UserOnlyIdFromJSON, UserOnlyIdFromJSONTyped, UserOnlyIdToJSON } from './UserOnlyId';
+import { UserOnlyIdFromJSON, UserOnlyIdFromJSONTyped, UserOnlyIdToJSON, UserOnlyIdToJSONTyped } from './UserOnlyId';
 
 /**
  * Request Body for Chapter List API
@@ -40,12 +45,10 @@ export interface ChapterListRequest {
 /**
  * Check if a given object implements the ChapterListRequest interface.
  */
-export function instanceOfChapterListRequest(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'user' in value;
-  isInstance = isInstance && 'project' in value;
-
-  return isInstance;
+export function instanceOfChapterListRequest(value: object): value is ChapterListRequest {
+  if (!('user' in value) || value['user'] === undefined) return false;
+  if (!('project' in value) || value['project'] === undefined) return false;
+  return true;
 }
 
 export function ChapterListRequestFromJSON(json: any): ChapterListRequest {
@@ -53,7 +56,7 @@ export function ChapterListRequestFromJSON(json: any): ChapterListRequest {
 }
 
 export function ChapterListRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): ChapterListRequest {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -62,15 +65,20 @@ export function ChapterListRequestFromJSONTyped(json: any, ignoreDiscriminator: 
   };
 }
 
-export function ChapterListRequestToJSON(value?: ChapterListRequest | null): any {
-  if (value === undefined) {
-    return undefined;
+export function ChapterListRequestToJSON(json: any): ChapterListRequest {
+  return ChapterListRequestToJSONTyped(json, false);
+}
+
+export function ChapterListRequestToJSONTyped(
+  value?: ChapterListRequest | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    user: UserOnlyIdToJSON(value.user),
-    project: ProjectOnlyIdToJSON(value.project),
+    user: UserOnlyIdToJSON(value['user']),
+    project: ProjectOnlyIdToJSON(value['project']),
   };
 }

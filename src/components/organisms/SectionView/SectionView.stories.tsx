@@ -48,7 +48,12 @@ export const Basic: Story = {
   },
   decorators: [
     (Story) => (
-      <GraphContentProvider initialContent={{ paragraph: 'This is graph content.' }}>
+      <GraphContentProvider
+        loadableGraph={{
+          data: { id: 'GRAPH', name: 'Graph Name', paragraph: 'This is graph content.' },
+          state: 'success',
+        }}
+      >
         <Story />
       </GraphContentProvider>
     ),
@@ -60,6 +65,16 @@ export const Loading: Story = {
     ...Basic.args,
     loadableGraph: {
       state: 'loading',
+      data: null,
+    },
+  },
+};
+
+export const NotFound: Story = {
+  args: {
+    ...Basic.args,
+    loadableGraph: {
+      state: 'notfound',
       data: null,
     },
   },

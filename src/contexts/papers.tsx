@@ -112,7 +112,7 @@ export function useUpdatePaper(
       return {
         state: 'error',
         error: {
-          message: errorable.error.message ?? EMPTY_PAPER_ACTION_ERROR.message,
+          message: errorable.error.message,
           paper: { ...EMPTY_PAPER_ACTION_ERROR.paper, ...errorable.error.paper },
         },
       };

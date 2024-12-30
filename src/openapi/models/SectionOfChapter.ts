@@ -11,7 +11,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * Section object in a Chapter object
  * @export
@@ -35,12 +35,10 @@ export interface SectionOfChapter {
 /**
  * Check if a given object implements the SectionOfChapter interface.
  */
-export function instanceOfSectionOfChapter(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'id' in value;
-  isInstance = isInstance && 'name' in value;
-
-  return isInstance;
+export function instanceOfSectionOfChapter(value: object): value is SectionOfChapter {
+  if (!('id' in value) || value['id'] === undefined) return false;
+  if (!('name' in value) || value['name'] === undefined) return false;
+  return true;
 }
 
 export function SectionOfChapterFromJSON(json: any): SectionOfChapter {
@@ -48,7 +46,7 @@ export function SectionOfChapterFromJSON(json: any): SectionOfChapter {
 }
 
 export function SectionOfChapterFromJSONTyped(json: any, ignoreDiscriminator: boolean): SectionOfChapter {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -57,15 +55,20 @@ export function SectionOfChapterFromJSONTyped(json: any, ignoreDiscriminator: bo
   };
 }
 
-export function SectionOfChapterToJSON(value?: SectionOfChapter | null): any {
-  if (value === undefined) {
-    return undefined;
+export function SectionOfChapterToJSON(json: any): SectionOfChapter {
+  return SectionOfChapterToJSONTyped(json, false);
+}
+
+export function SectionOfChapterToJSONTyped(
+  value?: SectionOfChapter | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    id: value.id,
-    name: value.name,
+    id: value['id'],
+    name: value['name'],
   };
 }

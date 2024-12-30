@@ -11,12 +11,13 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { SectionWithoutAutofieldError } from './SectionWithoutAutofieldError';
 import {
   SectionWithoutAutofieldErrorFromJSON,
   SectionWithoutAutofieldErrorFromJSONTyped,
   SectionWithoutAutofieldErrorToJSON,
+  SectionWithoutAutofieldErrorToJSONTyped,
 } from './SectionWithoutAutofieldError';
 
 /**
@@ -42,10 +43,8 @@ export interface SectionWithoutAutofieldListError {
 /**
  * Check if a given object implements the SectionWithoutAutofieldListError interface.
  */
-export function instanceOfSectionWithoutAutofieldListError(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfSectionWithoutAutofieldListError(value: object): value is SectionWithoutAutofieldListError {
+  return true;
 }
 
 export function SectionWithoutAutofieldListErrorFromJSON(json: any): SectionWithoutAutofieldListError {
@@ -56,24 +55,29 @@ export function SectionWithoutAutofieldListErrorFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
 ): SectionWithoutAutofieldListError {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    message: !exists(json, 'message') ? undefined : json['message'],
-    items: !exists(json, 'items') ? undefined : (json['items'] as Array<any>).map(SectionWithoutAutofieldErrorFromJSON),
+    message: json['message'] == null ? undefined : json['message'],
+    items: json['items'] == null ? undefined : (json['items'] as Array<any>).map(SectionWithoutAutofieldErrorFromJSON),
   };
 }
 
-export function SectionWithoutAutofieldListErrorToJSON(value?: SectionWithoutAutofieldListError | null): any {
-  if (value === undefined) {
-    return undefined;
+export function SectionWithoutAutofieldListErrorToJSON(json: any): SectionWithoutAutofieldListError {
+  return SectionWithoutAutofieldListErrorToJSONTyped(json, false);
+}
+
+export function SectionWithoutAutofieldListErrorToJSONTyped(
+  value?: SectionWithoutAutofieldListError | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    message: value.message,
-    items: value.items === undefined ? undefined : (value.items as Array<any>).map(SectionWithoutAutofieldErrorToJSON),
+    message: value['message'],
+    items: value['items'] == null ? undefined : (value['items'] as Array<any>).map(SectionWithoutAutofieldErrorToJSON),
   };
 }

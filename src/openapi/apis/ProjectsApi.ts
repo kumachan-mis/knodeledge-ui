@@ -95,7 +95,7 @@ export class ProjectsApi extends runtime.BaseAPI {
         method: 'POST',
         headers: headerParameters,
         query: queryParameters,
-        body: ProjectCreateRequestToJSON(requestParameters.projectCreateRequest),
+        body: ProjectCreateRequestToJSON(requestParameters['projectCreateRequest']),
       },
       initOverrides,
     );
@@ -133,7 +133,7 @@ export class ProjectsApi extends runtime.BaseAPI {
         method: 'POST',
         headers: headerParameters,
         query: queryParameters,
-        body: ProjectFindRequestToJSON(requestParameters.projectFindRequest),
+        body: ProjectFindRequestToJSON(requestParameters['projectFindRequest']),
       },
       initOverrides,
     );
@@ -171,7 +171,7 @@ export class ProjectsApi extends runtime.BaseAPI {
         method: 'POST',
         headers: headerParameters,
         query: queryParameters,
-        body: ProjectListRequestToJSON(requestParameters.projectListRequest),
+        body: ProjectListRequestToJSON(requestParameters['projectListRequest']),
       },
       initOverrides,
     );
@@ -209,7 +209,7 @@ export class ProjectsApi extends runtime.BaseAPI {
         method: 'POST',
         headers: headerParameters,
         query: queryParameters,
-        body: ProjectUpdateRequestToJSON(requestParameters.projectUpdateRequest),
+        body: ProjectUpdateRequestToJSON(requestParameters['projectUpdateRequest']),
       },
       initOverrides,
     );

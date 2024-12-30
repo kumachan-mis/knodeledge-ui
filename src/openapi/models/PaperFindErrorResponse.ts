@@ -11,21 +11,28 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
-import type { ChapterOnlyIdError } from './ChapterOnlyIdError';
-import {
-  ChapterOnlyIdErrorFromJSON,
-  ChapterOnlyIdErrorFromJSONTyped,
-  ChapterOnlyIdErrorToJSON,
-} from './ChapterOnlyIdError';
+import { mapValues } from '../runtime';
 import type { ProjectOnlyIdError } from './ProjectOnlyIdError';
 import {
   ProjectOnlyIdErrorFromJSON,
   ProjectOnlyIdErrorFromJSONTyped,
   ProjectOnlyIdErrorToJSON,
+  ProjectOnlyIdErrorToJSONTyped,
 } from './ProjectOnlyIdError';
 import type { UserOnlyIdError } from './UserOnlyIdError';
-import { UserOnlyIdErrorFromJSON, UserOnlyIdErrorFromJSONTyped, UserOnlyIdErrorToJSON } from './UserOnlyIdError';
+import {
+  UserOnlyIdErrorFromJSON,
+  UserOnlyIdErrorFromJSONTyped,
+  UserOnlyIdErrorToJSON,
+  UserOnlyIdErrorToJSONTyped,
+} from './UserOnlyIdError';
+import type { ChapterOnlyIdError } from './ChapterOnlyIdError';
+import {
+  ChapterOnlyIdErrorFromJSON,
+  ChapterOnlyIdErrorFromJSONTyped,
+  ChapterOnlyIdErrorToJSON,
+  ChapterOnlyIdErrorToJSONTyped,
+} from './ChapterOnlyIdError';
 
 /**
  * Error Response Body for Paper Find API
@@ -38,7 +45,7 @@ export interface PaperFindErrorResponse {
    * @type {string}
    * @memberof PaperFindErrorResponse
    */
-  message?: string;
+  message: string;
   /**
    *
    * @type {UserOnlyIdError}
@@ -62,10 +69,9 @@ export interface PaperFindErrorResponse {
 /**
  * Check if a given object implements the PaperFindErrorResponse interface.
  */
-export function instanceOfPaperFindErrorResponse(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfPaperFindErrorResponse(value: object): value is PaperFindErrorResponse {
+  if (!('message' in value) || value['message'] === undefined) return false;
+  return true;
 }
 
 export function PaperFindErrorResponseFromJSON(json: any): PaperFindErrorResponse {
@@ -73,28 +79,33 @@ export function PaperFindErrorResponseFromJSON(json: any): PaperFindErrorRespons
 }
 
 export function PaperFindErrorResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): PaperFindErrorResponse {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    message: !exists(json, 'message') ? undefined : json['message'],
-    user: !exists(json, 'user') ? undefined : UserOnlyIdErrorFromJSON(json['user']),
-    project: !exists(json, 'project') ? undefined : ProjectOnlyIdErrorFromJSON(json['project']),
-    chapter: !exists(json, 'chapter') ? undefined : ChapterOnlyIdErrorFromJSON(json['chapter']),
+    message: json['message'],
+    user: json['user'] == null ? undefined : UserOnlyIdErrorFromJSON(json['user']),
+    project: json['project'] == null ? undefined : ProjectOnlyIdErrorFromJSON(json['project']),
+    chapter: json['chapter'] == null ? undefined : ChapterOnlyIdErrorFromJSON(json['chapter']),
   };
 }
 
-export function PaperFindErrorResponseToJSON(value?: PaperFindErrorResponse | null): any {
-  if (value === undefined) {
-    return undefined;
+export function PaperFindErrorResponseToJSON(json: any): PaperFindErrorResponse {
+  return PaperFindErrorResponseToJSONTyped(json, false);
+}
+
+export function PaperFindErrorResponseToJSONTyped(
+  value?: PaperFindErrorResponse | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    message: value.message,
-    user: UserOnlyIdErrorToJSON(value.user),
-    project: ProjectOnlyIdErrorToJSON(value.project),
-    chapter: ChapterOnlyIdErrorToJSON(value.chapter),
+    message: value['message'],
+    user: UserOnlyIdErrorToJSON(value['user']),
+    project: ProjectOnlyIdErrorToJSON(value['project']),
+    chapter: ChapterOnlyIdErrorToJSON(value['chapter']),
   };
 }

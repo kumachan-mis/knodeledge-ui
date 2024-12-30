@@ -82,7 +82,7 @@ export class GraphsApi extends runtime.BaseAPI {
         method: 'POST',
         headers: headerParameters,
         query: queryParameters,
-        body: GraphFindRequestToJSON(requestParameters.graphFindRequest),
+        body: GraphFindRequestToJSON(requestParameters['graphFindRequest']),
       },
       initOverrides,
     );
@@ -120,7 +120,7 @@ export class GraphsApi extends runtime.BaseAPI {
         method: 'POST',
         headers: headerParameters,
         query: queryParameters,
-        body: GraphSectionalizeRequestToJSON(requestParameters.graphSectionalizeRequest),
+        body: GraphSectionalizeRequestToJSON(requestParameters['graphSectionalizeRequest']),
       },
       initOverrides,
     );
@@ -158,7 +158,7 @@ export class GraphsApi extends runtime.BaseAPI {
         method: 'POST',
         headers: headerParameters,
         query: queryParameters,
-        body: GraphUpdateRequestToJSON(requestParameters.graphUpdateRequest),
+        body: GraphUpdateRequestToJSON(requestParameters['graphUpdateRequest']),
       },
       initOverrides,
     );

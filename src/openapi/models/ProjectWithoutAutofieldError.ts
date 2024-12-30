@@ -11,7 +11,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * Error Message for ProjectWithoutAutofield object
  * @export
@@ -35,10 +35,8 @@ export interface ProjectWithoutAutofieldError {
 /**
  * Check if a given object implements the ProjectWithoutAutofieldError interface.
  */
-export function instanceOfProjectWithoutAutofieldError(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfProjectWithoutAutofieldError(value: object): value is ProjectWithoutAutofieldError {
+  return true;
 }
 
 export function ProjectWithoutAutofieldErrorFromJSON(json: any): ProjectWithoutAutofieldError {
@@ -49,24 +47,29 @@ export function ProjectWithoutAutofieldErrorFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
 ): ProjectWithoutAutofieldError {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    name: !exists(json, 'name') ? undefined : json['name'],
-    description: !exists(json, 'description') ? undefined : json['description'],
+    name: json['name'] == null ? undefined : json['name'],
+    description: json['description'] == null ? undefined : json['description'],
   };
 }
 
-export function ProjectWithoutAutofieldErrorToJSON(value?: ProjectWithoutAutofieldError | null): any {
-  if (value === undefined) {
-    return undefined;
+export function ProjectWithoutAutofieldErrorToJSON(json: any): ProjectWithoutAutofieldError {
+  return ProjectWithoutAutofieldErrorToJSONTyped(json, false);
+}
+
+export function ProjectWithoutAutofieldErrorToJSONTyped(
+  value?: ProjectWithoutAutofieldError | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    name: value.name,
-    description: value.description,
+    name: value['name'],
+    description: value['description'],
   };
 }

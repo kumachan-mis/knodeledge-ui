@@ -11,11 +11,16 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { ProjectOnlyId } from './ProjectOnlyId';
-import { ProjectOnlyIdFromJSON, ProjectOnlyIdFromJSONTyped, ProjectOnlyIdToJSON } from './ProjectOnlyId';
+import {
+  ProjectOnlyIdFromJSON,
+  ProjectOnlyIdFromJSONTyped,
+  ProjectOnlyIdToJSON,
+  ProjectOnlyIdToJSONTyped,
+} from './ProjectOnlyId';
 import type { UserOnlyId } from './UserOnlyId';
-import { UserOnlyIdFromJSON, UserOnlyIdFromJSONTyped, UserOnlyIdToJSON } from './UserOnlyId';
+import { UserOnlyIdFromJSON, UserOnlyIdFromJSONTyped, UserOnlyIdToJSON, UserOnlyIdToJSONTyped } from './UserOnlyId';
 
 /**
  * Request Body for Project Find API
@@ -40,12 +45,10 @@ export interface ProjectFindRequest {
 /**
  * Check if a given object implements the ProjectFindRequest interface.
  */
-export function instanceOfProjectFindRequest(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'user' in value;
-  isInstance = isInstance && 'project' in value;
-
-  return isInstance;
+export function instanceOfProjectFindRequest(value: object): value is ProjectFindRequest {
+  if (!('user' in value) || value['user'] === undefined) return false;
+  if (!('project' in value) || value['project'] === undefined) return false;
+  return true;
 }
 
 export function ProjectFindRequestFromJSON(json: any): ProjectFindRequest {
@@ -53,7 +56,7 @@ export function ProjectFindRequestFromJSON(json: any): ProjectFindRequest {
 }
 
 export function ProjectFindRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): ProjectFindRequest {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -62,15 +65,20 @@ export function ProjectFindRequestFromJSONTyped(json: any, ignoreDiscriminator: 
   };
 }
 
-export function ProjectFindRequestToJSON(value?: ProjectFindRequest | null): any {
-  if (value === undefined) {
-    return undefined;
+export function ProjectFindRequestToJSON(json: any): ProjectFindRequest {
+  return ProjectFindRequestToJSONTyped(json, false);
+}
+
+export function ProjectFindRequestToJSONTyped(
+  value?: ProjectFindRequest | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    user: UserOnlyIdToJSON(value.user),
-    project: ProjectOnlyIdToJSON(value.project),
+    user: UserOnlyIdToJSON(value['user']),
+    project: ProjectOnlyIdToJSON(value['project']),
   };
 }

@@ -11,15 +11,21 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { UserOnlyIdError } from './UserOnlyIdError';
+import {
+  UserOnlyIdErrorFromJSON,
+  UserOnlyIdErrorFromJSONTyped,
+  UserOnlyIdErrorToJSON,
+  UserOnlyIdErrorToJSONTyped,
+} from './UserOnlyIdError';
 import type { ProjectWithoutAutofieldError } from './ProjectWithoutAutofieldError';
 import {
   ProjectWithoutAutofieldErrorFromJSON,
   ProjectWithoutAutofieldErrorFromJSONTyped,
   ProjectWithoutAutofieldErrorToJSON,
+  ProjectWithoutAutofieldErrorToJSONTyped,
 } from './ProjectWithoutAutofieldError';
-import type { UserOnlyIdError } from './UserOnlyIdError';
-import { UserOnlyIdErrorFromJSON, UserOnlyIdErrorFromJSONTyped, UserOnlyIdErrorToJSON } from './UserOnlyIdError';
 
 /**
  * Error Response Body for Project Create API
@@ -32,7 +38,7 @@ export interface ProjectCreateErrorResponse {
    * @type {string}
    * @memberof ProjectCreateErrorResponse
    */
-  message?: string;
+  message: string;
   /**
    *
    * @type {UserOnlyIdError}
@@ -50,10 +56,9 @@ export interface ProjectCreateErrorResponse {
 /**
  * Check if a given object implements the ProjectCreateErrorResponse interface.
  */
-export function instanceOfProjectCreateErrorResponse(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfProjectCreateErrorResponse(value: object): value is ProjectCreateErrorResponse {
+  if (!('message' in value) || value['message'] === undefined) return false;
+  return true;
 }
 
 export function ProjectCreateErrorResponseFromJSON(json: any): ProjectCreateErrorResponse {
@@ -64,26 +69,31 @@ export function ProjectCreateErrorResponseFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
 ): ProjectCreateErrorResponse {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    message: !exists(json, 'message') ? undefined : json['message'],
-    user: !exists(json, 'user') ? undefined : UserOnlyIdErrorFromJSON(json['user']),
-    project: !exists(json, 'project') ? undefined : ProjectWithoutAutofieldErrorFromJSON(json['project']),
+    message: json['message'],
+    user: json['user'] == null ? undefined : UserOnlyIdErrorFromJSON(json['user']),
+    project: json['project'] == null ? undefined : ProjectWithoutAutofieldErrorFromJSON(json['project']),
   };
 }
 
-export function ProjectCreateErrorResponseToJSON(value?: ProjectCreateErrorResponse | null): any {
-  if (value === undefined) {
-    return undefined;
+export function ProjectCreateErrorResponseToJSON(json: any): ProjectCreateErrorResponse {
+  return ProjectCreateErrorResponseToJSONTyped(json, false);
+}
+
+export function ProjectCreateErrorResponseToJSONTyped(
+  value?: ProjectCreateErrorResponse | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    message: value.message,
-    user: UserOnlyIdErrorToJSON(value.user),
-    project: ProjectWithoutAutofieldErrorToJSON(value.project),
+    message: value['message'],
+    user: UserOnlyIdErrorToJSON(value['user']),
+    project: ProjectWithoutAutofieldErrorToJSON(value['project']),
   };
 }

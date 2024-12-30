@@ -11,9 +11,9 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { Paper } from './Paper';
-import { PaperFromJSON, PaperFromJSONTyped, PaperToJSON } from './Paper';
+import { PaperFromJSON, PaperFromJSONTyped, PaperToJSON, PaperToJSONTyped } from './Paper';
 
 /**
  * Request Body for Paper Find API
@@ -32,11 +32,9 @@ export interface PaperFindResponse {
 /**
  * Check if a given object implements the PaperFindResponse interface.
  */
-export function instanceOfPaperFindResponse(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'paper' in value;
-
-  return isInstance;
+export function instanceOfPaperFindResponse(value: object): value is PaperFindResponse {
+  if (!('paper' in value) || value['paper'] === undefined) return false;
+  return true;
 }
 
 export function PaperFindResponseFromJSON(json: any): PaperFindResponse {
@@ -44,7 +42,7 @@ export function PaperFindResponseFromJSON(json: any): PaperFindResponse {
 }
 
 export function PaperFindResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): PaperFindResponse {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -52,14 +50,19 @@ export function PaperFindResponseFromJSONTyped(json: any, ignoreDiscriminator: b
   };
 }
 
-export function PaperFindResponseToJSON(value?: PaperFindResponse | null): any {
-  if (value === undefined) {
-    return undefined;
+export function PaperFindResponseToJSON(json: any): PaperFindResponse {
+  return PaperFindResponseToJSONTyped(json, false);
+}
+
+export function PaperFindResponseToJSONTyped(
+  value?: PaperFindResponse | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    paper: PaperToJSON(value.paper),
+    paper: PaperToJSON(value['paper']),
   };
 }

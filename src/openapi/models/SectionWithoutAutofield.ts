@@ -11,7 +11,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * Section object without auto-generated fields
  * @export
@@ -35,12 +35,10 @@ export interface SectionWithoutAutofield {
 /**
  * Check if a given object implements the SectionWithoutAutofield interface.
  */
-export function instanceOfSectionWithoutAutofield(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'name' in value;
-  isInstance = isInstance && 'content' in value;
-
-  return isInstance;
+export function instanceOfSectionWithoutAutofield(value: object): value is SectionWithoutAutofield {
+  if (!('name' in value) || value['name'] === undefined) return false;
+  if (!('content' in value) || value['content'] === undefined) return false;
+  return true;
 }
 
 export function SectionWithoutAutofieldFromJSON(json: any): SectionWithoutAutofield {
@@ -48,7 +46,7 @@ export function SectionWithoutAutofieldFromJSON(json: any): SectionWithoutAutofi
 }
 
 export function SectionWithoutAutofieldFromJSONTyped(json: any, ignoreDiscriminator: boolean): SectionWithoutAutofield {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -57,15 +55,20 @@ export function SectionWithoutAutofieldFromJSONTyped(json: any, ignoreDiscrimina
   };
 }
 
-export function SectionWithoutAutofieldToJSON(value?: SectionWithoutAutofield | null): any {
-  if (value === undefined) {
-    return undefined;
+export function SectionWithoutAutofieldToJSON(json: any): SectionWithoutAutofield {
+  return SectionWithoutAutofieldToJSONTyped(json, false);
+}
+
+export function SectionWithoutAutofieldToJSONTyped(
+  value?: SectionWithoutAutofield | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    name: value.name,
-    content: value.content,
+    name: value['name'],
+    content: value['content'],
   };
 }

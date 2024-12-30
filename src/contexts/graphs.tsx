@@ -116,7 +116,7 @@ export function useUpdateGraph(
       return {
         state: 'error',
         error: {
-          message: errorable.error.message ?? EMPTY_GRAPH_ACTION_ERROR.message,
+          message: errorable.error.message,
           graph: { ...EMPTY_GRAPH_ACTION_ERROR.graph, ...errorable.error.graph },
         },
       };

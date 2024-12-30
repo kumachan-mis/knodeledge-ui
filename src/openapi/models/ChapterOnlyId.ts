@@ -11,7 +11,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * Chapter object with only ID
  * @export
@@ -29,11 +29,9 @@ export interface ChapterOnlyId {
 /**
  * Check if a given object implements the ChapterOnlyId interface.
  */
-export function instanceOfChapterOnlyId(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'id' in value;
-
-  return isInstance;
+export function instanceOfChapterOnlyId(value: object): value is ChapterOnlyId {
+  if (!('id' in value) || value['id'] === undefined) return false;
+  return true;
 }
 
 export function ChapterOnlyIdFromJSON(json: any): ChapterOnlyId {
@@ -41,7 +39,7 @@ export function ChapterOnlyIdFromJSON(json: any): ChapterOnlyId {
 }
 
 export function ChapterOnlyIdFromJSONTyped(json: any, ignoreDiscriminator: boolean): ChapterOnlyId {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -49,14 +47,16 @@ export function ChapterOnlyIdFromJSONTyped(json: any, ignoreDiscriminator: boole
   };
 }
 
-export function ChapterOnlyIdToJSON(value?: ChapterOnlyId | null): any {
-  if (value === undefined) {
-    return undefined;
+export function ChapterOnlyIdToJSON(json: any): ChapterOnlyId {
+  return ChapterOnlyIdToJSONTyped(json, false);
+}
+
+export function ChapterOnlyIdToJSONTyped(value?: ChapterOnlyId | null, ignoreDiscriminator: boolean = false): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    id: value.id,
+    id: value['id'],
   };
 }

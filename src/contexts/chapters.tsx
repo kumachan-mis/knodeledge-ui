@@ -115,7 +115,7 @@ export function useCreateChapterInList(user: UserOnlyId, project: ProjectOnlyId)
       return {
         state: 'error',
         error: {
-          message: errorable.error.message ?? EMPTY_CHAPTER_ACTION_ERROR.message,
+          message: errorable.error.message,
           chapter: { ...EMPTY_CHAPTER_ACTION_ERROR.chapter, ...errorable.error.chapter },
         },
       };
@@ -159,7 +159,7 @@ export function useUpdateChapterInList(user: UserOnlyId, project: ProjectOnlyId)
       return {
         state: 'error',
         error: {
-          message: errorable.error.message ?? EMPTY_CHAPTER_ACTION_ERROR.message,
+          message: errorable.error.message,
           chapter: { ...EMPTY_CHAPTER_ACTION_ERROR.chapter, ...errorable.error.chapter },
         },
       };
@@ -217,7 +217,7 @@ export function useSectionalizePaper(
       return {
         state: 'error',
         error: {
-          message: errorable.error.message ?? EMPTY_SECTIONS_ACTION_ERROR.message,
+          message: errorable.error.message,
           sections: { ...EMPTY_SECTIONS_ACTION_ERROR.sections, ...errorable.error.sections },
         },
       };

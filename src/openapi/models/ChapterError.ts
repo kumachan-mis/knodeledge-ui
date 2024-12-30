@@ -11,7 +11,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * Error Message for Chapter object
  * @export
@@ -41,10 +41,8 @@ export interface ChapterError {
 /**
  * Check if a given object implements the ChapterError interface.
  */
-export function instanceOfChapterError(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfChapterError(value: object): value is ChapterError {
+  return true;
 }
 
 export function ChapterErrorFromJSON(json: any): ChapterError {
@@ -52,26 +50,28 @@ export function ChapterErrorFromJSON(json: any): ChapterError {
 }
 
 export function ChapterErrorFromJSONTyped(json: any, ignoreDiscriminator: boolean): ChapterError {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    id: !exists(json, 'id') ? undefined : json['id'],
-    name: !exists(json, 'name') ? undefined : json['name'],
-    number: !exists(json, 'number') ? undefined : json['number'],
+    id: json['id'] == null ? undefined : json['id'],
+    name: json['name'] == null ? undefined : json['name'],
+    number: json['number'] == null ? undefined : json['number'],
   };
 }
 
-export function ChapterErrorToJSON(value?: ChapterError | null): any {
-  if (value === undefined) {
-    return undefined;
+export function ChapterErrorToJSON(json: any): ChapterError {
+  return ChapterErrorToJSONTyped(json, false);
+}
+
+export function ChapterErrorToJSONTyped(value?: ChapterError | null, ignoreDiscriminator: boolean = false): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    id: value.id,
-    name: value.name,
-    number: value.number,
+    id: value['id'],
+    name: value['name'],
+    number: value['number'],
   };
 }

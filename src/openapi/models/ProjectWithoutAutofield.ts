@@ -11,7 +11,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * Project object without auto-generated fields
  * @export
@@ -35,11 +35,9 @@ export interface ProjectWithoutAutofield {
 /**
  * Check if a given object implements the ProjectWithoutAutofield interface.
  */
-export function instanceOfProjectWithoutAutofield(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'name' in value;
-
-  return isInstance;
+export function instanceOfProjectWithoutAutofield(value: object): value is ProjectWithoutAutofield {
+  if (!('name' in value) || value['name'] === undefined) return false;
+  return true;
 }
 
 export function ProjectWithoutAutofieldFromJSON(json: any): ProjectWithoutAutofield {
@@ -47,24 +45,29 @@ export function ProjectWithoutAutofieldFromJSON(json: any): ProjectWithoutAutofi
 }
 
 export function ProjectWithoutAutofieldFromJSONTyped(json: any, ignoreDiscriminator: boolean): ProjectWithoutAutofield {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
     name: json['name'],
-    description: !exists(json, 'description') ? undefined : json['description'],
+    description: json['description'] == null ? undefined : json['description'],
   };
 }
 
-export function ProjectWithoutAutofieldToJSON(value?: ProjectWithoutAutofield | null): any {
-  if (value === undefined) {
-    return undefined;
+export function ProjectWithoutAutofieldToJSON(json: any): ProjectWithoutAutofield {
+  return ProjectWithoutAutofieldToJSONTyped(json, false);
+}
+
+export function ProjectWithoutAutofieldToJSONTyped(
+  value?: ProjectWithoutAutofield | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    name: value.name,
-    description: value.description,
+    name: value['name'],
+    description: value['description'],
   };
 }

@@ -11,9 +11,9 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { Graph } from './Graph';
-import { GraphFromJSON, GraphFromJSONTyped, GraphToJSON } from './Graph';
+import { GraphFromJSON, GraphFromJSONTyped, GraphToJSON, GraphToJSONTyped } from './Graph';
 
 /**
  * Response Body for Graph Sectionalize API
@@ -32,11 +32,9 @@ export interface GraphSectionalizeResponse {
 /**
  * Check if a given object implements the GraphSectionalizeResponse interface.
  */
-export function instanceOfGraphSectionalizeResponse(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'graphs' in value;
-
-  return isInstance;
+export function instanceOfGraphSectionalizeResponse(value: object): value is GraphSectionalizeResponse {
+  if (!('graphs' in value) || value['graphs'] === undefined) return false;
+  return true;
 }
 
 export function GraphSectionalizeResponseFromJSON(json: any): GraphSectionalizeResponse {
@@ -47,7 +45,7 @@ export function GraphSectionalizeResponseFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
 ): GraphSectionalizeResponse {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -55,14 +53,19 @@ export function GraphSectionalizeResponseFromJSONTyped(
   };
 }
 
-export function GraphSectionalizeResponseToJSON(value?: GraphSectionalizeResponse | null): any {
-  if (value === undefined) {
-    return undefined;
+export function GraphSectionalizeResponseToJSON(json: any): GraphSectionalizeResponse {
+  return GraphSectionalizeResponseToJSONTyped(json, false);
+}
+
+export function GraphSectionalizeResponseToJSONTyped(
+  value?: GraphSectionalizeResponse | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    graphs: (value.graphs as Array<any>).map(GraphToJSON),
+    graphs: (value['graphs'] as Array<any>).map(GraphToJSON),
   };
 }

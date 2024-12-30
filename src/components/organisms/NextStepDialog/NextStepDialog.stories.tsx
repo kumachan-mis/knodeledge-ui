@@ -29,8 +29,12 @@ export const Basic: Story = {
   decorators: [
     (Story) => (
       <PaperContentProvider
-        initialContent={{
-          content: ['[** Section One]', 'section one content text', 'section one content text'].join('\n'),
+        loadablePaper={{
+          data: {
+            id: 'PAPER',
+            content: ['[** Section One]', 'section one content text', 'section one content text'].join('\n'),
+          },
+          state: 'success',
         }}
       >
         <Story />
@@ -43,25 +47,29 @@ export const MultipleSections: Story = {
   decorators: [
     (Story) => (
       <PaperContentProvider
-        initialContent={{
-          content: [
-            '[** Section One]',
-            'section one content text',
-            'section one content text',
-            '',
-            '[** Section Two]',
-            'section two content text',
-            '',
-            '[** Section Three]',
-            'section three content text',
-            '',
-            '[** Section Four]',
-            'section four content text',
-            '',
-            '[** Section Five]',
-            'section five content text',
-            '',
-          ].join('\n'),
+        loadablePaper={{
+          data: {
+            id: 'PAPER',
+            content: [
+              '[** Section One]',
+              'section one content text',
+              'section one content text',
+              '',
+              '[** Section Two]',
+              'section two content text',
+              '',
+              '[** Section Three]',
+              'section three content text',
+              '',
+              '[** Section Four]',
+              'section four content text',
+              '',
+              '[** Section Five]',
+              'section five content text',
+              '',
+            ].join('\n'),
+          },
+          state: 'success',
         }}
       >
         <Story />
@@ -74,8 +82,12 @@ export const NoSections: Story = {
   decorators: [
     (Story) => (
       <PaperContentProvider
-        initialContent={{
-          content: 'This is paper content.',
+        loadablePaper={{
+          data: {
+            id: 'PAPER',
+            content: 'This is paper content.',
+          },
+          state: 'success',
         }}
       >
         <Story />

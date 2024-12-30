@@ -11,7 +11,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * Error Message for ChapterWithoutAutofield object
  * @export
@@ -35,10 +35,8 @@ export interface ChapterWithoutAutofieldError {
 /**
  * Check if a given object implements the ChapterWithoutAutofieldError interface.
  */
-export function instanceOfChapterWithoutAutofieldError(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfChapterWithoutAutofieldError(value: object): value is ChapterWithoutAutofieldError {
+  return true;
 }
 
 export function ChapterWithoutAutofieldErrorFromJSON(json: any): ChapterWithoutAutofieldError {
@@ -49,24 +47,29 @@ export function ChapterWithoutAutofieldErrorFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
 ): ChapterWithoutAutofieldError {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    name: !exists(json, 'name') ? undefined : json['name'],
-    number: !exists(json, 'number') ? undefined : json['number'],
+    name: json['name'] == null ? undefined : json['name'],
+    number: json['number'] == null ? undefined : json['number'],
   };
 }
 
-export function ChapterWithoutAutofieldErrorToJSON(value?: ChapterWithoutAutofieldError | null): any {
-  if (value === undefined) {
-    return undefined;
+export function ChapterWithoutAutofieldErrorToJSON(json: any): ChapterWithoutAutofieldError {
+  return ChapterWithoutAutofieldErrorToJSONTyped(json, false);
+}
+
+export function ChapterWithoutAutofieldErrorToJSONTyped(
+  value?: ChapterWithoutAutofieldError | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    name: value.name,
-    number: value.number,
+    name: value['name'],
+    number: value['number'],
   };
 }

@@ -11,12 +11,13 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { ChapterWithSections } from './ChapterWithSections';
 import {
   ChapterWithSectionsFromJSON,
   ChapterWithSectionsFromJSONTyped,
   ChapterWithSectionsToJSON,
+  ChapterWithSectionsToJSONTyped,
 } from './ChapterWithSections';
 
 /**
@@ -36,11 +37,9 @@ export interface ChapterListResponse {
 /**
  * Check if a given object implements the ChapterListResponse interface.
  */
-export function instanceOfChapterListResponse(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'chapters' in value;
-
-  return isInstance;
+export function instanceOfChapterListResponse(value: object): value is ChapterListResponse {
+  if (!('chapters' in value) || value['chapters'] === undefined) return false;
+  return true;
 }
 
 export function ChapterListResponseFromJSON(json: any): ChapterListResponse {
@@ -48,7 +47,7 @@ export function ChapterListResponseFromJSON(json: any): ChapterListResponse {
 }
 
 export function ChapterListResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): ChapterListResponse {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -56,14 +55,19 @@ export function ChapterListResponseFromJSONTyped(json: any, ignoreDiscriminator:
   };
 }
 
-export function ChapterListResponseToJSON(value?: ChapterListResponse | null): any {
-  if (value === undefined) {
-    return undefined;
+export function ChapterListResponseToJSON(json: any): ChapterListResponse {
+  return ChapterListResponseToJSONTyped(json, false);
+}
+
+export function ChapterListResponseToJSONTyped(
+  value?: ChapterListResponse | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    chapters: (value.chapters as Array<any>).map(ChapterWithSectionsToJSON),
+    chapters: (value['chapters'] as Array<any>).map(ChapterWithSectionsToJSON),
   };
 }

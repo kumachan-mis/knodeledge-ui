@@ -11,7 +11,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * Error Message for ChapterOnlyId object
  * @export
@@ -29,10 +29,8 @@ export interface ChapterOnlyIdError {
 /**
  * Check if a given object implements the ChapterOnlyIdError interface.
  */
-export function instanceOfChapterOnlyIdError(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfChapterOnlyIdError(value: object): value is ChapterOnlyIdError {
+  return true;
 }
 
 export function ChapterOnlyIdErrorFromJSON(json: any): ChapterOnlyIdError {
@@ -40,22 +38,27 @@ export function ChapterOnlyIdErrorFromJSON(json: any): ChapterOnlyIdError {
 }
 
 export function ChapterOnlyIdErrorFromJSONTyped(json: any, ignoreDiscriminator: boolean): ChapterOnlyIdError {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    id: !exists(json, 'id') ? undefined : json['id'],
+    id: json['id'] == null ? undefined : json['id'],
   };
 }
 
-export function ChapterOnlyIdErrorToJSON(value?: ChapterOnlyIdError | null): any {
-  if (value === undefined) {
-    return undefined;
+export function ChapterOnlyIdErrorToJSON(json: any): ChapterOnlyIdError {
+  return ChapterOnlyIdErrorToJSONTyped(json, false);
+}
+
+export function ChapterOnlyIdErrorToJSONTyped(
+  value?: ChapterOnlyIdError | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    id: value.id,
+    id: value['id'],
   };
 }

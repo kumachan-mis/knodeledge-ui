@@ -11,7 +11,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * Error Message for ProjectOnlyId object
  * @export
@@ -29,10 +29,8 @@ export interface ProjectOnlyIdError {
 /**
  * Check if a given object implements the ProjectOnlyIdError interface.
  */
-export function instanceOfProjectOnlyIdError(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfProjectOnlyIdError(value: object): value is ProjectOnlyIdError {
+  return true;
 }
 
 export function ProjectOnlyIdErrorFromJSON(json: any): ProjectOnlyIdError {
@@ -40,22 +38,27 @@ export function ProjectOnlyIdErrorFromJSON(json: any): ProjectOnlyIdError {
 }
 
 export function ProjectOnlyIdErrorFromJSONTyped(json: any, ignoreDiscriminator: boolean): ProjectOnlyIdError {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    id: !exists(json, 'id') ? undefined : json['id'],
+    id: json['id'] == null ? undefined : json['id'],
   };
 }
 
-export function ProjectOnlyIdErrorToJSON(value?: ProjectOnlyIdError | null): any {
-  if (value === undefined) {
-    return undefined;
+export function ProjectOnlyIdErrorToJSON(json: any): ProjectOnlyIdError {
+  return ProjectOnlyIdErrorToJSONTyped(json, false);
+}
+
+export function ProjectOnlyIdErrorToJSONTyped(
+  value?: ProjectOnlyIdError | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    id: value.id,
+    id: value['id'],
   };
 }

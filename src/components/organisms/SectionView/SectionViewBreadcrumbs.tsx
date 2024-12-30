@@ -1,14 +1,14 @@
 import AppBreadcrumbs from '@/components/molecules/AppBreadcrumbs';
-import { GraphActionError } from '@/contexts/graphs';
+import { GraphActionError, LoadableGraph } from '@/contexts/graphs';
 import { LoadableAction } from '@/contexts/openapi';
 import { useGraphContent } from '@/contexts/views';
-import { Project, Chapter, Graph, SectionOfChapter, GraphContentWithoutAutofield } from '@/openapi';
+import { Project, Chapter, SectionOfChapter, GraphContentWithoutAutofield } from '@/openapi';
 
 export type SectionViewBreadcrumbsComponentProps = {
   readonly project: Project;
   readonly chapter: Chapter;
   readonly section: SectionOfChapter;
-  readonly graph: Graph;
+  readonly loadableGraph: LoadableGraph;
   readonly updateGraph: (id: string, graph: GraphContentWithoutAutofield) => Promise<LoadableAction<GraphActionError>>;
 };
 
@@ -16,18 +16,20 @@ const SectionViewBreadcrumbsComponent: React.FC<SectionViewBreadcrumbsComponentP
   project,
   chapter,
   section,
-  graph,
+  loadableGraph,
   updateGraph,
 }) => {
   const unsavedGraph = useGraphContent();
-  const isDirty = unsavedGraph.paragraph !== graph.paragraph;
+  const dirty = loadableGraph.state === 'success' && unsavedGraph.paragraph !== loadableGraph.data.paragraph;
+  const saveDisabled = loadableGraph.state !== 'success';
+
   return (
     <AppBreadcrumbs
       chapter={{ id: chapter.id, name: chapter.name }}
-      isDirty={isDirty}
+      dirty={dirty}
       onSave={async () => {
-        if (!isDirty) return { success: true };
-        const loadableAction = await updateGraph(graph.id, unsavedGraph);
+        if (!dirty) return { success: true };
+        const loadableAction = await updateGraph(loadableGraph.data.id, unsavedGraph);
         if (loadableAction.state === 'success') {
           return { success: true };
         }
@@ -37,6 +39,7 @@ const SectionViewBreadcrumbsComponent: React.FC<SectionViewBreadcrumbsComponentP
         return { success: false, error: `${loadableAction.error.message}: ${loadableAction.error.graph.paragraph}` };
       }}
       project={{ id: project.id, name: project.name }}
+      saveDisabled={saveDisabled}
       section={{ id: section.id, name: section.name }}
     />
   );

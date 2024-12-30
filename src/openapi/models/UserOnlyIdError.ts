@@ -11,7 +11,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * Error Message for UserOnlyId object
  * @export
@@ -29,10 +29,8 @@ export interface UserOnlyIdError {
 /**
  * Check if a given object implements the UserOnlyIdError interface.
  */
-export function instanceOfUserOnlyIdError(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfUserOnlyIdError(value: object): value is UserOnlyIdError {
+  return true;
 }
 
 export function UserOnlyIdErrorFromJSON(json: any): UserOnlyIdError {
@@ -40,22 +38,24 @@ export function UserOnlyIdErrorFromJSON(json: any): UserOnlyIdError {
 }
 
 export function UserOnlyIdErrorFromJSONTyped(json: any, ignoreDiscriminator: boolean): UserOnlyIdError {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    id: !exists(json, 'id') ? undefined : json['id'],
+    id: json['id'] == null ? undefined : json['id'],
   };
 }
 
-export function UserOnlyIdErrorToJSON(value?: UserOnlyIdError | null): any {
-  if (value === undefined) {
-    return undefined;
+export function UserOnlyIdErrorToJSON(json: any): UserOnlyIdError {
+  return UserOnlyIdErrorToJSONTyped(json, false);
+}
+
+export function UserOnlyIdErrorToJSONTyped(value?: UserOnlyIdError | null, ignoreDiscriminator: boolean = false): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    id: value.id,
+    id: value['id'],
   };
 }

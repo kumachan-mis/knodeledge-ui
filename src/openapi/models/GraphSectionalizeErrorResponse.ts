@@ -11,27 +11,35 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
-import type { ChapterOnlyIdError } from './ChapterOnlyIdError';
-import {
-  ChapterOnlyIdErrorFromJSON,
-  ChapterOnlyIdErrorFromJSONTyped,
-  ChapterOnlyIdErrorToJSON,
-} from './ChapterOnlyIdError';
+import { mapValues } from '../runtime';
 import type { ProjectOnlyIdError } from './ProjectOnlyIdError';
 import {
   ProjectOnlyIdErrorFromJSON,
   ProjectOnlyIdErrorFromJSONTyped,
   ProjectOnlyIdErrorToJSON,
+  ProjectOnlyIdErrorToJSONTyped,
 } from './ProjectOnlyIdError';
+import type { UserOnlyIdError } from './UserOnlyIdError';
+import {
+  UserOnlyIdErrorFromJSON,
+  UserOnlyIdErrorFromJSONTyped,
+  UserOnlyIdErrorToJSON,
+  UserOnlyIdErrorToJSONTyped,
+} from './UserOnlyIdError';
 import type { SectionWithoutAutofieldListError } from './SectionWithoutAutofieldListError';
 import {
   SectionWithoutAutofieldListErrorFromJSON,
   SectionWithoutAutofieldListErrorFromJSONTyped,
   SectionWithoutAutofieldListErrorToJSON,
+  SectionWithoutAutofieldListErrorToJSONTyped,
 } from './SectionWithoutAutofieldListError';
-import type { UserOnlyIdError } from './UserOnlyIdError';
-import { UserOnlyIdErrorFromJSON, UserOnlyIdErrorFromJSONTyped, UserOnlyIdErrorToJSON } from './UserOnlyIdError';
+import type { ChapterOnlyIdError } from './ChapterOnlyIdError';
+import {
+  ChapterOnlyIdErrorFromJSON,
+  ChapterOnlyIdErrorFromJSONTyped,
+  ChapterOnlyIdErrorToJSON,
+  ChapterOnlyIdErrorToJSONTyped,
+} from './ChapterOnlyIdError';
 
 /**
  * Error Response Body for Graph Sectionalize API
@@ -44,7 +52,7 @@ export interface GraphSectionalizeErrorResponse {
    * @type {string}
    * @memberof GraphSectionalizeErrorResponse
    */
-  message?: string;
+  message: string;
   /**
    *
    * @type {UserOnlyIdError}
@@ -74,10 +82,9 @@ export interface GraphSectionalizeErrorResponse {
 /**
  * Check if a given object implements the GraphSectionalizeErrorResponse interface.
  */
-export function instanceOfGraphSectionalizeErrorResponse(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfGraphSectionalizeErrorResponse(value: object): value is GraphSectionalizeErrorResponse {
+  if (!('message' in value) || value['message'] === undefined) return false;
+  return true;
 }
 
 export function GraphSectionalizeErrorResponseFromJSON(json: any): GraphSectionalizeErrorResponse {
@@ -88,30 +95,35 @@ export function GraphSectionalizeErrorResponseFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
 ): GraphSectionalizeErrorResponse {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    message: !exists(json, 'message') ? undefined : json['message'],
-    user: !exists(json, 'user') ? undefined : UserOnlyIdErrorFromJSON(json['user']),
-    project: !exists(json, 'project') ? undefined : ProjectOnlyIdErrorFromJSON(json['project']),
-    chapter: !exists(json, 'chapter') ? undefined : ChapterOnlyIdErrorFromJSON(json['chapter']),
-    sections: !exists(json, 'sections') ? undefined : SectionWithoutAutofieldListErrorFromJSON(json['sections']),
+    message: json['message'],
+    user: json['user'] == null ? undefined : UserOnlyIdErrorFromJSON(json['user']),
+    project: json['project'] == null ? undefined : ProjectOnlyIdErrorFromJSON(json['project']),
+    chapter: json['chapter'] == null ? undefined : ChapterOnlyIdErrorFromJSON(json['chapter']),
+    sections: json['sections'] == null ? undefined : SectionWithoutAutofieldListErrorFromJSON(json['sections']),
   };
 }
 
-export function GraphSectionalizeErrorResponseToJSON(value?: GraphSectionalizeErrorResponse | null): any {
-  if (value === undefined) {
-    return undefined;
+export function GraphSectionalizeErrorResponseToJSON(json: any): GraphSectionalizeErrorResponse {
+  return GraphSectionalizeErrorResponseToJSONTyped(json, false);
+}
+
+export function GraphSectionalizeErrorResponseToJSONTyped(
+  value?: GraphSectionalizeErrorResponse | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    message: value.message,
-    user: UserOnlyIdErrorToJSON(value.user),
-    project: ProjectOnlyIdErrorToJSON(value.project),
-    chapter: ChapterOnlyIdErrorToJSON(value.chapter),
-    sections: SectionWithoutAutofieldListErrorToJSON(value.sections),
+    message: value['message'],
+    user: UserOnlyIdErrorToJSON(value['user']),
+    project: ProjectOnlyIdErrorToJSON(value['project']),
+    chapter: ChapterOnlyIdErrorToJSON(value['chapter']),
+    sections: SectionWithoutAutofieldListErrorToJSON(value['sections']),
   };
 }

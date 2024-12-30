@@ -11,9 +11,14 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { GraphContent } from './GraphContent';
-import { GraphContentFromJSON, GraphContentFromJSONTyped, GraphContentToJSON } from './GraphContent';
+import {
+  GraphContentFromJSON,
+  GraphContentFromJSONTyped,
+  GraphContentToJSON,
+  GraphContentToJSONTyped,
+} from './GraphContent';
 
 /**
  * Response Body for Graph Update API
@@ -32,11 +37,9 @@ export interface GraphUpdateResponse {
 /**
  * Check if a given object implements the GraphUpdateResponse interface.
  */
-export function instanceOfGraphUpdateResponse(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'graph' in value;
-
-  return isInstance;
+export function instanceOfGraphUpdateResponse(value: object): value is GraphUpdateResponse {
+  if (!('graph' in value) || value['graph'] === undefined) return false;
+  return true;
 }
 
 export function GraphUpdateResponseFromJSON(json: any): GraphUpdateResponse {
@@ -44,7 +47,7 @@ export function GraphUpdateResponseFromJSON(json: any): GraphUpdateResponse {
 }
 
 export function GraphUpdateResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): GraphUpdateResponse {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -52,14 +55,19 @@ export function GraphUpdateResponseFromJSONTyped(json: any, ignoreDiscriminator:
   };
 }
 
-export function GraphUpdateResponseToJSON(value?: GraphUpdateResponse | null): any {
-  if (value === undefined) {
-    return undefined;
+export function GraphUpdateResponseToJSON(json: any): GraphUpdateResponse {
+  return GraphUpdateResponseToJSONTyped(json, false);
+}
+
+export function GraphUpdateResponseToJSONTyped(
+  value?: GraphUpdateResponse | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    graph: GraphContentToJSON(value.graph),
+    graph: GraphContentToJSON(value['graph']),
   };
 }

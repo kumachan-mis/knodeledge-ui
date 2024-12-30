@@ -11,7 +11,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * Paper object
  * @export
@@ -35,12 +35,10 @@ export interface Paper {
 /**
  * Check if a given object implements the Paper interface.
  */
-export function instanceOfPaper(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'id' in value;
-  isInstance = isInstance && 'content' in value;
-
-  return isInstance;
+export function instanceOfPaper(value: object): value is Paper {
+  if (!('id' in value) || value['id'] === undefined) return false;
+  if (!('content' in value) || value['content'] === undefined) return false;
+  return true;
 }
 
 export function PaperFromJSON(json: any): Paper {
@@ -48,7 +46,7 @@ export function PaperFromJSON(json: any): Paper {
 }
 
 export function PaperFromJSONTyped(json: any, ignoreDiscriminator: boolean): Paper {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -57,15 +55,17 @@ export function PaperFromJSONTyped(json: any, ignoreDiscriminator: boolean): Pap
   };
 }
 
-export function PaperToJSON(value?: Paper | null): any {
-  if (value === undefined) {
-    return undefined;
+export function PaperToJSON(json: any): Paper {
+  return PaperToJSONTyped(json, false);
+}
+
+export function PaperToJSONTyped(value?: Paper | null, ignoreDiscriminator: boolean = false): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    id: value.id,
-    content: value.content,
+    id: value['id'],
+    content: value['content'],
   };
 }

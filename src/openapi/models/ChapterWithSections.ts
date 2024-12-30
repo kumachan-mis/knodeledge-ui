@@ -11,9 +11,14 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { SectionOfChapter } from './SectionOfChapter';
-import { SectionOfChapterFromJSON, SectionOfChapterFromJSONTyped, SectionOfChapterToJSON } from './SectionOfChapter';
+import {
+  SectionOfChapterFromJSON,
+  SectionOfChapterFromJSONTyped,
+  SectionOfChapterToJSON,
+  SectionOfChapterToJSONTyped,
+} from './SectionOfChapter';
 
 /**
  * ChapterWithSections object
@@ -50,14 +55,12 @@ export interface ChapterWithSections {
 /**
  * Check if a given object implements the ChapterWithSections interface.
  */
-export function instanceOfChapterWithSections(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'id' in value;
-  isInstance = isInstance && 'name' in value;
-  isInstance = isInstance && 'number' in value;
-  isInstance = isInstance && 'sections' in value;
-
-  return isInstance;
+export function instanceOfChapterWithSections(value: object): value is ChapterWithSections {
+  if (!('id' in value) || value['id'] === undefined) return false;
+  if (!('name' in value) || value['name'] === undefined) return false;
+  if (!('number' in value) || value['number'] === undefined) return false;
+  if (!('sections' in value) || value['sections'] === undefined) return false;
+  return true;
 }
 
 export function ChapterWithSectionsFromJSON(json: any): ChapterWithSections {
@@ -65,7 +68,7 @@ export function ChapterWithSectionsFromJSON(json: any): ChapterWithSections {
 }
 
 export function ChapterWithSectionsFromJSONTyped(json: any, ignoreDiscriminator: boolean): ChapterWithSections {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -76,17 +79,22 @@ export function ChapterWithSectionsFromJSONTyped(json: any, ignoreDiscriminator:
   };
 }
 
-export function ChapterWithSectionsToJSON(value?: ChapterWithSections | null): any {
-  if (value === undefined) {
-    return undefined;
+export function ChapterWithSectionsToJSON(json: any): ChapterWithSections {
+  return ChapterWithSectionsToJSONTyped(json, false);
+}
+
+export function ChapterWithSectionsToJSONTyped(
+  value?: ChapterWithSections | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    id: value.id,
-    name: value.name,
-    number: value.number,
-    sections: (value.sections as Array<any>).map(SectionOfChapterToJSON),
+    id: value['id'],
+    name: value['name'],
+    number: value['number'],
+    sections: (value['sections'] as Array<any>).map(SectionOfChapterToJSON),
   };
 }

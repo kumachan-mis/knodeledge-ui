@@ -11,9 +11,9 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { Graph } from './Graph';
-import { GraphFromJSON, GraphFromJSONTyped, GraphToJSON } from './Graph';
+import { GraphFromJSON, GraphFromJSONTyped, GraphToJSON, GraphToJSONTyped } from './Graph';
 
 /**
  * Request Body for Graph Find API
@@ -32,11 +32,9 @@ export interface GraphFindResponse {
 /**
  * Check if a given object implements the GraphFindResponse interface.
  */
-export function instanceOfGraphFindResponse(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'graph' in value;
-
-  return isInstance;
+export function instanceOfGraphFindResponse(value: object): value is GraphFindResponse {
+  if (!('graph' in value) || value['graph'] === undefined) return false;
+  return true;
 }
 
 export function GraphFindResponseFromJSON(json: any): GraphFindResponse {
@@ -44,7 +42,7 @@ export function GraphFindResponseFromJSON(json: any): GraphFindResponse {
 }
 
 export function GraphFindResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): GraphFindResponse {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -52,14 +50,19 @@ export function GraphFindResponseFromJSONTyped(json: any, ignoreDiscriminator: b
   };
 }
 
-export function GraphFindResponseToJSON(value?: GraphFindResponse | null): any {
-  if (value === undefined) {
-    return undefined;
+export function GraphFindResponseToJSON(json: any): GraphFindResponse {
+  return GraphFindResponseToJSONTyped(json, false);
+}
+
+export function GraphFindResponseToJSONTyped(
+  value?: GraphFindResponse | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    graph: GraphToJSON(value.graph),
+    graph: GraphToJSON(value['graph']),
   };
 }

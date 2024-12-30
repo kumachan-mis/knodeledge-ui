@@ -11,27 +11,35 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
-import type { ChapterOnlyIdError } from './ChapterOnlyIdError';
-import {
-  ChapterOnlyIdErrorFromJSON,
-  ChapterOnlyIdErrorFromJSONTyped,
-  ChapterOnlyIdErrorToJSON,
-} from './ChapterOnlyIdError';
-import type { ProjectOnlyIdError } from './ProjectOnlyIdError';
-import {
-  ProjectOnlyIdErrorFromJSON,
-  ProjectOnlyIdErrorFromJSONTyped,
-  ProjectOnlyIdErrorToJSON,
-} from './ProjectOnlyIdError';
+import { mapValues } from '../runtime';
 import type { SectionOnlyIdError } from './SectionOnlyIdError';
 import {
   SectionOnlyIdErrorFromJSON,
   SectionOnlyIdErrorFromJSONTyped,
   SectionOnlyIdErrorToJSON,
+  SectionOnlyIdErrorToJSONTyped,
 } from './SectionOnlyIdError';
+import type { ProjectOnlyIdError } from './ProjectOnlyIdError';
+import {
+  ProjectOnlyIdErrorFromJSON,
+  ProjectOnlyIdErrorFromJSONTyped,
+  ProjectOnlyIdErrorToJSON,
+  ProjectOnlyIdErrorToJSONTyped,
+} from './ProjectOnlyIdError';
 import type { UserOnlyIdError } from './UserOnlyIdError';
-import { UserOnlyIdErrorFromJSON, UserOnlyIdErrorFromJSONTyped, UserOnlyIdErrorToJSON } from './UserOnlyIdError';
+import {
+  UserOnlyIdErrorFromJSON,
+  UserOnlyIdErrorFromJSONTyped,
+  UserOnlyIdErrorToJSON,
+  UserOnlyIdErrorToJSONTyped,
+} from './UserOnlyIdError';
+import type { ChapterOnlyIdError } from './ChapterOnlyIdError';
+import {
+  ChapterOnlyIdErrorFromJSON,
+  ChapterOnlyIdErrorFromJSONTyped,
+  ChapterOnlyIdErrorToJSON,
+  ChapterOnlyIdErrorToJSONTyped,
+} from './ChapterOnlyIdError';
 
 /**
  * Error Response Body for Graph Find API
@@ -44,7 +52,7 @@ export interface GraphFindErrorResponse {
    * @type {string}
    * @memberof GraphFindErrorResponse
    */
-  message?: string;
+  message: string;
   /**
    *
    * @type {UserOnlyIdError}
@@ -74,10 +82,9 @@ export interface GraphFindErrorResponse {
 /**
  * Check if a given object implements the GraphFindErrorResponse interface.
  */
-export function instanceOfGraphFindErrorResponse(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfGraphFindErrorResponse(value: object): value is GraphFindErrorResponse {
+  if (!('message' in value) || value['message'] === undefined) return false;
+  return true;
 }
 
 export function GraphFindErrorResponseFromJSON(json: any): GraphFindErrorResponse {
@@ -85,30 +92,35 @@ export function GraphFindErrorResponseFromJSON(json: any): GraphFindErrorRespons
 }
 
 export function GraphFindErrorResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): GraphFindErrorResponse {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    message: !exists(json, 'message') ? undefined : json['message'],
-    user: !exists(json, 'user') ? undefined : UserOnlyIdErrorFromJSON(json['user']),
-    project: !exists(json, 'project') ? undefined : ProjectOnlyIdErrorFromJSON(json['project']),
-    chapter: !exists(json, 'chapter') ? undefined : ChapterOnlyIdErrorFromJSON(json['chapter']),
-    section: !exists(json, 'section') ? undefined : SectionOnlyIdErrorFromJSON(json['section']),
+    message: json['message'],
+    user: json['user'] == null ? undefined : UserOnlyIdErrorFromJSON(json['user']),
+    project: json['project'] == null ? undefined : ProjectOnlyIdErrorFromJSON(json['project']),
+    chapter: json['chapter'] == null ? undefined : ChapterOnlyIdErrorFromJSON(json['chapter']),
+    section: json['section'] == null ? undefined : SectionOnlyIdErrorFromJSON(json['section']),
   };
 }
 
-export function GraphFindErrorResponseToJSON(value?: GraphFindErrorResponse | null): any {
-  if (value === undefined) {
-    return undefined;
+export function GraphFindErrorResponseToJSON(json: any): GraphFindErrorResponse {
+  return GraphFindErrorResponseToJSONTyped(json, false);
+}
+
+export function GraphFindErrorResponseToJSONTyped(
+  value?: GraphFindErrorResponse | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    message: value.message,
-    user: UserOnlyIdErrorToJSON(value.user),
-    project: ProjectOnlyIdErrorToJSON(value.project),
-    chapter: ChapterOnlyIdErrorToJSON(value.chapter),
-    section: SectionOnlyIdErrorToJSON(value.section),
+    message: value['message'],
+    user: UserOnlyIdErrorToJSON(value['user']),
+    project: ProjectOnlyIdErrorToJSON(value['project']),
+    chapter: ChapterOnlyIdErrorToJSON(value['chapter']),
+    section: SectionOnlyIdErrorToJSON(value['section']),
   };
 }

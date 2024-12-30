@@ -82,7 +82,7 @@ export class ChaptersApi extends runtime.BaseAPI {
         method: 'POST',
         headers: headerParameters,
         query: queryParameters,
-        body: ChapterCreateRequestToJSON(requestParameters.chapterCreateRequest),
+        body: ChapterCreateRequestToJSON(requestParameters['chapterCreateRequest']),
       },
       initOverrides,
     );
@@ -120,7 +120,7 @@ export class ChaptersApi extends runtime.BaseAPI {
         method: 'POST',
         headers: headerParameters,
         query: queryParameters,
-        body: ChapterListRequestToJSON(requestParameters.chapterListRequest),
+        body: ChapterListRequestToJSON(requestParameters['chapterListRequest']),
       },
       initOverrides,
     );
@@ -158,7 +158,7 @@ export class ChaptersApi extends runtime.BaseAPI {
         method: 'POST',
         headers: headerParameters,
         query: queryParameters,
-        body: ChapterUpdateRequestToJSON(requestParameters.chapterUpdateRequest),
+        body: ChapterUpdateRequestToJSON(requestParameters['chapterUpdateRequest']),
       },
       initOverrides,
     );

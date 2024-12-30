@@ -11,15 +11,16 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { ProjectWithoutAutofield } from './ProjectWithoutAutofield';
 import {
   ProjectWithoutAutofieldFromJSON,
   ProjectWithoutAutofieldFromJSONTyped,
   ProjectWithoutAutofieldToJSON,
+  ProjectWithoutAutofieldToJSONTyped,
 } from './ProjectWithoutAutofield';
 import type { UserOnlyId } from './UserOnlyId';
-import { UserOnlyIdFromJSON, UserOnlyIdFromJSONTyped, UserOnlyIdToJSON } from './UserOnlyId';
+import { UserOnlyIdFromJSON, UserOnlyIdFromJSONTyped, UserOnlyIdToJSON, UserOnlyIdToJSONTyped } from './UserOnlyId';
 
 /**
  * Request Body for Project Create API
@@ -44,12 +45,10 @@ export interface ProjectCreateRequest {
 /**
  * Check if a given object implements the ProjectCreateRequest interface.
  */
-export function instanceOfProjectCreateRequest(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'user' in value;
-  isInstance = isInstance && 'project' in value;
-
-  return isInstance;
+export function instanceOfProjectCreateRequest(value: object): value is ProjectCreateRequest {
+  if (!('user' in value) || value['user'] === undefined) return false;
+  if (!('project' in value) || value['project'] === undefined) return false;
+  return true;
 }
 
 export function ProjectCreateRequestFromJSON(json: any): ProjectCreateRequest {
@@ -57,7 +56,7 @@ export function ProjectCreateRequestFromJSON(json: any): ProjectCreateRequest {
 }
 
 export function ProjectCreateRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): ProjectCreateRequest {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -66,15 +65,20 @@ export function ProjectCreateRequestFromJSONTyped(json: any, ignoreDiscriminator
   };
 }
 
-export function ProjectCreateRequestToJSON(value?: ProjectCreateRequest | null): any {
-  if (value === undefined) {
-    return undefined;
+export function ProjectCreateRequestToJSON(json: any): ProjectCreateRequest {
+  return ProjectCreateRequestToJSONTyped(json, false);
+}
+
+export function ProjectCreateRequestToJSONTyped(
+  value?: ProjectCreateRequest | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    user: UserOnlyIdToJSON(value.user),
-    project: ProjectWithoutAutofieldToJSON(value.project),
+    user: UserOnlyIdToJSON(value['user']),
+    project: ProjectWithoutAutofieldToJSON(value['project']),
   };
 }

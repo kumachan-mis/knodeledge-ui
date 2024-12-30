@@ -11,7 +11,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * Chapter object
  * @export
@@ -41,13 +41,11 @@ export interface Chapter {
 /**
  * Check if a given object implements the Chapter interface.
  */
-export function instanceOfChapter(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'id' in value;
-  isInstance = isInstance && 'name' in value;
-  isInstance = isInstance && 'number' in value;
-
-  return isInstance;
+export function instanceOfChapter(value: object): value is Chapter {
+  if (!('id' in value) || value['id'] === undefined) return false;
+  if (!('name' in value) || value['name'] === undefined) return false;
+  if (!('number' in value) || value['number'] === undefined) return false;
+  return true;
 }
 
 export function ChapterFromJSON(json: any): Chapter {
@@ -55,7 +53,7 @@ export function ChapterFromJSON(json: any): Chapter {
 }
 
 export function ChapterFromJSONTyped(json: any, ignoreDiscriminator: boolean): Chapter {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -65,16 +63,18 @@ export function ChapterFromJSONTyped(json: any, ignoreDiscriminator: boolean): C
   };
 }
 
-export function ChapterToJSON(value?: Chapter | null): any {
-  if (value === undefined) {
-    return undefined;
+export function ChapterToJSON(json: any): Chapter {
+  return ChapterToJSONTyped(json, false);
+}
+
+export function ChapterToJSONTyped(value?: Chapter | null, ignoreDiscriminator: boolean = false): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    id: value.id,
-    name: value.name,
-    number: value.number,
+    id: value['id'],
+    name: value['name'],
+    number: value['number'],
   };
 }

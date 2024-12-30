@@ -1,12 +1,15 @@
 'use client';
+import AppEditor from '@/components/molecules/AppEditor';
+import { LoadableGraph } from '@/contexts/graphs';
 import { useGraphContent, useSetGraphContent } from '@/contexts/views';
 
-import { styled } from '@mui/material/styles';
 import React from 'react';
-import { EditorRoot, EditorSyntaxMenu, Divider, EditorTextFieldRoot, EditorTextFieldBody } from 'react-clay-editor';
-import 'katex/dist/katex.min.css';
 
-const SectionViewEditorComponent: React.FC = () => {
+export type SectionViewEditorComponentProps = {
+  readonly loadableGraph: LoadableGraph;
+};
+
+const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({ loadableGraph }) => {
   const graph = useGraphContent();
   const setGraph = useSetGraphContent();
 
@@ -21,22 +24,7 @@ const SectionViewEditorComponent: React.FC = () => {
     [setGraph],
   );
 
-  return (
-    <SectionViewEditorRoot setText={setText} text={graph.paragraph}>
-      <EditorSyntaxMenu />
-      <Divider />
-      <EditorTextFieldRoot>
-        <EditorTextFieldBody />
-      </EditorTextFieldRoot>
-    </SectionViewEditorRoot>
-  );
+  return <AppEditor setText={setText} state={loadableGraph.state} text={graph.paragraph} />;
 };
-
-const SectionViewEditorRoot = styled(EditorRoot)({
-  '&&': {
-    width: '100%',
-    flexGrow: 1,
-  },
-});
 
 export default SectionViewEditorComponent;

@@ -11,15 +11,30 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
-import type { ChapterOnlyId } from './ChapterOnlyId';
-import { ChapterOnlyIdFromJSON, ChapterOnlyIdFromJSONTyped, ChapterOnlyIdToJSON } from './ChapterOnlyId';
+import { mapValues } from '../runtime';
 import type { GraphContent } from './GraphContent';
-import { GraphContentFromJSON, GraphContentFromJSONTyped, GraphContentToJSON } from './GraphContent';
+import {
+  GraphContentFromJSON,
+  GraphContentFromJSONTyped,
+  GraphContentToJSON,
+  GraphContentToJSONTyped,
+} from './GraphContent';
 import type { ProjectOnlyId } from './ProjectOnlyId';
-import { ProjectOnlyIdFromJSON, ProjectOnlyIdFromJSONTyped, ProjectOnlyIdToJSON } from './ProjectOnlyId';
+import {
+  ProjectOnlyIdFromJSON,
+  ProjectOnlyIdFromJSONTyped,
+  ProjectOnlyIdToJSON,
+  ProjectOnlyIdToJSONTyped,
+} from './ProjectOnlyId';
+import type { ChapterOnlyId } from './ChapterOnlyId';
+import {
+  ChapterOnlyIdFromJSON,
+  ChapterOnlyIdFromJSONTyped,
+  ChapterOnlyIdToJSON,
+  ChapterOnlyIdToJSONTyped,
+} from './ChapterOnlyId';
 import type { UserOnlyId } from './UserOnlyId';
-import { UserOnlyIdFromJSON, UserOnlyIdFromJSONTyped, UserOnlyIdToJSON } from './UserOnlyId';
+import { UserOnlyIdFromJSON, UserOnlyIdFromJSONTyped, UserOnlyIdToJSON, UserOnlyIdToJSONTyped } from './UserOnlyId';
 
 /**
  * Request Body for Graph Update API
@@ -56,14 +71,12 @@ export interface GraphUpdateRequest {
 /**
  * Check if a given object implements the GraphUpdateRequest interface.
  */
-export function instanceOfGraphUpdateRequest(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'user' in value;
-  isInstance = isInstance && 'project' in value;
-  isInstance = isInstance && 'chapter' in value;
-  isInstance = isInstance && 'graph' in value;
-
-  return isInstance;
+export function instanceOfGraphUpdateRequest(value: object): value is GraphUpdateRequest {
+  if (!('user' in value) || value['user'] === undefined) return false;
+  if (!('project' in value) || value['project'] === undefined) return false;
+  if (!('chapter' in value) || value['chapter'] === undefined) return false;
+  if (!('graph' in value) || value['graph'] === undefined) return false;
+  return true;
 }
 
 export function GraphUpdateRequestFromJSON(json: any): GraphUpdateRequest {
@@ -71,7 +84,7 @@ export function GraphUpdateRequestFromJSON(json: any): GraphUpdateRequest {
 }
 
 export function GraphUpdateRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): GraphUpdateRequest {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -82,17 +95,22 @@ export function GraphUpdateRequestFromJSONTyped(json: any, ignoreDiscriminator: 
   };
 }
 
-export function GraphUpdateRequestToJSON(value?: GraphUpdateRequest | null): any {
-  if (value === undefined) {
-    return undefined;
+export function GraphUpdateRequestToJSON(json: any): GraphUpdateRequest {
+  return GraphUpdateRequestToJSONTyped(json, false);
+}
+
+export function GraphUpdateRequestToJSONTyped(
+  value?: GraphUpdateRequest | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    user: UserOnlyIdToJSON(value.user),
-    project: ProjectOnlyIdToJSON(value.project),
-    chapter: ChapterOnlyIdToJSON(value.chapter),
-    graph: GraphContentToJSON(value.graph),
+    user: UserOnlyIdToJSON(value['user']),
+    project: ProjectOnlyIdToJSON(value['project']),
+    chapter: ChapterOnlyIdToJSON(value['chapter']),
+    graph: GraphContentToJSON(value['graph']),
   };
 }

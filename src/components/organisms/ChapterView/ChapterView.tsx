@@ -9,7 +9,6 @@ import ChapterViewEditorComponent from './ChapterViewEditor';
 import ChapterViewFooterComponent from './ChapterViewFooter';
 
 import Box from '@mui/material/Box';
-import CircularProgress from '@mui/material/CircularProgress';
 import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
 
@@ -27,35 +26,28 @@ const ChapterViewComponent: React.FC<ChapterViewComponentProps> = ({
   loadablePaper,
   updatePaper,
   sectionalizePaper,
-}) =>
-  loadablePaper.state === 'loading' ? (
-    <Container maxWidth="sm">
-      <Box display="flex" justifyContent="center" p={12}>
-        <CircularProgress />
-      </Box>
-    </Container>
-  ) : loadablePaper.state === 'success' ? (
-    <PaperContentProvider initialContent={loadablePaper.data}>
-      <Box
-        sx={(theme) => ({
-          height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px)`,
-          display: 'flex',
-          flexDirection: 'column',
-        })}
-      >
-        <Container maxWidth="lg" sx={{ height: '100%', display: 'flex', flexDirection: 'column', py: 1 }}>
-          <ChapterViewBreadcrumbsComponent
-            chapter={chapter}
-            paper={loadablePaper.data}
-            project={project}
-            updatePaper={updatePaper}
-          />
-          <ChapterViewEditorComponent />
-        </Container>
-        <Divider variant="fullWidth" />
-        <ChapterViewFooterComponent sectionalizePaper={sectionalizePaper} />
-      </Box>
-    </PaperContentProvider>
-  ) : null;
+}) => (
+  <PaperContentProvider loadablePaper={loadablePaper}>
+    <Box
+      sx={(theme) => ({
+        height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px)`,
+        display: 'flex',
+        flexDirection: 'column',
+      })}
+    >
+      <Container maxWidth="lg" sx={{ height: '100%', display: 'flex', flexDirection: 'column', py: 1 }}>
+        <ChapterViewBreadcrumbsComponent
+          chapter={chapter}
+          loadablePaper={loadablePaper}
+          project={project}
+          updatePaper={updatePaper}
+        />
+        <ChapterViewEditorComponent loadablePaper={loadablePaper} />
+      </Container>
+      <Divider variant="fullWidth" />
+      <ChapterViewFooterComponent loadablePaper={loadablePaper} sectionalizePaper={sectionalizePaper} />
+    </Box>
+  </PaperContentProvider>
+);
 
 export default ChapterViewComponent;

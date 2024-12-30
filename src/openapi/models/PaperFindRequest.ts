@@ -11,13 +11,23 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
-import type { ChapterOnlyId } from './ChapterOnlyId';
-import { ChapterOnlyIdFromJSON, ChapterOnlyIdFromJSONTyped, ChapterOnlyIdToJSON } from './ChapterOnlyId';
+import { mapValues } from '../runtime';
 import type { ProjectOnlyId } from './ProjectOnlyId';
-import { ProjectOnlyIdFromJSON, ProjectOnlyIdFromJSONTyped, ProjectOnlyIdToJSON } from './ProjectOnlyId';
+import {
+  ProjectOnlyIdFromJSON,
+  ProjectOnlyIdFromJSONTyped,
+  ProjectOnlyIdToJSON,
+  ProjectOnlyIdToJSONTyped,
+} from './ProjectOnlyId';
+import type { ChapterOnlyId } from './ChapterOnlyId';
+import {
+  ChapterOnlyIdFromJSON,
+  ChapterOnlyIdFromJSONTyped,
+  ChapterOnlyIdToJSON,
+  ChapterOnlyIdToJSONTyped,
+} from './ChapterOnlyId';
 import type { UserOnlyId } from './UserOnlyId';
-import { UserOnlyIdFromJSON, UserOnlyIdFromJSONTyped, UserOnlyIdToJSON } from './UserOnlyId';
+import { UserOnlyIdFromJSON, UserOnlyIdFromJSONTyped, UserOnlyIdToJSON, UserOnlyIdToJSONTyped } from './UserOnlyId';
 
 /**
  * Request Body for Paper Find API
@@ -48,13 +58,11 @@ export interface PaperFindRequest {
 /**
  * Check if a given object implements the PaperFindRequest interface.
  */
-export function instanceOfPaperFindRequest(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'user' in value;
-  isInstance = isInstance && 'project' in value;
-  isInstance = isInstance && 'chapter' in value;
-
-  return isInstance;
+export function instanceOfPaperFindRequest(value: object): value is PaperFindRequest {
+  if (!('user' in value) || value['user'] === undefined) return false;
+  if (!('project' in value) || value['project'] === undefined) return false;
+  if (!('chapter' in value) || value['chapter'] === undefined) return false;
+  return true;
 }
 
 export function PaperFindRequestFromJSON(json: any): PaperFindRequest {
@@ -62,7 +70,7 @@ export function PaperFindRequestFromJSON(json: any): PaperFindRequest {
 }
 
 export function PaperFindRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): PaperFindRequest {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -72,16 +80,21 @@ export function PaperFindRequestFromJSONTyped(json: any, ignoreDiscriminator: bo
   };
 }
 
-export function PaperFindRequestToJSON(value?: PaperFindRequest | null): any {
-  if (value === undefined) {
-    return undefined;
+export function PaperFindRequestToJSON(json: any): PaperFindRequest {
+  return PaperFindRequestToJSONTyped(json, false);
+}
+
+export function PaperFindRequestToJSONTyped(
+  value?: PaperFindRequest | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    user: UserOnlyIdToJSON(value.user),
-    project: ProjectOnlyIdToJSON(value.project),
-    chapter: ChapterOnlyIdToJSON(value.chapter),
+    user: UserOnlyIdToJSON(value['user']),
+    project: ProjectOnlyIdToJSON(value['project']),
+    chapter: ChapterOnlyIdToJSON(value['chapter']),
   };
 }

@@ -11,7 +11,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * Chapter object without auto-generated fields
  * @export
@@ -35,12 +35,10 @@ export interface ChapterWithoutAutofield {
 /**
  * Check if a given object implements the ChapterWithoutAutofield interface.
  */
-export function instanceOfChapterWithoutAutofield(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'name' in value;
-  isInstance = isInstance && 'number' in value;
-
-  return isInstance;
+export function instanceOfChapterWithoutAutofield(value: object): value is ChapterWithoutAutofield {
+  if (!('name' in value) || value['name'] === undefined) return false;
+  if (!('number' in value) || value['number'] === undefined) return false;
+  return true;
 }
 
 export function ChapterWithoutAutofieldFromJSON(json: any): ChapterWithoutAutofield {
@@ -48,7 +46,7 @@ export function ChapterWithoutAutofieldFromJSON(json: any): ChapterWithoutAutofi
 }
 
 export function ChapterWithoutAutofieldFromJSONTyped(json: any, ignoreDiscriminator: boolean): ChapterWithoutAutofield {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -57,15 +55,20 @@ export function ChapterWithoutAutofieldFromJSONTyped(json: any, ignoreDiscrimina
   };
 }
 
-export function ChapterWithoutAutofieldToJSON(value?: ChapterWithoutAutofield | null): any {
-  if (value === undefined) {
-    return undefined;
+export function ChapterWithoutAutofieldToJSON(json: any): ChapterWithoutAutofield {
+  return ChapterWithoutAutofieldToJSONTyped(json, false);
+}
+
+export function ChapterWithoutAutofieldToJSONTyped(
+  value?: ChapterWithoutAutofield | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    name: value.name,
-    number: value.number,
+    name: value['name'],
+    number: value['number'],
   };
 }

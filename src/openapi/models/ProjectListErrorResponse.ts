@@ -11,9 +11,14 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { UserOnlyIdError } from './UserOnlyIdError';
-import { UserOnlyIdErrorFromJSON, UserOnlyIdErrorFromJSONTyped, UserOnlyIdErrorToJSON } from './UserOnlyIdError';
+import {
+  UserOnlyIdErrorFromJSON,
+  UserOnlyIdErrorFromJSONTyped,
+  UserOnlyIdErrorToJSON,
+  UserOnlyIdErrorToJSONTyped,
+} from './UserOnlyIdError';
 
 /**
  * Error Response Body for Project List API
@@ -26,7 +31,7 @@ export interface ProjectListErrorResponse {
    * @type {string}
    * @memberof ProjectListErrorResponse
    */
-  message?: string;
+  message: string;
   /**
    *
    * @type {UserOnlyIdError}
@@ -38,10 +43,9 @@ export interface ProjectListErrorResponse {
 /**
  * Check if a given object implements the ProjectListErrorResponse interface.
  */
-export function instanceOfProjectListErrorResponse(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfProjectListErrorResponse(value: object): value is ProjectListErrorResponse {
+  if (!('message' in value) || value['message'] === undefined) return false;
+  return true;
 }
 
 export function ProjectListErrorResponseFromJSON(json: any): ProjectListErrorResponse {
@@ -52,24 +56,29 @@ export function ProjectListErrorResponseFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
 ): ProjectListErrorResponse {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    message: !exists(json, 'message') ? undefined : json['message'],
-    user: !exists(json, 'user') ? undefined : UserOnlyIdErrorFromJSON(json['user']),
+    message: json['message'],
+    user: json['user'] == null ? undefined : UserOnlyIdErrorFromJSON(json['user']),
   };
 }
 
-export function ProjectListErrorResponseToJSON(value?: ProjectListErrorResponse | null): any {
-  if (value === undefined) {
-    return undefined;
+export function ProjectListErrorResponseToJSON(json: any): ProjectListErrorResponse {
+  return ProjectListErrorResponseToJSONTyped(json, false);
+}
+
+export function ProjectListErrorResponseToJSONTyped(
+  value?: ProjectListErrorResponse | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    message: value.message,
-    user: UserOnlyIdErrorToJSON(value.user),
+    message: value['message'],
+    user: UserOnlyIdErrorToJSON(value['user']),
   };
 }

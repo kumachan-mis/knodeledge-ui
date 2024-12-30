@@ -11,17 +11,23 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
-import type { PaperError } from './PaperError';
-import { PaperErrorFromJSON, PaperErrorFromJSONTyped, PaperErrorToJSON } from './PaperError';
+import { mapValues } from '../runtime';
 import type { ProjectOnlyIdError } from './ProjectOnlyIdError';
 import {
   ProjectOnlyIdErrorFromJSON,
   ProjectOnlyIdErrorFromJSONTyped,
   ProjectOnlyIdErrorToJSON,
+  ProjectOnlyIdErrorToJSONTyped,
 } from './ProjectOnlyIdError';
 import type { UserOnlyIdError } from './UserOnlyIdError';
-import { UserOnlyIdErrorFromJSON, UserOnlyIdErrorFromJSONTyped, UserOnlyIdErrorToJSON } from './UserOnlyIdError';
+import {
+  UserOnlyIdErrorFromJSON,
+  UserOnlyIdErrorFromJSONTyped,
+  UserOnlyIdErrorToJSON,
+  UserOnlyIdErrorToJSONTyped,
+} from './UserOnlyIdError';
+import type { PaperError } from './PaperError';
+import { PaperErrorFromJSON, PaperErrorFromJSONTyped, PaperErrorToJSON, PaperErrorToJSONTyped } from './PaperError';
 
 /**
  * Error Response Body for Paper Update API
@@ -34,7 +40,7 @@ export interface PaperUpdateErrorResponse {
    * @type {string}
    * @memberof PaperUpdateErrorResponse
    */
-  message?: string;
+  message: string;
   /**
    *
    * @type {UserOnlyIdError}
@@ -58,10 +64,9 @@ export interface PaperUpdateErrorResponse {
 /**
  * Check if a given object implements the PaperUpdateErrorResponse interface.
  */
-export function instanceOfPaperUpdateErrorResponse(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfPaperUpdateErrorResponse(value: object): value is PaperUpdateErrorResponse {
+  if (!('message' in value) || value['message'] === undefined) return false;
+  return true;
 }
 
 export function PaperUpdateErrorResponseFromJSON(json: any): PaperUpdateErrorResponse {
@@ -72,28 +77,33 @@ export function PaperUpdateErrorResponseFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
 ): PaperUpdateErrorResponse {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    message: !exists(json, 'message') ? undefined : json['message'],
-    user: !exists(json, 'user') ? undefined : UserOnlyIdErrorFromJSON(json['user']),
-    project: !exists(json, 'project') ? undefined : ProjectOnlyIdErrorFromJSON(json['project']),
-    paper: !exists(json, 'paper') ? undefined : PaperErrorFromJSON(json['paper']),
+    message: json['message'],
+    user: json['user'] == null ? undefined : UserOnlyIdErrorFromJSON(json['user']),
+    project: json['project'] == null ? undefined : ProjectOnlyIdErrorFromJSON(json['project']),
+    paper: json['paper'] == null ? undefined : PaperErrorFromJSON(json['paper']),
   };
 }
 
-export function PaperUpdateErrorResponseToJSON(value?: PaperUpdateErrorResponse | null): any {
-  if (value === undefined) {
-    return undefined;
+export function PaperUpdateErrorResponseToJSON(json: any): PaperUpdateErrorResponse {
+  return PaperUpdateErrorResponseToJSONTyped(json, false);
+}
+
+export function PaperUpdateErrorResponseToJSONTyped(
+  value?: PaperUpdateErrorResponse | null,
+  ignoreDiscriminator: boolean = false,
+): any {
+  if (value == null) {
+    return value;
   }
-  if (value === null) {
-    return null;
-  }
+
   return {
-    message: value.message,
-    user: UserOnlyIdErrorToJSON(value.user),
-    project: ProjectOnlyIdErrorToJSON(value.project),
-    paper: PaperErrorToJSON(value.paper),
+    message: value['message'],
+    user: UserOnlyIdErrorToJSON(value['user']),
+    project: ProjectOnlyIdErrorToJSON(value['project']),
+    paper: PaperErrorToJSON(value['paper']),
   };
 }
