@@ -1,3 +1,5 @@
+import { CHAPTER_ID_PARAM_KEY } from '@/utils/params';
+
 import { SaveResult, useAppBreadcrumbsSaving } from './AppBreadcrumbs.hooks';
 
 import SaveIcon from '@mui/icons-material/Save';
@@ -45,7 +47,7 @@ const AppBreadcrumbs: React.FC<AppBreadcrumbsProps> = ({ project, chapter, secti
           <Typography color="inherit">{project.name}</Typography>
         </Link>
         {section ? (
-          <Link href={`/projects/${project.id}/chapters/${chapter.id}`}>
+          <Link href={`/projects/${project.id}?${CHAPTER_ID_PARAM_KEY}=${chapter.id}`}>
             <Typography color="inherit">{chapter.name}</Typography>
           </Link>
         ) : (
