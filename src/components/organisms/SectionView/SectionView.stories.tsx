@@ -69,3 +69,13 @@ export const Loading: Story = {
     },
   },
 };
+
+export const NotFound: Story = {
+  args: {
+    ...Basic.args,
+    loadableGraph: {
+      state: 'notfound',
+      data: null,
+    },
+  },
+};

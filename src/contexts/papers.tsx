@@ -75,6 +75,7 @@ export function useInitPaper(userId: string, projectId: string, chapterId: strin
       }
 
       if (errorable.state === 'error') {
+        setPaperMap((prev) => new Map(prev.set(chapterId, { state: 'notfound', data: null })));
         return;
       }
 

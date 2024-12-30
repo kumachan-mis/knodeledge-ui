@@ -24,7 +24,7 @@ const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({
     [setGraph],
   );
 
-  return <AppEditor loading={loadableGraph.state === 'loading'} setText={setText} text={graph.paragraph} />;
+  return <AppEditor setText={setText} state={loadableGraph.state} text={graph.paragraph} />;
 };
 
 export default SectionViewEditorComponent;

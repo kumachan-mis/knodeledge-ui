@@ -18,7 +18,7 @@ const ChapterViewFooterComponent: React.FC<ChapterViewFooterComponentProps> = ({
   sectionalizePaper,
 }) => {
   const { open: openNextStepDialog, onOpen: onOpenNextStepDialog, onClose: onCloseNextStepDialog } = useDialog();
-  const disabled = loadablePaper.state === 'loading';
+  const disabled = loadablePaper.state !== 'success';
 
   return (
     <Toolbar sx={{ display: 'flex', justifyContent: 'flex-end' }} variant="dense">

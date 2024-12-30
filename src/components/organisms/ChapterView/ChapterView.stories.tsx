@@ -64,3 +64,13 @@ export const Loading: Story = {
     },
   },
 };
+
+export const NotFound: Story = {
+  args: {
+    ...Basic.args,
+    loadablePaper: {
+      state: 'notfound',
+      data: null,
+    },
+  },
+};

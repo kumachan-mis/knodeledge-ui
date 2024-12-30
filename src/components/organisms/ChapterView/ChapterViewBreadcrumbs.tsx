@@ -19,7 +19,7 @@ const ChapterViewBreadcrumbsComponent: React.FC<ChapterViewBreadcrumbsComponentP
 }) => {
   const unsavedPaper = usePaperContent();
   const dirty = loadablePaper.state === 'success' && unsavedPaper.content !== loadablePaper.data.content;
-  const saveDisabled = loadablePaper.state === 'loading';
+  const saveDisabled = loadablePaper.state !== 'success';
 
   return (
     <AppBreadcrumbs

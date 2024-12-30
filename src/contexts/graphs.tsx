@@ -70,6 +70,7 @@ export function useInitGraph(userId: string, projectId: string, chapterId: strin
       }
 
       if (errorable.state === 'error') {
+        setGraphMap((prev) => new Map(prev.set(sectionId, { state: 'notfound', data: null })));
         return;
       }
 

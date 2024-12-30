@@ -21,7 +21,7 @@ const SectionViewBreadcrumbsComponent: React.FC<SectionViewBreadcrumbsComponentP
 }) => {
   const unsavedGraph = useGraphContent();
   const dirty = loadableGraph.state === 'success' && unsavedGraph.paragraph !== loadableGraph.data.paragraph;
-  const saveDisabled = loadableGraph.state === 'loading';
+  const saveDisabled = loadableGraph.state !== 'success';
 
   return (
     <AppBreadcrumbs

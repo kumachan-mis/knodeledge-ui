@@ -9,6 +9,10 @@ export type LoadableClientSideData<D> =
       data: D;
     }
   | {
+      state: 'notfound';
+      data: null;
+    }
+  | {
       state: 'loading';
       data: null;
     };
