@@ -24,7 +24,7 @@ const ChapterViewEditorComponent: React.FC<ChapterViewEditorComponentProps> = ({
     [setPaper],
   );
 
-  return <AppEditor setText={setText} state={loadablePaper.state} text={paper.content} />;
+  return <AppEditor setText={setText} state={loadablePaper.state} text={paper.content} view="paper" />;
 };
 
 export default ChapterViewEditorComponent;

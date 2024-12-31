@@ -5,6 +5,7 @@ import { ChapterWithSections, GraphContentWithoutAutofield, Project, SectionOfCh
 
 import SectionViewBreadcrumbsComponent from './SectionViewBreadcrumbs';
 import SectionViewEditorComponent from './SectionViewEditor';
+import SectionViewGraphComponent from './SectionViewGraph';
 
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -40,7 +41,8 @@ const SectionViewComponent: React.FC<SectionViewComponentProps> = ({
           section={section}
           updateGraph={updateGraph}
         />
-        <SectionViewEditorComponent loadableGraph={loadableGraph} />
+        <SectionViewGraphComponent loadableGraph={loadableGraph} />
+        <SectionViewEditorComponent loadableGraph={loadableGraph} view="graph" />
       </Container>
     </Box>
   </GraphContentProvider>

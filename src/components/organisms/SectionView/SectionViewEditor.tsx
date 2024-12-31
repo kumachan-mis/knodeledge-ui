@@ -7,9 +7,10 @@ import React from 'react';
 
 export type SectionViewEditorComponentProps = {
   readonly loadableGraph: LoadableGraph;
+  readonly view: 'article' | 'graph';
 };
 
-const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({ loadableGraph }) => {
+const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({ loadableGraph, view }) => {
   const graph = useGraphContent();
   const setGraph = useSetGraphContent();
 
@@ -24,7 +25,7 @@ const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({
     [setGraph],
   );
 
-  return <AppEditor setText={setText} state={loadableGraph.state} text={graph.paragraph} />;
+  return <AppEditor setText={setText} state={loadableGraph.state} text={graph.paragraph} view={view} />;
 };
 
 export default SectionViewEditorComponent;
