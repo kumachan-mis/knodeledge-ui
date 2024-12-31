@@ -32,7 +32,7 @@ export interface GraphContentWithoutAutofield {
    * @type {Array<GraphChild>}
    * @memberof GraphContentWithoutAutofield
    */
-  children?: Array<GraphChild>;
+  children: Array<GraphChild>;
 }
 
 /**
@@ -40,6 +40,7 @@ export interface GraphContentWithoutAutofield {
  */
 export function instanceOfGraphContentWithoutAutofield(value: object): value is GraphContentWithoutAutofield {
   if (!('paragraph' in value) || value['paragraph'] === undefined) return false;
+  if (!('children' in value) || value['children'] === undefined) return false;
   return true;
 }
 
@@ -56,7 +57,7 @@ export function GraphContentWithoutAutofieldFromJSONTyped(
   }
   return {
     paragraph: json['paragraph'],
-    children: json['children'] == null ? undefined : (json['children'] as Array<any>).map(GraphChildFromJSON),
+    children: (json['children'] as Array<any>).map(GraphChildFromJSON),
   };
 }
 
@@ -74,6 +75,6 @@ export function GraphContentWithoutAutofieldToJSONTyped(
 
   return {
     paragraph: value['paragraph'],
-    children: value['children'] == null ? undefined : (value['children'] as Array<any>).map(GraphChildToJSON),
+    children: (value['children'] as Array<any>).map(GraphChildToJSON),
   };
 }
