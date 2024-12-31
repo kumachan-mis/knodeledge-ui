@@ -1,5 +1,5 @@
 import { SectionOfChapter } from '@/openapi';
-import { CHAPTER_ID_PARAM_KEY, PROJECT_ID_PATH_NAME, SECTION_ID_PARAM_KEY } from '@/utils/page';
+import { CHAPTER_ID_PARAM_KEY, PROJECTS_ID_PATH_NAME, SECTION_ID_PARAM_KEY } from '@/utils/page';
 
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -16,7 +16,7 @@ const SectionListItem: React.FC<SectionListItemProps> = ({ projectId, chapterId,
   <ListItem>
     <ListItemButton
       LinkComponent={Link}
-      href={`/${PROJECT_ID_PATH_NAME}/${projectId}?${CHAPTER_ID_PARAM_KEY}=${chapterId}&${SECTION_ID_PARAM_KEY}=${section.id}`}
+      href={`/${PROJECTS_ID_PATH_NAME}/${projectId}?${CHAPTER_ID_PARAM_KEY}=${chapterId}&${SECTION_ID_PARAM_KEY}=${section.id}`}
     >
       <ListItemText slotProps={{ primary: { variant: 'subtitle2' } }}>{section.name}</ListItemText>
     </ListItemButton>

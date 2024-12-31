@@ -82,6 +82,7 @@ test('should show graph paragraph from Graph Find API', async () => {
       graph: {
         id: 'GRAPH',
         paragraph: 'Graph Paragraph',
+        children: [],
       },
     }),
   );

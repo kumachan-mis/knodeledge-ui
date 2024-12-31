@@ -4,6 +4,7 @@ import { LoadableAction } from '@/contexts/openapi';
 import { ProjectActionError } from '@/contexts/projects';
 import { useDialog } from '@/hooks/dialog';
 import { Project, ProjectWithoutAutofield } from '@/openapi';
+import { PROJECTS_ID_PATH_NAME } from '@/utils/page';
 
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import Card from '@mui/material/Card';
@@ -29,7 +30,7 @@ const ProjectCardComponent: React.FC<ProjectCardComponentProps> = ({ project, on
 
   return (
     <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <CardActionArea LinkComponent={Link} href={`/projects/${project.id}`}>
+      <CardActionArea LinkComponent={Link} href={`/${PROJECTS_ID_PATH_NAME}/${project.id}`}>
         <CardContent>
           <Tooltip title={project.name}>
             <Typography color="text.primary" component="div" gutterBottom noWrap variant="h6">

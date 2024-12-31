@@ -1,4 +1,4 @@
-import { CHAPTER_ID_PARAM_KEY, PROJECT_ID_PATH_NAME } from '@/utils/page';
+import { CHAPTER_ID_PARAM_KEY, PROJECTS_ID_PATH_NAME } from '@/utils/page';
 
 import { SaveResult, useAppBreadcrumbsSaving } from './AppBreadcrumbs.hooks';
 
@@ -43,11 +43,11 @@ const AppBreadcrumbs: React.FC<AppBreadcrumbsProps> = ({ project, chapter, secti
           flexGrow: 1,
         }}
       >
-        <Link href={`/${PROJECT_ID_PATH_NAME}/${project.id}`}>
+        <Link href={`/${PROJECTS_ID_PATH_NAME}/${project.id}`}>
           <Typography color="inherit">{project.name}</Typography>
         </Link>
         {section ? (
-          <Link href={`/${PROJECT_ID_PATH_NAME}/${project.id}?${CHAPTER_ID_PARAM_KEY}=${chapter.id}`}>
+          <Link href={`/${PROJECTS_ID_PATH_NAME}/${project.id}?${CHAPTER_ID_PARAM_KEY}=${chapter.id}`}>
             <Typography color="inherit">{chapter.name}</Typography>
           </Link>
         ) : (

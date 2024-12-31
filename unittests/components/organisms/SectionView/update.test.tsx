@@ -91,6 +91,7 @@ test('should update graph with Graph Update API', async () => {
         graph: {
           id: 'GRAPH',
           paragraph: 'Graph Paragraph',
+          children: [],
         },
       }),
     )
@@ -99,6 +100,7 @@ test('should update graph with Graph Update API', async () => {
         graph: {
           id: 'GRAPH',
           paragraph: 'Graph Paragraph Updated',
+          children: [],
         },
       }),
     );
@@ -168,7 +170,7 @@ test('should update graph with Graph Update API', async () => {
         user: { id: USER.sub },
         project: { id: 'PROJECT' },
         chapter: { id: 'CHAPTER' },
-        graph: { id: 'GRAPH', paragraph: 'Graph Paragraph Updated' },
+        graph: { id: 'GRAPH', paragraph: 'Graph Paragraph Updated', children: [] },
       }),
     }),
   );
@@ -202,6 +204,7 @@ test('should show error message when graph update failed', async () => {
         graph: {
           id: 'GRAPH',
           paragraph: 'Graph Paragraph',
+          children: [],
         },
       }),
     )
@@ -281,7 +284,7 @@ test('should show error message when graph update failed', async () => {
         user: { id: USER.sub },
         project: { id: 'PROJECT' },
         chapter: { id: 'CHAPTER' },
-        graph: { id: 'GRAPH', paragraph: 'Graph Paragraph Updated' },
+        graph: { id: 'GRAPH', paragraph: 'Graph Paragraph Updated', children: [] },
       }),
     }),
   );
@@ -315,6 +318,7 @@ test('should show error message when graph to be updated does not exist', async 
         graph: {
           id: 'GRAPH',
           paragraph: 'Graph Paragraph',
+          children: [],
         },
       }),
     )
@@ -392,7 +396,7 @@ test('should show error message when graph to be updated does not exist', async 
         user: { id: USER.sub },
         project: { id: 'PROJECT' },
         chapter: { id: 'CHAPTER' },
-        graph: { id: 'GRAPH', paragraph: 'Graph Paragraph Updated' },
+        graph: { id: 'GRAPH', paragraph: 'Graph Paragraph Updated', children: [] },
       }),
     }),
   );
@@ -426,6 +430,7 @@ test('should show error message when internal error occured', async () => {
         graph: {
           id: 'GRAPH',
           paragraph: 'Graph Paragraph',
+          children: [],
         },
       }),
     )
@@ -501,7 +506,7 @@ test('should show error message when internal error occured', async () => {
         user: { id: USER.sub },
         project: { id: 'PROJECT' },
         chapter: { id: 'CHAPTER' },
-        graph: { id: 'GRAPH', paragraph: 'Graph Paragraph Updated' },
+        graph: { id: 'GRAPH', paragraph: 'Graph Paragraph Updated', children: [] },
       }),
     }),
   );

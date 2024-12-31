@@ -24,12 +24,12 @@ export type LoadableActionGraphUpdate = (
 
 const EMPTY_GRAPH_ACTION_ERROR: GraphActionError = {
   message: '',
-  graph: { paragraph: '' },
+  graph: { paragraph: '', children: { message: '', items: [] } },
 } as const;
 
 const UNKNOWN_GRAPH_ACTION_ERROR: GraphActionError = {
   message: 'unknown error',
-  graph: { paragraph: 'unknown error' },
+  graph: { paragraph: 'unknown error', children: { message: 'unknown error', items: [] } },
 } as const;
 
 const GraphMapValueContext = React.createContext<LoadableGraphMap>(new Map());
@@ -122,15 +122,7 @@ export function useUpdateGraph(
       };
     }
 
-    setGraphMap(
-      (prev) =>
-        new Map(
-          prev.set(sectionId, {
-            state: 'success',
-            data: { name: loadableGraph.data.name, ...errorable.response.graph },
-          }),
-        ),
-    );
+    setGraphMap((prev) => new Map(prev.set(sectionId, { state: 'success', data: errorable.response.graph })));
     return { state: 'success', error: null };
   };
 }

@@ -43,6 +43,7 @@ export const Basic: Story = {
         id: 'GRAPH',
         name: 'Section One',
         paragraph: 'This is graph content.',
+        children: [],
       },
     },
   },
@@ -50,7 +51,12 @@ export const Basic: Story = {
     (Story) => (
       <GraphContentProvider
         loadableGraph={{
-          data: { id: 'GRAPH', name: 'Graph Name', paragraph: 'This is graph content.' },
+          data: {
+            id: 'GRAPH',
+            name: 'Graph Name',
+            paragraph: 'This is graph content.',
+            children: [],
+          },
           state: 'success',
         }}
       >
