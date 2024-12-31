@@ -43,7 +43,7 @@ const PaperContentInnerProvider: React.FC<{
   );
 };
 
-const GraphContentValueContext = React.createContext<GraphContentWithoutAutofield>({ paragraph: '' });
+const GraphContentValueContext = React.createContext<GraphContentWithoutAutofield>({ paragraph: '', children: [] });
 
 const GraphContentSetContext = React.createContext<React.Dispatch<React.SetStateAction<GraphContentWithoutAutofield>>>(
   () => {

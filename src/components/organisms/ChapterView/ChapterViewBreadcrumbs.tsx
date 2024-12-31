@@ -3,6 +3,7 @@ import { LoadableAction } from '@/contexts/openapi';
 import { LoadablePaper, PaperActionError } from '@/contexts/papers';
 import { usePaperContent } from '@/contexts/views';
 import { Chapter, PaperWithoutAutofield, Project } from '@/openapi';
+import { chapterViewContentEquals } from '@/utils/logic';
 
 export type ChapterViewBreadcrumbsComponentProps = {
   readonly project: Project;
@@ -18,7 +19,7 @@ const ChapterViewBreadcrumbsComponent: React.FC<ChapterViewBreadcrumbsComponentP
   updatePaper,
 }) => {
   const unsavedPaper = usePaperContent();
-  const dirty = loadablePaper.state === 'success' && unsavedPaper.content !== loadablePaper.data.content;
+  const dirty = loadablePaper.state === 'success' && !chapterViewContentEquals(loadablePaper.data, unsavedPaper);
   const saveDisabled = loadablePaper.state !== 'success';
 
   return (
