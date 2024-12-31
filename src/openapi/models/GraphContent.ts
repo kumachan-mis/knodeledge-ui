@@ -12,6 +12,9 @@
  */
 
 import { mapValues } from '../runtime';
+import type { GraphChild } from './GraphChild';
+import { GraphChildFromJSON, GraphChildFromJSONTyped, GraphChildToJSON, GraphChildToJSONTyped } from './GraphChild';
+
 /**
  * Graph object with only content fields
  * @export
@@ -30,6 +33,12 @@ export interface GraphContent {
    * @memberof GraphContent
    */
   paragraph: string;
+  /**
+   *
+   * @type {Array<GraphChild>}
+   * @memberof GraphContent
+   */
+  children: Array<GraphChild>;
 }
 
 /**
@@ -38,6 +47,7 @@ export interface GraphContent {
 export function instanceOfGraphContent(value: object): value is GraphContent {
   if (!('id' in value) || value['id'] === undefined) return false;
   if (!('paragraph' in value) || value['paragraph'] === undefined) return false;
+  if (!('children' in value) || value['children'] === undefined) return false;
   return true;
 }
 
@@ -52,6 +62,7 @@ export function GraphContentFromJSONTyped(json: any, ignoreDiscriminator: boolea
   return {
     id: json['id'],
     paragraph: json['paragraph'],
+    children: (json['children'] as Array<any>).map(GraphChildFromJSON),
   };
 }
 
@@ -67,5 +78,6 @@ export function GraphContentToJSONTyped(value?: GraphContent | null, ignoreDiscr
   return {
     id: value['id'],
     paragraph: value['paragraph'],
+    children: (value['children'] as Array<any>).map(GraphChildToJSON),
   };
 }

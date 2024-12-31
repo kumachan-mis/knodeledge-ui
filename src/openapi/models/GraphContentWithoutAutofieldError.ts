@@ -12,6 +12,14 @@
  */
 
 import { mapValues } from '../runtime';
+import type { GraphChildrenError } from './GraphChildrenError';
+import {
+  GraphChildrenErrorFromJSON,
+  GraphChildrenErrorFromJSONTyped,
+  GraphChildrenErrorToJSON,
+  GraphChildrenErrorToJSONTyped,
+} from './GraphChildrenError';
+
 /**
  * Error Message for GraphContentWithoutAutofield object
  * @export
@@ -24,6 +32,12 @@ export interface GraphContentWithoutAutofieldError {
    * @memberof GraphContentWithoutAutofieldError
    */
   paragraph?: string;
+  /**
+   *
+   * @type {GraphChildrenError}
+   * @memberof GraphContentWithoutAutofieldError
+   */
+  children?: GraphChildrenError;
 }
 
 /**
@@ -46,6 +60,7 @@ export function GraphContentWithoutAutofieldErrorFromJSONTyped(
   }
   return {
     paragraph: json['paragraph'] == null ? undefined : json['paragraph'],
+    children: json['children'] == null ? undefined : GraphChildrenErrorFromJSON(json['children']),
   };
 }
 
@@ -63,5 +78,6 @@ export function GraphContentWithoutAutofieldErrorToJSONTyped(
 
   return {
     paragraph: value['paragraph'],
+    children: GraphChildrenErrorToJSON(value['children']),
   };
 }
