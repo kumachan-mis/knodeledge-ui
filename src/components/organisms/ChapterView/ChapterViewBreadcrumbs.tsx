@@ -20,7 +20,6 @@ const ChapterViewBreadcrumbsComponent: React.FC<ChapterViewBreadcrumbsComponentP
 }) => {
   const unsavedPaper = usePaperContent();
   const dirty = loadablePaper.state === 'success' && !chapterViewContentEquals(loadablePaper.data, unsavedPaper);
-  const saveDisabled = loadablePaper.state !== 'success';
 
   return (
     <AppBreadcrumbs
@@ -38,7 +37,6 @@ const ChapterViewBreadcrumbsComponent: React.FC<ChapterViewBreadcrumbsComponentP
         return { success: false, error: `${loadableAction.error.message}: ${loadableAction.error.paper.content}` };
       }}
       project={{ id: project.id, name: project.name }}
-      saveDisabled={saveDisabled}
     />
   );
 };
