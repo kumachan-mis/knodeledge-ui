@@ -19,7 +19,7 @@ const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({
         setGraph((prev) => ({ ...prev, paragraph: value(prev.paragraph) }));
         return;
       }
-      setGraph({ paragraph: value });
+      setGraph((prev) => ({ ...prev, paragraph: value }));
     },
     [setGraph],
   );

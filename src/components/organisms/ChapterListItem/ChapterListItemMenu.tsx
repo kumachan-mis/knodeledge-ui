@@ -4,7 +4,7 @@ import { ChapterActionError } from '@/contexts/chapters';
 import { LoadableAction } from '@/contexts/openapi';
 import { useDialog } from '@/hooks/dialog';
 import { ChapterWithSections, ChapterWithoutAutofield } from '@/openapi';
-import { CHAPTER_ID_PARAM_KEY } from '@/utils/params';
+import { CHAPTER_ID_PARAM_KEY, PROJECTS_ID_PATH_NAME } from '@/utils/page';
 
 import OpenNoteIcon from '@mui/icons-material/Description';
 import EditNoteIcon from '@mui/icons-material/EditNote';
@@ -36,7 +36,7 @@ const ChapterListItemMenuComponent: React.FC<ChapterListItemMenuComponentProps> 
 
   return (
     <Menu {...rest} sx={{ '& a': { textDecoration: 'none', color: 'inherit' } }}>
-      <Link href={`/projects/${projectId}?${CHAPTER_ID_PARAM_KEY}=${chapter.id}`}>
+      <Link href={`/${PROJECTS_ID_PATH_NAME}/${projectId}?${CHAPTER_ID_PARAM_KEY}=${chapter.id}`}>
         <MenuItem>
           <ListItemIcon>
             <OpenNoteIcon fontSize="small" />

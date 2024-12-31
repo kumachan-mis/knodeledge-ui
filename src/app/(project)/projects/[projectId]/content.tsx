@@ -10,8 +10,7 @@ import {
 } from '@/contexts/chapters';
 import { useInitGraph } from '@/contexts/graphs';
 import { useInitPaper } from '@/contexts/papers';
-import { AuthorizedPageProps } from '@/utils/page';
-import { CHAPTER_ID_PARAM_KEY, SECTION_ID_PARAM_KEY } from '@/utils/params';
+import { AuthorizedPageProps, CHAPTER_ID_PARAM_KEY, SECTION_ID_PARAM_KEY } from '@/utils/page';
 
 import { useSearchParams } from 'next/navigation';
 import React from 'react';

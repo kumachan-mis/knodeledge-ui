@@ -1,3 +1,5 @@
+import { CHAPTER_ID_PARAM_KEY, PROJECTS_ID_PATH_NAME } from '@/utils/page';
+
 import { SaveResult, useAppBreadcrumbsSaving } from './AppBreadcrumbs.hooks';
 
 import SaveIcon from '@mui/icons-material/Save';
@@ -19,11 +21,10 @@ export type AppBreadcrumbsProps = {
   readonly chapter: BreadcrumbItem;
   readonly section?: BreadcrumbItem;
   readonly dirty: boolean;
-  readonly saveDisabled?: boolean;
   readonly onSave: () => Promise<SaveResult>;
 };
 
-const AppBreadcrumbs: React.FC<AppBreadcrumbsProps> = ({ project, chapter, section, onSave, dirty, saveDisabled }) => {
+const AppBreadcrumbs: React.FC<AppBreadcrumbsProps> = ({ project, chapter, section, onSave, dirty }) => {
   const { savingError, onSaveClick, onClearSavingError } = useAppBreadcrumbsSaving({ dirty, onSave });
 
   return (
@@ -41,11 +42,11 @@ const AppBreadcrumbs: React.FC<AppBreadcrumbsProps> = ({ project, chapter, secti
           flexGrow: 1,
         }}
       >
-        <Link href={`/projects/${project.id}`}>
+        <Link href={`/${PROJECTS_ID_PATH_NAME}/${project.id}`}>
           <Typography color="inherit">{project.name}</Typography>
         </Link>
         {section ? (
-          <Link href={`/projects/${project.id}/chapters/${chapter.id}`}>
+          <Link href={`/${PROJECTS_ID_PATH_NAME}/${project.id}?${CHAPTER_ID_PARAM_KEY}=${chapter.id}`}>
             <Typography color="inherit">{chapter.name}</Typography>
           </Link>
         ) : (
@@ -59,7 +60,7 @@ const AppBreadcrumbs: React.FC<AppBreadcrumbsProps> = ({ project, chapter, secti
           </Typography>
         )}
       </Breadcrumbs>
-      <Button disabled={saveDisabled} onClick={onSaveClick} size="small" startIcon={<SaveIcon />} variant="text">
+      <Button disabled={!dirty} onClick={onSaveClick} size="small" startIcon={<SaveIcon />} variant="text">
         Save
       </Button>
       <Snackbar onClose={onClearSavingError} open={!!savingError}>

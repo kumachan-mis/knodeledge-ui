@@ -12,13 +12,8 @@
  */
 
 import { mapValues } from '../runtime';
-import type { GraphContent } from './GraphContent';
-import {
-  GraphContentFromJSON,
-  GraphContentFromJSONTyped,
-  GraphContentToJSON,
-  GraphContentToJSONTyped,
-} from './GraphContent';
+import type { Graph } from './Graph';
+import { GraphFromJSON, GraphFromJSONTyped, GraphToJSON, GraphToJSONTyped } from './Graph';
 
 /**
  * Response Body for Graph Update API
@@ -28,10 +23,10 @@ import {
 export interface GraphUpdateResponse {
   /**
    *
-   * @type {GraphContent}
+   * @type {Graph}
    * @memberof GraphUpdateResponse
    */
-  graph: GraphContent;
+  graph: Graph;
 }
 
 /**
@@ -51,7 +46,7 @@ export function GraphUpdateResponseFromJSONTyped(json: any, ignoreDiscriminator:
     return json;
   }
   return {
-    graph: GraphContentFromJSON(json['graph']),
+    graph: GraphFromJSON(json['graph']),
   };
 }
 
@@ -68,6 +63,6 @@ export function GraphUpdateResponseToJSONTyped(
   }
 
   return {
-    graph: GraphContentToJSON(value['graph']),
+    graph: GraphToJSON(value['graph']),
   };
 }

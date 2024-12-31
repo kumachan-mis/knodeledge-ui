@@ -12,6 +12,9 @@
  */
 
 import { mapValues } from '../runtime';
+import type { GraphChild } from './GraphChild';
+import { GraphChildFromJSON, GraphChildFromJSONTyped, GraphChildToJSON, GraphChildToJSONTyped } from './GraphChild';
+
 /**
  * Graph object
  * @export
@@ -36,6 +39,12 @@ export interface Graph {
    * @memberof Graph
    */
   paragraph: string;
+  /**
+   *
+   * @type {Array<GraphChild>}
+   * @memberof Graph
+   */
+  children: Array<GraphChild>;
 }
 
 /**
@@ -45,6 +54,7 @@ export function instanceOfGraph(value: object): value is Graph {
   if (!('id' in value) || value['id'] === undefined) return false;
   if (!('name' in value) || value['name'] === undefined) return false;
   if (!('paragraph' in value) || value['paragraph'] === undefined) return false;
+  if (!('children' in value) || value['children'] === undefined) return false;
   return true;
 }
 
@@ -60,6 +70,7 @@ export function GraphFromJSONTyped(json: any, ignoreDiscriminator: boolean): Gra
     id: json['id'],
     name: json['name'],
     paragraph: json['paragraph'],
+    children: (json['children'] as Array<any>).map(GraphChildFromJSON),
   };
 }
 
@@ -76,5 +87,6 @@ export function GraphToJSONTyped(value?: Graph | null, ignoreDiscriminator: bool
     id: value['id'],
     name: value['name'],
     paragraph: value['paragraph'],
+    children: (value['children'] as Array<any>).map(GraphChildToJSON),
   };
 }

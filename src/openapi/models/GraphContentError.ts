@@ -12,6 +12,14 @@
  */
 
 import { mapValues } from '../runtime';
+import type { GraphChildrenError } from './GraphChildrenError';
+import {
+  GraphChildrenErrorFromJSON,
+  GraphChildrenErrorFromJSONTyped,
+  GraphChildrenErrorToJSON,
+  GraphChildrenErrorToJSONTyped,
+} from './GraphChildrenError';
+
 /**
  * Error Message for GraphContent object
  * @export
@@ -30,6 +38,12 @@ export interface GraphContentError {
    * @memberof GraphContentError
    */
   paragraph?: string;
+  /**
+   *
+   * @type {GraphChildrenError}
+   * @memberof GraphContentError
+   */
+  children?: GraphChildrenError;
 }
 
 /**
@@ -50,6 +64,7 @@ export function GraphContentErrorFromJSONTyped(json: any, ignoreDiscriminator: b
   return {
     id: json['id'] == null ? undefined : json['id'],
     paragraph: json['paragraph'] == null ? undefined : json['paragraph'],
+    children: json['children'] == null ? undefined : GraphChildrenErrorFromJSON(json['children']),
   };
 }
 
@@ -68,5 +83,6 @@ export function GraphContentErrorToJSONTyped(
   return {
     id: value['id'],
     paragraph: value['paragraph'],
+    children: GraphChildrenErrorToJSON(value['children']),
   };
 }

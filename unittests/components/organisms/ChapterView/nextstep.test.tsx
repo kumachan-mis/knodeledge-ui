@@ -92,11 +92,13 @@ test('should sectionalize paper into graph with Graph Sectionalize API', async (
             id: 'SECTION_ONE',
             name: 'Section 1',
             paragraph: 'section one text section one text',
+            children: [],
           },
           {
             id: 'SECTION_TWO',
             name: 'Section 2',
             paragraph: 'section two text section two text\nsection two text section two text',
+            children: [],
           },
         ],
       }),

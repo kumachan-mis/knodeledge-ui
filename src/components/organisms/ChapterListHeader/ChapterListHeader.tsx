@@ -4,6 +4,7 @@ import { ChapterActionError } from '@/contexts/chapters';
 import { LoadableAction } from '@/contexts/openapi';
 import { useDialog } from '@/hooks/dialog';
 import { ChapterWithoutAutofield, ChapterWithSections, Project } from '@/openapi';
+import { PROJECTS_ID_PATH_NAME } from '@/utils/page';
 
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import Box from '@mui/material/Box';
@@ -30,7 +31,7 @@ const ChapterListHeaderComponent: React.FC<ChapterListHeaderComponentProps> = ({
       <Button
         LinkComponent={Link}
         color="inherit"
-        href={`/projects/${project.id}`}
+        href={`/${PROJECTS_ID_PATH_NAME}/${project.id}`}
         sx={{ flexGrow: 1, textTransform: 'none' }}
       >
         <Typography fontWeight="bold" noWrap variant="subtitle1">

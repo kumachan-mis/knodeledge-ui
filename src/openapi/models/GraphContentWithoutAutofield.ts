@@ -12,6 +12,9 @@
  */
 
 import { mapValues } from '../runtime';
+import type { GraphChild } from './GraphChild';
+import { GraphChildFromJSON, GraphChildFromJSONTyped, GraphChildToJSON, GraphChildToJSONTyped } from './GraphChild';
+
 /**
  * Graph object with only content fields without auto-generated fields
  * @export
@@ -24,6 +27,12 @@ export interface GraphContentWithoutAutofield {
    * @memberof GraphContentWithoutAutofield
    */
   paragraph: string;
+  /**
+   *
+   * @type {Array<GraphChild>}
+   * @memberof GraphContentWithoutAutofield
+   */
+  children: Array<GraphChild>;
 }
 
 /**
@@ -31,6 +40,7 @@ export interface GraphContentWithoutAutofield {
  */
 export function instanceOfGraphContentWithoutAutofield(value: object): value is GraphContentWithoutAutofield {
   if (!('paragraph' in value) || value['paragraph'] === undefined) return false;
+  if (!('children' in value) || value['children'] === undefined) return false;
   return true;
 }
 
@@ -47,6 +57,7 @@ export function GraphContentWithoutAutofieldFromJSONTyped(
   }
   return {
     paragraph: json['paragraph'],
+    children: (json['children'] as Array<any>).map(GraphChildFromJSON),
   };
 }
 
@@ -64,5 +75,6 @@ export function GraphContentWithoutAutofieldToJSONTyped(
 
   return {
     paragraph: value['paragraph'],
+    children: (value['children'] as Array<any>).map(GraphChildToJSON),
   };
 }
