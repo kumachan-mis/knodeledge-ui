@@ -1,5 +1,5 @@
-import { SectionsActionError } from '@/contexts/chapters';
-import { LoadableAction } from '@/contexts/openapi';
+import { SectionsActionError } from '@/contexts/openapi/chapters';
+import { LoadableAction } from '@/contexts/openapi/types';
 import { SectionWithoutAutofield } from '@/openapi';
 
 import NextStepDialogComponent from './NextStepDialog';

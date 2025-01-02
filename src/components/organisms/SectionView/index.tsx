@@ -1,6 +1,6 @@
-import { useLoadableActiveChapterInList, useLoadableActiveSectionInList } from '@/contexts/chapters';
-import { useLoadableGraph, useUpdateGraph } from '@/contexts/graphs';
-import { useLoadableProject } from '@/contexts/projects';
+import { useLoadableActiveChapterInList, useLoadableActiveSectionInList } from '@/contexts/openapi/chapters';
+import { useLoadableGraph, useUpdateGraph } from '@/contexts/openapi/graphs';
+import { useLoadableProject } from '@/contexts/openapi/projects';
 
 import SectionViewComponent from './SectionView';
 

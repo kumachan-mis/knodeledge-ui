@@ -1,4 +1,4 @@
-import { PaperContentProvider } from '@/contexts/views';
+import { PaperContentProvider } from '@/contexts/views/paper';
 
 import ChapterViewComponent from './ChapterView';
 

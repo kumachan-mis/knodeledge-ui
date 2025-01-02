@@ -1,5 +1,5 @@
 'use client';
-import { useCreateProjectInList } from '@/contexts/projects';
+import { useCreateProjectInList } from '@/contexts/openapi/projects';
 
 import ProjectToolbarComponent from './ProjectToolbar';
 

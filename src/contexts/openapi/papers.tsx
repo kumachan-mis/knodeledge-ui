@@ -10,8 +10,8 @@ import {
   UserOnlyId,
 } from '@/openapi';
 
-import { LoadableAction, LoadableClientSideData } from './openapi';
 import { useSetPanic } from './panic';
+import { LoadableAction, LoadableClientSideData } from './types';
 
 import React from 'react';
 

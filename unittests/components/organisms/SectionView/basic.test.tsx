@@ -6,10 +6,10 @@ import {
   ActiveChapterContextProvider,
   ActiveSectionContextProvider,
   ChapterListContextProvider,
-} from '@/contexts/chapters';
-import { CachedGraphContextProvider, useInitGraph } from '@/contexts/graphs';
-import { PanicContextProvider } from '@/contexts/panic';
-import { ProjectContextProvider } from '@/contexts/projects';
+} from '@/contexts/openapi/chapters';
+import { CachedGraphContextProvider, useInitGraph } from '@/contexts/openapi/graphs';
+import { PanicContextProvider } from '@/contexts/openapi/panic';
+import { ProjectContextProvider } from '@/contexts/openapi/projects';
 import { ChapterWithSections, Project } from '@/openapi';
 
 import { render, waitFor } from '@testing-library/react';

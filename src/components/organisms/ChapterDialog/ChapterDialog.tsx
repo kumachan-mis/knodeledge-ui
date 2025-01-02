@@ -1,6 +1,6 @@
 'use client';
-import { ChapterActionError } from '@/contexts/chapters';
-import { LoadableAction } from '@/contexts/openapi';
+import { ChapterActionError } from '@/contexts/openapi/chapters';
+import { LoadableAction } from '@/contexts/openapi/types';
 import { ChapterWithoutAutofield } from '@/openapi';
 
 import ChapterDialogFormComponent, { ChapterFieldValidates, ChapterFieldValues } from './ChapterDialogForm';

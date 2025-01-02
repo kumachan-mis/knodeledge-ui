@@ -7,8 +7,8 @@ import {
 import { USER } from '../../../testutils/user';
 import ChapterList from '@/components/organisms/ChapterList';
 import PanicError from '@/components/organisms/PanicError';
-import { ChapterListContextProvider } from '@/contexts/chapters';
-import { PanicContextProvider } from '@/contexts/panic';
+import { ChapterListContextProvider } from '@/contexts/openapi/chapters';
+import { PanicContextProvider } from '@/contexts/openapi/panic';
 import { Chapter, ChapterWithSections } from '@/openapi';
 
 import { render, waitFor, within } from '@testing-library/react';

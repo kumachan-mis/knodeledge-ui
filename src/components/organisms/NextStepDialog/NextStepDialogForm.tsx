@@ -1,7 +1,7 @@
 'use client';
-import { SectionsActionError } from '@/contexts/chapters';
-import { LoadableAction } from '@/contexts/openapi';
-import { usePaperContent } from '@/contexts/views';
+import { SectionsActionError } from '@/contexts/openapi/chapters';
+import { LoadableAction } from '@/contexts/openapi/types';
+import { usePaperContent } from '@/contexts/views/paper';
 import { SectionWithoutAutofield } from '@/openapi';
 
 import { usePaperSections } from './NextStepDialog.hooks';

@@ -1,5 +1,5 @@
 'use client';
-import { useLoadableChapterList, useUpdateChapterInList } from '@/contexts/chapters';
+import { useLoadableChapterList, useUpdateChapterInList } from '@/contexts/openapi/chapters';
 
 import ChapterListComponent from './ChapterList';
 

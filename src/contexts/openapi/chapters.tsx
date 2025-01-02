@@ -1,4 +1,5 @@
 'use client';
+import { useSetPanic } from './panic';
 import { createChapter } from '@/actions/chapters/createChapter';
 import { updateChapter } from '@/actions/chapters/updateChapter';
 import { sectionalizeIntoGraphs } from '@/actions/graphs/sectionallizeIntoGraphs';
@@ -14,8 +15,7 @@ import {
   UserOnlyId,
 } from '@/openapi';
 
-import { LoadableAction, LoadableServerSideData } from './openapi';
-import { useSetPanic } from './panic';
+import { LoadableAction, LoadableServerSideData } from './types';
 
 import React from 'react';
 

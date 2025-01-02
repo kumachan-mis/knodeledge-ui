@@ -1,7 +1,7 @@
 'use client';
 import SectionList from '../SectionList';
-import { ChapterActionError } from '@/contexts/chapters';
-import { LoadableAction } from '@/contexts/openapi';
+import { ChapterActionError } from '@/contexts/openapi/chapters';
+import { LoadableAction } from '@/contexts/openapi/types';
 import { useMenu } from '@/hooks/menu';
 import { ChapterWithoutAutofield, ChapterWithSections } from '@/openapi';
 

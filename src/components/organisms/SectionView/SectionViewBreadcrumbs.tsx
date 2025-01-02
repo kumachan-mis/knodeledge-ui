@@ -1,7 +1,7 @@
 import AppBreadcrumbs from '@/components/molecules/AppBreadcrumbs';
-import { GraphActionError, LoadableGraph } from '@/contexts/graphs';
-import { LoadableAction } from '@/contexts/openapi';
-import { useGraphContent } from '@/contexts/views';
+import { GraphActionError, LoadableGraph } from '@/contexts/openapi/graphs';
+import { LoadableAction } from '@/contexts/openapi/types';
+import { useGraphContent } from '@/contexts/views/graph';
 import { Project, Chapter, SectionOfChapter, GraphContentWithoutAutofield } from '@/openapi';
 import { sectionViewContentEquals } from '@/utils/logic';
 

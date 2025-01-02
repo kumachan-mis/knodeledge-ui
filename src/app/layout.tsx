@@ -1,6 +1,6 @@
 import ThemeRegistry from '@/components/atoms/ThemeRegistry';
 import PanicError from '@/components/organisms/PanicError';
-import { PanicContextProvider } from '@/contexts/panic';
+import { PanicContextProvider } from '@/contexts/openapi/panic';
 import { ENVIRONMENT } from '@/utils/env';
 
 import { UserProvider } from '@auth0/nextjs-auth0/client';

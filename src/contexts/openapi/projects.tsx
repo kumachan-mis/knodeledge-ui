@@ -3,8 +3,8 @@ import { createProject } from '@/actions/projects/createProject';
 import { updateProject } from '@/actions/projects/updateProject';
 import { Project, ProjectWithoutAutofield, ProjectWithoutAutofieldError, UserOnlyId } from '@/openapi';
 
-import { LoadableAction, LoadableServerSideData } from './openapi';
 import { useSetPanic } from './panic';
+import { LoadableAction, LoadableServerSideData } from './types';
 
 import React from 'react';
 

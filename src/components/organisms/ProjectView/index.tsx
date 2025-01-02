@@ -1,5 +1,5 @@
 'use client';
-import { useLoadableProject, useUpdateProject } from '@/contexts/projects';
+import { useLoadableProject, useUpdateProject } from '@/contexts/openapi/projects';
 
 import ProjectViewComponent from './ProjectView';
 

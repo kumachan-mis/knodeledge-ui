@@ -7,9 +7,9 @@ import {
   ActiveChapterContextProvider,
   ActiveSectionContextProvider,
   useLoadableChapterList,
-} from '@/contexts/chapters';
-import { useInitGraph } from '@/contexts/graphs';
-import { useInitPaper } from '@/contexts/papers';
+} from '@/contexts/openapi/chapters';
+import { useInitGraph } from '@/contexts/openapi/graphs';
+import { useInitPaper } from '@/contexts/openapi/papers';
 import { AuthorizedPageProps, CHAPTER_ID_PARAM_KEY, SECTION_ID_PARAM_KEY } from '@/utils/page';
 
 import { useSearchParams } from 'next/navigation';

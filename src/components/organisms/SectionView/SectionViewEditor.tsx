@@ -1,7 +1,7 @@
 'use client';
 import AppEditor from '@/components/molecules/AppEditor';
-import { LoadableGraph } from '@/contexts/graphs';
-import { useGraphContent, useSetGraphContent } from '@/contexts/views';
+import { LoadableGraph } from '@/contexts/openapi/graphs';
+import { useGraphContent, useSetGraphContent } from '@/contexts/views/graph';
 
 import React from 'react';
 

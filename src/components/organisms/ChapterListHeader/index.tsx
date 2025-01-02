@@ -1,6 +1,6 @@
 'use client';
-import { useCreateChapterInList, useLoadableChapterList } from '@/contexts/chapters';
-import { useLoadableProject } from '@/contexts/projects';
+import { useCreateChapterInList, useLoadableChapterList } from '@/contexts/openapi/chapters';
+import { useLoadableProject } from '@/contexts/openapi/projects';
 
 import ChapterListHeaderComponent from './ChapterListHeader';
 

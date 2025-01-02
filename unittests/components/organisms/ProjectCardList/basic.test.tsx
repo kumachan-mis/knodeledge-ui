@@ -1,8 +1,8 @@
 import { USER } from '../../../testutils/user';
 import PanicError from '@/components/organisms/PanicError';
 import ProjectCardList from '@/components/organisms/ProjectCardList';
-import { PanicContextProvider } from '@/contexts/panic';
-import { ProjectListContextProvider } from '@/contexts/projects';
+import { PanicContextProvider } from '@/contexts/openapi/panic';
+import { ProjectListContextProvider } from '@/contexts/openapi/projects';
 import { Project } from '@/openapi';
 
 import { render } from '@testing-library/react';

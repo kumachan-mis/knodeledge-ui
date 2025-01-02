@@ -1,7 +1,7 @@
 'use client';
 import AppEditor from '@/components/molecules/AppEditor';
-import { LoadablePaper } from '@/contexts/papers';
-import { usePaperContent, useSetPaperContent } from '@/contexts/views';
+import { LoadablePaper } from '@/contexts/openapi/papers';
+import { usePaperContent, useSetPaperContent } from '@/contexts/views/paper';
 
 import React from 'react';
 

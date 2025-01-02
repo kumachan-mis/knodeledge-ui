@@ -1,5 +1,3 @@
-import { GraphContentProvider } from '@/contexts/views';
-
 import SectionViewComponent from './SectionView';
 
 import { Meta, StoryObj } from '@storybook/react';
@@ -43,27 +41,41 @@ export const Basic: Story = {
         id: 'GRAPH',
         name: 'Section One',
         paragraph: 'This is graph content.',
-        children: [],
+        children: [
+          {
+            name: 'Child One',
+            relation: 'Relation One',
+            description: 'This is child one content.',
+            children: [],
+          },
+          {
+            name: 'Child Two',
+            relation: 'Relation Two',
+            description: 'This is child two content.',
+            children: [],
+          },
+          {
+            name: 'Child Three',
+            relation: 'Relation Three',
+            description: 'This is child three content.',
+            children: [],
+          },
+          {
+            name: 'Child Four',
+            relation: 'Relation Four',
+            description: "This is child four content. It's a bit longer than the others.",
+            children: [],
+          },
+          {
+            name: 'Child Five',
+            relation: 'Relation Five',
+            description: "This is child five content. It's a bit longer than the others.",
+            children: [],
+          },
+        ],
       },
     },
   },
-  decorators: [
-    (Story) => (
-      <GraphContentProvider
-        loadableGraph={{
-          data: {
-            id: 'GRAPH',
-            name: 'Graph Name',
-            paragraph: 'This is graph content.',
-            children: [],
-          },
-          state: 'success',
-        }}
-      >
-        <Story />
-      </GraphContentProvider>
-    ),
-  ],
 };
 
 export const Loading: Story = {

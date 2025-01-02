@@ -1,5 +1,5 @@
 import NextStepDialog from '@/components/organisms/NextStepDialog';
-import { PaperContentProvider } from '@/contexts/views';
+import { PaperContentProvider } from '@/contexts/views/paper';
 
 import { waitFor, within } from '@testing-library/dom';
 import { render } from '@testing-library/react';

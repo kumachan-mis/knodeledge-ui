@@ -1,7 +1,7 @@
-import { SectionsActionError } from '@/contexts/chapters';
-import { LoadableAction } from '@/contexts/openapi';
-import { LoadablePaper, PaperActionError } from '@/contexts/papers';
-import { PaperContentProvider } from '@/contexts/views';
+import { SectionsActionError } from '@/contexts/openapi/chapters';
+import { LoadableAction } from '@/contexts/openapi/types';
+import { LoadablePaper, PaperActionError } from '@/contexts/openapi/papers';
+import { PaperContentProvider } from '@/contexts/views/paper';
 import { ChapterWithSections, PaperWithoutAutofield, Project, SectionWithoutAutofield } from '@/openapi';
 
 import ChapterViewBreadcrumbsComponent from './ChapterViewBreadcrumbs';

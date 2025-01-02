@@ -1,9 +1,9 @@
 import { USER } from '../../../testutils/user';
 import ChapterListHeader from '@/components/organisms/ChapterListHeader';
 import PanicError from '@/components/organisms/PanicError';
-import { ChapterListContextProvider } from '@/contexts/chapters';
-import { PanicContextProvider } from '@/contexts/panic';
-import { ProjectContextProvider } from '@/contexts/projects';
+import { ChapterListContextProvider } from '@/contexts/openapi/chapters';
+import { PanicContextProvider } from '@/contexts/openapi/panic';
+import { ProjectContextProvider } from '@/contexts/openapi/projects';
 import { ChapterWithSections, Project } from '@/openapi';
 
 import { render } from '@testing-library/react';

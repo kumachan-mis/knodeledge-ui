@@ -1,6 +1,6 @@
-import { GraphActionError, LoadableGraph } from '@/contexts/graphs';
-import { LoadableAction } from '@/contexts/openapi';
-import { GraphContentProvider } from '@/contexts/views';
+import { GraphActionError, LoadableGraph } from '@/contexts/openapi/graphs';
+import { LoadableAction } from '@/contexts/openapi/types';
+import { GraphContentProvider } from '@/contexts/views/graph';
 import { ChapterWithSections, GraphContentWithoutAutofield, Project, SectionOfChapter } from '@/openapi';
 
 import SectionViewBreadcrumbsComponent from './SectionViewBreadcrumbs';
