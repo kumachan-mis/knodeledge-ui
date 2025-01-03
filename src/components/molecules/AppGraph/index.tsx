@@ -67,7 +67,7 @@ const AppGraphInner: React.FC<Omit<AppGraphProps, 'state'>> = ({ graphRoot, grap
       simulationLogic.update(graphParentNode, graphChildrenNodes, graphLinks);
 
       simulationLogic.start();
-    }, 100);
+    }, 300);
 
     return () => {
       if (timerIdRef.current > 0) clearTimeout(timerIdRef.current);
