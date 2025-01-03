@@ -41,7 +41,7 @@ class GraphNodeLogic {
     this.selection.exit().remove();
 
     const enteredSelection = this.selection.enter().append('g');
-    enteredSelection.append('circle').attr('class', styles.GraphNode).attr('filter', 'url(#node-drop-shadow)');
+    enteredSelection.append('circle').attr('class', styles.GraphNode);
     enteredSelection.append('rect').attr('class', styles.GraphNode);
     enteredSelection.append('text').attr('class', styles.GraphNode);
 
