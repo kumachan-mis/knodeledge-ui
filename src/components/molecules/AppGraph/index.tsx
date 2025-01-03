@@ -20,18 +20,18 @@ export type AppGraphProps = {
 
 const AppGraphInner: React.FC<Omit<AppGraphProps, 'state'>> = ({ graphRoot, graphChildren }) => {
   const ref = React.useRef<SVGSVGElement>(null);
-  const graphLinkLogicRef = React.useRef(new GraphLinkLogic());
-  const graphNodeLogicRef = React.useRef(new GraphNodeLogic());
   const graphSimulationLogicRef = React.useRef(new GraphSimulationLogic());
+  const graphLinkLogicRef = React.useRef(new GraphLinkLogic());
+  const graphNodeLogicRef = React.useRef(new GraphNodeLogic(graphSimulationLogicRef.current));
   const timerIdRef = React.useRef<number>(0);
 
   React.useEffect(() => {
     if (!ref.current) return;
     const svgSelection = select(ref.current);
 
+    const simulationLogic = graphSimulationLogicRef.current;
     const linkLogic = graphLinkLogicRef.current;
     const nodeLogic = graphNodeLogicRef.current;
-    const simulationLogic = graphSimulationLogicRef.current;
 
     linkLogic.init(svgSelection);
     nodeLogic.init(svgSelection);
@@ -42,38 +42,21 @@ const AppGraphInner: React.FC<Omit<AppGraphProps, 'state'>> = ({ graphRoot, grap
     });
 
     return () => {
-      simulationLogic.stop();
+      simulationLogic.destroy();
       nodeLogic.destroy();
       linkLogic.destroy();
     };
   }, []);
 
-  React.useEffect(() => {
-    if (!ref.current) return;
-
-    const linkLogic = graphLinkLogicRef.current;
-    const nodeLogic = graphNodeLogicRef.current;
-    const simulationLogic = graphSimulationLogicRef.current;
-
-    const center = { x: ref.current.clientWidth / 2, y: ref.current.clientHeight / 2 };
-    const { graphParentNode, graphChildrenNodes, graphLinks } = graphEntityLogic({ graphRoot, graphChildren, center });
-
-    linkLogic.update(graphLinks);
-    nodeLogic.update(graphParentNode, graphChildrenNodes);
-    simulationLogic.update(graphParentNode, graphChildrenNodes, graphLinks, center);
-
-    simulationLogic.start();
-  }, [graphChildren, graphRoot]);
-
-  const handleOnResize = React.useCallback(() => {
+  const handleOnRerenderGraph = React.useCallback(() => {
     if (timerIdRef.current > 0) clearTimeout(timerIdRef.current);
 
     timerIdRef.current = window.setTimeout(() => {
       if (!ref.current) return;
 
+      const simulationLogic = graphSimulationLogicRef.current;
       const linkLogic = graphLinkLogicRef.current;
       const nodeLogic = graphNodeLogicRef.current;
-      const simulationLogic = graphSimulationLogicRef.current;
 
       const center = { x: ref.current.clientWidth / 2, y: ref.current.clientHeight / 2 };
       const graphEntityLogicProps: GraphEntityLogicProps = { graphRoot, graphChildren, center };
@@ -81,7 +64,7 @@ const AppGraphInner: React.FC<Omit<AppGraphProps, 'state'>> = ({ graphRoot, grap
 
       linkLogic.update(graphLinks);
       nodeLogic.update(graphParentNode, graphChildrenNodes);
-      simulationLogic.update(graphParentNode, graphChildrenNodes, graphLinks, center);
+      simulationLogic.update(graphParentNode, graphChildrenNodes, graphLinks);
 
       simulationLogic.start();
     }, 100);
@@ -91,13 +74,14 @@ const AppGraphInner: React.FC<Omit<AppGraphProps, 'state'>> = ({ graphRoot, grap
     };
   }, [graphChildren, graphRoot]);
 
+  React.useEffect(handleOnRerenderGraph, [handleOnRerenderGraph]);
+
   React.useEffect(() => {
-    window.addEventListener('resize', handleOnResize);
-    handleOnResize();
+    window.addEventListener('resize', handleOnRerenderGraph);
     return () => {
-      window.removeEventListener('resize', handleOnResize);
+      window.removeEventListener('resize', handleOnRerenderGraph);
     };
-  }, [handleOnResize]);
+  }, [handleOnRerenderGraph]);
 
   return <svg height="100%" ref={ref} width="100%" />;
 };

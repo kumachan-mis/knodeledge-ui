@@ -1,0 +1,33 @@
+.GraphLink,
+.GraphNode {
+  cursor: pointer;
+}
+
+
+
+circle.GraphNode {
+  fill: #ECEFF1;
+}
+
+rect.GraphNode {
+  fill: rgba(#CFD8DC, 0.30);
+  stroke: rgba(#78909C, 0.30);
+  stroke-width: 1;
+}
+
+line.GraphLink {
+  stroke: rgba(#78909C, 0.85);
+  stroke-width: 2;
+}
+
+text {
+  fill: #263238;
+  text-anchor: middle;
+  font-family: arial, sans-serif;
+  &.GraphLink {
+    font-size: 9pt;
+  }
+  &.GraphNode {
+    font-size: 10pt;
+  }
+}

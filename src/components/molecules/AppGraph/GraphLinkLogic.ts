@@ -1,4 +1,5 @@
 import GraphLink from './GraphLink';
+import styles from './styles.module.scss';
 
 import { Selection } from 'd3-selection';
 
@@ -20,13 +21,13 @@ class GraphLinkLogic {
     if (!this.selection) return;
 
     this.selection
-      .select('line')
+      .select<SVGLineElement>('line')
       .attr('x1', (link) => link.source.x)
       .attr('y1', (link) => link.source.y)
       .attr('x2', (link) => link.target.x)
       .attr('y2', (link) => link.target.y);
 
-    this.selection.select('text').attr('transform', (link) => {
+    this.selection.select<SVGTextElement>('text').attr('transform', (link) => {
       return `translate(${(link.source.x + link.target.x) / 2},${(link.source.y + link.target.y) / 2})`;
     });
   }
@@ -38,13 +39,12 @@ class GraphLinkLogic {
     this.selection.exit().remove();
 
     const enteredSelection = this.selection.enter().append('g');
-    enteredSelection.append('line');
-    enteredSelection.append('text');
+    enteredSelection.append('line').attr('class', styles.GraphLink);
+    enteredSelection.append('text').attr('class', styles.GraphLink);
 
     this.selection = enteredSelection.merge(this.selection);
 
-    this.selection.select('line').attr('stroke-width', 2);
-    this.selection.select('text').text((link) => link.relation);
+    this.selection.select<SVGTextElement>('text').text((link) => link.relation);
   }
 
   public destroy(): void {
