@@ -2,7 +2,7 @@ import GraphNode from './GraphNode';
 
 import { Selection } from 'd3-selection';
 
-class NodeLogic {
+class GraphNodeLogic {
   private rootSelection: Selection<SVGGElement, unknown, null, undefined> | null;
   private selection: Selection<SVGGElement, GraphNode, SVGGElement, unknown> | null;
 
@@ -48,4 +48,4 @@ class NodeLogic {
   }
 }
 
-export default NodeLogic;
+export default GraphNodeLogic;

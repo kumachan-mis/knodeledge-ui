@@ -20,8 +20,8 @@ export function graphEntityLogic({ graphRoot, graphChildren, center }: GraphEnti
   graphParentNode.fix(center.x, center.y);
 
   const graphChildrenNodes = graphChildren.map((child, index) => {
-    const x = center.x + 100 * Math.sin((index / graphChildren.length) * 2 * Math.PI);
-    const y = center.y - 100 * Math.cos((index / graphChildren.length) * 2 * Math.PI);
+    const x = center.x + 50 * Math.sin((index / graphChildren.length) * 2 * Math.PI);
+    const y = center.y - 50 * Math.cos((index / graphChildren.length) * 2 * Math.PI);
     return new GraphNode(child.name, x, y);
   });
   const graphChildrenMap = new Map(graphChildrenNodes.map((node) => [node.name, node]));

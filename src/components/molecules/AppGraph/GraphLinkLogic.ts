@@ -2,7 +2,7 @@ import GraphLink from './GraphLink';
 
 import { Selection } from 'd3-selection';
 
-class LinkLogic {
+class GraphLinkLogic {
   private rootSelection: Selection<SVGGElement, unknown, null, undefined> | null;
   private selection: Selection<SVGGElement, GraphLink, SVGGElement, unknown> | null;
 
@@ -53,4 +53,4 @@ class LinkLogic {
   }
 }
 
-export default LinkLogic;
+export default GraphLinkLogic;

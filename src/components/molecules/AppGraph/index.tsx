@@ -2,9 +2,9 @@
 import { GraphChild } from '@/openapi/models/GraphChild';
 
 import { graphEntityLogic, GraphEntityLogicProps } from './GraphEntityLogic';
-import LinkLogic from './LinkLogic';
-import NodeLogic from './NodeLogic';
-import SimulationLogic from './SimulationLogic';
+import GraphLinkLogic from './GraphLinkLogic';
+import GraphNodeLogic from './GraphNodeLogic';
+import GraphSimulationLogic from './GraphSimulationLogic';
 
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -20,18 +20,18 @@ export type AppGraphProps = {
 
 const AppGraphInner: React.FC<Omit<AppGraphProps, 'state'>> = ({ graphRoot, graphChildren }) => {
   const ref = React.useRef<SVGSVGElement>(null);
-  const linkLogicRef = React.useRef(new LinkLogic());
-  const nodeLogicRef = React.useRef(new NodeLogic());
-  const simulationLogicRef = React.useRef(new SimulationLogic());
+  const graphLinkLogicRef = React.useRef(new GraphLinkLogic());
+  const graphNodeLogicRef = React.useRef(new GraphNodeLogic());
+  const graphSimulationLogicRef = React.useRef(new GraphSimulationLogic());
   const timerIdRef = React.useRef<number>(0);
 
   React.useEffect(() => {
     if (!ref.current) return;
     const svgSelection = select(ref.current);
 
-    const linkLogic = linkLogicRef.current;
-    const nodeLogic = nodeLogicRef.current;
-    const simulationLogic = simulationLogicRef.current;
+    const linkLogic = graphLinkLogicRef.current;
+    const nodeLogic = graphNodeLogicRef.current;
+    const simulationLogic = graphSimulationLogicRef.current;
 
     linkLogic.init(svgSelection);
     nodeLogic.init(svgSelection);
@@ -51,9 +51,9 @@ const AppGraphInner: React.FC<Omit<AppGraphProps, 'state'>> = ({ graphRoot, grap
   React.useEffect(() => {
     if (!ref.current) return;
 
-    const linkLogic = linkLogicRef.current;
-    const nodeLogic = nodeLogicRef.current;
-    const simulationLogic = simulationLogicRef.current;
+    const linkLogic = graphLinkLogicRef.current;
+    const nodeLogic = graphNodeLogicRef.current;
+    const simulationLogic = graphSimulationLogicRef.current;
 
     const center = { x: ref.current.clientWidth / 2, y: ref.current.clientHeight / 2 };
     const { graphParentNode, graphChildrenNodes, graphLinks } = graphEntityLogic({ graphRoot, graphChildren, center });
@@ -71,9 +71,9 @@ const AppGraphInner: React.FC<Omit<AppGraphProps, 'state'>> = ({ graphRoot, grap
     timerIdRef.current = window.setTimeout(() => {
       if (!ref.current) return;
 
-      const linkLogic = linkLogicRef.current;
-      const nodeLogic = nodeLogicRef.current;
-      const simulationLogic = simulationLogicRef.current;
+      const linkLogic = graphLinkLogicRef.current;
+      const nodeLogic = graphNodeLogicRef.current;
+      const simulationLogic = graphSimulationLogicRef.current;
 
       const center = { x: ref.current.clientWidth / 2, y: ref.current.clientHeight / 2 };
       const graphEntityLogicProps: GraphEntityLogicProps = { graphRoot, graphChildren, center };

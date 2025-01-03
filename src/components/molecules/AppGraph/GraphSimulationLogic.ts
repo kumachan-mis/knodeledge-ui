@@ -3,7 +3,7 @@ import GraphNode from './GraphNode';
 
 import { forceLink, forceManyBody, forceSimulation, forceX, forceY, Simulation } from 'd3-force';
 
-class SimulationLogic {
+class GraphSimulationLogic {
   private simulation: Simulation<GraphNode, GraphLink> | null;
 
   public constructor() {
@@ -53,4 +53,4 @@ class SimulationLogic {
   }
 }
 
-export default SimulationLogic;
+export default GraphSimulationLogic;
