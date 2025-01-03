@@ -1,16 +1,15 @@
+import { GraphEntityLogicReturn } from './GraphEntityLogic';
 import GraphLink from './GraphLink';
+import GraphMenuLogic from './GraphMenuLogic';
 import styles from './styles.module.scss';
 
 import { Selection } from 'd3-selection';
 
 class GraphLinkLogic {
-  private rootSelection: Selection<SVGGElement, unknown, null, undefined> | null;
-  private selection: Selection<SVGGElement, GraphLink, SVGGElement, unknown> | null;
+  private rootSelection: Selection<SVGGElement, unknown, null, undefined> | null = null;
+  private selection: Selection<SVGGElement, GraphLink, SVGGElement, unknown> | null = null;
 
-  constructor() {
-    this.rootSelection = null;
-    this.selection = null;
-  }
+  public constructor(private menuLogic: GraphMenuLogic) {}
 
   public init(svgSelection: Selection<SVGSVGElement, unknown, null, undefined>): void {
     this.rootSelection = svgSelection.append('g');
@@ -32,7 +31,7 @@ class GraphLinkLogic {
     });
   }
 
-  public update(graphLinks: GraphLink[]): void {
+  public update({ graphLinks, deleteGraphLink, focusGraphLink }: GraphEntityLogicReturn): void {
     if (!this.selection) return;
 
     this.selection = this.selection.data(graphLinks);
@@ -45,6 +44,23 @@ class GraphLinkLogic {
     this.selection = enteredSelection.merge(this.selection);
 
     this.selection.select<SVGTextElement>('text').text((link) => link.relation);
+
+    this.selection
+      .call((selection) => {
+        selection.on('click', (event, link) => {
+          focusGraphLink(link);
+        });
+      })
+      .call(
+        this.menuLogic.behavior<GraphLink>([
+          {
+            name: 'Delete',
+            onClick: (event, link) => {
+              deleteGraphLink(link);
+            },
+          },
+        ]),
+      );
   }
 
   public destroy(): void {

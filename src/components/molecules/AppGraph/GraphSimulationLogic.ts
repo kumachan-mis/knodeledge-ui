@@ -1,24 +1,21 @@
+import { GraphEntityLogicReturn } from './GraphEntityLogic';
 import GraphLink from './GraphLink';
 import GraphNode from './GraphNode';
 
 import { forceLink, forceManyBody, forceSimulation, Simulation } from 'd3-force';
 
 class GraphSimulationLogic {
-  private simulation: Simulation<GraphNode, GraphLink> | null;
-
-  public constructor() {
-    this.simulation = null;
-  }
+  private simulation: Simulation<GraphNode, GraphLink> | null = null;
 
   public init(onTick: () => void): void {
     this.simulation = forceSimulation<GraphNode, GraphLink>().on('tick', onTick);
   }
 
-  public update(graphParent: GraphNode, graphChildren: GraphNode[], graphLinks: GraphLink[]): void {
+  public update({ graphParentNode, graphChildrenNodes, graphLinks }: GraphEntityLogicReturn): void {
     if (!this.simulation) return;
 
     const links = [...graphLinks];
-    const nodes = [graphParent, ...graphChildren];
+    const nodes = [graphParentNode, ...graphChildrenNodes];
 
     this.simulation
       .nodes(nodes)

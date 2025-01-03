@@ -50,7 +50,7 @@ const AppEditorRoot = styled<React.FC<EditorRootProps & { view: 'paper' | 'artic
   ({ view }) => ({
     '&&': {
       width: '100%',
-      height: view !== 'graph' ? '100%' : '30%',
+      height: view !== 'graph' ? '100%' : '20%',
     },
   }),
 );

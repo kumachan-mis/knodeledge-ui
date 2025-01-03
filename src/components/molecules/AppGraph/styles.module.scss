@@ -12,12 +12,12 @@ circle.GraphNode {
 rect.GraphNode {
   fill: rgba(#CFD8DC, 0.30);
   stroke: rgba(#78909C, 0.30);
-  stroke-width: 1;
+  stroke-width: 1px;
 }
 
 line.GraphLink {
   stroke: rgba(#78909C, 0.85);
-  stroke-width: 2;
+  stroke-width: 2px;
 }
 
 text {
@@ -29,5 +29,40 @@ text {
   }
   &.GraphNode {
     font-size: 10pt;
+  }
+}
+
+div.GraphMenu {
+  position: absolute;
+  background-color: #ECEFF1;
+  border-radius: 4px;
+  font-size: 9pt;
+}
+
+ul.GraphMenu {
+  list-style-type: none;
+  margin: 4px 0;
+  padding: 0;
+ 
+}
+
+li.GraphMenu {
+  padding: 4px 16px;
+  font-family: arial, sans-serif;
+  color: #263238;
+  cursor: pointer;
+  background-color: #ECEFF1;
+
+  &:hover {
+    background-color: #D8D8DA;
+  }
+
+  &__disabled {
+    color: #CFD8DC;
+    cursor: default;
+    
+    &:hover {
+      background-color: #ECEFF1;
+    }
   }
 }

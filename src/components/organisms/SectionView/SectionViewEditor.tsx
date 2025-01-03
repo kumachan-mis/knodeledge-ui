@@ -16,11 +16,10 @@ const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({
 
   const setText = React.useCallback(
     (value: React.SetStateAction<string>) => {
-      if (typeof value === 'function') {
-        setGraph((prev) => ({ ...prev, paragraph: value(prev.paragraph) }));
-        return;
-      }
-      setGraph((prev) => ({ ...prev, paragraph: value }));
+      setGraph((prev) => {
+        const updated = typeof value === 'function' ? value(prev.paragraph) : value;
+        return { ...prev, paragraph: updated };
+      });
     },
     [setGraph],
   );
