@@ -1,9 +1,8 @@
 import AppBreadcrumbs from '@/components/molecules/AppBreadcrumbs';
 import { LoadablePaper, PaperActionError } from '@/contexts/openapi/papers';
 import { LoadableAction } from '@/contexts/openapi/types';
-import { usePaperContent } from '@/contexts/views/paper';
+import { paperContentEquals, paperContentToServer, usePaperContent } from '@/contexts/views/paper';
 import { Chapter, PaperWithoutAutofield, Project } from '@/openapi';
-import { chapterViewContentEquals } from '@/utils/logic';
 
 export type ChapterViewBreadcrumbsComponentProps = {
   readonly project: Project;
@@ -19,7 +18,7 @@ const ChapterViewBreadcrumbsComponent: React.FC<ChapterViewBreadcrumbsComponentP
   updatePaper,
 }) => {
   const unsavedPaper = usePaperContent();
-  const dirty = loadablePaper.state === 'success' && !chapterViewContentEquals(loadablePaper.data, unsavedPaper);
+  const dirty = loadablePaper.state === 'success' && !paperContentEquals(unsavedPaper, loadablePaper.data);
 
   return (
     <AppBreadcrumbs
@@ -27,7 +26,7 @@ const ChapterViewBreadcrumbsComponent: React.FC<ChapterViewBreadcrumbsComponentP
       dirty={dirty}
       onSave={async () => {
         if (!dirty) return { success: true };
-        const loadableAction = await updatePaper(loadablePaper.data.id, unsavedPaper);
+        const loadableAction = await updatePaper(loadablePaper.data.id, paperContentToServer(unsavedPaper));
         if (loadableAction.state === 'success') {
           return { success: true };
         }

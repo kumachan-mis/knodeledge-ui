@@ -33,10 +33,16 @@ class GraphLinkLogic {
     });
   }
 
-  public update({ graphLinks, deleteGraphLink, focusGraphLink, blurGraphLink }: GraphEntityLogicReturn): void {
+  public update({
+    graphLinks,
+    inactiveGraphLinks,
+    deleteGraphLink,
+    focusGraphLink,
+    blurGraphLink,
+  }: GraphEntityLogicReturn): void {
     if (!this.selection) return;
 
-    this.selection = this.selection.data(graphLinks, (link) => link.id);
+    this.selection = this.selection.data([...inactiveGraphLinks, ...graphLinks], (link) => link.id);
     this.selection.exit().remove();
 
     const enteredSelection = this.selection.enter().append('g');

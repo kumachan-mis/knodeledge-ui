@@ -1,6 +1,5 @@
 'use client';
 import { GraphChildWithId, GraphRootWithId } from '@/contexts/views/graph';
-import { GraphChild } from '@/openapi/models/GraphChild';
 
 import { graphEntityLogic } from './GraphEntityLogic';
 import GraphLinkLogic from './GraphLinkLogic';
@@ -18,17 +17,19 @@ import React from 'react';
 
 export type AppGraphProps = {
   readonly graphRoot: GraphRootWithId;
-  readonly graphChildren: GraphChildWithId[];
-  readonly focusedGraphChildIndex: number;
-  readonly setGraphChildren: React.Dispatch<React.SetStateAction<GraphChildWithId[]>>;
-  readonly setFocusedGraphChildIndex: React.Dispatch<React.SetStateAction<number>>;
+  readonly graphRootChildren: GraphChildWithId[];
+  readonly focusedGraphParentId: string;
+  readonly focusedGraphChildId: string;
+  readonly setFocusedGraphChildren: React.Dispatch<React.SetStateAction<GraphChildWithId[]>>;
+  readonly setFocusedGraphParentId: React.Dispatch<React.SetStateAction<string>>;
+  readonly setFocusedGraphChildId: React.Dispatch<React.SetStateAction<string>>;
   readonly state: 'notfound' | 'loading' | 'success';
 };
 
 const AppGraph: React.FC<AppGraphProps> = ({
-  graphChildren,
-  focusedGraphChildIndex,
-  setGraphChildren,
+  graphRootChildren,
+  focusedGraphChildId,
+  setFocusedGraphChildren,
   state,
   ...rest
 }) => (
@@ -39,9 +40,9 @@ const AppGraph: React.FC<AppGraphProps> = ({
       </Box>
     ) : (
       <AppGraphEditor
-        focusedGraphChildIndex={focusedGraphChildIndex}
-        graphChildren={graphChildren}
-        setGraphChildren={setGraphChildren}
+        focusedGraphChildId={focusedGraphChildId}
+        graphRootChildren={graphRootChildren}
+        setFocusedGraphChildren={setFocusedGraphChildren}
         {...rest}
       />
     )}
@@ -50,10 +51,12 @@ const AppGraph: React.FC<AppGraphProps> = ({
 
 const AppGraphEditor: React.FC<Omit<AppGraphProps, 'state'>> = ({
   graphRoot,
-  graphChildren,
-  focusedGraphChildIndex,
-  setGraphChildren,
-  setFocusedGraphChildIndex,
+  graphRootChildren,
+  focusedGraphParentId,
+  focusedGraphChildId,
+  setFocusedGraphChildren,
+  setFocusedGraphParentId,
+  setFocusedGraphChildId,
 }) => {
   const ref = React.useRef<SVGSVGElement>(null);
   const simulationLogicRef = React.useRef(new GraphSimulationLogic());
@@ -95,17 +98,27 @@ const AppGraphEditor: React.FC<Omit<AppGraphProps, 'state'>> = ({
     const clientRect = ref.current.getBoundingClientRect();
     const graphEntityLogicReturn = graphEntityLogic({
       graphRoot,
-      graphChildren,
-      focusedGraphChildIndex,
-      setGraphChildren,
-      setFocusedGraphChildIndex,
+      graphRootChildren,
+      focusedGraphParentId,
+      focusedGraphChildId,
+      setFocusedGraphChildren,
+      setFocusedGraphParentId,
+      setFocusedGraphChildId,
       center: { x: clientRect.width / 2, y: clientRect.height / 2 },
     });
 
     linkLogic.update(graphEntityLogicReturn);
     nodeLogic.update(graphEntityLogicReturn);
     simulationLogic.update(graphEntityLogicReturn);
-  }, [focusedGraphChildIndex, graphChildren, graphRoot, setFocusedGraphChildIndex, setGraphChildren]);
+  }, [
+    focusedGraphChildId,
+    focusedGraphParentId,
+    graphRoot,
+    graphRootChildren,
+    setFocusedGraphChildId,
+    setFocusedGraphParentId,
+    setFocusedGraphChildren,
+  ]);
 
   React.useEffect(handleOnRerenderGraph, [handleOnRerenderGraph]);
 
@@ -126,23 +139,23 @@ const AppGraphEditor: React.FC<Omit<AppGraphProps, 'state'>> = ({
     };
   }, [handleResizeGraph]);
 
-  const focusedGraphChild = graphChildren[focusedGraphChildIndex] as GraphChildWithId | undefined;
+  const focusedGraphChild = graphRootChildren.find((child) => child.id === focusedGraphChildId);
   const setFocusedGraphChild = React.useCallback(
     (value: React.SetStateAction<GraphChildWithId>) => {
-      setGraphChildren((prev) => {
-        const next = [...prev];
-        const updated = typeof value === 'function' ? value(next[focusedGraphChildIndex]) : value;
-        next[focusedGraphChildIndex] = updated;
-        return next;
+      setFocusedGraphChildren((prev) => {
+        const prevFocusedGraphChild = prev.find((child) => child.id === focusedGraphChildId);
+        if (!prevFocusedGraphChild) return prev;
+        const updated = typeof value === 'function' ? value(prevFocusedGraphChild) : value;
+        return prev.map((child) => (child.id === focusedGraphChildId ? updated : child));
       });
     },
-    [focusedGraphChildIndex, setGraphChildren],
+    [focusedGraphChildId, setFocusedGraphChildren],
   );
 
-  const [prevFocusedGraphChildIndex, setPrevFocusedGraphChildIndex] = React.useState<number>(focusedGraphChildIndex);
-  const prevFocusedGraphChild = graphChildren[prevFocusedGraphChildIndex] as GraphChild | undefined;
-  if (prevFocusedGraphChildIndex !== focusedGraphChildIndex) {
-    setPrevFocusedGraphChildIndex(focusedGraphChildIndex);
+  const [prevFocusedGraphChildId, setPrevFocusedGraphChildId] = React.useState<string>(focusedGraphChildId);
+  const prevFocusedGraphChild = graphRootChildren.find((child) => child.id === prevFocusedGraphChildId);
+  if (prevFocusedGraphChildId !== focusedGraphChildId) {
+    setPrevFocusedGraphChildId(focusedGraphChildId);
     if ((!prevFocusedGraphChild && focusedGraphChild) || (prevFocusedGraphChild && !focusedGraphChild)) {
       handleResizeGraph();
     }

@@ -1,7 +1,7 @@
 'use client';
 import AppGraph from '@/components/molecules/AppGraph';
 import { LoadableGraph } from '@/contexts/openapi/graphs';
-import { GraphChildWithId, GraphRootWithId, useGraphContent, useSetGraphContent } from '@/contexts/views/graph';
+import { GraphChildWithId, useGraphContent, useGraphContentRoot, useSetGraphContent } from '@/contexts/views/graph';
 
 import React from 'react';
 
@@ -10,32 +10,46 @@ export type SectionViewGraphComponentProps = {
 };
 
 const SectionViewGraphComponent: React.FC<SectionViewGraphComponentProps> = ({ loadableGraph }) => {
-  const graphRoot: GraphRootWithId = React.useMemo(
-    () => ({ id: loadableGraph.data?.id ?? '', name: loadableGraph.data?.name ?? '' }),
-    [loadableGraph],
-  );
-
+  const graphRoot = useGraphContentRoot();
   const graph = useGraphContent();
   const setGraph = useSetGraphContent();
 
-  const setGraphChildren = React.useCallback(
+  const setFocusedGraphChildren = React.useCallback(
     (value: React.SetStateAction<GraphChildWithId[]>) => {
       setGraph((prev) => {
-        const updated = typeof value === 'function' ? value(prev.children) : value;
-        if (updated.length === prev.children.length) {
-          return { ...prev, children: updated };
+        const focusedParent = prev.rootChildren.find((child) => child.id === prev.focusedParentId);
+
+        const prevChildren = focusedParent ? focusedParent.children : prev.rootChildren;
+        const children = typeof value === 'function' ? value(prevChildren) : value;
+
+        const updated = focusedParent
+          ? prev.rootChildren.map((child) => (child === focusedParent ? { ...child, children } : child))
+          : children;
+
+        if (children.length === prevChildren.length) {
+          return { ...prev, rootChildren: updated };
         }
-        return { ...prev, children: updated, focusedChildIndex: -1 };
+        return { ...prev, rootChildren: updated, focusedChildId: '' };
       });
     },
     [setGraph],
   );
 
-  const setFocusedGraphChildIndex = React.useCallback(
-    (value: React.SetStateAction<number>) => {
+  const setFocusedGraphParentId = React.useCallback(
+    (value: React.SetStateAction<string>) => {
       setGraph((prev) => {
-        const updated = typeof value === 'function' ? value(prev.focusedChildIndex) : value;
-        return { ...prev, focusedChildIndex: updated };
+        const updated = typeof value === 'function' ? value(prev.focusedParentId) : value;
+        return { ...prev, focusedParentId: updated, focusedChildId: '' };
+      });
+    },
+    [setGraph],
+  );
+
+  const setFocusedGraphChildId = React.useCallback(
+    (value: React.SetStateAction<string>) => {
+      setGraph((prev) => {
+        const updated = typeof value === 'function' ? value(prev.focusedChildId) : value;
+        return { ...prev, focusedChildId: updated };
       });
     },
     [setGraph],
@@ -43,11 +57,13 @@ const SectionViewGraphComponent: React.FC<SectionViewGraphComponentProps> = ({ l
 
   return (
     <AppGraph
-      focusedGraphChildIndex={graph.focusedChildIndex}
-      graphChildren={graph.children}
+      focusedGraphChildId={graph.focusedChildId}
+      focusedGraphParentId={graph.focusedParentId}
       graphRoot={graphRoot}
-      setFocusedGraphChildIndex={setFocusedGraphChildIndex}
-      setGraphChildren={setGraphChildren}
+      graphRootChildren={graph.rootChildren}
+      setFocusedGraphChildId={setFocusedGraphChildId}
+      setFocusedGraphChildren={setFocusedGraphChildren}
+      setFocusedGraphParentId={setFocusedGraphParentId}
       state={loadableGraph.state}
     />
   );

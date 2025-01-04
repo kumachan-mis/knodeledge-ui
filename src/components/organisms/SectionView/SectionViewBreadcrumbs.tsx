@@ -1,9 +1,8 @@
 import AppBreadcrumbs from '@/components/molecules/AppBreadcrumbs';
 import { GraphActionError, LoadableGraph } from '@/contexts/openapi/graphs';
 import { LoadableAction } from '@/contexts/openapi/types';
-import { useGraphContent } from '@/contexts/views/graph';
+import { graphContentEquals, graphContentToServer, useGraphContent } from '@/contexts/views/graph';
 import { Project, Chapter, SectionOfChapter, GraphContentWithoutAutofield } from '@/openapi';
-import { sectionViewContentEquals } from '@/utils/logic';
 
 export type SectionViewBreadcrumbsComponentProps = {
   readonly project: Project;
@@ -21,7 +20,7 @@ const SectionViewBreadcrumbsComponent: React.FC<SectionViewBreadcrumbsComponentP
   updateGraph,
 }) => {
   const unsavedGraph = useGraphContent();
-  const dirty = loadableGraph.state === 'success' && !sectionViewContentEquals(loadableGraph.data, unsavedGraph);
+  const dirty = loadableGraph.state === 'success' && !graphContentEquals(unsavedGraph, loadableGraph.data);
 
   return (
     <AppBreadcrumbs
@@ -29,7 +28,7 @@ const SectionViewBreadcrumbsComponent: React.FC<SectionViewBreadcrumbsComponentP
       dirty={dirty}
       onSave={async () => {
         if (!dirty) return { success: true };
-        const loadableAction = await updateGraph(loadableGraph.data.id, unsavedGraph);
+        const loadableAction = await updateGraph(loadableGraph.data.id, graphContentToServer(unsavedGraph));
         if (loadableAction.state === 'success') {
           return { success: true };
         }

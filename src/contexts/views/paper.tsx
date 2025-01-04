@@ -1,9 +1,10 @@
 'use client';
 import { LoadablePaper } from '../openapi/papers';
+import { PaperWithoutAutofield } from '@/openapi';
 
 import React from 'react';
 
-type PaperContent = {
+export type PaperContent = {
   readonly content: string;
 };
 
@@ -43,3 +44,11 @@ const PaperContentInnerProvider: React.FC<{
     </PaperContentValueContext.Provider>
   );
 };
+
+export function paperContentToServer(client: PaperContent): PaperWithoutAutofield {
+  return { content: client.content };
+}
+
+export function paperContentEquals(client: PaperContent, server: PaperWithoutAutofield): boolean {
+  return client.content === server.content;
+}

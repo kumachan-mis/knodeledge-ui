@@ -34,30 +34,55 @@ class GraphNodeLogic {
     this.selection.select<SVGTextElement>('text').attr('transform', (node) => `translate(${node.x},${node.y + 20})`);
   }
 
-  public update({ graphParentNode, graphChildrenNodes, deleteGraphNode, center }: GraphEntityLogicReturn): void {
+  public update({
+    graphParentNode,
+    graphChildrenNodes,
+    inactiveGraphNodes,
+    focusGraphParent,
+    blurGraphParent,
+    deleteGraphNode,
+    center,
+  }: GraphEntityLogicReturn): void {
     if (!this.selection) return;
 
     graphParentNode.fix(center.x, center.y);
 
     const oldGraphNodeMap = new Map(this.selection.data().map((node) => [node.id, node]));
-    const graphNodes = [graphParentNode, ...graphChildrenNodes];
+    const graphNodes = [...inactiveGraphNodes, ...graphChildrenNodes, graphParentNode];
     if (graphNodes.length === oldGraphNodeMap.size && graphNodes.every((node) => oldGraphNodeMap.has(node.id))) {
       // GraphNodesMap.get() will never return undefined because the if condition above checks for that.
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const oldParentNode = oldGraphNodeMap.get(graphParentNode.id)!;
-      const [parentDx, parentDy] = [graphParentNode.x - oldParentNode.x, graphParentNode.y - oldParentNode.y];
+      const parenOldNode = oldGraphNodeMap.get(graphParentNode.id)!;
+      const [parentDx, parentDy] = [center.x - parenOldNode.x, center.y - parenOldNode.y];
 
       graphChildrenNodes.forEach((childNode) => {
         // GraphNodesMap.get() will never return undefined because the if condition above checks for that.
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const oldChildNode = oldGraphNodeMap.get(childNode.id)!;
-        childNode.position(oldChildNode.x + parentDx, oldChildNode.y + parentDy);
+        const childOldNode = oldGraphNodeMap.get(childNode.id)!;
+        childNode.position(childOldNode.x + parentDx, childOldNode.y + parentDy);
+      });
+
+      inactiveGraphNodes.forEach((inactiveNode) => {
+        // GraphNodesMap.get() will never return undefined because the if condition above checks for that.
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const inactiveOldNode = oldGraphNodeMap.get(inactiveNode.id)!;
+        inactiveNode.fix(inactiveOldNode.x + parentDx, inactiveOldNode.y + parentDy);
       });
     } else {
       graphChildrenNodes.forEach((childNode, index) => {
         const x = center.x + 120 * Math.sin((index / graphChildrenNodes.length) * 2 * Math.PI);
         const y = center.y - 120 * Math.cos((index / graphChildrenNodes.length) * 2 * Math.PI);
         childNode.position(x, y);
+      });
+
+      const parentOldNode = oldGraphNodeMap.get(graphParentNode.id);
+      const [parentDx, parentDy] = parentOldNode ? [center.x - parentOldNode.x, center.y - parentOldNode.y] : [0, 0];
+
+      inactiveGraphNodes.forEach((inactiveNode) => {
+        const oldInactiveNode = oldGraphNodeMap.get(inactiveNode.id);
+        if (oldInactiveNode) {
+          inactiveNode.fix(oldInactiveNode.x + parentDx, oldInactiveNode.y + parentDy);
+        }
       });
     }
 
@@ -113,6 +138,20 @@ class GraphNodeLogic {
               deleteGraphNode(node);
             },
             disabled: (node) => node === graphParentNode,
+          },
+          {
+            name: 'Expand',
+            onClick: (event, node) => {
+              focusGraphParent(node);
+            },
+            disabled: (node) => node === graphParentNode,
+          },
+          {
+            name: 'Collapse',
+            onClick: () => {
+              blurGraphParent();
+            },
+            disabled: (node) => node !== graphParentNode,
           },
         ]),
       );
