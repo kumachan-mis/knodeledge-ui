@@ -1,6 +1,7 @@
 import { GraphChildWithId, GraphRootWithId } from '@/contexts/views/graph';
 
 import GraphLink from './GraphLink';
+import GraphMenuItem from './GraphMenuItem';
 import GraphNode from './GraphNode';
 
 export type GraphEntityLogicProps = {
@@ -22,43 +23,36 @@ export type GraphEntityLogicReturn = {
   readonly inactiveGraphNodes: GraphNode[];
   readonly inactiveGraphLinks: GraphLink[];
   readonly center: { readonly x: number; readonly y: number };
-  readonly focusGraphParent: (node: GraphNode) => void;
+  readonly graphNodeNenuItems: GraphMenuItem<GraphNode>[];
+  readonly graphLinkMenuItems: GraphMenuItem<GraphLink>[];
   readonly focusGraphLink: (link: GraphLink) => void;
-  readonly blurGraphParent: () => void;
   readonly blurGraphLink: () => void;
-  readonly deleteGraphNode: (node: GraphNode) => void;
-  readonly deleteGraphLink: (link: GraphLink) => void;
 };
+
+export function graphEntityLogic(props: GraphEntityLogicProps): GraphEntityLogicReturn {
+  const activeLogicReturn = graphEntityActiveLogic(props);
+
+  const { graphParentNode, graphChildrenNodes } = activeLogicReturn;
+  const inactiveLogicReturn = graphEntityInactiveLogic({ ...props, graphParentNode });
+
+  const callbackLogicReturn = graphEntityCallbackLogic({ ...props, graphChildrenNodes });
+
+  return { ...activeLogicReturn, ...inactiveLogicReturn, center: props.center, ...callbackLogicReturn };
+}
+
+type GraphEntityActiveLogicProps = GraphEntityLogicProps;
 
 type GraphEntityActiveLogicReturn = Pick<
   GraphEntityLogicReturn,
   'graphParentNode' | 'graphChildrenNodes' | 'graphLinks' | 'focusedLink'
 >;
 
-type GraphEntityInactiveLogicReturn = Pick<GraphEntityLogicReturn, 'inactiveGraphNodes' | 'inactiveGraphLinks'>;
-
-type GraphEntityCallbackLogicReturn = Pick<
-  GraphEntityLogicReturn,
-  'focusGraphParent' | 'focusGraphLink' | 'blurGraphParent' | 'blurGraphLink' | 'deleteGraphNode' | 'deleteGraphLink'
->;
-
-export function graphEntityLogic(props: GraphEntityLogicProps): GraphEntityLogicReturn {
-  const activeLogicReturn = graphEntityActiveLogic(props);
-
-  const { graphParentNode } = activeLogicReturn;
-  const inactiveLogicReturn = graphEntityInactiveLogic({ ...props, graphParentNode });
-
-  const callbackLogicReturn = graphEntityCallbackLogic(props);
-
-  return { ...activeLogicReturn, ...inactiveLogicReturn, center: props.center, ...callbackLogicReturn };
-}
-
 function graphEntityActiveLogic({
   graphRoot,
   graphRootChildren,
   focusedGraphParentId,
   focusedGraphChildId,
-}: GraphEntityLogicProps): GraphEntityActiveLogicReturn {
+}: GraphEntityActiveLogicProps): GraphEntityActiveLogicReturn {
   const focusedGraphParent = graphRootChildren.find((child) => child.id === focusedGraphParentId);
   const graphParent = focusedGraphParent ?? graphRoot;
   const graphChildren = focusedGraphParent?.children ?? graphRootChildren;
@@ -79,12 +73,16 @@ function graphEntityActiveLogic({
   return { graphParentNode, graphChildrenNodes, graphLinks, focusedLink };
 }
 
+type GraphEntityInactiveLogicProps = GraphEntityLogicProps & { graphParentNode: GraphNode };
+
+type GraphEntityInactiveLogicReturn = Pick<GraphEntityLogicReturn, 'inactiveGraphNodes' | 'inactiveGraphLinks'>;
+
 function graphEntityInactiveLogic({
   graphRoot,
   graphRootChildren,
   focusedGraphParentId,
   graphParentNode,
-}: GraphEntityLogicProps & { graphParentNode: GraphNode }): GraphEntityInactiveLogicReturn {
+}: GraphEntityInactiveLogicProps): GraphEntityInactiveLogicReturn {
   const focusedGraphParent = graphRootChildren.find((child) => child.id === focusedGraphParentId);
   if (!focusedGraphParent) {
     return { inactiveGraphNodes: [], inactiveGraphLinks: [] };
@@ -108,6 +106,13 @@ function graphEntityInactiveLogic({
   return { inactiveGraphNodes, inactiveGraphLinks };
 }
 
+type GraphEntityCallbackLogicProps = GraphEntityLogicProps & { graphChildrenNodes: GraphNode[] };
+
+type GraphEntityCallbackLogicReturn = Pick<
+  GraphEntityLogicReturn,
+  'graphNodeNenuItems' | 'graphLinkMenuItems' | 'focusGraphLink' | 'blurGraphLink'
+>;
+
 function graphEntityCallbackLogic({
   graphRoot,
   graphRootChildren,
@@ -115,35 +120,56 @@ function graphEntityCallbackLogic({
   setFocusedGraphParentId,
   setFocusedGraphChildId,
   setFocusedGraphChildren,
-}: GraphEntityLogicProps): GraphEntityCallbackLogicReturn {
-  const focusGraphParent = (node: GraphNode) => {
-    if (graphRoot.id === node.id) {
-      setFocusedGraphParentId('');
-    } else if (graphRootChildren.some((child) => child.id === node.id)) {
-      setFocusedGraphParentId(node.id);
-    }
-  };
+  graphChildrenNodes,
+}: GraphEntityCallbackLogicProps): GraphEntityCallbackLogicReturn {
+  const graphNodeNenuItems: GraphMenuItem<GraphNode>[] = [
+    {
+      name: 'Delete',
+      onClick: (event, node) => {
+        setFocusedGraphChildren((prev) => prev.filter((child) => child.id !== node.id));
+      },
+      disabled: (node) => graphChildrenNodes.every((child) => child.id !== node.id),
+    },
+    {
+      name: 'Expand',
+      onClick: (event, node) => {
+        if (node.id === graphRoot.id) {
+          setFocusedGraphParentId('');
+        } else if (graphRootChildren.some((child) => child.id === node.id)) {
+          setFocusedGraphParentId(node.id);
+        }
+      },
+      disabled: (node) =>
+        node.id === focusedGraphParentId ||
+        (node.id !== graphRoot.id && graphRootChildren.every((child) => child.id !== node.id)),
+    },
+    {
+      name: 'Collapse',
+      onClick: () => {
+        setFocusedGraphParentId('');
+      },
+      disabled: (node) => node.id !== focusedGraphParentId || node.id === graphRoot.id,
+    },
+  ];
+
+  const graphLinkMenuItems: GraphMenuItem<GraphLink>[] = [
+    {
+      name: 'Delete',
+      onClick: (event, link) => {
+        setFocusedGraphChildren((prev) => prev.filter((child) => child.id !== link.target.id));
+      },
+      disabled: (link) => graphChildrenNodes.every((child) => child.id !== link.target.id),
+    },
+  ];
 
   const focusGraphLink = (link: GraphLink) => {
     if (link.source.id !== focusedGraphParentId) return;
     setFocusedGraphChildId(link.target.id);
   };
 
-  const blurGraphParent = () => {
-    setFocusedGraphParentId('');
-  };
-
   const blurGraphLink = () => {
     setFocusedGraphChildId('');
   };
 
-  const deleteGraphNode = (node: GraphNode) => {
-    setFocusedGraphChildren((prev) => prev.filter((child) => child.id !== node.id));
-  };
-
-  const deleteGraphLink = (link: GraphLink) => {
-    setFocusedGraphChildren((prev) => prev.filter((child) => child.id !== link.target.id));
-  };
-
-  return { focusGraphParent, focusGraphLink, blurGraphParent, blurGraphLink, deleteGraphNode, deleteGraphLink };
+  return { graphNodeNenuItems, graphLinkMenuItems, focusGraphLink, blurGraphLink };
 }

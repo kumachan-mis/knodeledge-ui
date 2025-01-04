@@ -36,7 +36,7 @@ class GraphLinkLogic {
   public update({
     graphLinks,
     inactiveGraphLinks,
-    deleteGraphLink,
+    graphLinkMenuItems,
     focusGraphLink,
     blurGraphLink,
   }: GraphEntityLogicReturn): void {
@@ -60,16 +60,7 @@ class GraphLinkLogic {
           focusGraphLink(link);
         });
       })
-      .call(
-        this.menuLogic.behavior<GraphLink>([
-          {
-            name: 'Delete',
-            onClick: (event: MouseEvent, link) => {
-              deleteGraphLink(link);
-            },
-          },
-        ]),
-      );
+      .call(this.menuLogic.behavior<GraphLink>(graphLinkMenuItems));
 
     if (!this.svgSelection) return;
     this.svgSelection.on('click', () => {

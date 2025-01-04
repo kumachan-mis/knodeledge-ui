@@ -38,9 +38,7 @@ class GraphNodeLogic {
     graphParentNode,
     graphChildrenNodes,
     inactiveGraphNodes,
-    focusGraphParent,
-    blurGraphParent,
-    deleteGraphNode,
+    graphNodeNenuItems,
     center,
   }: GraphEntityLogicReturn): void {
     if (!this.selection) return;
@@ -130,31 +128,7 @@ class GraphNodeLogic {
             node.unfix();
           }),
       )
-      .call(
-        this.menuLogic.behavior<GraphNode>([
-          {
-            name: 'Delete',
-            onClick: (event, node) => {
-              deleteGraphNode(node);
-            },
-            disabled: (node) => node === graphParentNode,
-          },
-          {
-            name: 'Expand',
-            onClick: (event, node) => {
-              focusGraphParent(node);
-            },
-            disabled: (node) => node === graphParentNode,
-          },
-          {
-            name: 'Collapse',
-            onClick: () => {
-              blurGraphParent();
-            },
-            disabled: (node) => node !== graphParentNode,
-          },
-        ]),
-      );
+      .call(this.menuLogic.behavior<GraphNode>(graphNodeNenuItems));
   }
 
   public destroy(): void {
