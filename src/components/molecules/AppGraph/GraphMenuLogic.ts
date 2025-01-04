@@ -5,11 +5,13 @@ import styles from './styles.module.scss';
 import { select, Selection } from 'd3-selection';
 
 class GraphMenuLogic {
-  private static readonly bodySelection = select('body');
+  private readonly bodySelection;
 
   private rootSelection: Selection<HTMLDivElement, unknown, HTMLElement, unknown> | null = null;
 
-  public constructor(private readonly simulationLogic: GraphSimulationLogic) {}
+  public constructor(private readonly simulationLogic: GraphSimulationLogic) {
+    this.bodySelection = select('body');
+  }
 
   public behavior<Datum>(
     menuItems: GraphMenuItem<Datum>[],
@@ -28,7 +30,7 @@ class GraphMenuLogic {
 
     this.simulationLogic.stop();
 
-    this.rootSelection = GraphMenuLogic.bodySelection
+    this.rootSelection = this.bodySelection
       .append('div')
       .attr('role', 'presentation')
       .attr('class', styles.GraphMenu)
@@ -56,7 +58,7 @@ class GraphMenuLogic {
         this.hide();
       });
 
-    GraphMenuLogic.bodySelection.on('click', () => {
+    this.bodySelection.on('click', () => {
       this.hide();
     });
   }
@@ -64,7 +66,7 @@ class GraphMenuLogic {
   private hide(): void {
     if (!this.rootSelection) return;
 
-    GraphMenuLogic.bodySelection.on('click', null);
+    this.bodySelection.on('click', null);
 
     this.rootSelection.remove();
     this.rootSelection = null;
