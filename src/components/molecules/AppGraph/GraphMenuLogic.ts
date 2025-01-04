@@ -5,12 +5,12 @@ import styles from './styles.module.scss';
 import { select, Selection } from 'd3-selection';
 
 class GraphMenuLogic {
-  private readonly bodySelection;
+  private readonly bodySelection: Selection<HTMLBodyElement, unknown, HTMLElement, unknown>;
 
   private rootSelection: Selection<HTMLDivElement, unknown, HTMLElement, unknown> | null = null;
 
   public constructor(private readonly simulationLogic: GraphSimulationLogic) {
-    this.bodySelection = select('body');
+    this.bodySelection = select<HTMLBodyElement, unknown>('body');
   }
 
   public behavior<Datum>(
