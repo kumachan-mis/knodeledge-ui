@@ -10,7 +10,7 @@ class GraphLinkLogic {
   private rootSelection: Selection<SVGGElement, unknown, null, undefined> | null = null;
   private selection: Selection<SVGGElement, GraphLink, SVGGElement, unknown> | null = null;
 
-  public constructor(private menuLogic: GraphMenuLogic) {}
+  public constructor(private readonly menuLogic: GraphMenuLogic) {}
 
   public init(svgSelection: Selection<SVGSVGElement, unknown, null, undefined>): void {
     this.svgSelection = svgSelection;

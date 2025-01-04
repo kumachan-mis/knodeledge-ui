@@ -1,8 +1,7 @@
 'use client';
 import AppGraph from '@/components/molecules/AppGraph';
 import { LoadableGraph } from '@/contexts/openapi/graphs';
-import { useGraphContent, useSetGraphContent } from '@/contexts/views/graph';
-import { GraphChild } from '@/openapi';
+import { GraphChildWithId, GraphRootWithId, useGraphContent, useSetGraphContent } from '@/contexts/views/graph';
 
 import React from 'react';
 
@@ -11,12 +10,16 @@ export type SectionViewGraphComponentProps = {
 };
 
 const SectionViewGraphComponent: React.FC<SectionViewGraphComponentProps> = ({ loadableGraph }) => {
-  const graphRoot = loadableGraph.data?.name ?? '';
+  const graphRoot: GraphRootWithId = React.useMemo(
+    () => ({ id: loadableGraph.data?.id ?? '', name: loadableGraph.data?.name ?? '' }),
+    [loadableGraph],
+  );
+
   const graph = useGraphContent();
   const setGraph = useSetGraphContent();
 
   const setGraphChildren = React.useCallback(
-    (value: React.SetStateAction<GraphChild[]>) => {
+    (value: React.SetStateAction<GraphChildWithId[]>) => {
       setGraph((prev) => {
         const updated = typeof value === 'function' ? value(prev.children) : value;
         if (updated.length === prev.children.length) {

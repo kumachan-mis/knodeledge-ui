@@ -1,10 +1,24 @@
 'use client';
 import { LoadableGraph } from '../openapi/graphs';
-import { GraphContentWithoutAutofield } from '@/openapi';
+import { GraphChild } from '@/openapi';
 
 import React from 'react';
 
-type GraphContent = GraphContentWithoutAutofield & { readonly focusedChildIndex: number };
+export type GraphRootWithId = {
+  readonly id: string;
+  readonly name: string;
+};
+
+export type GraphChildWithId = Omit<GraphChild, 'children'> & {
+  readonly id: string;
+  readonly children: GraphChildWithId[];
+};
+
+export type GraphContent = {
+  readonly paragraph: string;
+  readonly children: GraphChildWithId[];
+  readonly focusedChildIndex: number;
+};
 
 const GraphContentValueContext = React.createContext<GraphContent>({
   paragraph: '',
@@ -23,6 +37,11 @@ export function useSetGraphContent(): React.Dispatch<React.SetStateAction<GraphC
   return React.useContext(GraphContentSetContext);
 }
 
+export function issueGraphChildId(child: GraphChild): GraphChildWithId {
+  const randomId = Math.floor(Math.pow(10, 12) + Math.random() * 9 * Math.pow(10, 12)).toString(16);
+  return { ...child, id: randomId, children: child.children.map(issueGraphChildId) };
+}
+
 export const GraphContentProvider: React.FC<{
   readonly loadableGraph: LoadableGraph;
   readonly children?: React.ReactNode;
@@ -30,8 +49,10 @@ export const GraphContentProvider: React.FC<{
   if (loadableGraph.state !== 'success') {
     return children;
   }
+  const { paragraph, children: graphChildren } = loadableGraph.data;
+  const graphChildrenWithId = graphChildren.map(issueGraphChildId);
   return (
-    <GraphContentInnerProvider initialContent={{ ...loadableGraph.data, focusedChildIndex: -1 }}>
+    <GraphContentInnerProvider initialContent={{ paragraph, children: graphChildrenWithId, focusedChildIndex: -1 }}>
       {children}
     </GraphContentInnerProvider>
   );

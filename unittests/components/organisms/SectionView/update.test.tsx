@@ -55,15 +55,36 @@ const HooksWrapper: React.FC<{
   );
 };
 
+// eslint-disable-next-line @typescript-eslint/unbound-method
+const originalSvgGetClientRect = SVGSVGElement.prototype.getBoundingClientRect;
 beforeAll(() => {
   global.fetch = jest.fn();
+  Object.defineProperty(global.SVGElement.prototype, 'getBBox', {
+    writable: true,
+    value: jest.fn().mockReturnValue({ x: 0, y: 0, width: 100, height: 100 }),
+  });
+  Object.defineProperty(SVGSVGElement.prototype, 'getBoundingClientRect', {
+    writable: true,
+    value: jest.fn().mockReturnValue({ x: 0, y: 0, width: 100, height: 100 }),
+  });
 });
 
 beforeEach(() => {
   (global.fetch as jest.Mock).mockRestore();
 });
 
-test('should update graph with Graph Update API', async () => {
+afterAll(() => {
+  Object.defineProperty(SVGSVGElement.prototype, 'getBoundingClientRect', {
+    writable: true,
+    value: originalSvgGetClientRect,
+  });
+  Object.defineProperty(global.SVGElement.prototype, 'getBBox', {
+    writable: true,
+    value: undefined,
+  });
+});
+
+test('should update graph paragraph with Graph Update API', async () => {
   const user = userEvent.setup();
 
   const project: Project = {
@@ -90,6 +111,7 @@ test('should update graph with Graph Update API', async () => {
       createOkResponse({
         graph: {
           id: 'GRAPH',
+          name: 'Parent Node Name',
           paragraph: 'Graph Paragraph',
           children: [],
         },
@@ -99,6 +121,7 @@ test('should update graph with Graph Update API', async () => {
       createOkResponse({
         graph: {
           id: 'GRAPH',
+          name: 'Parent Node Name',
           paragraph: 'Graph Paragraph Updated',
           children: [],
         },
@@ -203,6 +226,7 @@ test('should show error message when graph update failed', async () => {
       createOkResponse({
         graph: {
           id: 'GRAPH',
+          name: 'Parent Node Name',
           paragraph: 'Graph Paragraph',
           children: [],
         },
@@ -214,6 +238,7 @@ test('should show error message when graph update failed', async () => {
         user: {},
         project: {},
         graph: {
+          name: 'name error',
           paragraph: 'paragraph error',
         },
       }),
@@ -317,6 +342,7 @@ test('should show error message when graph to be updated does not exist', async 
       createOkResponse({
         graph: {
           id: 'GRAPH',
+          name: 'Parent Node Name',
           paragraph: 'Graph Paragraph',
           children: [],
         },
@@ -429,6 +455,7 @@ test('should show error message when internal error occured', async () => {
       createOkResponse({
         graph: {
           id: 'GRAPH',
+          name: 'Parent Node Name',
           paragraph: 'Graph Paragraph',
           children: [],
         },

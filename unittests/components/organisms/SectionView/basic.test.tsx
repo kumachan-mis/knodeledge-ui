@@ -49,15 +49,36 @@ const HooksWrapper: React.FC<{
   );
 };
 
+// eslint-disable-next-line @typescript-eslint/unbound-method
+const originalSvgGetClientRect = SVGSVGElement.prototype.getBoundingClientRect;
 beforeAll(() => {
   global.fetch = jest.fn();
+  Object.defineProperty(global.SVGElement.prototype, 'getBBox', {
+    writable: true,
+    value: jest.fn().mockReturnValue({ x: 0, y: 0, width: 100, height: 100 }),
+  });
+  Object.defineProperty(SVGSVGElement.prototype, 'getBoundingClientRect', {
+    writable: true,
+    value: jest.fn().mockReturnValue({ x: 0, y: 0, width: 1000, height: 800 }),
+  });
 });
 
 beforeEach(() => {
   (global.fetch as jest.Mock).mockRestore();
 });
 
-test('should show graph paragraph from Graph Find API', async () => {
+afterAll(() => {
+  Object.defineProperty(SVGSVGElement.prototype, 'getBoundingClientRect', {
+    writable: true,
+    value: originalSvgGetClientRect,
+  });
+  Object.defineProperty(global.SVGElement.prototype, 'getBBox', {
+    writable: true,
+    value: undefined,
+  });
+});
+
+test('should show graph diagram and paragraph from Graph Find API', async () => {
   const project: Project = {
     id: 'PROJECT',
     name: 'Project Name',
@@ -81,6 +102,7 @@ test('should show graph paragraph from Graph Find API', async () => {
     createOkResponse({
       graph: {
         id: 'GRAPH',
+        name: 'Parent Node Name',
         paragraph: 'Graph Paragraph',
         children: [],
       },
@@ -103,6 +125,14 @@ test('should show graph paragraph from Graph Find API', async () => {
   expect(screen.getByText('Chapter Name')).toBeInTheDocument();
   expect(screen.getByText('Section Name')).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
+
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const parentNodeGroup = screen.getByText('Parent Node Name').closest('g')!;
+  await waitFor(() => {
+    const parentNodeCircle = parentNodeGroup.querySelector('circle');
+    expect(parentNodeCircle).toHaveAttribute('cx', '500');
+    expect(parentNodeCircle).toHaveAttribute('cy', '400');
+  });
 
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(

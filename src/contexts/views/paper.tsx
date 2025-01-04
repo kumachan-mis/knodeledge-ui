@@ -1,20 +1,23 @@
 'use client';
 import { LoadablePaper } from '../openapi/papers';
-import { PaperWithoutAutofield } from '@/openapi';
 
 import React from 'react';
 
-const PaperContentValueContext = React.createContext<PaperWithoutAutofield>({ content: '' });
+type PaperContent = {
+  readonly content: string;
+};
 
-const PaperContentSetContext = React.createContext<React.Dispatch<React.SetStateAction<PaperWithoutAutofield>>>(() => {
+const PaperContentValueContext = React.createContext<PaperContent>({ content: '' });
+
+const PaperContentSetContext = React.createContext<React.Dispatch<React.SetStateAction<PaperContent>>>(() => {
   // Do nothing
 });
 
-export function usePaperContent(): PaperWithoutAutofield {
+export function usePaperContent(): PaperContent {
   return React.useContext(PaperContentValueContext);
 }
 
-export function useSetPaperContent(): React.Dispatch<React.SetStateAction<PaperWithoutAutofield>> {
+export function useSetPaperContent(): React.Dispatch<React.SetStateAction<PaperContent>> {
   return React.useContext(PaperContentSetContext);
 }
 
@@ -29,10 +32,10 @@ export const PaperContentProvider: React.FC<{
 };
 
 const PaperContentInnerProvider: React.FC<{
-  readonly initialPaper: PaperWithoutAutofield;
+  readonly initialPaper: PaperContent;
   readonly children?: React.ReactNode;
 }> = ({ initialPaper, children }) => {
-  const [paper, setPaper] = React.useState<PaperWithoutAutofield>(initialPaper);
+  const [paper, setPaper] = React.useState<PaperContent>(initialPaper);
 
   return (
     <PaperContentValueContext.Provider value={paper}>

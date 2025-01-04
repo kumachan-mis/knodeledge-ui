@@ -1,4 +1,5 @@
 'use client';
+import { GraphChildWithId, GraphRootWithId } from '@/contexts/views/graph';
 import { GraphChild } from '@/openapi/models/GraphChild';
 
 import { graphEntityLogic } from './GraphEntityLogic';
@@ -16,10 +17,10 @@ import { select } from 'd3-selection';
 import React from 'react';
 
 export type AppGraphProps = {
-  readonly graphRoot: string;
-  readonly graphChildren: GraphChild[];
+  readonly graphRoot: GraphRootWithId;
+  readonly graphChildren: GraphChildWithId[];
   readonly focusedGraphChildIndex: number;
-  readonly setGraphChildren: React.Dispatch<React.SetStateAction<GraphChild[]>>;
+  readonly setGraphChildren: React.Dispatch<React.SetStateAction<GraphChildWithId[]>>;
   readonly setFocusedGraphChildIndex: React.Dispatch<React.SetStateAction<number>>;
   readonly state: 'notfound' | 'loading' | 'success';
 };
@@ -91,13 +92,14 @@ const AppGraphEditor: React.FC<Omit<AppGraphProps, 'state'>> = ({
     const linkLogic = linkLogicRef.current;
     const nodeLogic = nodeLogicRef.current;
 
+    const clientRect = ref.current.getBoundingClientRect();
     const graphEntityLogicReturn = graphEntityLogic({
       graphRoot,
       graphChildren,
       focusedGraphChildIndex,
       setGraphChildren,
       setFocusedGraphChildIndex,
-      center: { x: ref.current.clientWidth / 2, y: ref.current.clientHeight / 2 },
+      center: { x: clientRect.width / 2, y: clientRect.height / 2 },
     });
 
     linkLogic.update(graphEntityLogicReturn);
@@ -124,9 +126,9 @@ const AppGraphEditor: React.FC<Omit<AppGraphProps, 'state'>> = ({
     };
   }, [handleResizeGraph]);
 
-  const focusedGraphChild = graphChildren[focusedGraphChildIndex] as GraphChild | undefined;
+  const focusedGraphChild = graphChildren[focusedGraphChildIndex] as GraphChildWithId | undefined;
   const setFocusedGraphChild = React.useCallback(
-    (value: React.SetStateAction<GraphChild>) => {
+    (value: React.SetStateAction<GraphChildWithId>) => {
       setGraphChildren((prev) => {
         const next = [...prev];
         const updated = typeof value === 'function' ? value(next[focusedGraphChildIndex]) : value;
@@ -155,8 +157,8 @@ const AppGraphEditor: React.FC<Omit<AppGraphProps, 'state'>> = ({
 };
 
 const AppGraphChildEditor: React.FC<{
-  readonly graphChild: GraphChild;
-  readonly setGraphChild: React.Dispatch<React.SetStateAction<GraphChild>>;
+  readonly graphChild: GraphChildWithId;
+  readonly setGraphChild: React.Dispatch<React.SetStateAction<GraphChildWithId>>;
 }> = ({ graphChild, setGraphChild }) => (
   <Grid container my={1} spacing={1}>
     <Grid size={{ xs: 12, sm: 6, md: 3 }}>

@@ -1,14 +1,14 @@
-import { GraphChild } from '@/openapi';
+import { GraphChildWithId, GraphRootWithId } from '@/contexts/views/graph';
 
 import GraphLink from './GraphLink';
 import GraphNode from './GraphNode';
 
 export type GraphEntityLogicProps = {
-  readonly graphRoot: string;
-  readonly graphChildren: GraphChild[];
+  readonly graphRoot: GraphRootWithId;
+  readonly graphChildren: GraphChildWithId[];
   readonly focusedGraphChildIndex: number;
   readonly center: { readonly x: number; readonly y: number };
-  readonly setGraphChildren: React.Dispatch<React.SetStateAction<GraphChild[]>>;
+  readonly setGraphChildren: React.Dispatch<React.SetStateAction<GraphChildWithId[]>>;
   readonly setFocusedGraphChildIndex: React.Dispatch<React.SetStateAction<number>>;
 };
 
@@ -32,8 +32,8 @@ export function graphEntityLogic({
   setGraphChildren,
   setFocusedGraphChildIndex,
 }: GraphEntityLogicProps): GraphEntityLogicReturn {
-  const graphParentNode = new GraphNode('root', graphRoot);
-  const graphChildrenNodes = graphChildren.map((child, index) => new GraphNode(`child${index}`, child.name));
+  const graphParentNode = new GraphNode(graphRoot.id, graphRoot.name);
+  const graphChildrenNodes = graphChildren.map((child) => new GraphNode(child.id, child.name));
   const graphChildrenMap = new Map(graphChildrenNodes.map((node) => [node.name, node]));
 
   const graphLinks = graphChildren.map((child) => {
