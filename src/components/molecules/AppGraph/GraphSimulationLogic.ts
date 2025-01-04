@@ -14,18 +14,15 @@ class GraphSimulationLogic {
   public update({ graphParentNode, graphChildrenNodes, graphLinks }: GraphEntityLogicReturn): void {
     if (!this.simulation) return;
 
-    const links = [...graphLinks];
-    const nodes = [graphParentNode, ...graphChildrenNodes];
-
     this.simulation
-      .nodes(nodes)
-      .force('forceManyBody', forceManyBody().strength(-600))
-      .force('forceLink', forceLink(links).distance(160).strength(1));
+      .nodes([graphParentNode, ...graphChildrenNodes])
+      .force('forceManyBody', forceManyBody().strength(-500))
+      .force('forceLink', forceLink(graphLinks).distance(150).strength(1));
   }
 
-  public start(alpha = 0.25): void {
+  public start(): void {
     if (!this.simulation) return;
-    this.simulation.alpha(alpha).restart();
+    this.simulation.alpha(1.0).alphaTarget(0.0).restart();
   }
 
   public stop(): void {

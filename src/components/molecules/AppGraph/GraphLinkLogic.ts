@@ -6,12 +6,14 @@ import styles from './styles.module.scss';
 import { Selection } from 'd3-selection';
 
 class GraphLinkLogic {
+  private svgSelection: Selection<SVGSVGElement, unknown, null, undefined> | null = null;
   private rootSelection: Selection<SVGGElement, unknown, null, undefined> | null = null;
   private selection: Selection<SVGGElement, GraphLink, SVGGElement, unknown> | null = null;
 
   public constructor(private menuLogic: GraphMenuLogic) {}
 
   public init(svgSelection: Selection<SVGSVGElement, unknown, null, undefined>): void {
+    this.svgSelection = svgSelection;
     this.rootSelection = svgSelection.append('g');
     this.selection = this.rootSelection.append('g').selectAll<SVGGElement, GraphLink>('g');
   }
@@ -31,10 +33,10 @@ class GraphLinkLogic {
     });
   }
 
-  public update({ graphLinks, deleteGraphLink, focusGraphLink }: GraphEntityLogicReturn): void {
+  public update({ graphLinks, deleteGraphLink, focusGraphLink, blurGraphLink }: GraphEntityLogicReturn): void {
     if (!this.selection) return;
 
-    this.selection = this.selection.data(graphLinks);
+    this.selection = this.selection.data(graphLinks, (link) => link.id);
     this.selection.exit().remove();
 
     const enteredSelection = this.selection.enter().append('g');
@@ -47,7 +49,8 @@ class GraphLinkLogic {
 
     this.selection
       .call((selection) => {
-        selection.on('click', (event, link) => {
+        selection.on('click', (event: MouseEvent, link) => {
+          event.stopPropagation();
           focusGraphLink(link);
         });
       })
@@ -55,15 +58,23 @@ class GraphLinkLogic {
         this.menuLogic.behavior<GraphLink>([
           {
             name: 'Delete',
-            onClick: (event, link) => {
+            onClick: (event: MouseEvent, link) => {
               deleteGraphLink(link);
             },
           },
         ]),
       );
+
+    if (!this.svgSelection) return;
+    this.svgSelection.on('click', () => {
+      blurGraphLink();
+    });
   }
 
   public destroy(): void {
+    if (!this.svgSelection) return;
+    this.svgSelection.on('click', null);
+
     if (!this.rootSelection) return;
     this.rootSelection.remove();
   }

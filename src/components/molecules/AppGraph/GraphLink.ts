@@ -15,6 +15,10 @@ class GraphLink implements SimulationLinkDatum<GraphNode> {
     this._description = description;
   }
 
+  public get id(): string {
+    return `${this._source.id}-${this._target.id}`;
+  }
+
   public get source(): GraphNode {
     return this._source;
   }

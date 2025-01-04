@@ -17,7 +17,9 @@ export type GraphEntityLogicReturn = {
   readonly graphChildrenNodes: GraphNode[];
   readonly graphLinks: GraphLink[];
   readonly foccusedLink: GraphLink | null;
+  readonly center: { readonly x: number; readonly y: number };
   readonly focusGraphLink: (link: GraphLink) => void;
+  readonly blurGraphLink: () => void;
   readonly deleteGraphNode: (node: GraphNode) => void;
   readonly deleteGraphLink: (link: GraphLink) => void;
 };
@@ -30,14 +32,8 @@ export function graphEntityLogic({
   setGraphChildren,
   setFocusedGraphChildIndex,
 }: GraphEntityLogicProps): GraphEntityLogicReturn {
-  const graphParentNode = new GraphNode(graphRoot, center.x, center.y);
-  graphParentNode.fix(center.x, center.y);
-
-  const graphChildrenNodes = graphChildren.map((child, index) => {
-    const x = center.x + 120 * Math.sin((index / graphChildren.length) * 2 * Math.PI);
-    const y = center.y - 120 * Math.cos((index / graphChildren.length) * 2 * Math.PI);
-    return new GraphNode(child.name, x, y);
-  });
+  const graphParentNode = new GraphNode('root', graphRoot);
+  const graphChildrenNodes = graphChildren.map((child, index) => new GraphNode(`child${index}`, child.name));
   const graphChildrenMap = new Map(graphChildrenNodes.map((node) => [node.name, node]));
 
   const graphLinks = graphChildren.map((child) => {
@@ -65,13 +61,19 @@ export function graphEntityLogic({
     setFocusedGraphChildIndex(targetIndex);
   };
 
+  const blurGraphLink = () => {
+    setFocusedGraphChildIndex(-1);
+  };
+
   return {
     graphParentNode,
     graphChildrenNodes,
     graphLinks,
     foccusedLink,
+    center,
+    focusGraphLink,
+    blurGraphLink,
     deleteGraphNode,
     deleteGraphLink,
-    focusGraphLink,
   };
 }

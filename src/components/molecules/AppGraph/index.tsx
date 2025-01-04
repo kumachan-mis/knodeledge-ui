@@ -30,44 +30,24 @@ const AppGraph: React.FC<AppGraphProps> = ({
   setGraphChildren,
   state,
   ...rest
-}) => {
-  const graphChild = graphChildren[focusedGraphChildIndex];
-  const setGraphChild = React.useCallback(
-    (value: React.SetStateAction<GraphChild>) => {
-      setGraphChildren((prev) => {
-        const next = [...prev];
-        const updated = typeof value === 'function' ? value(next[focusedGraphChildIndex]) : value;
-        next[focusedGraphChildIndex] = updated;
-        return next;
-      });
-    },
-    [focusedGraphChildIndex, setGraphChildren],
-  );
+}) => (
+  <AppGraphRoot>
+    {state !== 'success' ? (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
+        {state === 'loading' && <CircularProgress />}
+      </Box>
+    ) : (
+      <AppGraphEditor
+        focusedGraphChildIndex={focusedGraphChildIndex}
+        graphChildren={graphChildren}
+        setGraphChildren={setGraphChildren}
+        {...rest}
+      />
+    )}
+  </AppGraphRoot>
+);
 
-  return (
-    <AppGraphRoot>
-      {state !== 'success' ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
-          {state === 'loading' && <CircularProgress />}
-        </Box>
-      ) : (
-        <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}>
-          <AppGraphViewer
-            focusedGraphChildIndex={focusedGraphChildIndex}
-            graphChildren={graphChildren}
-            setGraphChildren={setGraphChildren}
-            {...rest}
-          />
-          {0 <= focusedGraphChildIndex && focusedGraphChildIndex < graphChildren.length && (
-            <AppGraphChildEditor graphChild={graphChild} setGraphChild={setGraphChild} />
-          )}
-        </Box>
-      )}
-    </AppGraphRoot>
-  );
-};
-
-const AppGraphViewer: React.FC<Omit<AppGraphProps, 'state'>> = ({
+const AppGraphEditor: React.FC<Omit<AppGraphProps, 'state'>> = ({
   graphRoot,
   graphChildren,
   focusedGraphChildIndex,
@@ -105,46 +85,73 @@ const AppGraphViewer: React.FC<Omit<AppGraphProps, 'state'>> = ({
   }, []);
 
   const handleOnRerenderGraph = React.useCallback(() => {
-    if (timerIdRef.current > 0) clearTimeout(timerIdRef.current);
+    if (!ref.current) return;
 
-    timerIdRef.current = window.setTimeout(() => {
-      if (!ref.current) return;
+    const simulationLogic = simulationLogicRef.current;
+    const linkLogic = linkLogicRef.current;
+    const nodeLogic = nodeLogicRef.current;
 
-      const simulationLogic = simulationLogicRef.current;
-      const linkLogic = linkLogicRef.current;
-      const nodeLogic = nodeLogicRef.current;
+    const graphEntityLogicReturn = graphEntityLogic({
+      graphRoot,
+      graphChildren,
+      focusedGraphChildIndex,
+      setGraphChildren,
+      setFocusedGraphChildIndex,
+      center: { x: ref.current.clientWidth / 2, y: ref.current.clientHeight / 2 },
+    });
 
-      const graphEntityLogicReturn = graphEntityLogic({
-        graphRoot,
-        graphChildren,
-        focusedGraphChildIndex,
-        setGraphChildren,
-        setFocusedGraphChildIndex,
-        center: { x: ref.current.clientWidth / 2, y: ref.current.clientHeight / 2 },
-      });
-
-      linkLogic.update(graphEntityLogicReturn);
-      nodeLogic.update(graphEntityLogicReturn);
-      simulationLogic.update(graphEntityLogicReturn);
-
-      simulationLogic.start();
-    }, 300);
-
-    return () => {
-      if (timerIdRef.current > 0) clearTimeout(timerIdRef.current);
-    };
+    linkLogic.update(graphEntityLogicReturn);
+    nodeLogic.update(graphEntityLogicReturn);
+    simulationLogic.update(graphEntityLogicReturn);
   }, [focusedGraphChildIndex, graphChildren, graphRoot, setFocusedGraphChildIndex, setGraphChildren]);
 
   React.useEffect(handleOnRerenderGraph, [handleOnRerenderGraph]);
 
-  React.useEffect(() => {
-    window.addEventListener('resize', handleOnRerenderGraph);
-    return () => {
-      window.removeEventListener('resize', handleOnRerenderGraph);
-    };
+  const handleResizeGraph = React.useCallback(() => {
+    if (timerIdRef.current > 0) clearTimeout(timerIdRef.current);
+    const simulationLogic = simulationLogicRef.current;
+
+    timerIdRef.current = window.setTimeout(() => {
+      handleOnRerenderGraph();
+      simulationLogic.start();
+    }, 300);
   }, [handleOnRerenderGraph]);
 
-  return <svg height="100%" ref={ref} width="100%" />;
+  React.useEffect(() => {
+    window.addEventListener('resize', handleResizeGraph);
+    return () => {
+      window.removeEventListener('resize', handleResizeGraph);
+    };
+  }, [handleResizeGraph]);
+
+  const focusedGraphChild = graphChildren[focusedGraphChildIndex] as GraphChild | undefined;
+  const setFocusedGraphChild = React.useCallback(
+    (value: React.SetStateAction<GraphChild>) => {
+      setGraphChildren((prev) => {
+        const next = [...prev];
+        const updated = typeof value === 'function' ? value(next[focusedGraphChildIndex]) : value;
+        next[focusedGraphChildIndex] = updated;
+        return next;
+      });
+    },
+    [focusedGraphChildIndex, setGraphChildren],
+  );
+
+  const [prevFocusedGraphChildIndex, setPrevFocusedGraphChildIndex] = React.useState<number>(focusedGraphChildIndex);
+  const prevFocusedGraphChild = graphChildren[prevFocusedGraphChildIndex] as GraphChild | undefined;
+  if (prevFocusedGraphChildIndex !== focusedGraphChildIndex) {
+    setPrevFocusedGraphChildIndex(focusedGraphChildIndex);
+    if ((!prevFocusedGraphChild && focusedGraphChild) || (prevFocusedGraphChild && !focusedGraphChild)) {
+      handleResizeGraph();
+    }
+  }
+
+  return (
+    <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}>
+      <svg height="100%" ref={ref} width="100%" />
+      {focusedGraphChild && <AppGraphChildEditor graphChild={focusedGraphChild} setGraphChild={setFocusedGraphChild} />}
+    </Box>
+  );
 };
 
 const AppGraphChildEditor: React.FC<{
@@ -152,7 +159,7 @@ const AppGraphChildEditor: React.FC<{
   readonly setGraphChild: React.Dispatch<React.SetStateAction<GraphChild>>;
 }> = ({ graphChild, setGraphChild }) => (
   <Grid container my={1} spacing={1}>
-    <Grid size={{ xs: 12, md: 4 }} sx={{ display: 'flex', alignItems: 'center' }}>
+    <Grid size={{ xs: 12, sm: 6, md: 3 }}>
       <TextField
         fullWidth
         onChange={(event) => {
@@ -163,7 +170,7 @@ const AppGraphChildEditor: React.FC<{
         value={graphChild.name}
       />
     </Grid>
-    <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+    <Grid size={{ xs: 12, sm: 6, md: 3 }}>
       <TextField
         fullWidth
         onChange={(event) => {
@@ -174,7 +181,7 @@ const AppGraphChildEditor: React.FC<{
         value={graphChild.relation}
       />
     </Grid>
-    <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+    <Grid size={{ xs: 12, sm: 12, md: 6 }}>
       <TextField
         fullWidth
         onChange={(event) => {
