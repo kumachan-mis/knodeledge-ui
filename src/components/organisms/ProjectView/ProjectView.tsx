@@ -1,6 +1,6 @@
 import ProjectDialog from '@/components/organisms/ProjectDialog';
-import { LoadableAction } from '@/contexts/openapi/types';
 import { ProjectActionError } from '@/contexts/openapi/projects';
+import { LoadableAction } from '@/contexts/openapi/types';
 import { useDialog } from '@/hooks/dialog';
 import { Project, ProjectWithoutAutofield } from '@/openapi';
 

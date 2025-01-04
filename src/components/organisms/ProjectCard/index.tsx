@@ -1,5 +1,5 @@
-import { LoadableAction } from '@/contexts/openapi/types';
 import { ProjectActionError } from '@/contexts/openapi/projects';
+import { LoadableAction } from '@/contexts/openapi/types';
 import { ProjectWithoutAutofield, Project } from '@/openapi';
 
 import ProjectCardComponent from './ProjectCard';

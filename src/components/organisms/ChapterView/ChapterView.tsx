@@ -1,6 +1,6 @@
 import { SectionsActionError } from '@/contexts/openapi/chapters';
-import { LoadableAction } from '@/contexts/openapi/types';
 import { LoadablePaper, PaperActionError } from '@/contexts/openapi/papers';
+import { LoadableAction } from '@/contexts/openapi/types';
 import { PaperContentProvider } from '@/contexts/views/paper';
 import { ChapterWithSections, PaperWithoutAutofield, Project, SectionWithoutAutofield } from '@/openapi';
 

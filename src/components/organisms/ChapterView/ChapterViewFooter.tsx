@@ -1,7 +1,7 @@
 import NextStepDialog from '../NextStepDialog';
 import { SectionsActionError } from '@/contexts/openapi/chapters';
-import { LoadableAction } from '@/contexts/openapi/types';
 import { LoadablePaper } from '@/contexts/openapi/papers';
+import { LoadableAction } from '@/contexts/openapi/types';
 import { useDialog } from '@/hooks/dialog';
 import { SectionWithoutAutofield } from '@/openapi';
 

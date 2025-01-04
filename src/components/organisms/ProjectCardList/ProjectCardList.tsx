@@ -1,6 +1,6 @@
 import ProjectCard from '@/components/organisms/ProjectCard';
-import { LoadableAction } from '@/contexts/openapi/types';
 import { ProjectActionError } from '@/contexts/openapi/projects';
+import { LoadableAction } from '@/contexts/openapi/types';
 import { ProjectWithoutAutofield, Project } from '@/openapi';
 
 import Box from '@mui/material/Box';

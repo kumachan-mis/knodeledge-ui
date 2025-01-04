@@ -1,6 +1,6 @@
 import AppBreadcrumbs from '@/components/molecules/AppBreadcrumbs';
-import { LoadableAction } from '@/contexts/openapi/types';
 import { LoadablePaper, PaperActionError } from '@/contexts/openapi/papers';
+import { LoadableAction } from '@/contexts/openapi/types';
 import { usePaperContent } from '@/contexts/views/paper';
 import { Chapter, PaperWithoutAutofield, Project } from '@/openapi';
 import { chapterViewContentEquals } from '@/utils/logic';
