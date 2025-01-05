@@ -55,6 +55,26 @@ export function useAppBreadcrumbsSaving({
   }, [onSaveClick]);
 
   React.useEffect(() => {
+    const handleClick = (event: MouseEvent) => {
+      if (
+        dirty &&
+        event.target instanceof Element &&
+        event.target.closest('a[href]:not([target="_blank"])') &&
+        !window.confirm(message)
+      ) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    };
+
+    window.addEventListener('click', handleClick, true);
+
+    return () => {
+      window.removeEventListener('click', handleClick, true);
+    };
+  }, [dirty, message]);
+
+  React.useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       if (dirty) event.preventDefault();
     };
