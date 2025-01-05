@@ -18,12 +18,12 @@ import 'katex/dist/katex.min.css';
 
 export type AppEditorProps = EditorRootProps & {
   readonly state: 'notfound' | 'loading' | 'success';
-  readonly view: 'paper' | 'article' | 'graph';
+  readonly mode: 'regular' | 'simple';
 };
 
-const AppEditor: React.FC<AppEditorProps> = ({ state, view, ...rest }) => (
-  <AppEditorRoot view={view} {...rest}>
-    {view !== 'graph' && (
+const AppEditor: React.FC<AppEditorProps> = ({ state, mode, ...rest }) => (
+  <AppEditorRoot {...rest}>
+    {mode !== 'simple' && (
       <>
         <EditorSyntaxMenu />
         <Divider />
@@ -44,13 +44,11 @@ const AppEditor: React.FC<AppEditorProps> = ({ state, view, ...rest }) => (
   </AppEditorRoot>
 );
 
-const AppEditorRoot = styled<React.FC<EditorRootProps & { view: 'paper' | 'article' | 'graph' }>>(EditorRoot)(
-  ({ view }) => ({
-    '&&': {
-      width: '100%',
-      height: view !== 'graph' ? '100%' : '20%',
-    },
-  }),
-);
+const AppEditorRoot = styled(EditorRoot)({
+  '&&': {
+    width: '100%',
+    flexGrow: 1,
+  },
+});
 
 export default AppEditor;

@@ -16,6 +16,8 @@ export type SectionViewEditorComponentProps = {
   readonly view: 'article' | 'graph';
 };
 
+const APP_EDITOR_MMODE = { article: 'regular', graph: 'simple' } as const;
+
 const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({ loadableGraph, view }) => {
   const graphRoot = useGraphContentRoot();
   const graph = useGraphContent();
@@ -70,10 +72,10 @@ const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({
   return (
     <AppEditor
       bracketLinkProps={{ anchorProps: bracketLinkAnchorProps }}
+      mode={APP_EDITOR_MMODE[view]}
       setText={setText}
       state={loadableGraph.state}
       text={graph.paragraph}
-      view={view}
     />
   );
 };

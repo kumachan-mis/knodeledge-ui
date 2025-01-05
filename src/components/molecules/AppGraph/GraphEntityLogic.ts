@@ -1,8 +1,8 @@
-import { GraphChildWithId, GraphRootWithId } from '@/contexts/views/graph';
-
+import GraphChildWithId from './GraphChildWithId';
 import GraphLink from './GraphLink';
 import GraphMenuItem from './GraphMenuItem';
 import GraphNode from './GraphNode';
+import GraphRootWithId from './GraphRootWithId';
 
 export type GraphEntityLogicProps = {
   readonly graphRoot: GraphRootWithId;
