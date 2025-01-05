@@ -59,18 +59,21 @@ export const GraphContentProvider: React.FC<{
   const grapRoothChildrenWithId = grapRoothChildren.map(issueGraphChildId);
   return (
     <GraphContentInnerProvider
+      id={id}
       initialContent={{ paragraph, rootChildren: grapRoothChildrenWithId, focusedParentId: id, focusedChildId: '' }}
-      rootContent={{ id, name }}
+      rootName={name}
     >
       {children}
     </GraphContentInnerProvider>
   );
 };
 const GraphContentInnerProvider: React.FC<{
-  readonly rootContent: GraphRootWithId;
+  readonly id: string;
+  readonly rootName: string;
   readonly initialContent: GraphContent;
   readonly children?: React.ReactNode;
-}> = ({ rootContent, initialContent, children }) => {
+}> = ({ id, rootName, initialContent, children }) => {
+  const rootContent: GraphRootWithId = React.useMemo(() => ({ id, name: rootName }), [id, rootName]);
   const [graph, setGraph] = React.useState<GraphContent>(initialContent);
 
   return (

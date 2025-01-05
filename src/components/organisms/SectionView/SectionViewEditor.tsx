@@ -1,7 +1,13 @@
 'use client';
 import AppEditor from '@/components/molecules/AppEditor';
 import { LoadableGraph } from '@/contexts/openapi/graphs';
-import { generateGraphChildId, GraphChildWithId, useGraphContent, useSetGraphContent } from '@/contexts/views/graph';
+import {
+  generateGraphChildId,
+  GraphChildWithId,
+  useGraphContent,
+  useGraphContentRoot,
+  useSetGraphContent,
+} from '@/contexts/views/graph';
 
 import React from 'react';
 
@@ -11,6 +17,7 @@ export type SectionViewEditorComponentProps = {
 };
 
 const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({ loadableGraph, view }) => {
+  const graphRoot = useGraphContentRoot();
   const graph = useGraphContent();
   const setGraph = useSetGraphContent();
 
@@ -40,11 +47,15 @@ const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({
         setGraph((prev) => {
           const focusedParent = prev.rootChildren.find((child) => child.id === prev.focusedParentId);
           if (!focusedParent) {
-            if (prev.rootChildren.some((child) => child.name === graphChild.name)) return prev;
+            if ([graphRoot, ...prev.rootChildren].some((node) => node.name === graphChild.name)) {
+              return prev;
+            }
             return { ...prev, rootChildren: [...prev.rootChildren, graphChild] };
           }
 
-          if (focusedParent.children.some((child) => child.name === graphChild.name)) return prev;
+          if ([focusedParent, ...focusedParent.children].some((node) => node.name === graphChild.name)) {
+            return prev;
+          }
           const updated = prev.rootChildren.map((child) => {
             if (child !== focusedParent) return child;
             return { ...child, children: [...child.children, graphChild] };
@@ -53,7 +64,7 @@ const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({
         });
       },
     }),
-    [setGraph],
+    [setGraph, graphRoot],
   );
 
   return (
