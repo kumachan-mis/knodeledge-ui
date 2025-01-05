@@ -70,6 +70,7 @@ class GraphLinkLogic {
     this.selection
       .call((selection) => {
         selection.on('click', (event: MouseEvent, link) => {
+          if (inactiveGraphLinkIds.has(link.id)) return;
           event.stopPropagation();
           focusGraphLink(link);
         });

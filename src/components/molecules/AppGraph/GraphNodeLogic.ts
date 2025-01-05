@@ -132,17 +132,23 @@ class GraphNodeLogic {
       .call(
         drag<SVGGElement, GraphNode>()
           .on('start', (event: DragEvent, node) => {
-            if (node === graphParentNode) return;
+            if (node === graphParentNode || inactiveGraphNodeIds.has(node.id)) {
+              return;
+            }
             node.fix(event.x, event.y);
             this.simulationLogic.start();
           })
           .on('drag', (event: MouseEvent, node) => {
-            if (node === graphParentNode) return;
+            if (node === graphParentNode || inactiveGraphNodeIds.has(node.id)) {
+              return;
+            }
             node.fix(event.x, event.y);
             this.simulationLogic.start();
           })
           .on('end', (_: MouseEvent, node) => {
-            if (node === graphParentNode) return;
+            if (node === graphParentNode || inactiveGraphNodeIds.has(node.id)) {
+              return;
+            }
             node.unfix();
           }),
       )
