@@ -57,7 +57,7 @@ function graphEntityActiveLogic({
   const graphParent = focusedGraphParent ?? graphRoot;
   const graphChildren = focusedGraphParent?.children ?? graphRootChildren;
 
-  const graphParentNode = new GraphNode(graphParent.id, graphParent.name, true);
+  const graphParentNode = new GraphNode(graphParent.id, graphParent.name);
   const graphChildrenNodes = graphChildren.map((child) => new GraphNode(child.id, child.name));
 
   const graphChildrenMap = new Map(graphChildrenNodes.map((node) => [node.name, node]));

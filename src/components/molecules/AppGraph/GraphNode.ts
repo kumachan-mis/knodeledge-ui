@@ -3,18 +3,16 @@ import { SimulationNodeDatum } from 'd3-force';
 class GraphNode implements SimulationNodeDatum {
   private _id: string;
   private _name: string;
-  private _parent: boolean;
   private _x: number;
   private _y: number;
   private _fx?: number;
   private _fy?: number;
 
-  constructor(id: string, name: string, parent = false) {
+  constructor(id: string, name: string) {
     this._id = id;
     this._name = name;
     this._x = 0;
     this._y = 0;
-    this._parent = parent;
   }
 
   public get id(): string {
@@ -23,10 +21,6 @@ class GraphNode implements SimulationNodeDatum {
 
   public get name(): string {
     return this._name;
-  }
-
-  public get parent(): boolean {
-    return this._parent;
   }
 
   public get x(): number {
