@@ -9,15 +9,15 @@ import {
   useSetGraphContent,
 } from '@/contexts/views/graph';
 
-import { styled } from '@mui/material/styles';
+import styled from '@emotion/styled';
 import React from 'react';
 
 export type SectionViewEditorComponentProps = {
   readonly loadableGraph: LoadableGraph;
-  readonly view: 'article' | 'graph';
+  readonly view: 'text' | 'graph';
 };
 
-const APP_EDITOR_MMODE = { article: 'regular', graph: 'simple' } as const;
+const APP_EDITOR_MMODE = { text: 'regular', graph: 'simple' } as const;
 
 const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({ loadableGraph, view }) => {
   const graphRoot = useGraphContentRoot();
@@ -71,7 +71,7 @@ const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({
   );
 
   return (
-    <SectionViewEditorRootComponent>
+    <SectionViewEditorRootComponent view={view}>
       <AppEditor
         bracketLinkProps={{ anchorProps: bracketLinkAnchorProps }}
         mode={APP_EDITOR_MMODE[view]}
@@ -83,11 +83,11 @@ const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({
   );
 };
 
-const SectionViewEditorRootComponent = styled('div')({
+const SectionViewEditorRootComponent = styled.div<{ view: 'text' | 'graph' }>(({ view }) => ({
   '&': {
     width: '100%',
-    height: '20%',
+    height: view === 'graph' ? '20%' : '100%',
   },
-});
+}));
 
 export default SectionViewEditorComponent;

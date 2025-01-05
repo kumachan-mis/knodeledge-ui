@@ -8,9 +8,9 @@ import GraphMenuLogic from './GraphMenuLogic';
 import GraphNodeLogic from './GraphNodeLogic';
 import GraphSimulationLogic from './GraphSimulationLogic';
 
+import styled from '@emotion/styled';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
-import { styled } from '@mui/material/styles';
 import { select } from 'd3-selection';
 import React from 'react';
 
@@ -168,7 +168,7 @@ const AppGraphInner: React.FC<Omit<AppGraphProps, 'state'>> = ({
   );
 };
 
-const AppGraphRoot = styled('div')({
+const AppGraphRoot = styled.div({
   '&': {
     width: '100%',
     height: '100%',

@@ -4,11 +4,17 @@ import { LoadableAction } from '@/contexts/openapi/types';
 import { graphContentEquals, graphContentToServer, useGraphContent } from '@/contexts/views/graph';
 import { Project, Chapter, SectionOfChapter, GraphContentWithoutAutofield } from '@/openapi';
 
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import React from 'react';
+
 export type SectionViewBreadcrumbsComponentProps = {
   readonly project: Project;
   readonly chapter: Chapter;
   readonly section: SectionOfChapter;
   readonly loadableGraph: LoadableGraph;
+  readonly view: 'text' | 'graph';
+  readonly onChangeView: React.Dispatch<React.SetStateAction<'text' | 'graph'>>;
   readonly onUpdateGraph: (
     id: string,
     graph: GraphContentWithoutAutofield,
@@ -20,6 +26,8 @@ const SectionViewBreadcrumbsComponent: React.FC<SectionViewBreadcrumbsComponentP
   chapter,
   section,
   loadableGraph,
+  view,
+  onChangeView,
   onUpdateGraph,
 }) => {
   const unsavedGraph = useGraphContent();
@@ -42,7 +50,18 @@ const SectionViewBreadcrumbsComponent: React.FC<SectionViewBreadcrumbsComponentP
       }}
       project={{ id: project.id, name: project.name }}
       section={{ id: section.id, name: section.name }}
-    />
+    >
+      <Tabs
+        onChange={(event, value: 'text' | 'graph') => {
+          onChangeView(value);
+        }}
+        sx={{ mx: 4, my: 1, minHeight: '28px', '& button': { padding: '0 28px', minHeight: '28px' } }}
+        value={view}
+      >
+        <Tab label="Text View" value="text" />
+        <Tab label="Graph View" value="graph" />
+      </Tabs>
+    </AppBreadcrumbs>
   );
 };
 

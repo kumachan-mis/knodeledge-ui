@@ -3,7 +3,7 @@ import AppGraph from '@/components/molecules/AppGraph';
 import { LoadableGraph } from '@/contexts/openapi/graphs';
 import { GraphChildWithId, useGraphContent, useGraphContentRoot, useSetGraphContent } from '@/contexts/views/graph';
 
-import { styled } from '@mui/material/styles';
+import styled from '@emotion/styled';
 import React from 'react';
 
 export type SectionViewGraphComponentProps = {
@@ -72,7 +72,7 @@ const SectionViewGraphComponent: React.FC<SectionViewGraphComponentProps> = ({ l
   );
 };
 
-const SectionViewGraphRootComponent = styled('div')({
+const SectionViewGraphRootComponent = styled.div({
   '&': {
     width: '100%',
     height: '80%',

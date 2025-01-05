@@ -9,6 +9,7 @@ import SectionViewGraphComponent from './SectionViewGraph';
 
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
+import React from 'react';
 
 export type SectionViewComponentProps = {
   readonly project: Project;
@@ -27,28 +28,34 @@ const SectionViewComponent: React.FC<SectionViewComponentProps> = ({
   section,
   loadableGraph,
   onUpdateGraph,
-}) => (
-  <GraphContentProvider loadableGraph={loadableGraph}>
-    <Box
-      sx={(theme) => ({
-        height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px)`,
-        display: 'flex',
-        flexDirection: 'column',
-      })}
-    >
-      <Container maxWidth="lg" sx={{ height: '100%', display: 'flex', flexDirection: 'column', py: 1 }}>
-        <SectionViewBreadcrumbsComponent
-          chapter={chapter}
-          loadableGraph={loadableGraph}
-          onUpdateGraph={onUpdateGraph}
-          project={project}
-          section={section}
-        />
-        <SectionViewGraphComponent loadableGraph={loadableGraph} />
-        <SectionViewEditorComponent loadableGraph={loadableGraph} view="graph" />
-      </Container>
-    </Box>
-  </GraphContentProvider>
-);
+}) => {
+  const [view, setView] = React.useState<'text' | 'graph'>('text');
+
+  return (
+    <GraphContentProvider loadableGraph={loadableGraph}>
+      <Box
+        sx={(theme) => ({
+          height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px)`,
+          display: 'flex',
+          flexDirection: 'column',
+        })}
+      >
+        <Container maxWidth="lg" sx={{ height: '100%', display: 'flex', flexDirection: 'column', py: 1 }}>
+          <SectionViewBreadcrumbsComponent
+            chapter={chapter}
+            loadableGraph={loadableGraph}
+            onChangeView={setView}
+            onUpdateGraph={onUpdateGraph}
+            project={project}
+            section={section}
+            view={view}
+          />
+          {view === 'graph' && <SectionViewGraphComponent loadableGraph={loadableGraph} />}
+          <SectionViewEditorComponent loadableGraph={loadableGraph} view={view} />
+        </Container>
+      </Box>
+    </GraphContentProvider>
+  );
+};
 
 export default SectionViewComponent;
