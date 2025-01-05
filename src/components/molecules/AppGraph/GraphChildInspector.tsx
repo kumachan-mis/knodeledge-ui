@@ -14,6 +14,7 @@ const GraphChildInspector: React.FC<GraphChildInspectorProps> = ({ graphChild, s
     <Grid size={{ xs: 12, sm: 6, md: 3 }}>
       <TextField
         fullWidth
+        label="Name"
         onChange={(event) => {
           setGraphChild((prev) => ({ ...prev, name: event.target.value }));
         }}
@@ -25,6 +26,7 @@ const GraphChildInspector: React.FC<GraphChildInspectorProps> = ({ graphChild, s
     <Grid size={{ xs: 12, sm: 6, md: 3 }}>
       <TextField
         fullWidth
+        label="Relation"
         onChange={(event) => {
           setGraphChild((prev) => ({ ...prev, relation: event.target.value }));
         }}
@@ -36,6 +38,7 @@ const GraphChildInspector: React.FC<GraphChildInspectorProps> = ({ graphChild, s
     <Grid size={{ xs: 12, sm: 12, md: 6 }}>
       <TextField
         fullWidth
+        label="Description"
         onChange={(event) => {
           setGraphChild((prev) => ({ ...prev, description: event.target.value }));
         }}
