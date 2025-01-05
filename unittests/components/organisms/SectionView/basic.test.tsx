@@ -13,6 +13,7 @@ import { ProjectContextProvider } from '@/contexts/openapi/projects';
 import { ChapterWithSections, Project } from '@/openapi';
 
 import { render, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 const Wrapper: React.FC<{
   project: Project;
@@ -79,6 +80,8 @@ afterAll(() => {
 });
 
 test('should show graph diagram and paragraph from Graph Find API', async () => {
+  const user = userEvent.setup();
+
   const project: Project = {
     id: 'PROJECT',
     name: 'Project Name',
@@ -124,7 +127,17 @@ test('should show graph diagram and paragraph from Graph Find API', async () => 
   expect(screen.getByText('Project Name')).toBeInTheDocument();
   expect(screen.getByText('Chapter Name')).toBeInTheDocument();
   expect(screen.getByText('Section Name')).toBeInTheDocument();
+  expect(screen.getByRole('tab', { name: 'Text View' })).toBeInTheDocument();
+  expect(screen.getByRole('tab', { name: 'Graph View' })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
+
+  expect(screen.getByRole('tab', { name: 'Text View' })).toHaveAttribute('aria-selected', 'true');
+  expect(screen.getByRole('tab', { name: 'Graph View' })).toHaveAttribute('aria-selected', 'false');
+
+  await user.click(screen.getByRole('tab', { name: 'Graph View' }));
+  await waitFor(() => {
+    expect(screen.getByText('Parent Node Name')).toBeInTheDocument();
+  });
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const parentNodeGroup = screen.getByText('Parent Node Name').closest('g')!;
