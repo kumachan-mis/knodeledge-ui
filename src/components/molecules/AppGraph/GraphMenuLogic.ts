@@ -63,7 +63,7 @@ class GraphMenuLogic {
     });
   }
 
-  private hide(): void {
+  public hide(): void {
     if (!this.rootSelection) return;
 
     this.bodySelection.on('click', null);

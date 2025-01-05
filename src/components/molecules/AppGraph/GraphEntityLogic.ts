@@ -133,11 +133,7 @@ function graphEntityCallbackLogic({
     {
       name: 'Expand',
       onClick: (event, node) => {
-        if (node.id === graphRoot.id) {
-          setFocusedGraphParentId('');
-        } else if (graphRootChildren.some((child) => child.id === node.id)) {
-          setFocusedGraphParentId(node.id);
-        }
+        setFocusedGraphParentId(node.id);
       },
       disabled: (node) =>
         node.id === focusedGraphParentId ||
@@ -146,7 +142,7 @@ function graphEntityCallbackLogic({
     {
       name: 'Collapse',
       onClick: () => {
-        setFocusedGraphParentId('');
+        setFocusedGraphParentId(graphRoot.id);
       },
       disabled: (node) => node.id !== focusedGraphParentId || node.id === graphRoot.id,
     },
