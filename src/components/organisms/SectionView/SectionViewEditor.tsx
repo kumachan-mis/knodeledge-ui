@@ -9,6 +9,7 @@ import {
   useSetGraphContent,
 } from '@/contexts/views/graph';
 
+import { styled } from '@mui/material/styles';
 import React from 'react';
 
 export type SectionViewEditorComponentProps = {
@@ -70,14 +71,23 @@ const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({
   );
 
   return (
-    <AppEditor
-      bracketLinkProps={{ anchorProps: bracketLinkAnchorProps }}
-      mode={APP_EDITOR_MMODE[view]}
-      setText={setText}
-      state={loadableGraph.state}
-      text={graph.paragraph}
-    />
+    <SectionViewEditorRootComponent>
+      <AppEditor
+        bracketLinkProps={{ anchorProps: bracketLinkAnchorProps }}
+        mode={APP_EDITOR_MMODE[view]}
+        setText={setText}
+        state={loadableGraph.state}
+        text={graph.paragraph}
+      />
+    </SectionViewEditorRootComponent>
   );
 };
+
+const SectionViewEditorRootComponent = styled('div')({
+  '&': {
+    width: '100%',
+    height: '20%',
+  },
+});
 
 export default SectionViewEditorComponent;

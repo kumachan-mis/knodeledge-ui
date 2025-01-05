@@ -171,7 +171,7 @@ const AppGraphInner: React.FC<Omit<AppGraphProps, 'state'>> = ({
 const AppGraphRoot = styled('div')({
   '&': {
     width: '100%',
-    height: '80%',
+    height: '100%',
   },
 });
 

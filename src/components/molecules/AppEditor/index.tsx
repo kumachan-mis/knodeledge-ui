@@ -47,7 +47,7 @@ const AppEditor: React.FC<AppEditorProps> = ({ state, mode, ...rest }) => (
 const AppEditorRoot = styled(EditorRoot)({
   '&&': {
     width: '100%',
-    flexGrow: 1,
+    height: '100%',
   },
 });
 

@@ -3,6 +3,7 @@ import AppGraph from '@/components/molecules/AppGraph';
 import { LoadableGraph } from '@/contexts/openapi/graphs';
 import { GraphChildWithId, useGraphContent, useGraphContentRoot, useSetGraphContent } from '@/contexts/views/graph';
 
+import { styled } from '@mui/material/styles';
 import React from 'react';
 
 export type SectionViewGraphComponentProps = {
@@ -56,17 +57,26 @@ const SectionViewGraphComponent: React.FC<SectionViewGraphComponentProps> = ({ l
   );
 
   return (
-    <AppGraph
-      focusedGraphChildId={graph.focusedChildId}
-      focusedGraphParentId={graph.focusedParentId}
-      graphRoot={graphRoot}
-      graphRootChildren={graph.rootChildren}
-      setFocusedGraphChildId={setFocusedGraphChildId}
-      setFocusedGraphChildren={setFocusedGraphChildren}
-      setFocusedGraphParentId={setFocusedGraphParentId}
-      state={loadableGraph.state}
-    />
+    <SectionViewGraphRootComponent>
+      <AppGraph
+        focusedGraphChildId={graph.focusedChildId}
+        focusedGraphParentId={graph.focusedParentId}
+        graphRoot={graphRoot}
+        graphRootChildren={graph.rootChildren}
+        setFocusedGraphChildId={setFocusedGraphChildId}
+        setFocusedGraphChildren={setFocusedGraphChildren}
+        setFocusedGraphParentId={setFocusedGraphParentId}
+        state={loadableGraph.state}
+      />
+    </SectionViewGraphRootComponent>
   );
 };
+
+const SectionViewGraphRootComponent = styled('div')({
+  '&': {
+    width: '100%',
+    height: '80%',
+  },
+});
 
 export default SectionViewGraphComponent;
