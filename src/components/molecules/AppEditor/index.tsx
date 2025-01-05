@@ -18,10 +18,10 @@ import 'katex/dist/katex.min.css';
 
 export type AppEditorProps = EditorRootProps & {
   readonly state: 'notfound' | 'loading' | 'success';
-  readonly mode: 'regular' | 'simple';
+  readonly mode?: 'regular' | 'simple';
 };
 
-const AppEditor: React.FC<AppEditorProps> = ({ state, mode, ...rest }) => (
+const AppEditor: React.FC<AppEditorProps> = ({ state, mode = 'regular', ...rest }) => (
   <AppEditorRoot {...rest}>
     {mode !== 'simple' && (
       <>
