@@ -16,15 +16,13 @@ import {
 
 import 'katex/dist/katex.min.css';
 
-export type AppEditorProps = {
-  readonly text: string;
-  readonly setText: React.Dispatch<React.SetStateAction<string>>;
+export type AppEditorProps = EditorRootProps & {
   readonly state: 'notfound' | 'loading' | 'success';
   readonly view: 'paper' | 'article' | 'graph';
 };
 
-const AppEditor: React.FC<AppEditorProps> = ({ text, setText, state, view }) => (
-  <AppEditorRoot setText={setText} text={text} view={view}>
+const AppEditor: React.FC<AppEditorProps> = ({ state, view, ...rest }) => (
+  <AppEditorRoot view={view} {...rest}>
     {view !== 'graph' && (
       <>
         <EditorSyntaxMenu />

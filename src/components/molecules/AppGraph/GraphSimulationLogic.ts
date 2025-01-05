@@ -13,11 +13,17 @@ class GraphSimulationLogic {
 
   public update({ graphParentNode, graphChildrenNodes, graphLinks }: GraphEntityLogicReturn): void {
     if (!this.simulation) return;
+    const oldGraphNodeIds = new Set(this.simulation.nodes().map((node) => node.id));
 
     this.simulation
       .nodes([graphParentNode, ...graphChildrenNodes])
       .force('forceManyBody', forceManyBody().strength(-500))
       .force('forceLink', forceLink(graphLinks).distance(150).strength(1));
+
+    const graphNodeIds = new Set(this.simulation.nodes().map((node) => node.id));
+    if (!oldGraphNodeIds.isSubsetOf(graphNodeIds) || !graphNodeIds.isSubsetOf(oldGraphNodeIds)) {
+      this.start();
+    }
   }
 
   public start(): void {

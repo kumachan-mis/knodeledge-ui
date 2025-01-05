@@ -121,6 +121,9 @@ function graphChildEquals(client: GraphChildWithId, server: GraphChild): boolean
 }
 
 function issueGraphChildId(child: GraphChild): GraphChildWithId {
-  const randomId = Math.floor(Math.pow(10, 12) + Math.random() * 9 * Math.pow(10, 12)).toString(16);
-  return { ...child, id: randomId, children: child.children.map(issueGraphChildId) };
+  return { ...child, id: generateGraphChildId(), children: child.children.map(issueGraphChildId) };
+}
+
+export function generateGraphChildId(): string {
+  return Math.floor(Math.pow(10, 12) + Math.random() * 9 * Math.pow(10, 12)).toString(16);
 }

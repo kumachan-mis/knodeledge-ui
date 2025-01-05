@@ -1,7 +1,7 @@
 'use client';
 import AppEditor from '@/components/molecules/AppEditor';
 import { LoadableGraph } from '@/contexts/openapi/graphs';
-import { useGraphContent, useSetGraphContent } from '@/contexts/views/graph';
+import { generateGraphChildId, GraphChildWithId, useGraphContent, useSetGraphContent } from '@/contexts/views/graph';
 
 import React from 'react';
 
@@ -24,7 +24,47 @@ const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({
     [setGraph],
   );
 
-  return <AppEditor setText={setText} state={loadableGraph.state} text={graph.paragraph} view={view} />;
+  const bracketLinkAnchorProps = React.useCallback(
+    (linkName: string, clickable: boolean): React.PropsWithoutRef<React.ComponentProps<'a'>> => ({
+      onClick: (event) => {
+        event.preventDefault();
+        if (!clickable) return;
+
+        const graphChild: GraphChildWithId = {
+          id: generateGraphChildId(),
+          name: linkName,
+          relation: '',
+          description: '',
+          children: [],
+        };
+        setGraph((prev) => {
+          const focusedParent = prev.rootChildren.find((child) => child.id === prev.focusedParentId);
+          if (!focusedParent) {
+            if (prev.rootChildren.some((child) => child.name === graphChild.name)) return prev;
+            return { ...prev, rootChildren: [...prev.rootChildren, graphChild] };
+          }
+
+          if (focusedParent.children.some((child) => child.name === graphChild.name)) return prev;
+          const updated = prev.rootChildren.map((child) => {
+            if (child !== focusedParent) return child;
+            return { ...child, children: [...child.children, graphChild] };
+          });
+          return { ...prev, rootChildren: updated };
+        });
+      },
+    }),
+    [setGraph],
+  );
+
+  return (
+    <AppEditor
+      bracketLinkProps={{ anchorProps: bracketLinkAnchorProps }}
+      setText={setText}
+      state={loadableGraph.state}
+      text={graph.paragraph}
+      view={view}
+    />
+  );
 };
 
 export default SectionViewEditorComponent;

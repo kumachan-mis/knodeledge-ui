@@ -60,11 +60,11 @@ function graphEntityActiveLogic({
   const graphParentNode = new GraphNode(graphParent.id, graphParent.name);
   const graphChildrenNodes = graphChildren.map((child) => new GraphNode(child.id, child.name));
 
-  const graphChildrenMap = new Map(graphChildrenNodes.map((node) => [node.name, node]));
+  const graphChildrenMap = new Map(graphChildrenNodes.map((node) => [node.id, node]));
   const graphLinks = graphChildren.map((child) => {
     // GraphChildrenMap.get() will never return undefined because the keys are from graphChildrenNodes
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const graphChildNode = graphChildrenMap.get(child.name)!;
+    const graphChildNode = graphChildrenMap.get(child.id)!;
     return new GraphLink(graphParentNode, graphChildNode, child.relation, child.description);
   });
 
@@ -95,11 +95,11 @@ function graphEntityInactiveLogic({
   });
   const inactiveGraphNodes = [rootNode, ...rootChildenNodes.filter((node) => node.id !== focusedGraphParentId)];
 
-  const rootChildenNodesMap = new Map(rootChildenNodes.map((node) => [node.name, node]));
+  const rootChildenNodesMap = new Map(rootChildenNodes.map((node) => [node.id, node]));
   const inactiveGraphLinks = graphRootChildren.map((child) => {
     // RootChildenNodesMap.get() will never return undefined because the keys are from inactiveGraphNodes
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const rootChildNode = rootChildenNodesMap.get(child.name)!;
+    const rootChildNode = rootChildenNodesMap.get(child.id)!;
     return new GraphLink(rootNode, rootChildNode, child.relation, child.description);
   });
 
