@@ -8,14 +8,14 @@ export type ChapterViewBreadcrumbsComponentProps = {
   readonly project: Project;
   readonly chapter: Chapter;
   readonly loadablePaper: LoadablePaper;
-  readonly updatePaper: (id: string, paper: PaperWithoutAutofield) => Promise<LoadableAction<PaperActionError>>;
+  readonly onUpdatePaper: (id: string, paper: PaperWithoutAutofield) => Promise<LoadableAction<PaperActionError>>;
 };
 
 const ChapterViewBreadcrumbsComponent: React.FC<ChapterViewBreadcrumbsComponentProps> = ({
   project,
   chapter,
   loadablePaper,
-  updatePaper,
+  onUpdatePaper,
 }) => {
   const unsavedPaper = usePaperContent();
   const dirty = loadablePaper.state === 'success' && !paperContentEquals(unsavedPaper, loadablePaper.data);
@@ -26,7 +26,7 @@ const ChapterViewBreadcrumbsComponent: React.FC<ChapterViewBreadcrumbsComponentP
       dirty={dirty}
       onSave={async () => {
         if (!dirty) return { success: true };
-        const loadableAction = await updatePaper(loadablePaper.data.id, paperContentToServer(unsavedPaper));
+        const loadableAction = await onUpdatePaper(loadablePaper.data.id, paperContentToServer(unsavedPaper));
         if (loadableAction.state === 'success') {
           return { success: true };
         }

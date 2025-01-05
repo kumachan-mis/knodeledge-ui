@@ -16,16 +16,16 @@ export type ChapterViewComponentProps = {
   readonly project: Project;
   readonly chapter: ChapterWithSections;
   readonly loadablePaper: LoadablePaper;
-  readonly updatePaper: (id: string, paper: PaperWithoutAutofield) => Promise<LoadableAction<PaperActionError>>;
-  readonly sectionalizePaper: (sections: SectionWithoutAutofield[]) => Promise<LoadableAction<SectionsActionError>>;
+  readonly onUpdatePaper: (id: string, paper: PaperWithoutAutofield) => Promise<LoadableAction<PaperActionError>>;
+  readonly onSectionalizePaper: (sections: SectionWithoutAutofield[]) => Promise<LoadableAction<SectionsActionError>>;
 };
 
 const ChapterViewComponent: React.FC<ChapterViewComponentProps> = ({
   project,
   chapter,
   loadablePaper,
-  updatePaper,
-  sectionalizePaper,
+  onUpdatePaper,
+  onSectionalizePaper,
 }) => (
   <PaperContentProvider loadablePaper={loadablePaper}>
     <Box
@@ -39,13 +39,13 @@ const ChapterViewComponent: React.FC<ChapterViewComponentProps> = ({
         <ChapterViewBreadcrumbsComponent
           chapter={chapter}
           loadablePaper={loadablePaper}
+          onUpdatePaper={onUpdatePaper}
           project={project}
-          updatePaper={updatePaper}
         />
         <ChapterViewEditorComponent loadablePaper={loadablePaper} />
       </Container>
       <Divider variant="fullWidth" />
-      <ChapterViewFooterComponent loadablePaper={loadablePaper} sectionalizePaper={sectionalizePaper} />
+      <ChapterViewFooterComponent loadablePaper={loadablePaper} onSectionalizePaper={onSectionalizePaper} />
     </Box>
   </PaperContentProvider>
 );

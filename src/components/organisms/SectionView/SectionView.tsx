@@ -15,7 +15,10 @@ export type SectionViewComponentProps = {
   readonly chapter: ChapterWithSections;
   readonly section: SectionOfChapter;
   readonly loadableGraph: LoadableGraph;
-  readonly updateGraph: (id: string, graph: GraphContentWithoutAutofield) => Promise<LoadableAction<GraphActionError>>;
+  readonly onUpdateGraph: (
+    id: string,
+    graph: GraphContentWithoutAutofield,
+  ) => Promise<LoadableAction<GraphActionError>>;
 };
 
 const SectionViewComponent: React.FC<SectionViewComponentProps> = ({
@@ -23,7 +26,7 @@ const SectionViewComponent: React.FC<SectionViewComponentProps> = ({
   chapter,
   section,
   loadableGraph,
-  updateGraph,
+  onUpdateGraph,
 }) => (
   <GraphContentProvider loadableGraph={loadableGraph}>
     <Box
@@ -37,9 +40,9 @@ const SectionViewComponent: React.FC<SectionViewComponentProps> = ({
         <SectionViewBreadcrumbsComponent
           chapter={chapter}
           loadableGraph={loadableGraph}
+          onUpdateGraph={onUpdateGraph}
           project={project}
           section={section}
-          updateGraph={updateGraph}
         />
         <SectionViewGraphComponent loadableGraph={loadableGraph} />
         <SectionViewEditorComponent loadableGraph={loadableGraph} view="graph" />

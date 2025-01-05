@@ -24,9 +24,9 @@ const ChapterView: React.FC<ChapterViewProps> = ({ user, projectId, chapterId })
     <ChapterViewComponent
       chapter={loadableChapter.data}
       loadablePaper={loadablePaper}
+      onSectionalizePaper={sectionalizePaper}
+      onUpdatePaper={updatePaper}
       project={loadableProject.data}
-      sectionalizePaper={sectionalizePaper}
-      updatePaper={updatePaper}
     />
   );
 };

@@ -9,7 +9,10 @@ export type SectionViewBreadcrumbsComponentProps = {
   readonly chapter: Chapter;
   readonly section: SectionOfChapter;
   readonly loadableGraph: LoadableGraph;
-  readonly updateGraph: (id: string, graph: GraphContentWithoutAutofield) => Promise<LoadableAction<GraphActionError>>;
+  readonly onUpdateGraph: (
+    id: string,
+    graph: GraphContentWithoutAutofield,
+  ) => Promise<LoadableAction<GraphActionError>>;
 };
 
 const SectionViewBreadcrumbsComponent: React.FC<SectionViewBreadcrumbsComponentProps> = ({
@@ -17,7 +20,7 @@ const SectionViewBreadcrumbsComponent: React.FC<SectionViewBreadcrumbsComponentP
   chapter,
   section,
   loadableGraph,
-  updateGraph,
+  onUpdateGraph,
 }) => {
   const unsavedGraph = useGraphContent();
   const dirty = loadableGraph.state === 'success' && !graphContentEquals(unsavedGraph, loadableGraph.data);
@@ -28,7 +31,7 @@ const SectionViewBreadcrumbsComponent: React.FC<SectionViewBreadcrumbsComponentP
       dirty={dirty}
       onSave={async () => {
         if (!dirty) return { success: true };
-        const loadableAction = await updateGraph(loadableGraph.data.id, graphContentToServer(unsavedGraph));
+        const loadableAction = await onUpdateGraph(loadableGraph.data.id, graphContentToServer(unsavedGraph));
         if (loadableAction.state === 'success') {
           return { success: true };
         }

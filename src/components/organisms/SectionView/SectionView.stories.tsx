@@ -4,6 +4,12 @@ import { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof SectionViewComponent> = {
   component: SectionViewComponent,
+  args: {
+    // eslint-disable-next-line @typescript-eslint/require-await
+    onUpdateGraph: async () => {
+      return { state: 'success', error: null };
+    },
+  },
 };
 
 export default meta;

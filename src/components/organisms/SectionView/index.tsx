@@ -25,9 +25,9 @@ const SectionView: React.FC<SectionViewProps> = ({ user, projectId, chapterId, s
     <SectionViewComponent
       chapter={loadableChapter.data}
       loadableGraph={loadableGraph}
+      onUpdateGraph={updateGraph}
       project={loadableProject.data}
       section={loadableSection.data}
-      updateGraph={updateGraph}
     />
   );
 };
