@@ -87,14 +87,31 @@ class GraphNodeLogic {
     this.selection = this.selection.data(graphNodes, (node) => node.id);
     this.selection.exit().remove();
 
-    const enteredSelection = this.selection.enter().append('g');
-    enteredSelection.append('circle').attr('class', styles.GraphNode);
-    enteredSelection.append('rect').attr('class', styles.GraphNode);
-    enteredSelection.append('text').attr('class', styles.GraphNode);
+    const inactiveGraphNodeIds = new Set(inactiveGraphNodes.map((node) => node.id));
+    const graphNodeClassName = (node: GraphNode) => {
+      const classNames = [styles.GraphNode];
+      if (inactiveGraphNodeIds.has(node.id)) {
+        classNames.push(styles.GraphNode__inactive);
+      }
+      return classNames.join(' ');
+    };
 
-    this.selection = enteredSelection.merge(this.selection);
-    this.selection.select<SVGCircleElement>('circle').attr('r', (node) => (node === graphParentNode ? 20 : 16));
-    this.selection.select<SVGTextElement>('text').text((node) => node.name);
+    const enteredSelection = this.selection.enter().append('g');
+    enteredSelection.append('circle');
+    enteredSelection.append('rect');
+    enteredSelection.append('text');
+
+    this.selection = enteredSelection.merge(this.selection).sort();
+
+    this.selection
+      .select<SVGCircleElement>('circle')
+      .attr('class', graphNodeClassName)
+      .attr('r', (node) => (node === graphParentNode ? 20 : 16));
+
+    this.selection
+      .select<SVGTextElement>('text')
+      .attr('class', graphNodeClassName)
+      .text((node) => node.name);
 
     const boundingBoxes = this.selection
       .select<SVGTextElement>('text')
@@ -103,6 +120,7 @@ class GraphNodeLogic {
 
     this.selection
       .select<SVGRectElement>('rect')
+      .attr('class', graphNodeClassName)
       .attr('x', (node, index) => boundingBoxes[index].x - 4)
       .attr('y', (node, index) => boundingBoxes[index].y - 2)
       .attr('rx', 4)

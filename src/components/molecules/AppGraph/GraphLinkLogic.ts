@@ -45,13 +45,27 @@ class GraphLinkLogic {
     this.selection = this.selection.data([...inactiveGraphLinks, ...graphLinks], (link) => link.id);
     this.selection.exit().remove();
 
+    const inactiveGraphLinkIds = new Set(inactiveGraphLinks.map((link) => link.id));
+    const graphLinkClassName = (link: GraphLink) => {
+      const className = [styles.GraphLink];
+      if (inactiveGraphLinkIds.has(link.id)) {
+        className.push(styles.GraphLink__inactive);
+      }
+      return className.join(' ');
+    };
+
     const enteredSelection = this.selection.enter().append('g');
-    enteredSelection.append('line').attr('class', styles.GraphLink);
-    enteredSelection.append('text').attr('class', styles.GraphLink);
+    enteredSelection.append('line');
+    enteredSelection.append('text');
 
-    this.selection = enteredSelection.merge(this.selection);
+    this.selection = enteredSelection.merge(this.selection).sort();
 
-    this.selection.select<SVGTextElement>('text').text((link) => link.relation);
+    this.selection.select<SVGLineElement>('line').attr('class', graphLinkClassName);
+
+    this.selection
+      .select<SVGTextElement>('text')
+      .attr('class', graphLinkClassName)
+      .text((link) => link.relation);
 
     this.selection
       .call((selection) => {

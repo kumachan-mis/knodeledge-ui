@@ -7,17 +7,30 @@
 
 circle.GraphNode {
   fill: #ECEFF1;
+
+  &__inactive {
+    fill: #FAFAFA;
+  }
 }
 
 rect.GraphNode {
   fill: rgba(#CFD8DC, 0.30);
   stroke: rgba(#78909C, 0.30);
   stroke-width: 1px;
+
+  &__inactive {
+    fill: rgba(#ECEFF1, 0.30);
+    stroke: rgba(#ECEFF1, 0.30);
+  }
 }
 
 line.GraphLink {
-  stroke: rgba(#78909C, 0.85);
+  stroke: #78909C;
   stroke-width: 2px;
+
+  &__inactive {
+    stroke: #CFD8DC;
+  }
 }
 
 text.GraphLink,
@@ -25,6 +38,10 @@ text.GraphNode {
   fill: #263238;
   text-anchor: middle;
   font-family: arial, sans-serif;
+
+  &__inactive {
+    fill: #ECEFF1;
+  }
   
 }
 text.GraphLink {
