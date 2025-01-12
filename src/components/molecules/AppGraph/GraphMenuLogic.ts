@@ -48,7 +48,7 @@ class GraphMenuLogic {
       .attr('role', 'menuitem')
       .attr('class', (menuItem) => {
         const classNames = [styles.GraphMenu];
-        if (menuItem.disabled?.(datum)) classNames.push(styles.GraphMenu__disabled);
+        if (menuItem.disabled?.(datum)) classNames.push(styles['GraphMenu--disabled']);
         return classNames.join(' ');
       })
       .text((menuItem) => menuItem.name)

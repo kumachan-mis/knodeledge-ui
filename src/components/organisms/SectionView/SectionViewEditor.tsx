@@ -9,6 +9,8 @@ import {
   useSetGraphContent,
 } from '@/contexts/views/graph';
 
+import styles from './styles.module.scss';
+
 import styled from '@emotion/styled';
 import React from 'react';
 
@@ -24,6 +26,18 @@ const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({
   const graph = useGraphContent();
   const setGraph = useSetGraphContent();
 
+  const graphNodeNames = React.useMemo(() => {
+    const result = new Set<string>([graphRoot.name]);
+    const queue = [...graph.rootChildren];
+    while (queue.length > 0) {
+      const node = queue.shift();
+      if (!node) continue;
+      result.add(node.name);
+      queue.push(...node.children);
+    }
+    return result;
+  }, [graphRoot.name, graph.rootChildren]);
+
   const setText = React.useCallback(
     (value: React.SetStateAction<string>) => {
       setGraph((prev) => {
@@ -34,8 +48,14 @@ const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({
     [setGraph],
   );
 
-  const bracketLinkAnchorProps = React.useCallback(
+  const hashtagAnchorProps = React.useCallback(
     (linkName: string, clickable: boolean): React.PropsWithoutRef<React.ComponentProps<'a'>> => ({
+      className: (() => {
+        if (graphNodeNames.has(linkName)) return undefined;
+        const classNames = [styles['SectionViewEditor_hashtag--unused']];
+        if (clickable) classNames.push(styles['SectionViewEditor_hashtag--clickable']);
+        return classNames.join(' ');
+      })(),
       onClick: (event) => {
         event.preventDefault();
         if (!clickable) return;
@@ -67,13 +87,13 @@ const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({
         });
       },
     }),
-    [setGraph, graphRoot],
+    [setGraph, graphRoot, graphNodeNames],
   );
 
   return (
     <SectionViewEditorRootComponent view={view}>
       <AppEditor
-        bracketLinkProps={{ anchorProps: bracketLinkAnchorProps }}
+        hashtagProps={{ anchorProps: hashtagAnchorProps }}
         mode={APP_EDITOR_MMODE[view]}
         setText={setText}
         state={loadableGraph.state}

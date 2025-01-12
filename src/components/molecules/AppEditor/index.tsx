@@ -12,6 +12,7 @@ import {
   EditorTextFieldRoot,
   EditorTextFieldBody,
   EditorRootProps,
+  EditorBracketLinkProps,
 } from 'react-clay-editor';
 
 import 'katex/dist/katex.min.css';
@@ -21,8 +22,12 @@ export type AppEditorProps = EditorRootProps & {
   readonly mode?: 'regular' | 'simple';
 };
 
+const bracketLinkProps: EditorBracketLinkProps = {
+  disabled: true,
+};
+
 const AppEditor: React.FC<AppEditorProps> = ({ state, mode = 'regular', ...rest }) => (
-  <AppEditorRoot {...rest}>
+  <AppEditorRoot {...rest} bracketLinkProps={bracketLinkProps}>
     {mode !== 'simple' && (
       <>
         <EditorSyntaxMenu />
