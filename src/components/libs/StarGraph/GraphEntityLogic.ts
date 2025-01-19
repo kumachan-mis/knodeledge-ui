@@ -25,6 +25,7 @@ export type GraphEntityLogicReturn = {
   readonly center: { readonly x: number; readonly y: number };
   readonly graphNodeNenuItems: GraphMenuItem<GraphNode>[];
   readonly graphLinkMenuItems: GraphMenuItem<GraphLink>[];
+  readonly reorderGraphChildren: (key: (node: GraphNode) => number) => void;
   readonly focusGraphLink: (link: GraphLink) => void;
   readonly blurGraphLink: () => void;
 };
@@ -110,7 +111,7 @@ type GraphEntityCallbackLogicProps = GraphEntityLogicProps & { graphChildrenNode
 
 type GraphEntityCallbackLogicReturn = Pick<
   GraphEntityLogicReturn,
-  'graphNodeNenuItems' | 'graphLinkMenuItems' | 'focusGraphLink' | 'blurGraphLink'
+  'graphNodeNenuItems' | 'graphLinkMenuItems' | 'reorderGraphChildren' | 'focusGraphLink' | 'blurGraphLink'
 >;
 
 function graphEntityCallbackLogic({
@@ -158,6 +159,15 @@ function graphEntityCallbackLogic({
     },
   ];
 
+  const graphChildrenNodesMap = new Map(graphChildrenNodes.map((node) => [node.id, node]));
+  const reorderGraphChildren = (key: (node: GraphNode) => number) => {
+    setFocusedGraphChildren((prev) => {
+      // GraphChildrenNodesMap.get() will never return undefined because the keys are from focusedGraphChildren
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      return [...prev].sort((a, b) => key(graphChildrenNodesMap.get(a.id)!) - key(graphChildrenNodesMap.get(b.id)!));
+    });
+  };
+
   const focusGraphLink = (link: GraphLink) => {
     if (link.source.id !== focusedGraphParentId) return;
     setFocusedGraphChildId(link.target.id);
@@ -167,5 +177,5 @@ function graphEntityCallbackLogic({
     setFocusedGraphChildId('');
   };
 
-  return { graphNodeNenuItems, graphLinkMenuItems, focusGraphLink, blurGraphLink };
+  return { graphNodeNenuItems, graphLinkMenuItems, reorderGraphChildren, focusGraphLink, blurGraphLink };
 }

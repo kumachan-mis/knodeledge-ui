@@ -39,6 +39,7 @@ class GraphNodeLogic {
     graphChildrenNodes,
     inactiveGraphNodes,
     graphNodeNenuItems,
+    reorderGraphChildren,
     center,
   }: GraphEntityLogicReturn): void {
     if (!this.selection) return;
@@ -149,6 +150,10 @@ class GraphNodeLogic {
             if (node === graphParentNode || inactiveGraphNodeIds.has(node.id)) {
               return;
             }
+            reorderGraphChildren((node) => {
+              const atan2 = Math.atan2(node.x - center.x, -(node.y - center.y));
+              return atan2 >= 0 ? atan2 : atan2 + 2 * Math.PI;
+            });
             node.unfix();
           }),
       )
