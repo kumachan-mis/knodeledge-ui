@@ -1,15 +1,15 @@
-import GraphChildWithId from './GraphChildWithId';
+import GraphChildWithId from '@/components/libs/StarGraph/GraphChildWithId';
 
 import Grid from '@mui/material/Grid2';
 import TextField from '@mui/material/TextField';
 import React from 'react';
 
-export type GraphChildInspectorProps = {
+export type AppGraphChildInspectorProps = {
   readonly graphChild: GraphChildWithId;
   readonly setGraphChild: React.Dispatch<React.SetStateAction<GraphChildWithId>>;
 };
 
-const GraphChildInspector: React.FC<GraphChildInspectorProps> = ({ graphChild, setGraphChild }) => (
+const AppGraphChildInspector: React.FC<AppGraphChildInspectorProps> = ({ graphChild, setGraphChild }) => (
   <Grid container my={1} spacing={1}>
     <Grid size={{ xs: 12, sm: 6, md: 3 }}>
       <TextField
@@ -50,4 +50,4 @@ const GraphChildInspector: React.FC<GraphChildInspectorProps> = ({ graphChild, s
   </Grid>
 );
 
-export default GraphChildInspector;
+export default AppGraphChildInspector;
