@@ -1,11 +1,11 @@
 'use client';
-import { GraphChildWithId, GraphRootWithId } from '@/contexts/views/graph';
-
 import GraphChildInspector from './GraphChildInspector';
+import GraphChildWithId from './GraphChildWithId';
 import { graphEntityLogic } from './GraphEntityLogic';
 import GraphLinkLogic from './GraphLinkLogic';
 import GraphMenuLogic from './GraphMenuLogic';
 import GraphNodeLogic from './GraphNodeLogic';
+import GraphRootWithId from './GraphRootWithId';
 import GraphSimulationLogic from './GraphSimulationLogic';
 
 import styled from '@emotion/styled';
