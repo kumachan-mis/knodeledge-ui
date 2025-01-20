@@ -28,7 +28,7 @@ const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({
 
   const graphNodeNames = React.useMemo(() => {
     const result = new Set<string>([graphRoot.name]);
-    const queue = [...graph.rootChildren];
+    const queue = [...graph.graphRootChildren];
     while (queue.length > 0) {
       const node = queue.shift();
       if (!node) continue;
@@ -36,7 +36,7 @@ const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({
       queue.push(...node.children);
     }
     return result;
-  }, [graphRoot.name, graph.rootChildren]);
+  }, [graphRoot.name, graph.graphRootChildren]);
 
   const setText = React.useCallback(
     (value: React.SetStateAction<string>) => {
@@ -68,22 +68,22 @@ const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({
           children: [],
         };
         setGraph((prev) => {
-          const focusedParent = prev.rootChildren.find((child) => child.id === prev.focusedParentId);
+          const focusedParent = prev.graphRootChildren.find((child) => child.id === prev.focusedGraphParentId);
           if (!focusedParent) {
-            if ([graphRoot, ...prev.rootChildren].some((node) => node.name === graphChild.name)) {
+            if ([graphRoot, ...prev.graphRootChildren].some((node) => node.name === graphChild.name)) {
               return prev;
             }
-            return { ...prev, rootChildren: [...prev.rootChildren, graphChild] };
+            return { ...prev, graphRootChildren: [...prev.graphRootChildren, graphChild] };
           }
 
           if ([focusedParent, ...focusedParent.children].some((node) => node.name === graphChild.name)) {
             return prev;
           }
-          const updated = prev.rootChildren.map((child) => {
+          const updated = prev.graphRootChildren.map((child) => {
             if (child !== focusedParent) return child;
             return { ...child, children: [...child.children, graphChild] };
           });
-          return { ...prev, rootChildren: updated };
+          return { ...prev, graphRootChildren: updated };
         });
       },
     }),

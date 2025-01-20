@@ -16,9 +16,9 @@ export type GraphChildWithId = Omit<GraphChild, 'children'> & {
 
 export type GraphContent = {
   readonly paragraph: string;
-  readonly rootChildren: GraphChildWithId[];
-  readonly focusedParentId: string;
-  readonly focusedChildId: string;
+  readonly graphRootChildren: GraphChildWithId[];
+  readonly focusedGraphParentId: string;
+  readonly focusedGraphChildId: string;
 };
 
 const GraphContentRootValueContext = React.createContext<GraphRootWithId>({
@@ -28,9 +28,9 @@ const GraphContentRootValueContext = React.createContext<GraphRootWithId>({
 
 const GraphContentValueContext = React.createContext<GraphContent>({
   paragraph: '',
-  rootChildren: [],
-  focusedParentId: '',
-  focusedChildId: '',
+  graphRootChildren: [],
+  focusedGraphParentId: '',
+  focusedGraphChildId: '',
 });
 const GraphContentSetContext = React.createContext<React.Dispatch<React.SetStateAction<GraphContent>>>(() => {
   // Do nothing
@@ -55,14 +55,11 @@ export const GraphContentProvider: React.FC<{
   if (loadableGraph.state !== 'success') {
     return children;
   }
-  const { id, name, paragraph, children: grapRoothChildren } = loadableGraph.data;
-  const grapRoothChildrenWithId = grapRoothChildren.map(issueGraphChildId);
+  const { id: focusedGraphParentId, name, paragraph, children: graphChildren } = loadableGraph.data;
+  const graphRootChildren = graphChildren.map(issueGraphChildId);
+  const initialContent: GraphContent = { paragraph, graphRootChildren, focusedGraphParentId, focusedGraphChildId: '' };
   return (
-    <GraphContentInnerProvider
-      id={id}
-      initialContent={{ paragraph, rootChildren: grapRoothChildrenWithId, focusedParentId: id, focusedChildId: '' }}
-      rootName={name}
-    >
+    <GraphContentInnerProvider id={focusedGraphParentId} initialContent={initialContent} rootName={name}>
       {children}
     </GraphContentInnerProvider>
   );
@@ -86,7 +83,7 @@ const GraphContentInnerProvider: React.FC<{
 };
 
 export function graphContentToServer(client: GraphContent): GraphContentWithoutAutofield {
-  return { paragraph: client.paragraph, children: client.rootChildren.map(graphChildToServer) };
+  return { paragraph: client.paragraph, children: client.graphRootChildren.map(graphChildToServer) };
 }
 
 function graphChildToServer(client: GraphChildWithId): GraphChild {
@@ -99,7 +96,7 @@ function graphChildToServer(client: GraphChildWithId): GraphChild {
 }
 
 export function graphContentEquals(client: GraphContent, server: GraphContentWithoutAutofield): boolean {
-  return server.paragraph === client.paragraph && graphChildrenEquals(client.rootChildren, server.children);
+  return server.paragraph === client.paragraph && graphChildrenEquals(client.graphRootChildren, server.children);
 }
 
 function graphChildrenEquals(client: GraphChildWithId[], server: GraphChild[]): boolean {

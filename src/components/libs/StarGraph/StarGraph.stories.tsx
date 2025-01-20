@@ -1,5 +1,6 @@
 import GraphChildWithId from './GraphChildWithId';
 import GraphRootWithId from './GraphRootWithId';
+import { StarGraphContent, useStarGraph } from './hooks';
 
 import StarGraph from './index';
 
@@ -10,59 +11,14 @@ const StarGraphStory: React.FC<{
   readonly graphRoot: GraphRootWithId;
   readonly graphRootChildren: GraphChildWithId[];
 }> = ({ graphRoot, graphRootChildren }) => {
-  const [graph, setGraph] = React.useState<{
-    rootChildren: GraphChildWithId[];
-    focusedParentId: string;
-    focusedChildId: string;
-  }>({
-    rootChildren: graphRootChildren,
-    focusedParentId: graphRoot.id,
-    focusedChildId: '',
+  const [graphContent, setGraphContent] = React.useState<StarGraphContent>({
+    graphRootChildren: graphRootChildren,
+    focusedGraphParentId: graphRoot.id,
+    focusedGraphChildId: '',
   });
+  const props = useStarGraph({ graphRoot, graphContent, setGraphContent });
 
-  const setFocusedGraphChildren = React.useCallback((value: React.SetStateAction<GraphChildWithId[]>) => {
-    setGraph((prev) => {
-      const focusedParent = prev.rootChildren.find((child) => child.id === prev.focusedParentId);
-
-      const prevChildren = focusedParent ? focusedParent.children : prev.rootChildren;
-      const children = typeof value === 'function' ? value(prevChildren) : value;
-
-      const updated = focusedParent
-        ? prev.rootChildren.map((child) => (child === focusedParent ? { ...child, children } : child))
-        : children;
-
-      if (children.length === prevChildren.length) {
-        return { ...prev, rootChildren: updated };
-      }
-      return { ...prev, rootChildren: updated, focusedChildId: '' };
-    });
-  }, []);
-
-  const setFocusedGraphParentId = React.useCallback((value: React.SetStateAction<string>) => {
-    setGraph((prev) => {
-      const updated = typeof value === 'function' ? value(prev.focusedParentId) : value;
-      return { ...prev, focusedParentId: updated, focusedChildId: '' };
-    });
-  }, []);
-
-  const setFocusedGraphChildId = React.useCallback((value: React.SetStateAction<string>) => {
-    setGraph((prev) => {
-      const updated = typeof value === 'function' ? value(prev.focusedChildId) : value;
-      return { ...prev, focusedChildId: updated };
-    });
-  }, []);
-
-  return (
-    <StarGraph
-      focusedGraphChildId={graph.focusedChildId}
-      focusedGraphParentId={graph.focusedParentId}
-      graphRoot={graphRoot}
-      graphRootChildren={graph.rootChildren}
-      setFocusedGraphChildId={setFocusedGraphChildId}
-      setFocusedGraphChildren={setFocusedGraphChildren}
-      setFocusedGraphParentId={setFocusedGraphParentId}
-    />
-  );
+  return <StarGraph {...props} />;
 };
 
 const meta: Meta = {
