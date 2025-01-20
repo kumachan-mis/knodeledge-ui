@@ -25,7 +25,7 @@ const meta: Meta = {
   component: StarGraphWithHooks,
   decorators: [
     (Story) => (
-      <div style={{ width: '100%', height: '360px' }}>
+      <div style={{ width: '100%', height: '480px' }}>
         <Story />
       </div>
     ),
