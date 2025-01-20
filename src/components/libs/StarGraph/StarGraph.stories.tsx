@@ -7,7 +7,7 @@ import StarGraph from './index';
 import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 
-const StarGraphStory: React.FC<{
+const StarGraphWithHooks: React.FC<{
   readonly graphRoot: GraphRootWithId;
   readonly graphRootChildren: GraphChildWithId[];
 }> = ({ graphRoot, graphRootChildren }) => {
@@ -22,7 +22,7 @@ const StarGraphStory: React.FC<{
 };
 
 const meta: Meta = {
-  component: StarGraphStory,
+  component: StarGraphWithHooks,
   decorators: [
     (Story) => (
       <div style={{ width: '100%', height: '360px' }}>
@@ -34,7 +34,7 @@ const meta: Meta = {
 
 export default meta;
 
-type Story = StoryObj<typeof StarGraphStory>;
+type Story = StoryObj<typeof StarGraphWithHooks>;
 
 export const Basic: Story = {
   args: {
