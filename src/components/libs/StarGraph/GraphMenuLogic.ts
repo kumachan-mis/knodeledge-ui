@@ -46,6 +46,7 @@ class GraphMenuLogic {
       .enter()
       .append('li')
       .attr('role', 'menuitem')
+      .attr('aria-disabled', (menuItem) => (menuItem.disabled?.(datum) ? true : null))
       .attr('class', (menuItem) => {
         const classNames = [styles.GraphMenuItem];
         classNames.push(styles[`GraphMenuItem-${menuItem.name}`]);

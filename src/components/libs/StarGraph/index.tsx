@@ -45,8 +45,9 @@ const StarGraph: React.FC<StarGraphProps> = ({
     const linkLogic = linkLogicRef.current;
     const nodeLogic = nodeLogicRef.current;
 
-    linkLogic.init(svgSelection);
-    nodeLogic.init(svgSelection);
+    linkLogic.initLink(svgSelection);
+    nodeLogic.initNode(svgSelection);
+    linkLogic.initDesc(svgSelection);
 
     simulationLogic.init(() => {
       linkLogic.onTick();

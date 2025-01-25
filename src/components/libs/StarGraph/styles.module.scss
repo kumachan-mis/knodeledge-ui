@@ -3,8 +3,6 @@
   cursor: pointer;
 }
 
-
-
 circle.GraphNode {
   fill: #ECEFF1;
 
@@ -22,6 +20,12 @@ rect.GraphNode {
     fill: rgba(#ECEFF1, 0.30);
     stroke: rgba(#ECEFF1, 0.30);
   }
+}
+
+rect.GraphLink {
+  fill: #ECEFF1;
+  stroke: #78909C;
+  stroke-width: 2px;
 }
 
 line.GraphLink {
@@ -49,6 +53,12 @@ text.GraphLink {
 }
 text.GraphNode {
   font-size: 10pt;
+}
+
+foreignObject {
+  div {
+    font-size: 11px;
+  }
 }
 
 div.GraphMenu {

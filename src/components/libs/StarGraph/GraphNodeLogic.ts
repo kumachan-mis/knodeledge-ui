@@ -8,30 +8,34 @@ import { drag } from 'd3-drag';
 import { Selection } from 'd3-selection';
 
 class GraphNodeLogic {
-  private rootSelection: Selection<SVGGElement, unknown, null, undefined> | null = null;
-  private selection: Selection<SVGGElement, GraphNode, SVGGElement, unknown> | null = null;
+  private nodeRootSelection: Selection<SVGGElement, unknown, null, undefined> | null = null;
+  private nodeSelection: Selection<SVGGElement, GraphNode, SVGGElement, unknown> | null = null;
 
   public constructor(
     private readonly menuLogic: GraphMenuLogic,
     private readonly simulationLogic: GraphSimulationLogic,
   ) {}
 
-  public init(svgSelection: Selection<SVGSVGElement, unknown, null, undefined>): void {
-    this.rootSelection = svgSelection.append('g');
-    this.selection = this.rootSelection.selectAll<SVGGElement, GraphNode>('g');
+  public initNode(svgSelection: Selection<SVGSVGElement, unknown, null, undefined>): void {
+    this.nodeRootSelection = svgSelection.append('g');
+    this.nodeSelection = this.nodeRootSelection.selectAll<SVGGElement, GraphNode>('g');
   }
 
   public onTick(): void {
-    if (!this.selection) return;
+    if (!this.nodeSelection) return;
 
-    this.selection
+    this.nodeSelection
       .select<SVGCircleElement>('circle')
       .attr('cx', (node) => node.x)
       .attr('cy', (node) => node.y);
 
-    this.selection.select<SVGRectElement>('rect').attr('transform', (node) => `translate(${node.x},${node.y + 20})`);
+    this.nodeSelection
+      .select<SVGRectElement>('rect')
+      .attr('transform', (node) => `translate(${node.x},${node.y + 20})`);
 
-    this.selection.select<SVGTextElement>('text').attr('transform', (node) => `translate(${node.x},${node.y + 20})`);
+    this.nodeSelection
+      .select<SVGTextElement>('text')
+      .attr('transform', (node) => `translate(${node.x},${node.y + 20})`);
   }
 
   public update({
@@ -42,11 +46,11 @@ class GraphNodeLogic {
     reorderGraphChildren,
     center,
   }: GraphEntityLogicReturn): void {
-    if (!this.selection) return;
+    if (!this.nodeSelection) return;
 
     graphParentNode.fix(center.x, center.y);
 
-    const oldGraphNodeMap = new Map(this.selection.data().map((node) => [node.id, node]));
+    const oldGraphNodeMap = new Map(this.nodeSelection.data().map((node) => [node.id, node]));
     const graphNodes = [...inactiveGraphNodes, ...graphChildrenNodes, graphParentNode];
     if (graphNodes.length === oldGraphNodeMap.size && graphNodes.every((node) => oldGraphNodeMap.has(node.id))) {
       // GraphNodesMap.get() will never return undefined because the if condition above checks for that.
@@ -85,8 +89,8 @@ class GraphNodeLogic {
       });
     }
 
-    this.selection = this.selection.data(graphNodes, (node) => node.id);
-    this.selection.exit().remove();
+    this.nodeSelection = this.nodeSelection.data(graphNodes, (node) => node.id);
+    this.nodeSelection.exit().remove();
 
     const inactiveGraphNodeIds = new Set(inactiveGraphNodes.map((node) => node.id));
     const graphNodeClassName = (node: GraphNode) => {
@@ -97,36 +101,37 @@ class GraphNodeLogic {
       return classNames.join(' ');
     };
 
-    const enteredSelection = this.selection
-      .enter()
-      .append('g')
+    const enteredNodeSelection = this.nodeSelection.enter().append('g');
+    enteredNodeSelection.append('circle');
+    enteredNodeSelection.append('rect');
+    enteredNodeSelection.append('text');
+
+    this.nodeSelection = enteredNodeSelection
+      .merge(this.nodeSelection)
+      .sort()
+      .attr('aria-disabled', (node) => (inactiveGraphNodeIds.has(node.id) ? true : null))
       .attr('data-star-graph', (node) => {
         if (node.id === graphParentNode.id) return 'parent-node';
         if (inactiveGraphNodeIds.has(node.id)) return 'inactive-node';
         return 'child-node';
       });
-    enteredSelection.append('circle');
-    enteredSelection.append('rect');
-    enteredSelection.append('text');
 
-    this.selection = enteredSelection.merge(this.selection).sort();
-
-    this.selection
+    this.nodeSelection
       .select<SVGCircleElement>('circle')
       .attr('class', graphNodeClassName)
       .attr('r', (node) => (node === graphParentNode ? 20 : 16));
 
-    this.selection
+    this.nodeSelection
       .select<SVGTextElement>('text')
       .attr('class', graphNodeClassName)
       .text((node) => node.name);
 
-    const boundingBoxes = this.selection
+    const boundingBoxes = this.nodeSelection
       .select<SVGTextElement>('text')
       .nodes()
       .map((node) => node.getBBox());
 
-    this.selection
+    this.nodeSelection
       .select<SVGRectElement>('rect')
       .attr('class', graphNodeClassName)
       .attr('x', (node, index) => boundingBoxes[index].x - 4)
@@ -136,7 +141,7 @@ class GraphNodeLogic {
       .attr('width', (node, index) => boundingBoxes[index].width + 8)
       .attr('height', (node, index) => boundingBoxes[index].height + 4);
 
-    this.selection
+    this.nodeSelection
       .call(
         drag<SVGGElement, GraphNode>()
           .on('start', (event: DragEvent, node) => {
@@ -168,8 +173,8 @@ class GraphNodeLogic {
   }
 
   public destroy(): void {
-    if (!this.rootSelection) return;
-    this.rootSelection.remove();
+    if (!this.nodeRootSelection) return;
+    this.nodeRootSelection.remove();
   }
 }
 
