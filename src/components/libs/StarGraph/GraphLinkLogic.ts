@@ -54,7 +54,13 @@ class GraphLinkLogic {
       return className.join(' ');
     };
 
-    const enteredSelection = this.selection.enter().append('g');
+    const enteredSelection = this.selection
+      .enter()
+      .append('g')
+      .attr('data-star-graph', (link) => {
+        if (inactiveGraphLinkIds.has(link.id)) return 'inactive-link';
+        return 'link';
+      });
     enteredSelection.append('line');
     enteredSelection.append('text');
 

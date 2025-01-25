@@ -97,7 +97,14 @@ class GraphNodeLogic {
       return classNames.join(' ');
     };
 
-    const enteredSelection = this.selection.enter().append('g');
+    const enteredSelection = this.selection
+      .enter()
+      .append('g')
+      .attr('data-star-graph', (node) => {
+        if (node.id === graphParentNode.id) return 'parent-node';
+        if (inactiveGraphNodeIds.has(node.id)) return 'inactive-node';
+        return 'child-node';
+      });
     enteredSelection.append('circle');
     enteredSelection.append('rect');
     enteredSelection.append('text');
