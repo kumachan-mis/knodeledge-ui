@@ -65,7 +65,7 @@ ul.GraphMenu {
  
 }
 
-li.GraphMenu {
+li.GraphMenuItem {
   padding: 4px 16px;
   font-family: arial, sans-serif;
   color: #263238;
@@ -74,6 +74,10 @@ li.GraphMenu {
 
   &:hover {
     background-color: #D8D8DA;
+  }
+
+  &-Delete {
+    color: #F44336;
   }
 
   &--disabled {

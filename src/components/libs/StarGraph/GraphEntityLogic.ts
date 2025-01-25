@@ -125,13 +125,6 @@ function graphEntityCallbackLogic({
 }: GraphEntityCallbackLogicProps): GraphEntityCallbackLogicReturn {
   const graphNodeNenuItems: GraphMenuItem<GraphNode>[] = [
     {
-      name: 'Delete',
-      onClick: (event, node) => {
-        setFocusedGraphChildren((prev) => prev.filter((child) => child.id !== node.id));
-      },
-      disabled: (node) => graphChildrenNodes.every((child) => child.id !== node.id),
-    },
-    {
       name: 'Expand',
       onClick: (event, node) => {
         setFocusedGraphParentId(node.id);
@@ -146,6 +139,13 @@ function graphEntityCallbackLogic({
         setFocusedGraphParentId(graphRoot.id);
       },
       disabled: (node) => node.id !== focusedGraphParentId || node.id === graphRoot.id,
+    },
+    {
+      name: 'Delete',
+      onClick: (event, node) => {
+        setFocusedGraphChildren((prev) => prev.filter((child) => child.id !== node.id));
+      },
+      disabled: (node) => graphChildrenNodes.every((child) => child.id !== node.id),
     },
   ];
 
