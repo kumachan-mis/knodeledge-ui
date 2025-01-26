@@ -4,32 +4,32 @@
 }
 
 circle.GraphNode {
-  fill: #ECEFF1;
+  fill: #eceff1;
 
   &__inactive {
-    fill: #FAFAFA;
+    fill: #fafafa;
   }
 }
 
 rect.GraphNode {
-  fill: rgba(#CFD8DC, 0.30);
-  stroke: rgba(#78909C, 0.30);
+  fill: rgba(#cfd8dc, 0.3);
+  stroke: rgba(#78909c, 0.3);
   stroke-width: 1px;
 
   &__inactive {
-    fill: rgba(#ECEFF1, 0.30);
-    stroke: rgba(#ECEFF1, 0.30);
+    fill: rgba(#eceff1, 0.3);
+    stroke: rgba(#eceff1, 0.3);
   }
 }
 
 rect.GraphLink {
-  fill: #ECEFF1;
-  stroke: #78909C;
+  fill: #eceff1;
+  stroke: #78909c;
   stroke-width: 2px;
 }
 
 line.GraphLink {
-  stroke: #78909C;
+  stroke: #78909c;
   stroke-width: 2px;
 
   &__focused {
@@ -37,7 +37,7 @@ line.GraphLink {
   }
 
   &__inactive {
-    stroke: #CFD8DC;
+    stroke: #cfd8dc;
   }
 }
 
@@ -48,9 +48,8 @@ text.GraphNode {
   font-family: arial, sans-serif;
 
   &__inactive {
-    fill: #ECEFF1;
+    fill: #eceff1;
   }
-  
 }
 text.GraphLink {
   font-size: 9pt;
@@ -67,7 +66,7 @@ foreignObject.GraphLink {
 
 div.GraphMenu {
   position: absolute;
-  background-color: #ECEFF1;
+  background-color: #eceff1;
   border-radius: 4px;
   font-size: 10pt;
 }
@@ -76,7 +75,6 @@ ul.GraphMenu {
   list-style-type: none;
   margin: 4px 0;
   padding: 0;
- 
 }
 
 li.GraphMenuItem {
@@ -84,22 +82,22 @@ li.GraphMenuItem {
   font-family: arial, sans-serif;
   color: #263238;
   cursor: pointer;
-  background-color: #ECEFF1;
+  background-color: #eceff1;
 
   &:hover {
-    background-color: #D8D8DA;
+    background-color: #d8d8da;
   }
 
   &-Delete {
-    color: #F44336;
+    color: #f44336;
   }
 
   &--disabled {
-    color: #CFD8DC;
+    color: #cfd8dc;
     cursor: default;
-    
+
     &:hover {
-      background-color: #ECEFF1;
+      background-color: #eceff1;
     }
   }
 }
