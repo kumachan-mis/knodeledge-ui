@@ -60,6 +60,7 @@ class GraphLinkLogic {
 
   public update({
     graphLinks,
+    focusedLink,
     inactiveGraphLinks,
     graphLinkMenuItems,
     focusGraphLink,
@@ -75,6 +76,9 @@ class GraphLinkLogic {
     const inactiveGraphLinkIds = new Set(inactiveGraphLinks.map((link) => link.id));
     const graphLinkClassName = (link: GraphLink) => {
       const className = [styles.GraphLink];
+      if (link.id === focusedLink?.id) {
+        className.push(styles.GraphLink__focused);
+      }
       if (inactiveGraphLinkIds.has(link.id)) {
         className.push(styles.GraphLink__inactive);
       }
@@ -92,6 +96,7 @@ class GraphLinkLogic {
     this.linkSelection = enteredLinkSelection
       .merge(this.linkSelection)
       .sort()
+      .attr('aria-selected', (link) => (link.id === focusedLink?.id ? true : null))
       .attr('aria-disabled', (link) => (inactiveGraphLinkIds.has(link.id) ? true : null))
       .attr('data-star-graph', (link) => {
         if (inactiveGraphLinkIds.has(link.id)) return 'inactive-link';
@@ -131,6 +136,7 @@ class GraphLinkLogic {
 
     this.linkSelection
       .on('mouseenter', (event: MouseEvent, link) => {
+        if (inactiveGraphLinkIds.has(link.id)) return;
         this.descTimerId = window.setTimeout(() => {
           const selection = this.descSelection?.filter((d) => d.id === link.id);
           if (!selection) return;
@@ -156,6 +162,7 @@ class GraphLinkLogic {
 
     this.descSelection
       .on('mouseenter', (event: MouseEvent, link) => {
+        if (inactiveGraphLinkIds.has(link.id)) return;
         this.descTimerId = window.setTimeout(() => {
           const selection = this.descSelection?.filter((d) => d.id === link.id);
           if (!selection) return;

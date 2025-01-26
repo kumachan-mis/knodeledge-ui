@@ -105,7 +105,7 @@ test('should show graph diagram and paragraph from Graph Find API', async () => 
     createOkResponse({
       graph: {
         id: 'GRAPH',
-        name: 'Parent Node Name',
+        name: 'Graph',
         paragraph: 'Graph Paragraph',
         children: [],
       },
@@ -136,11 +136,11 @@ test('should show graph diagram and paragraph from Graph Find API', async () => 
 
   await user.click(screen.getByRole('tab', { name: 'Graph View' }));
   await waitFor(() => {
-    expect(screen.getByText('Parent Node Name')).toBeInTheDocument();
+    expect(screen.getByText('Graph')).toBeInTheDocument();
   });
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const parentNodeGroup = screen.getByText('Parent Node Name').closest('g')!;
+  const parentNodeGroup = screen.getByText('Graph').closest('g')!;
   await waitFor(() => {
     const parentNodeCircle = parentNodeGroup.querySelector('circle');
     expect(parentNodeCircle).toHaveAttribute('cx', '500');

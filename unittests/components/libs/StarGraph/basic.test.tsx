@@ -3,7 +3,8 @@ import GraphChildWithId from '@/components/libs/StarGraph/GraphChildWithId';
 import GraphRootWithId from '@/components/libs/StarGraph/GraphRootWithId';
 import { StarGraphContent, useStarGraph } from '@/components/libs/StarGraph/hooks';
 
-import { render, RenderResult, waitFor } from '@testing-library/react';
+import { render, RenderResult, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 const StarGraphWithHooks: React.FC<{
@@ -59,7 +60,7 @@ test.each<{
     graphRootChildren: [],
     assertElements: async (screen) => {
       await waitFor(() => {
-        expect(screen.queryByText('Graph')).toBeInTheDocument();
+        expect(screen.queryByText('Graph')).toBeVisible();
       });
 
       expect(screen.container.querySelectorAll('[data-star-graph="parent-node"]')).toHaveLength(1);
@@ -114,26 +115,26 @@ test.each<{
     ],
     assertElements: async (screen) => {
       await waitFor(() => {
-        expect(screen.queryByText('Graph')).toBeInTheDocument();
+        expect(screen.queryByText('Graph')).toBeVisible();
       });
 
-      expect(screen.queryByText('Child One')).toBeInTheDocument();
-      expect(screen.queryByText('Child Two')).toBeInTheDocument();
-      expect(screen.queryByText('Child Three')).toBeInTheDocument();
-      expect(screen.queryByText('Child Four')).toBeInTheDocument();
-      expect(screen.queryByText('Child Five')).toBeInTheDocument();
+      expect(screen.queryByText('Child One')).toBeVisible();
+      expect(screen.queryByText('Child Two')).toBeVisible();
+      expect(screen.queryByText('Child Three')).toBeVisible();
+      expect(screen.queryByText('Child Four')).toBeVisible();
+      expect(screen.queryByText('Child Five')).toBeVisible();
 
-      expect(screen.queryByText('Relation One')).toBeInTheDocument();
-      expect(screen.queryByText('Relation Two')).toBeInTheDocument();
-      expect(screen.queryByText('Relation Three')).toBeInTheDocument();
-      expect(screen.queryByText('Relation Four')).toBeInTheDocument();
-      expect(screen.queryByText('Relation Five')).toBeInTheDocument();
+      expect(screen.queryByText('Relation One')).toBeVisible();
+      expect(screen.queryByText('Relation Two')).toBeVisible();
+      expect(screen.queryByText('Relation Three')).toBeVisible();
+      expect(screen.queryByText('Relation Four')).toBeVisible();
+      expect(screen.queryByText('Relation Five')).toBeVisible();
 
-      expect(screen.queryByText('This is child one content.')).not.toBeInTheDocument();
-      expect(screen.queryByText('This is child two content.')).not.toBeInTheDocument();
-      expect(screen.queryByText('This is child three content.')).not.toBeInTheDocument();
-      expect(screen.queryByText('This is child four content.')).not.toBeInTheDocument();
-      expect(screen.queryByText('This is child five content.')).not.toBeInTheDocument();
+      expect(screen.queryByText('This is child one content.')).not.toBeVisible();
+      expect(screen.queryByText('This is child two content.')).not.toBeVisible();
+      expect(screen.queryByText('This is child three content.')).not.toBeVisible();
+      expect(screen.queryByText('This is child four content.')).not.toBeVisible();
+      expect(screen.queryByText('This is child five content.')).not.toBeVisible();
 
       expect(screen.container.querySelectorAll('[data-star-graph="parent-node"]')).toHaveLength(1);
       expect(screen.container.querySelectorAll('[data-star-graph="child-node"]')).toHaveLength(5);
@@ -143,7 +144,7 @@ test.each<{
     },
   },
   {
-    name: 'with grand children',
+    name: 'with grandchildren',
     graphRoot: {
       id: 'GRAPH',
       name: 'Graph',
@@ -239,20 +240,20 @@ test.each<{
     ],
     assertElements: async (screen) => {
       await waitFor(() => {
-        expect(screen.queryByText('Graph')).toBeInTheDocument();
+        expect(screen.queryByText('Graph')).toBeVisible();
       });
 
-      expect(screen.queryByText('Child One')).toBeInTheDocument();
-      expect(screen.queryByText('Child Two')).toBeInTheDocument();
-      expect(screen.queryByText('Child Three')).toBeInTheDocument();
+      expect(screen.queryByText('Child One')).toBeVisible();
+      expect(screen.queryByText('Child Two')).toBeVisible();
+      expect(screen.queryByText('Child Three')).toBeVisible();
 
-      expect(screen.queryByText('Relation One')).toBeInTheDocument();
-      expect(screen.queryByText('Relation Two')).toBeInTheDocument();
-      expect(screen.queryByText('Relation Three')).toBeInTheDocument();
+      expect(screen.queryByText('Relation One')).toBeVisible();
+      expect(screen.queryByText('Relation Two')).toBeVisible();
+      expect(screen.queryByText('Relation Three')).toBeVisible();
 
-      expect(screen.queryByText('This is child one content.')).not.toBeInTheDocument();
-      expect(screen.queryByText('This is child two content.')).not.toBeInTheDocument();
-      expect(screen.queryByText('This is child three content.')).not.toBeInTheDocument();
+      expect(screen.queryByText('This is child one content.')).not.toBeVisible();
+      expect(screen.queryByText('This is child two content.')).not.toBeVisible();
+      expect(screen.queryByText('This is child three content.')).not.toBeVisible();
 
       expect(screen.queryByText('Grandchild One-One')).not.toBeInTheDocument();
       expect(screen.queryByText('Grandchild One-Two')).not.toBeInTheDocument();
@@ -294,4 +295,101 @@ test.each<{
 ])('should show a star graph ($name)', async ({ graphRoot, graphRootChildren, assertElements }) => {
   const screen = render(<StarGraphWithHooks graphRoot={graphRoot} graphRootChildren={graphRootChildren} />);
   await assertElements(screen);
+});
+
+test('should focus and blur link', async () => {
+  const user = userEvent.setup();
+  const screen = render(
+    <StarGraphWithHooks
+      graphRoot={{
+        id: 'GRAPH',
+        name: 'Graph',
+      }}
+      graphRootChildren={[
+        {
+          id: 'CHILD_ONE',
+          name: 'Child One',
+          relation: 'Relation One',
+          description: 'This is child one content.',
+          children: [
+            {
+              id: 'GRANDCHILD_ONE_ONE',
+              name: 'Grandchild One-One',
+              relation: 'Relation One-One',
+              description: 'This is grandchild one-one content.',
+              children: [],
+            },
+            {
+              id: 'GRANDCHILD_ONE_TWO',
+              name: 'Grandchild One-Two',
+              relation: 'Relation One-Two',
+              description: 'This is grandchild one-two content.',
+              children: [],
+            },
+            {
+              id: 'GRANDCHILD_ONE_THREE',
+              name: 'Grandchild One-Three',
+              relation: 'Relation One-Three',
+              description: 'This is grandchild one-three content.',
+              children: [],
+            },
+          ],
+        },
+        {
+          id: 'CHILD_TWO',
+          name: 'Child Two',
+          relation: 'Relation Two',
+          description: 'This is child two content.',
+          children: [],
+        },
+        {
+          id: 'CHILD_THREE',
+          name: 'Child Three',
+          relation: 'Relation Three',
+          description: 'This is child three content.',
+          children: [],
+        },
+      ]}
+    />,
+  );
+
+  await waitFor(() => {
+    expect(screen.queryByText('Graph')).toBeVisible();
+  });
+
+  expect(screen.container.querySelector('[aria-selected="true"]')).not.toBeInTheDocument();
+
+  await user.click(screen.getByText('Relation One'));
+
+  await waitFor(() => {
+    expect(screen.getByText('Relation One').closest('g')).toHaveAttribute('aria-selected', 'true');
+  });
+
+  await user.pointer({ keys: '[MouseRight>]', target: screen.getByText('Child One') });
+
+  const baseElement = within(screen.baseElement);
+  await waitFor(() => {
+    expect(baseElement.getByRole('presentation')).toBeInTheDocument();
+  });
+
+  await user.click(baseElement.getByRole('menuitem', { name: 'Expand' }));
+
+  await waitFor(() => {
+    expect(baseElement.queryByRole('presentation')).not.toBeInTheDocument();
+  });
+
+  expect(screen.container.querySelector('[aria-selected="true"]')).not.toBeInTheDocument();
+
+  await user.click(screen.getByText('Relation One-Two'));
+
+  await waitFor(() => {
+    expect(screen.getByText('Relation One-Two').closest('g')).toHaveAttribute('aria-selected', 'true');
+  });
+
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  await user.click(screen.container.querySelector('svg')!);
+
+  await waitFor(() => {
+    expect(screen.container.querySelector('[aria-selected="true"]')).not.toBeInTheDocument();
+  });
 });

@@ -32,6 +32,10 @@ line.GraphLink {
   stroke: #78909C;
   stroke-width: 2px;
 
+  &__focused {
+    stroke-width: 5px;
+  }
+
   &__inactive {
     stroke: #CFD8DC;
   }

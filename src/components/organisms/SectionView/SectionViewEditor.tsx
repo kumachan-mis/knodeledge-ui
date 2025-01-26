@@ -73,7 +73,11 @@ const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({
             if ([graphRoot, ...prev.graphRootChildren].some((node) => node.name === graphChild.name)) {
               return prev;
             }
-            return { ...prev, graphRootChildren: [...prev.graphRootChildren, graphChild] };
+            return {
+              ...prev,
+              graphRootChildren: [...prev.graphRootChildren, graphChild],
+              focusedGraphChildId: graphChild.id,
+            };
           }
 
           if ([focusedParent, ...focusedParent.children].some((node) => node.name === graphChild.name)) {
@@ -83,7 +87,7 @@ const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({
             if (child !== focusedParent) return child;
             return { ...child, children: [...child.children, graphChild] };
           });
-          return { ...prev, graphRootChildren: updated };
+          return { ...prev, graphRootChildren: updated, focusedGraphChildId: graphChild.id };
         });
       },
     }),

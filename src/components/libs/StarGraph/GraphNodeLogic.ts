@@ -141,35 +141,31 @@ class GraphNodeLogic {
       .attr('width', (node, index) => boundingBoxes[index].width + 8)
       .attr('height', (node, index) => boundingBoxes[index].height + 4);
 
+    const childNodeIds = new Set(graphChildrenNodes.map((node) => node.id));
+
+    this.nodeSelection.on('.drag', null).call(this.menuLogic.behavior<GraphNode>(graphNodeNenuItems));
+
     this.nodeSelection
+      .filter((node) => childNodeIds.has(node.id))
       .call(
         drag<SVGGElement, GraphNode>()
           .on('start', (event: DragEvent, node) => {
-            if (node === graphParentNode || inactiveGraphNodeIds.has(node.id)) {
-              return;
-            }
             node.fix(event.x, event.y);
             this.simulationLogic.start();
           })
           .on('drag', (event: MouseEvent, node) => {
-            if (node === graphParentNode || inactiveGraphNodeIds.has(node.id)) {
-              return;
-            }
             node.fix(event.x, event.y);
             this.simulationLogic.start();
           })
           .on('end', (_: MouseEvent, node) => {
-            if (node === graphParentNode || inactiveGraphNodeIds.has(node.id)) {
-              return;
-            }
             reorderGraphChildren((node) => {
               const atan2 = Math.atan2(node.x - center.x, -(node.y - center.y));
               return atan2 >= 0 ? atan2 : atan2 + 2 * Math.PI;
             });
             node.unfix();
           }),
-      )
-      .call(this.menuLogic.behavior<GraphNode>(graphNodeNenuItems));
+      );
+    this.nodeSelection.call(this.menuLogic.behavior<GraphNode>(graphNodeNenuItems));
   }
 
   public destroy(): void {

@@ -6,6 +6,7 @@ import GraphMenuLogic from './GraphMenuLogic';
 import GraphNodeLogic from './GraphNodeLogic';
 import GraphRootWithId from './GraphRootWithId';
 import GraphSimulationLogic from './GraphSimulationLogic';
+import { useFocusedStarGraphChild, useFocusedStarGraphChildren } from './hooks';
 
 import { select } from 'd3-selection';
 import React from 'react';
@@ -15,20 +16,12 @@ export type StarGraphProps = {
   readonly graphRootChildren: GraphChildWithId[];
   readonly focusedGraphParentId: string;
   readonly focusedGraphChildId: string;
-  readonly setFocusedGraphChildren: React.Dispatch<React.SetStateAction<GraphChildWithId[]>>;
+  readonly setGraphRootChildren: React.Dispatch<React.SetStateAction<GraphChildWithId[]>>;
   readonly setFocusedGraphParentId: React.Dispatch<React.SetStateAction<string>>;
   readonly setFocusedGraphChildId: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const StarGraph: React.FC<StarGraphProps> = ({
-  graphRoot,
-  graphRootChildren,
-  focusedGraphParentId,
-  focusedGraphChildId,
-  setFocusedGraphChildren,
-  setFocusedGraphParentId,
-  setFocusedGraphChildId,
-}) => {
+const StarGraph: React.FC<StarGraphProps> = (props) => {
   const ref = React.useRef<SVGSVGElement>(null);
   const simulationLogicRef = React.useRef(new GraphSimulationLogic());
   const menuLogicRef = React.useRef(new GraphMenuLogic(simulationLogicRef.current));
@@ -36,6 +29,9 @@ const StarGraph: React.FC<StarGraphProps> = ({
   const nodeLogicRef = React.useRef(new GraphNodeLogic(menuLogicRef.current, simulationLogicRef.current));
   const timerIdRef = React.useRef<number>(0);
   const centerRef = React.useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+
+  const focusedChildrenProps = useFocusedStarGraphChildren(props);
+  const focusedChildProps = useFocusedStarGraphChild(props);
 
   React.useEffect(() => {
     if (!ref.current) return;
@@ -72,13 +68,9 @@ const StarGraph: React.FC<StarGraphProps> = ({
     const center: { x: number; y: number } = { x: clientRect.width / 2, y: clientRect.height / 2 };
 
     const graphEntityLogicReturn = graphEntityLogic({
-      graphRoot,
-      graphRootChildren,
-      focusedGraphParentId,
-      focusedGraphChildId,
-      setFocusedGraphChildren,
-      setFocusedGraphParentId,
-      setFocusedGraphChildId,
+      ...props,
+      ...focusedChildrenProps,
+      ...focusedChildProps,
       center,
     });
 
@@ -90,15 +82,8 @@ const StarGraph: React.FC<StarGraphProps> = ({
       simulationLogic.start();
       centerRef.current = center;
     }
-  }, [
-    focusedGraphChildId,
-    focusedGraphParentId,
-    graphRoot,
-    graphRootChildren,
-    setFocusedGraphChildId,
-    setFocusedGraphParentId,
-    setFocusedGraphChildren,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [...Object.values(focusedChildrenProps), ...Object.values(focusedChildProps), ...Object.values(props)]);
 
   React.useEffect(handleOnRerenderGraph, [handleOnRerenderGraph]);
 

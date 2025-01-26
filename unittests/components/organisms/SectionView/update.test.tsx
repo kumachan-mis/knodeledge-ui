@@ -17,7 +17,7 @@ import { PanicContextProvider } from '@/contexts/openapi/panic';
 import { ProjectContextProvider } from '@/contexts/openapi/projects';
 import { ChapterWithSections, Project } from '@/openapi';
 
-import { render, waitFor } from '@testing-library/react';
+import { render, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 const Wrapper: React.FC<{
@@ -111,7 +111,7 @@ test('should update graph paragraph with Graph Update API', async () => {
       createOkResponse({
         graph: {
           id: 'GRAPH',
-          name: 'Parent Node Name',
+          name: 'Graph',
           paragraph: 'Graph Paragraph',
           children: [],
         },
@@ -121,7 +121,7 @@ test('should update graph paragraph with Graph Update API', async () => {
       createOkResponse({
         graph: {
           id: 'GRAPH',
-          name: 'Parent Node Name',
+          name: 'Graph',
           paragraph: 'Graph Paragraph Updated',
           children: [],
         },
@@ -199,6 +199,396 @@ test('should update graph paragraph with Graph Update API', async () => {
   );
 });
 
+test('should update graph children with Graph Update API', async () => {
+  const user = userEvent.setup();
+
+  const project: Project = {
+    id: 'PROJECT',
+    name: 'Project Name',
+    description: 'Project Description',
+  };
+  const chapterList: ChapterWithSections[] = [
+    {
+      id: 'CHAPTER',
+      number: 1,
+      name: 'Chapter Name',
+      sections: [
+        {
+          id: 'SECTION',
+          name: 'Section Name',
+        },
+      ],
+    },
+  ];
+
+  (global.fetch as jest.Mock)
+    .mockResolvedValueOnce(
+      createOkResponse({
+        graph: {
+          id: 'GRAPH',
+          name: 'Graph',
+          paragraph: '',
+          children: [],
+        },
+      }),
+    )
+    .mockResolvedValueOnce(
+      createOkResponse({
+        graph: {
+          id: 'GRAPH',
+          name: 'Graph',
+          paragraph: '#Child_One\n',
+          children: [
+            {
+              name: 'Child One',
+              relation: 'Child One Relation',
+              description: 'Child One Description',
+              children: [],
+            },
+          ],
+        },
+      }),
+    );
+
+  const screen = render(<SectionView chapterId="CHAPTER" projectId="PROJECT" sectionId="SECTION" user={USER} />, {
+    wrapper: ({ children }) => (
+      <Wrapper chapterList={chapterList} project={project}>
+        {children}
+      </Wrapper>
+    ),
+  });
+
+  await waitFor(() => {
+    expect(screen.container.querySelector('[data-selectid="text-field"]')).toHaveTextContent('');
+  });
+
+  expect(screen.getByText('Project Name')).toBeInTheDocument();
+  expect(screen.getByText('Chapter Name')).toBeInTheDocument();
+  expect(screen.getByText('Section Name')).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
+
+  expect(global.fetch).toHaveBeenCalledTimes(1);
+  expect(global.fetch).toHaveBeenNthCalledWith(
+    1,
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/find`,
+    expect.objectContaining({
+      method: 'POST',
+      body: JSON.stringify({
+        user: { id: USER.sub },
+        project: { id: 'PROJECT' },
+        chapter: { id: 'CHAPTER' },
+        section: { id: 'SECTION' },
+      }),
+    }),
+  );
+
+  await user.click(screen.getByRole('tab', { name: 'Graph View' }));
+  await waitFor(() => {
+    expect(screen.getByText('Graph')).toBeInTheDocument();
+  });
+
+  // eslint-disable-next-line @typescript-eslint/unbound-method
+  const originalElementFromPoint = document.elementsFromPoint;
+  document.elementsFromPoint = jest
+    .fn()
+    .mockReturnValue([screen.container.querySelector('[data-selectid="text-field"]')]);
+
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  await user.click(screen.container.querySelector('[data-selectid="text-field"]')!);
+
+  await user.keyboard('#Child_One{enter}');
+
+  const hashtagElements = screen.container.querySelectorAll('[data-styleid="hashtag"]');
+
+  await user.click(hashtagElements[0]);
+  await waitFor(() => {
+    expect(screen.getByText('Child One')).toBeInTheDocument();
+  });
+
+  await user.type(screen.getByLabelText('Relation'), 'Child One Relation');
+
+  await user.click(screen.getByText('Graph'));
+  await waitFor(() => {
+    expect(screen.queryByLabelText('Description')).not.toBeInTheDocument();
+  });
+
+  await user.click(screen.getByText('Child One Relation'));
+  await waitFor(() => {
+    expect(screen.getByLabelText('Description')).toBeInTheDocument();
+  });
+
+  await user.type(screen.getByLabelText('Description'), 'Child One Description');
+
+  document.elementsFromPoint = originalElementFromPoint;
+
+  expect(screen.getByText('Project Name')).toBeInTheDocument();
+  expect(screen.getByText('Chapter Name')).toBeInTheDocument();
+  expect(screen.getByText('Section Name *')).toBeInTheDocument();
+
+  await user.click(screen.getByRole('button', { name: 'Save' }));
+
+  await waitFor(() => {
+    expect(screen.getByText('Section Name')).toBeInTheDocument();
+  });
+
+  expect(global.fetch).toHaveBeenCalledTimes(2);
+  expect(global.fetch).toHaveBeenNthCalledWith(
+    2,
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/update`,
+    expect.objectContaining({
+      method: 'POST',
+      body: JSON.stringify({
+        user: { id: USER.sub },
+        project: { id: 'PROJECT' },
+        chapter: { id: 'CHAPTER' },
+        graph: {
+          id: 'GRAPH',
+          paragraph: '#Child_One\n',
+          children: [
+            {
+              name: 'Child One',
+              relation: 'Child One Relation',
+              description: 'Child One Description',
+              children: [],
+            },
+          ],
+        },
+      }),
+    }),
+  );
+});
+
+test('should update graph grandchildren with Graph Update API', async () => {
+  const user = userEvent.setup();
+
+  const project: Project = {
+    id: 'PROJECT',
+    name: 'Project Name',
+    description: 'Project Description',
+  };
+  const chapterList: ChapterWithSections[] = [
+    {
+      id: 'CHAPTER',
+      number: 1,
+      name: 'Chapter Name',
+      sections: [
+        {
+          id: 'SECTION',
+          name: 'Section Name',
+        },
+      ],
+    },
+  ];
+
+  (global.fetch as jest.Mock)
+    .mockResolvedValueOnce(
+      createOkResponse({
+        graph: {
+          id: 'GRAPH',
+          name: 'Graph',
+          paragraph: '#Child_One\n#Child_Two\n#Child_Three\n',
+          children: [
+            {
+              name: 'Child One',
+              relation: 'Child One Relation',
+              description: 'Child One Description',
+              children: [],
+            },
+            {
+              name: 'Child Two',
+              relation: 'Child Two Relation',
+              description: 'Child Two Description',
+              children: [],
+            },
+            {
+              name: 'Child Three',
+              relation: 'Child Three Relation',
+              description: 'Child Three Description',
+              children: [],
+            },
+          ],
+        },
+      }),
+    )
+    .mockResolvedValueOnce(
+      createOkResponse({
+        graph: {
+          id: 'GRAPH',
+          name: 'Graph',
+          paragraph: '#Child_One\n#Child_Two\n#Child_Three\n#Grandchild_One\n',
+          children: [
+            {
+              name: 'Child One',
+              relation: 'Child One Relation',
+              description: 'Child One Description',
+              children: [
+                {
+                  name: 'Grandchild One',
+                  relation: 'Grandchild One Relation',
+                  description: 'Grandchild One Description',
+                  children: [],
+                },
+              ],
+            },
+            {
+              name: 'Child Two',
+              relation: 'Child Two Relation',
+              description: 'Child Two Description',
+              children: [],
+            },
+            {
+              name: 'Child Three',
+              relation: 'Child Three Relation',
+              description: 'Child Three Description',
+              children: [],
+            },
+          ],
+        },
+      }),
+    );
+
+  const screen = render(<SectionView chapterId="CHAPTER" projectId="PROJECT" sectionId="SECTION" user={USER} />, {
+    wrapper: ({ children }) => (
+      <Wrapper chapterList={chapterList} project={project}>
+        {children}
+      </Wrapper>
+    ),
+  });
+
+  await waitFor(() => {
+    expect(screen.container.querySelector('[data-selectid="text-field"]')).toHaveTextContent(
+      '#Child_One #Child_Two #Child_Three',
+    );
+  });
+
+  expect(screen.getByText('Project Name')).toBeInTheDocument();
+  expect(screen.getByText('Chapter Name')).toBeInTheDocument();
+  expect(screen.getByText('Section Name')).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
+
+  expect(global.fetch).toHaveBeenCalledTimes(1);
+  expect(global.fetch).toHaveBeenNthCalledWith(
+    1,
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/find`,
+    expect.objectContaining({
+      method: 'POST',
+      body: JSON.stringify({
+        user: { id: USER.sub },
+        project: { id: 'PROJECT' },
+        chapter: { id: 'CHAPTER' },
+        section: { id: 'SECTION' },
+      }),
+    }),
+  );
+
+  await user.click(screen.getByRole('tab', { name: 'Graph View' }));
+  await waitFor(() => {
+    expect(screen.getByText('Graph')).toBeInTheDocument();
+  });
+
+  await user.pointer({ keys: '[MouseRight>]', target: screen.getByText('Child One') });
+
+  const baseElement = within(screen.baseElement);
+  await waitFor(() => {
+    expect(baseElement.getByRole('presentation')).toBeInTheDocument();
+  });
+
+  await user.click(baseElement.getByRole('menuitem', { name: 'Expand' }));
+
+  await waitFor(() => {
+    expect(baseElement.queryByRole('presentation')).not.toBeInTheDocument();
+  });
+
+  // eslint-disable-next-line @typescript-eslint/unbound-method
+  const originalElementFromPoint = document.elementsFromPoint;
+  document.elementsFromPoint = jest
+    .fn()
+    .mockReturnValue([screen.container.querySelector('[data-selectid="text-field"]')]);
+
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  await user.click(screen.container.querySelector('[data-selectid="text-field"]')!);
+
+  await user.keyboard('#Grandchild_One{enter}');
+
+  const hashtagElements = screen.container.querySelectorAll('[data-styleid="hashtag"]');
+
+  await user.click(hashtagElements[3]);
+  await waitFor(() => {
+    expect(screen.getByText('Grandchild One')).toBeInTheDocument();
+  });
+
+  await user.type(screen.getByLabelText('Relation'), 'Grandchild One Relation');
+
+  await user.click(screen.getByText('Graph'));
+  await waitFor(() => {
+    expect(screen.queryByLabelText('Description')).not.toBeInTheDocument();
+  });
+
+  await user.click(screen.getByText('Grandchild One Relation'));
+  await waitFor(() => {
+    expect(screen.getByLabelText('Description')).toBeInTheDocument();
+  });
+
+  await user.type(screen.getByLabelText('Description'), 'Grandchild One Description');
+
+  document.elementsFromPoint = originalElementFromPoint;
+
+  expect(screen.getByText('Project Name')).toBeInTheDocument();
+  expect(screen.getByText('Chapter Name')).toBeInTheDocument();
+  expect(screen.getByText('Section Name *')).toBeInTheDocument();
+
+  await user.click(screen.getByRole('button', { name: 'Save' }));
+
+  await waitFor(() => {
+    expect(screen.getByText('Section Name')).toBeInTheDocument();
+  });
+
+  expect(global.fetch).toHaveBeenCalledTimes(2);
+  expect(global.fetch).toHaveBeenNthCalledWith(
+    2,
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/update`,
+    expect.objectContaining({
+      method: 'POST',
+      body: JSON.stringify({
+        user: { id: USER.sub },
+        project: { id: 'PROJECT' },
+        chapter: { id: 'CHAPTER' },
+        graph: {
+          id: 'GRAPH',
+          paragraph: '#Child_One\n#Child_Two\n#Child_Three\n#Grandchild_One\n',
+          children: [
+            {
+              name: 'Child One',
+              relation: 'Child One Relation',
+              description: 'Child One Description',
+              children: [
+                {
+                  name: 'Grandchild One',
+                  relation: 'Grandchild One Relation',
+                  description: 'Grandchild One Description',
+                  children: [],
+                },
+              ],
+            },
+            {
+              name: 'Child Two',
+              relation: 'Child Two Relation',
+              description: 'Child Two Description',
+              children: [],
+            },
+            {
+              name: 'Child Three',
+              relation: 'Child Three Relation',
+              description: 'Child Three Description',
+              children: [],
+            },
+          ],
+        },
+      }),
+    }),
+  );
+});
+
 test('should show error message when graph update failed', async () => {
   const user = userEvent.setup();
 
@@ -226,7 +616,7 @@ test('should show error message when graph update failed', async () => {
       createOkResponse({
         graph: {
           id: 'GRAPH',
-          name: 'Parent Node Name',
+          name: 'Graph',
           paragraph: 'Graph Paragraph',
           children: [],
         },
@@ -342,7 +732,7 @@ test('should show error message when graph to be updated does not exist', async 
       createOkResponse({
         graph: {
           id: 'GRAPH',
-          name: 'Parent Node Name',
+          name: 'Graph',
           paragraph: 'Graph Paragraph',
           children: [],
         },
@@ -455,7 +845,7 @@ test('should show error message when internal error occured', async () => {
       createOkResponse({
         graph: {
           id: 'GRAPH',
-          name: 'Parent Node Name',
+          name: 'Graph',
           paragraph: 'Graph Paragraph',
           children: [],
         },

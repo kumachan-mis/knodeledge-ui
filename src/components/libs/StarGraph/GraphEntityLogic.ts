@@ -7,8 +7,9 @@ import GraphRootWithId from './GraphRootWithId';
 export type GraphEntityLogicProps = {
   readonly graphRoot: GraphRootWithId;
   readonly graphRootChildren: GraphChildWithId[];
-  readonly focusedGraphParentId: string;
-  readonly focusedGraphChildId: string;
+  readonly focusedGraphParent: GraphRootWithId;
+  readonly focusedGraphChildren: GraphChildWithId[];
+  readonly focusedGraphChild: GraphChildWithId | null;
   readonly center: { readonly x: number; readonly y: number };
   readonly setFocusedGraphChildren: React.Dispatch<React.SetStateAction<GraphChildWithId[]>>;
   readonly setFocusedGraphParentId: React.Dispatch<React.SetStateAction<string>>;
@@ -49,27 +50,22 @@ type GraphEntityActiveLogicReturn = Pick<
 >;
 
 function graphEntityActiveLogic({
-  graphRoot,
-  graphRootChildren,
-  focusedGraphParentId,
-  focusedGraphChildId,
+  focusedGraphParent,
+  focusedGraphChildren,
+  focusedGraphChild,
 }: GraphEntityActiveLogicProps): GraphEntityActiveLogicReturn {
-  const focusedGraphParent = graphRootChildren.find((child) => child.id === focusedGraphParentId);
-  const graphParent = focusedGraphParent ?? graphRoot;
-  const graphChildren = focusedGraphParent?.children ?? graphRootChildren;
-
-  const graphParentNode = new GraphNode(graphParent.id, graphParent.name);
-  const graphChildrenNodes = graphChildren.map((child) => new GraphNode(child.id, child.name));
+  const graphParentNode = new GraphNode(focusedGraphParent.id, focusedGraphParent.name);
+  const graphChildrenNodes = focusedGraphChildren.map((child) => new GraphNode(child.id, child.name));
 
   const graphChildrenMap = new Map(graphChildrenNodes.map((node) => [node.id, node]));
-  const graphLinks = graphChildren.map((child) => {
+  const graphLinks = focusedGraphChildren.map((child) => {
     // GraphChildrenMap.get() will never return undefined because the keys are from graphChildrenNodes
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const graphChildNode = graphChildrenMap.get(child.id)!;
     return new GraphLink(graphParentNode, graphChildNode, child.relation, child.description);
   });
 
-  const focusedLink = graphLinks.find((link) => link.target.id === focusedGraphChildId);
+  const focusedLink = graphLinks.find((link) => link.target.id === focusedGraphChild?.id);
 
   return { graphParentNode, graphChildrenNodes, graphLinks, focusedLink };
 }
@@ -81,11 +77,10 @@ type GraphEntityInactiveLogicReturn = Pick<GraphEntityLogicReturn, 'inactiveGrap
 function graphEntityInactiveLogic({
   graphRoot,
   graphRootChildren,
-  focusedGraphParentId,
+  focusedGraphParent,
   graphParentNode,
 }: GraphEntityInactiveLogicProps): GraphEntityInactiveLogicReturn {
-  const focusedGraphParent = graphRootChildren.find((child) => child.id === focusedGraphParentId);
-  if (!focusedGraphParent) {
+  if (focusedGraphParent.id === graphRoot.id) {
     return { inactiveGraphNodes: [], inactiveGraphLinks: [] };
   }
 
@@ -94,7 +89,7 @@ function graphEntityInactiveLogic({
     if (child.id === graphParentNode.id) return graphParentNode;
     return new GraphNode(child.id, child.name);
   });
-  const inactiveGraphNodes = [rootNode, ...rootChildenNodes.filter((node) => node.id !== focusedGraphParentId)];
+  const inactiveGraphNodes = [rootNode, ...rootChildenNodes.filter((node) => node.id !== focusedGraphParent.id)];
 
   const rootChildenNodesMap = new Map(rootChildenNodes.map((node) => [node.id, node]));
   const inactiveGraphLinks = graphRootChildren.map((child) => {
@@ -117,7 +112,7 @@ type GraphEntityCallbackLogicReturn = Pick<
 function graphEntityCallbackLogic({
   graphRoot,
   graphRootChildren,
-  focusedGraphParentId,
+  focusedGraphParent,
   setFocusedGraphParentId,
   setFocusedGraphChildId,
   setFocusedGraphChildren,
@@ -130,7 +125,7 @@ function graphEntityCallbackLogic({
         setFocusedGraphParentId(node.id);
       },
       disabled: (node) =>
-        node.id === focusedGraphParentId ||
+        node.id === focusedGraphParent.id ||
         (node.id !== graphRoot.id && graphRootChildren.every((child) => child.id !== node.id)),
     },
     {
@@ -138,7 +133,7 @@ function graphEntityCallbackLogic({
       onClick: () => {
         setFocusedGraphParentId(graphRoot.id);
       },
-      disabled: (node) => node.id !== focusedGraphParentId || node.id === graphRoot.id,
+      disabled: (node) => node.id !== focusedGraphParent.id || node.id === graphRoot.id,
     },
     {
       name: 'Delete',
@@ -169,7 +164,7 @@ function graphEntityCallbackLogic({
   };
 
   const focusGraphLink = (link: GraphLink) => {
-    if (link.source.id !== focusedGraphParentId) return;
+    if (link.source.id !== focusedGraphParent.id) return;
     setFocusedGraphChildId(link.target.id);
   };
 
