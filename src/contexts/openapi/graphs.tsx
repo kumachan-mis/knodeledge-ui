@@ -3,8 +3,8 @@ import { findGraph } from '@/actions/graphs/findGraph';
 import { updateGraph } from '@/actions/graphs/updateGraph';
 import { Graph, GraphContentWithoutAutofield, GraphContentWithoutAutofieldError, UserOnlyId } from '@/openapi';
 
-import { LoadableAction, LoadableClientSideData } from './openapi';
 import { useSetPanic } from './panic';
+import { LoadableAction, LoadableClientSideData } from './types';
 
 import React from 'react';
 

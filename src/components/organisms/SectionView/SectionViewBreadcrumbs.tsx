@@ -1,16 +1,24 @@
 import AppBreadcrumbs from '@/components/molecules/AppBreadcrumbs';
-import { GraphActionError, LoadableGraph } from '@/contexts/graphs';
-import { LoadableAction } from '@/contexts/openapi';
-import { useGraphContent } from '@/contexts/views';
+import { GraphActionError, LoadableGraph } from '@/contexts/openapi/graphs';
+import { LoadableAction } from '@/contexts/openapi/types';
+import { graphContentEquals, graphContentToServer, useGraphContent } from '@/contexts/views/graph';
 import { Project, Chapter, SectionOfChapter, GraphContentWithoutAutofield } from '@/openapi';
-import { sectionViewContentEquals } from '@/utils/logic';
+
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import React from 'react';
 
 export type SectionViewBreadcrumbsComponentProps = {
   readonly project: Project;
   readonly chapter: Chapter;
   readonly section: SectionOfChapter;
   readonly loadableGraph: LoadableGraph;
-  readonly updateGraph: (id: string, graph: GraphContentWithoutAutofield) => Promise<LoadableAction<GraphActionError>>;
+  readonly view: 'text' | 'graph';
+  readonly onChangeView: React.Dispatch<React.SetStateAction<'text' | 'graph'>>;
+  readonly onUpdateGraph: (
+    id: string,
+    graph: GraphContentWithoutAutofield,
+  ) => Promise<LoadableAction<GraphActionError>>;
 };
 
 const SectionViewBreadcrumbsComponent: React.FC<SectionViewBreadcrumbsComponentProps> = ({
@@ -18,10 +26,12 @@ const SectionViewBreadcrumbsComponent: React.FC<SectionViewBreadcrumbsComponentP
   chapter,
   section,
   loadableGraph,
-  updateGraph,
+  view,
+  onChangeView,
+  onUpdateGraph,
 }) => {
   const unsavedGraph = useGraphContent();
-  const dirty = loadableGraph.state === 'success' && !sectionViewContentEquals(loadableGraph.data, unsavedGraph);
+  const dirty = loadableGraph.state === 'success' && !graphContentEquals(unsavedGraph, loadableGraph.data);
 
   return (
     <AppBreadcrumbs
@@ -29,7 +39,7 @@ const SectionViewBreadcrumbsComponent: React.FC<SectionViewBreadcrumbsComponentP
       dirty={dirty}
       onSave={async () => {
         if (!dirty) return { success: true };
-        const loadableAction = await updateGraph(loadableGraph.data.id, unsavedGraph);
+        const loadableAction = await onUpdateGraph(loadableGraph.data.id, graphContentToServer(unsavedGraph));
         if (loadableAction.state === 'success') {
           return { success: true };
         }
@@ -40,7 +50,18 @@ const SectionViewBreadcrumbsComponent: React.FC<SectionViewBreadcrumbsComponentP
       }}
       project={{ id: project.id, name: project.name }}
       section={{ id: section.id, name: section.name }}
-    />
+    >
+      <Tabs
+        onChange={(event, value: 'text' | 'graph') => {
+          onChangeView(value);
+        }}
+        sx={{ mx: 4, my: 1, minHeight: '28px', '& button': { padding: '0 28px', minHeight: '28px' } }}
+        value={view}
+      >
+        <Tab label="Text View" value="text" />
+        <Tab label="Graph View" value="graph" />
+      </Tabs>
+    </AppBreadcrumbs>
   );
 };
 

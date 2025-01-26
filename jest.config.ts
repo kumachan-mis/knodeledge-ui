@@ -5,14 +5,15 @@ const createJestConfig = nextJest({
   dir: './',
 });
 
-const config: Config = {
+const customJestConfig: Config = {
   coverageProvider: 'v8',
   testEnvironment: 'jsdom',
   testTimeout: 10 * 1000,
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
-  moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1',
-  },
 };
 
-module.exports = createJestConfig(config);
+module.exports = async () => {
+  const config = (await createJestConfig(customJestConfig)()) as Config;
+  config.transformIgnorePatterns = ['node_modules/(?!(d3-.*)/)'];
+  return config;
+};

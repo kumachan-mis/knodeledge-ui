@@ -1,7 +1,7 @@
 'use client';
 import ChapterDialog from '@/components/organisms/ChapterDialog';
-import { ChapterActionError } from '@/contexts/chapters';
-import { LoadableAction } from '@/contexts/openapi';
+import { ChapterActionError } from '@/contexts/openapi/chapters';
+import { LoadableAction } from '@/contexts/openapi/types';
 import { useDialog } from '@/hooks/dialog';
 import { ChapterWithoutAutofield, ChapterWithSections, Project } from '@/openapi';
 import { PROJECTS_ID_PATH_NAME } from '@/utils/page';

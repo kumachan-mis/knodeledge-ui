@@ -7,10 +7,10 @@ import {
 import { USER } from '../../../testutils/user';
 import ChapterView from '@/components/organisms/ChapterView';
 import PanicError from '@/components/organisms/PanicError';
-import { ActiveChapterContextProvider, ChapterListContextProvider } from '@/contexts/chapters';
-import { PanicContextProvider } from '@/contexts/panic';
-import { CachedPaperContextProvider, useInitPaper } from '@/contexts/papers';
-import { ProjectContextProvider } from '@/contexts/projects';
+import { ActiveChapterContextProvider, ChapterListContextProvider } from '@/contexts/openapi/chapters';
+import { PanicContextProvider } from '@/contexts/openapi/panic';
+import { CachedPaperContextProvider, useInitPaper } from '@/contexts/openapi/papers';
+import { ProjectContextProvider } from '@/contexts/openapi/projects';
 import { ChapterWithSections, Project } from '@/openapi';
 
 import { render, waitFor } from '@testing-library/react';

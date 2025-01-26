@@ -1,6 +1,6 @@
 'use client';
-import { LoadableAction } from '@/contexts/openapi';
-import { ProjectActionError } from '@/contexts/projects';
+import { ProjectActionError } from '@/contexts/openapi/projects';
+import { LoadableAction } from '@/contexts/openapi/types';
 import { ProjectWithoutAutofield } from '@/openapi';
 
 import Button from '@mui/material/Button';

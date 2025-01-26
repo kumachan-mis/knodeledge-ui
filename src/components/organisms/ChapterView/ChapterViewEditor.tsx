@@ -1,7 +1,7 @@
 'use client';
 import AppEditor from '@/components/molecules/AppEditor';
-import { LoadablePaper } from '@/contexts/papers';
-import { usePaperContent, useSetPaperContent } from '@/contexts/views';
+import { LoadablePaper } from '@/contexts/openapi/papers';
+import { usePaperContent, useSetPaperContent } from '@/contexts/views/paper';
 
 import React from 'react';
 
@@ -15,11 +15,10 @@ const ChapterViewEditorComponent: React.FC<ChapterViewEditorComponentProps> = ({
 
   const setText = React.useCallback(
     (value: React.SetStateAction<string>) => {
-      if (typeof value === 'function') {
-        setPaper((prev) => ({ ...prev, content: value(prev.content) }));
-        return;
-      }
-      setPaper({ content: value });
+      setPaper((prev) => {
+        const updated = typeof value === 'function' ? value(prev.content) : value;
+        return { ...prev, content: updated };
+      });
     },
     [setPaper],
   );

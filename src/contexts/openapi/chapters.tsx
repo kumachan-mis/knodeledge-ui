@@ -14,8 +14,8 @@ import {
   UserOnlyId,
 } from '@/openapi';
 
-import { LoadableAction, LoadableServerSideData } from './openapi';
 import { useSetPanic } from './panic';
+import { LoadableAction, LoadableServerSideData } from './types';
 
 import React from 'react';
 

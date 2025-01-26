@@ -59,7 +59,7 @@ export function useAppBreadcrumbsSaving({
       if (
         dirty &&
         event.target instanceof Element &&
-        event.target.closest('a:not([target="_blank"])') &&
+        event.target.closest('a[href]:not([target="_blank"])') &&
         !window.confirm(message)
       ) {
         event.preventDefault();
@@ -76,9 +76,7 @@ export function useAppBreadcrumbsSaving({
 
   React.useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      if (dirty) {
-        event.preventDefault();
-      }
+      if (dirty) event.preventDefault();
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);

@@ -5,20 +5,35 @@ import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import { styled, ThemeProvider } from '@mui/material/styles';
 import React from 'react';
-import { EditorRoot, EditorSyntaxMenu, Divider, EditorTextFieldRoot, EditorTextFieldBody } from 'react-clay-editor';
+import {
+  EditorRoot,
+  EditorSyntaxMenu,
+  Divider,
+  EditorTextFieldRoot,
+  EditorTextFieldBody,
+  EditorRootProps,
+  EditorBracketLinkProps,
+} from 'react-clay-editor';
 
 import 'katex/dist/katex.min.css';
 
-export type AppEditorProps = {
-  readonly text: string;
-  readonly setText: React.Dispatch<React.SetStateAction<string>>;
+export type AppEditorProps = EditorRootProps & {
   readonly state: 'notfound' | 'loading' | 'success';
+  readonly mode?: 'regular' | 'simple';
 };
 
-const AppEditor: React.FC<AppEditorProps> = ({ text, setText, state }) => (
-  <AppEditorRoot setText={setText} text={text}>
-    <EditorSyntaxMenu />
-    <Divider />
+const bracketLinkProps: EditorBracketLinkProps = {
+  disabled: true,
+};
+
+const AppEditor: React.FC<AppEditorProps> = ({ state, mode = 'regular', ...rest }) => (
+  <AppEditorRoot {...rest} bracketLinkProps={bracketLinkProps}>
+    {mode !== 'simple' && (
+      <>
+        <EditorSyntaxMenu />
+        <Divider />
+      </>
+    )}
     {state !== 'success' ? (
       // ThemeProvider is a workaround to use MUI inside the editor
       <ThemeProvider theme={theme}>
@@ -37,7 +52,7 @@ const AppEditor: React.FC<AppEditorProps> = ({ text, setText, state }) => (
 const AppEditorRoot = styled(EditorRoot)({
   '&&': {
     width: '100%',
-    flexGrow: 1,
+    height: '100%',
   },
 });
 

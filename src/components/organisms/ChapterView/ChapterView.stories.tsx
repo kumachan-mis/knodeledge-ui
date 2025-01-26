@@ -1,11 +1,19 @@
-import { PaperContentProvider } from '@/contexts/views';
-
 import ChapterViewComponent from './ChapterView';
 
 import { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof ChapterViewComponent> = {
   component: ChapterViewComponent,
+  args: {
+    // eslint-disable-next-line @typescript-eslint/require-await
+    onUpdatePaper: async () => {
+      return { state: 'success', error: null };
+    },
+    // eslint-disable-next-line @typescript-eslint/require-await
+    onSectionalizePaper: async () => {
+      return { state: 'success', error: null };
+    },
+  },
 };
 
 export default meta;
@@ -41,18 +49,6 @@ export const Basic: Story = {
       },
     },
   },
-  decorators: [
-    (Story) => (
-      <PaperContentProvider
-        loadablePaper={{
-          data: { id: 'PAPER', content: 'This is paper content.' },
-          state: 'success',
-        }}
-      >
-        <Story />
-      </PaperContentProvider>
-    ),
-  ],
 };
 
 export const Loading: Story = {

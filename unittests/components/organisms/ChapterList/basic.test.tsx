@@ -1,8 +1,8 @@
 import { USER } from '../../../testutils/user';
 import ChapterList from '@/components/organisms/ChapterList';
 import PanicError from '@/components/organisms/PanicError';
-import { ChapterListContextProvider } from '@/contexts/chapters';
-import { PanicContextProvider } from '@/contexts/panic';
+import { ChapterListContextProvider } from '@/contexts/openapi/chapters';
+import { PanicContextProvider } from '@/contexts/openapi/panic';
 import { ChapterWithSections } from '@/openapi';
 
 import { within } from '@testing-library/dom';

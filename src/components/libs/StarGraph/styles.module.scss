@@ -1,0 +1,105 @@
+.GraphLink,
+.GraphNode {
+  cursor: pointer;
+}
+
+circle.GraphNode {
+  fill: #ECEFF1;
+
+  &__inactive {
+    fill: #FAFAFA;
+  }
+}
+
+rect.GraphNode {
+  fill: rgba(#CFD8DC, 0.30);
+  stroke: rgba(#78909C, 0.30);
+  stroke-width: 1px;
+
+  &__inactive {
+    fill: rgba(#ECEFF1, 0.30);
+    stroke: rgba(#ECEFF1, 0.30);
+  }
+}
+
+rect.GraphLink {
+  fill: #ECEFF1;
+  stroke: #78909C;
+  stroke-width: 2px;
+}
+
+line.GraphLink {
+  stroke: #78909C;
+  stroke-width: 2px;
+
+  &__focused {
+    stroke-width: 5px;
+  }
+
+  &__inactive {
+    stroke: #CFD8DC;
+  }
+}
+
+text.GraphLink,
+text.GraphNode {
+  fill: #263238;
+  text-anchor: middle;
+  font-family: arial, sans-serif;
+
+  &__inactive {
+    fill: #ECEFF1;
+  }
+  
+}
+text.GraphLink {
+  font-size: 9pt;
+}
+text.GraphNode {
+  font-size: 10pt;
+}
+
+foreignObject.GraphLink {
+  div {
+    font-size: 11px;
+  }
+}
+
+div.GraphMenu {
+  position: absolute;
+  background-color: #ECEFF1;
+  border-radius: 4px;
+  font-size: 10pt;
+}
+
+ul.GraphMenu {
+  list-style-type: none;
+  margin: 4px 0;
+  padding: 0;
+ 
+}
+
+li.GraphMenuItem {
+  padding: 4px 16px;
+  font-family: arial, sans-serif;
+  color: #263238;
+  cursor: pointer;
+  background-color: #ECEFF1;
+
+  &:hover {
+    background-color: #D8D8DA;
+  }
+
+  &-Delete {
+    color: #F44336;
+  }
+
+  &--disabled {
+    color: #CFD8DC;
+    cursor: default;
+    
+    &:hover {
+      background-color: #ECEFF1;
+    }
+  }
+}

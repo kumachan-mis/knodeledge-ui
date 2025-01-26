@@ -1,6 +1,6 @@
-import { useLoadableActiveChapterInList, useSectionalizePaper } from '@/contexts/chapters';
-import { useLoadablePaper, useUpdatePaper } from '@/contexts/papers';
-import { useLoadableProject } from '@/contexts/projects';
+import { useLoadableActiveChapterInList, useSectionalizePaper } from '@/contexts/openapi/chapters';
+import { useLoadablePaper, useUpdatePaper } from '@/contexts/openapi/papers';
+import { useLoadableProject } from '@/contexts/openapi/projects';
 
 import ChapterViewComponent from './ChapterView';
 
@@ -24,9 +24,9 @@ const ChapterView: React.FC<ChapterViewProps> = ({ user, projectId, chapterId })
     <ChapterViewComponent
       chapter={loadableChapter.data}
       loadablePaper={loadablePaper}
+      onSectionalizePaper={sectionalizePaper}
+      onUpdatePaper={updatePaper}
       project={loadableProject.data}
-      sectionalizePaper={sectionalizePaper}
-      updatePaper={updatePaper}
     />
   );
 };

@@ -10,6 +10,7 @@ import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
 import Typography from '@mui/material/Typography';
 import Link from 'next/link';
+import React from 'react';
 
 type BreadcrumbItem = {
   readonly id: string;
@@ -21,10 +22,11 @@ export type AppBreadcrumbsProps = {
   readonly chapter: BreadcrumbItem;
   readonly section?: BreadcrumbItem;
   readonly dirty: boolean;
+  readonly children?: React.ReactNode;
   readonly onSave: () => Promise<SaveResult>;
 };
 
-const AppBreadcrumbs: React.FC<AppBreadcrumbsProps> = ({ project, chapter, section, onSave, dirty }) => {
+const AppBreadcrumbs: React.FC<AppBreadcrumbsProps> = ({ project, chapter, section, onSave, dirty, children }) => {
   const { savingError, onSaveClick, onClearSavingError } = useAppBreadcrumbsSaving({ dirty, onSave });
 
   return (
@@ -32,6 +34,8 @@ const AppBreadcrumbs: React.FC<AppBreadcrumbsProps> = ({ project, chapter, secti
       <Breadcrumbs
         aria-label="breadcrumb"
         sx={{
+          display: 'flex',
+          alignItems: 'center',
           '& a': {
             textDecoration: 'none',
             color: 'inherit',
@@ -39,7 +43,6 @@ const AppBreadcrumbs: React.FC<AppBreadcrumbsProps> = ({ project, chapter, secti
               textDecoration: 'underline',
             },
           },
-          flexGrow: 1,
         }}
       >
         <Link href={`/${PROJECTS_ID_PATH_NAME}/${project.id}`}>
@@ -60,6 +63,7 @@ const AppBreadcrumbs: React.FC<AppBreadcrumbsProps> = ({ project, chapter, secti
           </Typography>
         )}
       </Breadcrumbs>
+      <Box sx={{ flexGrow: 1 }}>{children}</Box>
       <Button disabled={!dirty} onClick={onSaveClick} size="small" startIcon={<SaveIcon />} variant="text">
         Save
       </Button>

@@ -6,13 +6,14 @@ import {
   ActiveChapterContextProvider,
   ActiveSectionContextProvider,
   ChapterListContextProvider,
-} from '@/contexts/chapters';
-import { CachedGraphContextProvider, useInitGraph } from '@/contexts/graphs';
-import { PanicContextProvider } from '@/contexts/panic';
-import { ProjectContextProvider } from '@/contexts/projects';
+} from '@/contexts/openapi/chapters';
+import { CachedGraphContextProvider, useInitGraph } from '@/contexts/openapi/graphs';
+import { PanicContextProvider } from '@/contexts/openapi/panic';
+import { ProjectContextProvider } from '@/contexts/openapi/projects';
 import { ChapterWithSections, Project } from '@/openapi';
 
 import { render, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 const Wrapper: React.FC<{
   project: Project;
@@ -49,15 +50,38 @@ const HooksWrapper: React.FC<{
   );
 };
 
+// eslint-disable-next-line @typescript-eslint/unbound-method
+const originalSvgGetClientRect = SVGSVGElement.prototype.getBoundingClientRect;
 beforeAll(() => {
   global.fetch = jest.fn();
+  Object.defineProperty(global.SVGElement.prototype, 'getBBox', {
+    writable: true,
+    value: jest.fn().mockReturnValue({ x: 0, y: 0, width: 100, height: 100 }),
+  });
+  Object.defineProperty(SVGSVGElement.prototype, 'getBoundingClientRect', {
+    writable: true,
+    value: jest.fn().mockReturnValue({ x: 0, y: 0, width: 1000, height: 800 }),
+  });
 });
 
 beforeEach(() => {
   (global.fetch as jest.Mock).mockRestore();
 });
 
-test('should show graph paragraph from Graph Find API', async () => {
+afterAll(() => {
+  Object.defineProperty(SVGSVGElement.prototype, 'getBoundingClientRect', {
+    writable: true,
+    value: originalSvgGetClientRect,
+  });
+  Object.defineProperty(global.SVGElement.prototype, 'getBBox', {
+    writable: true,
+    value: undefined,
+  });
+});
+
+test('should show graph diagram and paragraph from Graph Find API', async () => {
+  const user = userEvent.setup();
+
   const project: Project = {
     id: 'PROJECT',
     name: 'Project Name',
@@ -81,6 +105,7 @@ test('should show graph paragraph from Graph Find API', async () => {
     createOkResponse({
       graph: {
         id: 'GRAPH',
+        name: 'Graph',
         paragraph: 'Graph Paragraph',
         children: [],
       },
@@ -102,7 +127,25 @@ test('should show graph paragraph from Graph Find API', async () => {
   expect(screen.getByText('Project Name')).toBeInTheDocument();
   expect(screen.getByText('Chapter Name')).toBeInTheDocument();
   expect(screen.getByText('Section Name')).toBeInTheDocument();
+  expect(screen.getByRole('tab', { name: 'Text View' })).toBeInTheDocument();
+  expect(screen.getByRole('tab', { name: 'Graph View' })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
+
+  expect(screen.getByRole('tab', { name: 'Text View' })).toHaveAttribute('aria-selected', 'true');
+  expect(screen.getByRole('tab', { name: 'Graph View' })).toHaveAttribute('aria-selected', 'false');
+
+  await user.click(screen.getByRole('tab', { name: 'Graph View' }));
+  await waitFor(() => {
+    expect(screen.getByText('Graph')).toBeInTheDocument();
+  });
+
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const parentNodeGroup = screen.getByText('Graph').closest('g')!;
+  await waitFor(() => {
+    const parentNodeCircle = parentNodeGroup.querySelector('circle');
+    expect(parentNodeCircle).toHaveAttribute('cx', '500');
+    expect(parentNodeCircle).toHaveAttribute('cy', '400');
+  });
 
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(

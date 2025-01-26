@@ -1,4 +1,4 @@
-import { Panic } from '@/contexts/openapi';
+import { Panic } from '@/contexts/openapi/types';
 
 import ErrorIcon from '@mui/icons-material/Error';
 import Backdrop from '@mui/material/Backdrop';

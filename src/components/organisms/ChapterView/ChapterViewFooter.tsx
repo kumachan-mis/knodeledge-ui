@@ -1,7 +1,7 @@
 import NextStepDialog from '../NextStepDialog';
-import { SectionsActionError } from '@/contexts/chapters';
-import { LoadableAction } from '@/contexts/openapi';
-import { LoadablePaper } from '@/contexts/papers';
+import { SectionsActionError } from '@/contexts/openapi/chapters';
+import { LoadablePaper } from '@/contexts/openapi/papers';
+import { LoadableAction } from '@/contexts/openapi/types';
 import { useDialog } from '@/hooks/dialog';
 import { SectionWithoutAutofield } from '@/openapi';
 
@@ -10,12 +10,12 @@ import Toolbar from '@mui/material/Toolbar';
 
 export type ChapterViewFooterComponentProps = {
   readonly loadablePaper: LoadablePaper;
-  readonly sectionalizePaper: (sections: SectionWithoutAutofield[]) => Promise<LoadableAction<SectionsActionError>>;
+  readonly onSectionalizePaper: (sections: SectionWithoutAutofield[]) => Promise<LoadableAction<SectionsActionError>>;
 };
 
 const ChapterViewFooterComponent: React.FC<ChapterViewFooterComponentProps> = ({
   loadablePaper,
-  sectionalizePaper,
+  onSectionalizePaper,
 }) => {
   const { open: openNextStepDialog, onOpen: onOpenNextStepDialog, onClose: onCloseNextStepDialog } = useDialog();
   const disabled = loadablePaper.state !== 'success';
@@ -25,7 +25,7 @@ const ChapterViewFooterComponent: React.FC<ChapterViewFooterComponentProps> = ({
       <Button color="primary" disabled={disabled} onClick={onOpenNextStepDialog} variant="contained">
         Go to Next Step
       </Button>
-      <NextStepDialog onClose={onCloseNextStepDialog} onSubmit={sectionalizePaper} open={openNextStepDialog} />
+      <NextStepDialog onClose={onCloseNextStepDialog} onSubmit={onSectionalizePaper} open={openNextStepDialog} />
     </Toolbar>
   );
 };

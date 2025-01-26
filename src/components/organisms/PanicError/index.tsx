@@ -1,5 +1,5 @@
 'use client';
-import { usePanicValue } from '@/contexts/panic';
+import { usePanicValue } from '@/contexts/openapi/panic';
 
 import PanicErrorComponent from './PanicError';
 

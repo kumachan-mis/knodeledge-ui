@@ -1,6 +1,6 @@
-import { useLoadableActiveChapterInList, useLoadableActiveSectionInList } from '@/contexts/chapters';
-import { useLoadableGraph, useUpdateGraph } from '@/contexts/graphs';
-import { useLoadableProject } from '@/contexts/projects';
+import { useLoadableActiveChapterInList, useLoadableActiveSectionInList } from '@/contexts/openapi/chapters';
+import { useLoadableGraph, useUpdateGraph } from '@/contexts/openapi/graphs';
+import { useLoadableProject } from '@/contexts/openapi/projects';
 
 import SectionViewComponent from './SectionView';
 
@@ -25,9 +25,9 @@ const SectionView: React.FC<SectionViewProps> = ({ user, projectId, chapterId, s
     <SectionViewComponent
       chapter={loadableChapter.data}
       loadableGraph={loadableGraph}
+      onUpdateGraph={updateGraph}
       project={loadableProject.data}
       section={loadableSection.data}
-      updateGraph={updateGraph}
     />
   );
 };

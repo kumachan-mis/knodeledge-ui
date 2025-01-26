@@ -2,7 +2,7 @@ import { listProject } from '@/actions/projects/listProject';
 import AppLayout from '@/components/layouts/AppLayout';
 import InternalError from '@/components/organisms/InternalError';
 import UnauthorizedError from '@/components/organisms/UnauthorizedError';
-import { ProjectListContextProvider } from '@/contexts/projects';
+import { ProjectListContextProvider } from '@/contexts/openapi/projects';
 
 import ProjectListPageContent from './content';
 

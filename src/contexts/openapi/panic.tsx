@@ -1,5 +1,5 @@
 'use client';
-import { Panic } from './openapi';
+import { Panic } from './types';
 
 import React from 'react';
 

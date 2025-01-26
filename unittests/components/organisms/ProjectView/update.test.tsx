@@ -7,8 +7,8 @@ import {
 import { USER } from '../../../testutils/user';
 import PanicError from '@/components/organisms/PanicError';
 import ProjectView from '@/components/organisms/ProjectView';
-import { PanicContextProvider } from '@/contexts/panic';
-import { ProjectContextProvider } from '@/contexts/projects';
+import { PanicContextProvider } from '@/contexts/openapi/panic';
+import { ProjectContextProvider } from '@/contexts/openapi/projects';
 import { Project } from '@/openapi';
 
 import { render, waitFor, within } from '@testing-library/react';

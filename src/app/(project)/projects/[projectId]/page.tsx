@@ -6,10 +6,10 @@ import ChapterListHeader from '@/components/organisms/ChapterListHeader';
 import InternalError from '@/components/organisms/InternalError';
 import NotFoundError from '@/components/organisms/NotFoundError';
 import UnauthorizedError from '@/components/organisms/UnauthorizedError';
-import { ChapterListContextProvider } from '@/contexts/chapters';
-import { CachedGraphContextProvider } from '@/contexts/graphs';
-import { CachedPaperContextProvider } from '@/contexts/papers';
-import { ProjectContextProvider } from '@/contexts/projects';
+import { ChapterListContextProvider } from '@/contexts/openapi/chapters';
+import { CachedGraphContextProvider } from '@/contexts/openapi/graphs';
+import { CachedPaperContextProvider } from '@/contexts/openapi/papers';
+import { ProjectContextProvider } from '@/contexts/openapi/projects';
 
 import ProjectDetailPageContent from './content';
 

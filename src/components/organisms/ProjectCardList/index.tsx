@@ -1,5 +1,5 @@
 'use client';
-import { useLoadableProjectList, useUpdateProjectInList } from '@/contexts/projects';
+import { useLoadableProjectList, useUpdateProjectInList } from '@/contexts/openapi/projects';
 
 import ProjectCardListComponent from './ProjectCardList';
 
