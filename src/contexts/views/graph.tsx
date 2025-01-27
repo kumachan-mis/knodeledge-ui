@@ -66,7 +66,7 @@ export function graphContentToServer(client: GraphContent): GraphContentWithoutA
   };
 }
 
-export function graphChildrenToServer(client: StarGraphChild[]): GraphChild[] {
+function graphChildrenToServer(client: StarGraphChild[]): GraphChild[] {
   return client.map(graphChildToServer);
 }
 
