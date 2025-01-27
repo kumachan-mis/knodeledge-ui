@@ -1,51 +1,37 @@
 'use client';
 import { LoadableGraph } from '../openapi/graphs';
-import { GraphChild, GraphContentWithoutAutofield } from '@/openapi';
+import { StarGraphChild, StarGraphContentProvider, useStarGraphContent } from '@/components/libs/StarGraph/context';
+import { Graph, GraphChild, GraphContentWithoutAutofield } from '@/openapi';
 
 import React from 'react';
 
-export type GraphRootWithId = {
-  readonly id: string;
-  readonly name: string;
-};
-
-export type GraphChildWithId = Omit<GraphChild, 'children'> & {
-  readonly id: string;
-  readonly children: GraphChildWithId[];
-};
-
-export type GraphContent = {
+export type GraphParagraph = {
   readonly paragraph: string;
-  readonly graphRootChildren: GraphChildWithId[];
-  readonly focusedGraphParentId: string;
-  readonly focusedGraphChildId: string;
 };
 
-const GraphContentRootValueContext = React.createContext<GraphRootWithId>({
-  id: '',
-  name: '',
-});
+export type GraphContent = GraphParagraph & {
+  readonly children: StarGraphChild[];
+};
 
-const GraphContentValueContext = React.createContext<GraphContent>({
+const GraphParagraphValueContext = React.createContext<GraphParagraph>({
   paragraph: '',
-  graphRootChildren: [],
-  focusedGraphParentId: '',
-  focusedGraphChildId: '',
 });
-const GraphContentSetContext = React.createContext<React.Dispatch<React.SetStateAction<GraphContent>>>(() => {
+const GraphParagraphSetContext = React.createContext<React.Dispatch<React.SetStateAction<GraphParagraph>>>(() => {
   // Do nothing
 });
 
-export function useGraphContentRoot(): GraphRootWithId {
-  return React.useContext(GraphContentRootValueContext);
-}
-
 export function useGraphContent(): GraphContent {
-  return React.useContext(GraphContentValueContext);
+  const paragraph = useGraphParagraph();
+  const graph = useStarGraphContent();
+  return { paragraph: paragraph.paragraph, children: graph.graphRootChildren };
 }
 
-export function useSetGraphContent(): React.Dispatch<React.SetStateAction<GraphContent>> {
-  return React.useContext(GraphContentSetContext);
+export function useGraphParagraph(): GraphParagraph {
+  return React.useContext(GraphParagraphValueContext);
+}
+
+export function useSetGraphParagraph(): React.Dispatch<React.SetStateAction<GraphParagraph>> {
+  return React.useContext(GraphParagraphSetContext);
 }
 
 export const GraphContentProvider: React.FC<{
@@ -55,38 +41,36 @@ export const GraphContentProvider: React.FC<{
   if (loadableGraph.state !== 'success') {
     return children;
   }
-  const { id: focusedGraphParentId, name, paragraph, children: graphChildren } = loadableGraph.data;
-  const graphRootChildren = graphChildren.map(issueGraphChildId);
-  const initialContent: GraphContent = { paragraph, graphRootChildren, focusedGraphParentId, focusedGraphChildId: '' };
-  return (
-    <GraphContentInnerProvider id={focusedGraphParentId} initialContent={initialContent} rootName={name}>
-      {children}
-    </GraphContentInnerProvider>
-  );
+  return <GraphContentInnerProvider initialGraph={loadableGraph.data}>{children}</GraphContentInnerProvider>;
 };
 const GraphContentInnerProvider: React.FC<{
-  readonly id: string;
-  readonly rootName: string;
-  readonly initialContent: GraphContent;
+  readonly initialGraph: Graph;
   readonly children?: React.ReactNode;
-}> = ({ id, rootName, initialContent, children }) => {
-  const rootContent: GraphRootWithId = React.useMemo(() => ({ id, name: rootName }), [id, rootName]);
-  const [graph, setGraph] = React.useState<GraphContent>(initialContent);
+}> = ({ initialGraph, children }) => {
+  const graphRoot = React.useMemo(() => ({ name: initialGraph.name }), [initialGraph.name]);
+  const [paragraph, setParagraph] = React.useState<GraphParagraph>({ paragraph: initialGraph.paragraph });
 
   return (
-    <GraphContentRootValueContext.Provider value={rootContent}>
-      <GraphContentValueContext.Provider value={graph}>
-        <GraphContentSetContext.Provider value={setGraph}>{children}</GraphContentSetContext.Provider>
-      </GraphContentValueContext.Provider>
-    </GraphContentRootValueContext.Provider>
+    <StarGraphContentProvider graphRoot={graphRoot} graphRootChildren={initialGraph.children}>
+      <GraphParagraphValueContext.Provider value={paragraph}>
+        <GraphParagraphSetContext.Provider value={setParagraph}>{children}</GraphParagraphSetContext.Provider>
+      </GraphParagraphValueContext.Provider>
+    </StarGraphContentProvider>
   );
 };
 
 export function graphContentToServer(client: GraphContent): GraphContentWithoutAutofield {
-  return { paragraph: client.paragraph, children: client.graphRootChildren.map(graphChildToServer) };
+  return {
+    paragraph: client.paragraph,
+    children: graphChildrenToServer(client.children),
+  };
 }
 
-function graphChildToServer(client: GraphChildWithId): GraphChild {
+export function graphChildrenToServer(client: StarGraphChild[]): GraphChild[] {
+  return client.map(graphChildToServer);
+}
+
+function graphChildToServer(client: StarGraphChild): GraphChild {
   return {
     name: client.name,
     relation: client.relation,
@@ -96,10 +80,10 @@ function graphChildToServer(client: GraphChildWithId): GraphChild {
 }
 
 export function graphContentEquals(client: GraphContent, server: GraphContentWithoutAutofield): boolean {
-  return server.paragraph === client.paragraph && graphChildrenEquals(client.graphRootChildren, server.children);
+  return client.paragraph === server.paragraph && graphChildrenEquals(client.children, server.children);
 }
 
-function graphChildrenEquals(client: GraphChildWithId[], server: GraphChild[]): boolean {
+function graphChildrenEquals(client: StarGraphChild[], server: GraphChild[]): boolean {
   if (server.length !== client.length) {
     return false;
   }
@@ -111,19 +95,11 @@ function graphChildrenEquals(client: GraphChildWithId[], server: GraphChild[]): 
   return true;
 }
 
-function graphChildEquals(client: GraphChildWithId, server: GraphChild): boolean {
+function graphChildEquals(client: StarGraphChild, server: GraphChild): boolean {
   return (
     client.name === server.name &&
     client.relation === server.relation &&
     client.description === server.description &&
     graphChildrenEquals(client.children, server.children)
   );
-}
-
-function issueGraphChildId(child: GraphChild): GraphChildWithId {
-  return { ...child, id: generateGraphChildId(), children: child.children.map(issueGraphChildId) };
-}
-
-export function generateGraphChildId(): string {
-  return Math.floor(Math.pow(10, 12) + Math.random() * 9 * Math.pow(10, 12)).toString(16);
 }

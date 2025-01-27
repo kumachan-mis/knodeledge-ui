@@ -1,12 +1,12 @@
-import GraphChildWithId from '@/components/libs/StarGraph/GraphChildWithId';
+import { StarGraphChildWithId } from '@/components/libs/StarGraph/context';
 
 import Grid from '@mui/material/Grid2';
 import TextField from '@mui/material/TextField';
 import React from 'react';
 
 export type AppGraphChildInspectorProps = {
-  readonly graphChild: GraphChildWithId;
-  readonly setGraphChild: React.Dispatch<React.SetStateAction<GraphChildWithId>>;
+  readonly graphChild: StarGraphChildWithId;
+  readonly setGraphChild: React.Dispatch<React.SetStateAction<StarGraphChildWithId>>;
 };
 
 const AppGraphChildInspector: React.FC<AppGraphChildInspectorProps> = ({ graphChild, setGraphChild }) => (

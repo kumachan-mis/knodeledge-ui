@@ -1,7 +1,8 @@
 'use client';
 import AppGraphChildInspector from '../AppGraphChildInspector';
 import StarGraph, { StarGraphProps } from '@/components/libs/StarGraph';
-import { useFocusedStarGraphChild } from '@/components/libs/StarGraph/hooks';
+import { useFocusedGraphChild } from '@/components/libs/StarGraph/focusedGraphChild.hooks';
+import { useFocusedGraph } from '@/components/libs/StarGraph/focusedGraphChildren.hooks';
 
 import styled from '@emotion/styled';
 import Box from '@mui/material/Box';
@@ -25,7 +26,10 @@ const AppGraph: React.FC<AppGraphProps> = ({ state, ...rest }) => (
 );
 
 const AppGraphInner: React.FC<StarGraphProps> = (props) => {
-  const { focusedGraphChild, setFocusedGraphChild } = useFocusedStarGraphChild(props);
+  const focusedGraph = useFocusedGraph(props);
+  const { focusedGraphChildId } = props;
+
+  const { focusedGraphChild, setFocusedGraphChild } = useFocusedGraphChild({ ...focusedGraph, focusedGraphChildId });
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}>

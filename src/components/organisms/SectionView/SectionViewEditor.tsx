@@ -1,13 +1,14 @@
 'use client';
+import {
+  StarGraphChildWithId,
+  starGraphId,
+  useSetStarGraphContent,
+  useStarGraphContent,
+  useStarGraphRoot,
+} from '@/components/libs/StarGraph/context';
 import AppEditor from '@/components/molecules/AppEditor';
 import { LoadableGraph } from '@/contexts/openapi/graphs';
-import {
-  generateGraphChildId,
-  GraphChildWithId,
-  useGraphContent,
-  useGraphContentRoot,
-  useSetGraphContent,
-} from '@/contexts/views/graph';
+import { useGraphParagraph, useSetGraphParagraph } from '@/contexts/views/graph';
 
 import styles from './styles.module.scss';
 
@@ -22,9 +23,12 @@ export type SectionViewEditorComponentProps = {
 const APP_EDITOR_MMODE = { text: 'regular', graph: 'simple' } as const;
 
 const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({ loadableGraph, view }) => {
-  const graphRoot = useGraphContentRoot();
-  const graph = useGraphContent();
-  const setGraph = useSetGraphContent();
+  const graphParagraph = useGraphParagraph();
+  const setGraphParagraph = useSetGraphParagraph();
+
+  const graphRoot = useStarGraphRoot();
+  const graph = useStarGraphContent();
+  const setGraph = useSetStarGraphContent();
 
   const graphNodeNames = React.useMemo(() => {
     const result = new Set<string>([graphRoot.name]);
@@ -40,12 +44,12 @@ const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({
 
   const setText = React.useCallback(
     (value: React.SetStateAction<string>) => {
-      setGraph((prev) => {
+      setGraphParagraph((prev) => {
         const updated = typeof value === 'function' ? value(prev.paragraph) : value;
-        return { ...prev, paragraph: updated };
+        return { paragraph: updated };
       });
     },
-    [setGraph],
+    [setGraphParagraph],
   );
 
   const hashtagAnchorProps = React.useCallback(
@@ -60,8 +64,8 @@ const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({
         event.preventDefault();
         if (!clickable) return;
 
-        const graphChild: GraphChildWithId = {
-          id: generateGraphChildId(),
+        const graphChild: StarGraphChildWithId = {
+          id: starGraphId(),
           name: linkName,
           relation: '',
           description: '',
@@ -101,7 +105,7 @@ const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({
         mode={APP_EDITOR_MMODE[view]}
         setText={setText}
         state={loadableGraph.state}
-        text={graph.paragraph}
+        text={graphParagraph.paragraph}
       />
     </SectionViewEditorRootComponent>
   );

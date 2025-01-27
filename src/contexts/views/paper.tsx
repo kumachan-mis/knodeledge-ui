@@ -1,6 +1,6 @@
 'use client';
 import { LoadablePaper } from '../openapi/papers';
-import { PaperWithoutAutofield } from '@/openapi';
+import { Paper, PaperWithoutAutofield } from '@/openapi';
 
 import React from 'react';
 
@@ -33,7 +33,7 @@ export const PaperContentProvider: React.FC<{
 };
 
 const PaperContentInnerProvider: React.FC<{
-  readonly initialPaper: PaperContent;
+  readonly initialPaper: Paper;
   readonly children?: React.ReactNode;
 }> = ({ initialPaper, children }) => {
   const [paper, setPaper] = React.useState<PaperContent>(initialPaper);
