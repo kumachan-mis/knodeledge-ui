@@ -1,5 +1,5 @@
 import { StarGraphChildWithId } from './context';
-import { UseFocusedGraphReturn } from './focusedGraphChildren.hooks';
+import { UseFocusedGraphReturn } from './focusedGraph.hooks';
 
 import React from 'react';
 

@@ -1,22 +1,14 @@
-import { StarGraphChildWithId, StarGraphRootWithId } from './context';
+import { StarGraphChildWithId, useSetStarGraphContent, useStarGraphContent, useStarGraphRoot } from './context';
 
 import { StarGraphProps } from './index';
 
 import React from 'react';
 
-export type StarGraphContent = {
-  readonly graphRootChildren: StarGraphChildWithId[];
-  readonly focusedGraphParentId: string;
-  readonly focusedGraphChildId: string;
-};
+export function useStarGraph(): StarGraphProps {
+  const graphRoot = useStarGraphRoot();
+  const graphContent = useStarGraphContent();
+  const setGraphContent = useSetStarGraphContent();
 
-export type UseStarGraphProps = {
-  readonly graphRoot: StarGraphRootWithId;
-  readonly graphContent: StarGraphContent;
-  readonly setGraphContent: React.Dispatch<React.SetStateAction<StarGraphContent>>;
-};
-
-export function useStarGraph({ setGraphContent, graphRoot, graphContent }: UseStarGraphProps): StarGraphProps {
   const setGraphRootChildren = React.useCallback(
     (value: React.SetStateAction<StarGraphChildWithId[]>) => {
       setGraphContent((prev) => {

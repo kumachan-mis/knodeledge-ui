@@ -1,12 +1,5 @@
 import StarGraph from '@/components/libs/StarGraph';
-import {
-  StarGraphContentProvider,
-  useStarGraphRoot,
-  useStarGraphContent,
-  useSetStarGraphContent,
-  StarGraphRoot,
-  StarGraphChild,
-} from '@/components/libs/StarGraph/context';
+import { StarGraphContentProvider, StarGraphRoot, StarGraphChild } from '@/components/libs/StarGraph/context';
 import { useStarGraph } from '@/components/libs/StarGraph/hooks';
 
 import { render, waitFor, within } from '@testing-library/react';
@@ -23,10 +16,7 @@ const StarGraphWithContexts: React.FC<{
 );
 
 const StarGraphWithHooks: React.FC = () => {
-  const graphRoot = useStarGraphRoot();
-  const graphContent = useStarGraphContent();
-  const setGraphContent = useSetStarGraphContent();
-  const props = useStarGraph({ graphRoot, graphContent, setGraphContent });
+  const props = useStarGraph();
   return <StarGraph {...props} />;
 };
 

@@ -3,7 +3,7 @@ import GraphMenuItem from './GraphMenuItem';
 import GraphNode from './GraphNode';
 import { StarGraphChildWithId, StarGraphRootWithId } from './context';
 import { useFocusedGraphChild } from './focusedGraphChild.hooks';
-import { useFocusedGraph } from './focusedGraphChildren.hooks';
+import { useFocusedGraph } from './focusedGraph.hooks';
 
 import { StarGraphProps } from '.';
 

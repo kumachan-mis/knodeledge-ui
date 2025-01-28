@@ -76,6 +76,10 @@ export const StarGraphContentProvider: React.FC<{
   );
 };
 
+export function graphChildOf(child: { name: string; relation?: string; description?: string }): StarGraphChildWithId {
+  return { id: starGraphId(), relation: '', description: '', children: [], ...child };
+}
+
 function issueGraphRootId(root: StarGraphRoot): StarGraphRootWithId {
   return { ...root, id: starGraphId() };
 }
@@ -84,6 +88,6 @@ function issueGraphChildId(child: StarGraphChild): StarGraphChildWithId {
   return { ...child, id: starGraphId(), children: child.children.map(issueGraphChildId) };
 }
 
-export function starGraphId(): string {
+function starGraphId(): string {
   return Math.floor(Math.pow(10, 12) + Math.random() * 9 * Math.pow(10, 12)).toString(16);
 }
