@@ -2,8 +2,8 @@ import GraphLink from './GraphLink';
 import GraphMenuItem from './GraphMenuItem';
 import GraphNode from './GraphNode';
 import { StarGraphChildWithId, StarGraphRootWithId } from './context';
-import { useFocusedGraphChild } from './focusedGraphChild.hooks';
 import { useFocusedGraph } from './focusedGraph.hooks';
+import { useFocusedGraphChild } from './focusedGraphChild.hooks';
 
 import { StarGraphProps } from '.';
 

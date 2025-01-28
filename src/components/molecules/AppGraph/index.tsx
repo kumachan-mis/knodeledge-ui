@@ -1,8 +1,8 @@
 'use client';
 import AppGraphChildInspector from '../AppGraphChildInspector';
 import StarGraph, { StarGraphProps } from '@/components/libs/StarGraph';
-import { useFocusedGraphChild } from '@/components/libs/StarGraph/focusedGraphChild.hooks';
 import { useFocusedGraph } from '@/components/libs/StarGraph/focusedGraph.hooks';
+import { useFocusedGraphChild } from '@/components/libs/StarGraph/focusedGraphChild.hooks';
 
 import styled from '@emotion/styled';
 import Box from '@mui/material/Box';
