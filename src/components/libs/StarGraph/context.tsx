@@ -16,6 +16,12 @@ export type StarGraphChild = {
   readonly children: StarGraphChild[];
 };
 
+export type StarGraphChildOfArg = {
+  readonly name: string;
+  readonly relation?: string;
+  readonly description?: string;
+};
+
 export type StarGraphChildWithId = Omit<StarGraphChild, 'children'> & {
   readonly id: string;
   readonly children: StarGraphChildWithId[];
@@ -76,7 +82,7 @@ export const StarGraphContentProvider: React.FC<{
   );
 };
 
-export function graphChildOf(child: { name: string; relation?: string; description?: string }): StarGraphChildWithId {
+export function starGraphChildOf(child: StarGraphChildOfArg): StarGraphChildWithId {
   return { id: starGraphId(), relation: '', description: '', children: [], ...child };
 }
 

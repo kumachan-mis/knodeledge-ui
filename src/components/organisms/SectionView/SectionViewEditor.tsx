@@ -1,5 +1,5 @@
 'use client';
-import { graphChildOf } from '@/components/libs/StarGraph/context';
+import { starGraphChildOf } from '@/components/libs/StarGraph/context';
 import { useFocusedGraph } from '@/components/libs/StarGraph/focusedGraph.hooks';
 import { useStarGraph } from '@/components/libs/StarGraph/hooks';
 import AppEditor from '@/components/molecules/AppEditor';
@@ -59,7 +59,7 @@ const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({
       onClick: (event) => {
         event.preventDefault();
         if (!clickable) return;
-        const graphChild = graphChildOf({ name: linkName });
+        const graphChild = starGraphChildOf({ name: linkName });
         setFocusedGraphChildren((prev) => {
           const nodeExists = [focusedGraphParent, ...prev].some((node) => node.name === graphChild.name);
           return nodeExists ? prev : [...prev, graphChild];
