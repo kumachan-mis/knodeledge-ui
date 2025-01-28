@@ -65,10 +65,10 @@ export const StarGraphContentProvider: React.FC<{
   readonly graphRootChildren: StarGraphChild[];
   readonly children?: React.ReactNode;
 }> = ({ children, graphRoot, graphRootChildren }) => {
-  const graphRootWithId: StarGraphRootWithId = React.useMemo(() => issueGraphRootId(graphRoot), [graphRoot]);
+  const graphRootWithId: StarGraphRootWithId = React.useMemo(() => issueStarGraphRootId(graphRoot), [graphRoot]);
 
   const [content, setContent] = React.useState({
-    graphRootChildren: graphRootChildren.map(issueGraphChildId),
+    graphRootChildren: graphRootChildren.map(issueStarGraphChildId),
     focusedGraphParentId: graphRootWithId.id,
     focusedGraphChildId: '',
   });
@@ -86,12 +86,12 @@ export function starGraphChildOf(child: StarGraphChildOfArg): StarGraphChildWith
   return { id: starGraphId(), relation: '', description: '', children: [], ...child };
 }
 
-function issueGraphRootId(root: StarGraphRoot): StarGraphRootWithId {
+function issueStarGraphRootId(root: StarGraphRoot): StarGraphRootWithId {
   return { ...root, id: starGraphId() };
 }
 
-function issueGraphChildId(child: StarGraphChild): StarGraphChildWithId {
-  return { ...child, id: starGraphId(), children: child.children.map(issueGraphChildId) };
+function issueStarGraphChildId(child: StarGraphChild): StarGraphChildWithId {
+  return { ...child, id: starGraphId(), children: child.children.map(issueStarGraphChildId) };
 }
 
 function starGraphId(): string {
