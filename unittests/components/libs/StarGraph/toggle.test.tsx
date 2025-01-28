@@ -1,23 +1,22 @@
 import StarGraph from '@/components/libs/StarGraph';
-import GraphChildWithId from '@/components/libs/StarGraph/GraphChildWithId';
-import GraphRootWithId from '@/components/libs/StarGraph/GraphRootWithId';
-import { StarGraphContent, useStarGraph } from '@/components/libs/StarGraph/hooks';
+import { StarGraphContentProvider, StarGraphChild, StarGraphRoot } from '@/components/libs/StarGraph/context';
+import { useStarGraph } from '@/components/libs/StarGraph/hooks';
 
 import { render, RenderResult, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-const StarGraphWithHooks: React.FC<{
-  readonly graphRoot: GraphRootWithId;
-  readonly graphRootChildren: GraphChildWithId[];
-}> = ({ graphRoot, graphRootChildren }) => {
-  const [graphContent, setGraphContent] = React.useState<StarGraphContent>({
-    graphRootChildren: graphRootChildren,
-    focusedGraphParentId: graphRoot.id,
-    focusedGraphChildId: '',
-  });
-  const props = useStarGraph({ graphRoot, graphContent, setGraphContent });
+const StarGraphWithContexts: React.FC<{
+  readonly graphRoot: StarGraphRoot;
+  readonly graphRootChildren: StarGraphChild[];
+}> = ({ graphRoot, graphRootChildren }) => (
+  <StarGraphContentProvider graphRoot={graphRoot} graphRootChildren={graphRootChildren}>
+    <StarGraphWithHooks />
+  </StarGraphContentProvider>
+);
 
+const StarGraphWithHooks: React.FC = () => {
+  const props = useStarGraph();
   return <StarGraph {...props} />;
 };
 
@@ -45,33 +44,28 @@ afterAll(() => {
   });
 });
 
-const graphRoot: GraphRootWithId = {
-  id: 'GRAPH',
+const graphRoot: StarGraphRoot = {
   name: 'Graph',
 };
-const graphRootChildren: GraphChildWithId[] = [
+const graphRootChildren: StarGraphChild[] = [
   {
-    id: 'CHILD_ONE',
     name: 'Child One',
     relation: 'Relation One',
     description: 'This is child one content.',
     children: [
       {
-        id: 'GRANDCHILD_ONE_ONE',
         name: 'Grandchild One-One',
         relation: 'Relation One-One',
         description: 'This is grandchild one-one content.',
         children: [],
       },
       {
-        id: 'GRANDCHILD_ONE_TWO',
         name: 'Grandchild One-Two',
         relation: 'Relation One-Two',
         description: 'This is grandchild one-two content.',
         children: [],
       },
       {
-        id: 'GRANDCHILD_ONE_THREE',
         name: 'Grandchild One-Three',
         relation: 'Relation One-Three',
         description: 'This is grandchild one-three content.',
@@ -80,27 +74,23 @@ const graphRootChildren: GraphChildWithId[] = [
     ],
   },
   {
-    id: 'CHILD_TWO',
     name: 'Child Two',
     relation: 'Relation Two',
     description: 'This is child two content.',
     children: [
       {
-        id: 'GRANDCHILD_TWO_ONE',
         name: 'Grandchild Two-One',
         relation: 'Relation Two-One',
         description: 'This is grandchild two-one content.',
         children: [],
       },
       {
-        id: 'GRANDCHILD_TWO_TWO',
         name: 'Grandchild Two-Two',
         relation: 'Relation Two-Two',
         description: 'This is grandchild two-two content.',
         children: [],
       },
       {
-        id: 'GRANDCHILD_TWO_THREE',
         name: 'Grandchild Two-Three',
         relation: 'Relation Two-Three',
         description: 'This is grandchild two-three content.',
@@ -109,27 +99,23 @@ const graphRootChildren: GraphChildWithId[] = [
     ],
   },
   {
-    id: 'CHILD_THREE',
     name: 'Child Three',
     relation: 'Relation Three',
     description: 'This is child three content.',
     children: [
       {
-        id: 'GRANDCHILD_THREE_ONE',
         name: 'Grandchild Three-One',
         relation: 'Relation Three-One',
         description: 'This is grandchild three-one content.',
         children: [],
       },
       {
-        id: 'GRANDCHILD_THREE_TWO',
         name: 'Grandchild Three-Two',
         relation: 'Relation Three-Two',
         description: 'This is grandchild three-two content.',
         children: [],
       },
       {
-        id: 'GRANDCHILD_THREE_THREE',
         name: 'Grandchild Three-Three',
         relation: 'Relation Three-Three',
         description: 'This is grandchild three-three content.',
@@ -141,7 +127,7 @@ const graphRootChildren: GraphChildWithId[] = [
 
 test('should expand then collapse graph child', async () => {
   const user = userEvent.setup();
-  const screen = render(<StarGraphWithHooks graphRoot={graphRoot} graphRootChildren={graphRootChildren} />);
+  const screen = render(<StarGraphWithContexts graphRoot={graphRoot} graphRootChildren={graphRootChildren} />);
 
   await waitFor(() => {
     expect(screen.getByText('Graph')).toBeVisible();
@@ -181,7 +167,7 @@ test('should expand then collapse graph child', async () => {
 
 test('should expand graph child then expand graph root', async () => {
   const user = userEvent.setup();
-  const screen = render(<StarGraphWithHooks graphRoot={graphRoot} graphRootChildren={graphRootChildren} />);
+  const screen = render(<StarGraphWithContexts graphRoot={graphRoot} graphRootChildren={graphRootChildren} />);
 
   await waitFor(() => {
     expect(screen.getByText('Graph')).toBeVisible();
@@ -221,7 +207,7 @@ test('should expand graph child then expand graph root', async () => {
 
 test('should expand graph child then expand another graph child', async () => {
   const user = userEvent.setup();
-  const screen = render(<StarGraphWithHooks graphRoot={graphRoot} graphRootChildren={graphRootChildren} />);
+  const screen = render(<StarGraphWithContexts graphRoot={graphRoot} graphRootChildren={graphRootChildren} />);
 
   await waitFor(() => {
     expect(screen.getByText('Graph')).toBeVisible();
@@ -261,7 +247,7 @@ test('should expand graph child then expand another graph child', async () => {
 
 test('should expand button of root node disabled when root node expanded', async () => {
   const user = userEvent.setup();
-  const screen = render(<StarGraphWithHooks graphRoot={graphRoot} graphRootChildren={graphRootChildren} />);
+  const screen = render(<StarGraphWithContexts graphRoot={graphRoot} graphRootChildren={graphRootChildren} />);
 
   await waitFor(() => {
     expect(screen.getByText('Graph')).toBeVisible();
@@ -301,7 +287,7 @@ test.each<{
   },
 ])('should expand button of node disabled when child node expanded ($name)', async ({ graphNodeName }) => {
   const user = userEvent.setup();
-  const screen = render(<StarGraphWithHooks graphRoot={graphRoot} graphRootChildren={graphRootChildren} />);
+  const screen = render(<StarGraphWithContexts graphRoot={graphRoot} graphRootChildren={graphRootChildren} />);
 
   await waitFor(() => {
     expect(screen.getByText('Graph')).toBeVisible();
@@ -355,7 +341,7 @@ test.each<{
   },
 ])('should collapse button of node disabled when root node expanded  ($name)', async ({ graphNodeName }) => {
   const user = userEvent.setup();
-  const screen = render(<StarGraphWithHooks graphRoot={graphRoot} graphRootChildren={graphRootChildren} />);
+  const screen = render(<StarGraphWithContexts graphRoot={graphRoot} graphRootChildren={graphRootChildren} />);
 
   await waitFor(() => {
     expect(screen.getByText('Graph')).toBeVisible();
@@ -399,7 +385,7 @@ test.each<{
   },
 ])('should collapse button of node disabled when child node expanded', async ({ graphNodeName }) => {
   const user = userEvent.setup();
-  const screen = render(<StarGraphWithHooks graphRoot={graphRoot} graphRootChildren={graphRootChildren} />);
+  const screen = render(<StarGraphWithContexts graphRoot={graphRoot} graphRootChildren={graphRootChildren} />);
 
   await waitFor(() => {
     expect(screen.getByText('Graph')).toBeVisible();

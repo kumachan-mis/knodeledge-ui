@@ -1,13 +1,14 @@
-import { GraphEntityLogicReturn } from './GraphEntityLogic';
 import GraphMenuLogic from './GraphMenuLogic';
 import GraphNode from './GraphNode';
 import GraphSimulationLogic from './GraphSimulationLogic';
+import { GraphEntityReturn } from './graphEntity.hooks';
 import styles from './styles.module.scss';
 
 import { drag } from 'd3-drag';
 import { Selection } from 'd3-selection';
 
 class GraphNodeLogic {
+  private svgSelection: Selection<SVGSVGElement, unknown, null, undefined> | null = null;
   private nodeRootSelection: Selection<SVGGElement, unknown, null, undefined> | null = null;
   private nodeSelection: Selection<SVGGElement, GraphNode, SVGGElement, unknown> | null = null;
 
@@ -17,6 +18,7 @@ class GraphNodeLogic {
   ) {}
 
   public initNode(svgSelection: Selection<SVGSVGElement, unknown, null, undefined>): void {
+    this.svgSelection = svgSelection;
     this.nodeRootSelection = svgSelection.append('g');
     this.nodeSelection = this.nodeRootSelection.selectAll<SVGGElement, GraphNode>('g');
   }
@@ -44,9 +46,12 @@ class GraphNodeLogic {
     inactiveGraphNodes,
     graphNodeNenuItems,
     reorderGraphChildren,
-    center,
-  }: GraphEntityLogicReturn): void {
-    if (!this.nodeSelection) return;
+  }: GraphEntityReturn): void {
+    const svgElement = this.svgSelection?.node();
+    if (!svgElement || !this.nodeSelection) return;
+
+    const svgClientRect = svgElement.getBoundingClientRect();
+    const center: { x: number; y: number } = { x: svgClientRect.width / 2, y: svgClientRect.height / 2 };
 
     graphParentNode.fix(center.x, center.y);
 
@@ -168,9 +173,9 @@ class GraphNodeLogic {
     this.nodeSelection.call(this.menuLogic.behavior<GraphNode>(graphNodeNenuItems));
   }
 
-  public destroy(): void {
-    if (!this.nodeRootSelection) return;
-    this.nodeRootSelection.remove();
+  public destroy({ focusGraphRoot }: GraphEntityReturn): void {
+    focusGraphRoot();
+    if (this.nodeRootSelection) this.nodeRootSelection.remove();
   }
 }
 

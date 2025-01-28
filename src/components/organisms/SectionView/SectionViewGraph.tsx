@@ -1,8 +1,7 @@
 'use client';
-import { StarGraphContent, useStarGraph } from '@/components/libs/StarGraph/hooks';
+import { useStarGraph } from '@/components/libs/StarGraph/hooks';
 import AppGraph from '@/components/molecules/AppGraph';
 import { LoadableGraph } from '@/contexts/openapi/graphs';
-import { useGraphContent, useGraphContentRoot, useSetGraphContent } from '@/contexts/views/graph';
 
 import styled from '@emotion/styled';
 import React from 'react';
@@ -12,21 +11,7 @@ export type SectionViewGraphComponentProps = {
 };
 
 const SectionViewGraphComponent: React.FC<SectionViewGraphComponentProps> = ({ loadableGraph }) => {
-  const graphRoot = useGraphContentRoot();
-  const graphContent = useGraphContent();
-  const setGraph = useSetGraphContent();
-
-  const setGraphContent = React.useCallback(
-    (value: React.SetStateAction<StarGraphContent>) => {
-      setGraph((prev) => {
-        const updated = typeof value === 'function' ? value(prev) : value;
-        return { ...prev, ...updated };
-      });
-    },
-    [setGraph],
-  );
-
-  const starGraphProps = useStarGraph({ graphRoot, graphContent, setGraphContent });
+  const starGraphProps = useStarGraph();
 
   return (
     <SectionViewGraphRootComponent>

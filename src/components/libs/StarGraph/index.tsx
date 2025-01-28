@@ -1,22 +1,20 @@
 'use client';
-import GraphChildWithId from './GraphChildWithId';
-import { graphEntityLogic } from './GraphEntityLogic';
 import GraphLinkLogic from './GraphLinkLogic';
 import GraphMenuLogic from './GraphMenuLogic';
 import GraphNodeLogic from './GraphNodeLogic';
-import GraphRootWithId from './GraphRootWithId';
 import GraphSimulationLogic from './GraphSimulationLogic';
-import { useFocusedStarGraphChild, useFocusedStarGraphChildren } from './hooks';
+import { StarGraphChildWithId, StarGraphRootWithId } from './context';
+import { useGraphEntity } from './graphEntity.hooks';
 
 import { select } from 'd3-selection';
 import React from 'react';
 
 export type StarGraphProps = {
-  readonly graphRoot: GraphRootWithId;
-  readonly graphRootChildren: GraphChildWithId[];
+  readonly graphRoot: StarGraphRootWithId;
+  readonly graphRootChildren: StarGraphChildWithId[];
   readonly focusedGraphParentId: string;
   readonly focusedGraphChildId: string;
-  readonly setGraphRootChildren: React.Dispatch<React.SetStateAction<GraphChildWithId[]>>;
+  readonly setGraphRootChildren: React.Dispatch<React.SetStateAction<StarGraphChildWithId[]>>;
   readonly setFocusedGraphParentId: React.Dispatch<React.SetStateAction<string>>;
   readonly setFocusedGraphChildId: React.Dispatch<React.SetStateAction<string>>;
 };
@@ -28,10 +26,8 @@ const StarGraph: React.FC<StarGraphProps> = (props) => {
   const linkLogicRef = React.useRef(new GraphLinkLogic(menuLogicRef.current));
   const nodeLogicRef = React.useRef(new GraphNodeLogic(menuLogicRef.current, simulationLogicRef.current));
   const timerIdRef = React.useRef<number>(0);
-  const centerRef = React.useRef<{ x: number; y: number }>({ x: 0, y: 0 });
 
-  const focusedChildrenProps = useFocusedStarGraphChildren(props);
-  const focusedChildProps = useFocusedStarGraphChild(props);
+  const graphEntity = useGraphEntity(props);
 
   React.useEffect(() => {
     if (!ref.current) return;
@@ -45,16 +41,17 @@ const StarGraph: React.FC<StarGraphProps> = (props) => {
     nodeLogic.initNode(svgSelection);
     linkLogic.initDesc(svgSelection);
 
-    simulationLogic.init(() => {
+    simulationLogic.init(svgSelection, () => {
       linkLogic.onTick();
       nodeLogic.onTick();
     });
 
     return () => {
       simulationLogic.destroy();
-      nodeLogic.destroy();
-      linkLogic.destroy();
+      nodeLogic.destroy(graphEntity);
+      linkLogic.destroy(graphEntity);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleOnRerenderGraph = React.useCallback(() => {
@@ -64,26 +61,10 @@ const StarGraph: React.FC<StarGraphProps> = (props) => {
     const linkLogic = linkLogicRef.current;
     const nodeLogic = nodeLogicRef.current;
 
-    const clientRect = ref.current.getBoundingClientRect();
-    const center: { x: number; y: number } = { x: clientRect.width / 2, y: clientRect.height / 2 };
-
-    const graphEntityLogicReturn = graphEntityLogic({
-      ...props,
-      ...focusedChildrenProps,
-      ...focusedChildProps,
-      center,
-    });
-
-    linkLogic.update(graphEntityLogicReturn);
-    nodeLogic.update(graphEntityLogicReturn);
-    simulationLogic.update(graphEntityLogicReturn);
-
-    if (center.x !== centerRef.current.x || center.y !== centerRef.current.y) {
-      simulationLogic.start();
-      centerRef.current = center;
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [...Object.values(focusedChildrenProps), ...Object.values(focusedChildProps), ...Object.values(props)]);
+    linkLogic.update(graphEntity);
+    nodeLogic.update(graphEntity);
+    simulationLogic.update(graphEntity);
+  }, [graphEntity]);
 
   React.useEffect(handleOnRerenderGraph, [handleOnRerenderGraph]);
 

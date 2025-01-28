@@ -1,6 +1,6 @@
-import { GraphEntityLogicReturn } from './GraphEntityLogic';
 import GraphLink from './GraphLink';
 import GraphMenuLogic from './GraphMenuLogic';
+import { GraphEntityReturn } from './graphEntity.hooks';
 import styles from './styles.module.scss';
 
 import { Selection } from 'd3-selection';
@@ -65,7 +65,7 @@ class GraphLinkLogic {
     graphLinkMenuItems,
     focusGraphLink,
     blurGraphLink,
-  }: GraphEntityLogicReturn): void {
+  }: GraphEntityReturn): void {
     if (!this.linkSelection || !this.descSelection) return;
 
     this.linkSelection = this.linkSelection.data([...inactiveGraphLinks, ...graphLinks], (link) => link.id);
@@ -185,10 +185,9 @@ class GraphLinkLogic {
     });
   }
 
-  public destroy(): void {
-    if (!this.svgSelection) return;
-    this.svgSelection.on('click', null);
-
+  public destroy({ blurGraphLink }: GraphEntityReturn): void {
+    blurGraphLink();
+    if (this.svgSelection) this.svgSelection.on('click', null);
     if (this.linkRootSelection) this.linkRootSelection.remove();
     if (this.descRootSelection) this.descRootSelection.remove();
   }

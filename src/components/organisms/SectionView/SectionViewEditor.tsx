@@ -1,13 +1,10 @@
 'use client';
+import { starGraphChildOf } from '@/components/libs/StarGraph/context';
+import { useFocusedGraph } from '@/components/libs/StarGraph/focusedGraph.hooks';
+import { useStarGraph } from '@/components/libs/StarGraph/hooks';
 import AppEditor from '@/components/molecules/AppEditor';
 import { LoadableGraph } from '@/contexts/openapi/graphs';
-import {
-  generateGraphChildId,
-  GraphChildWithId,
-  useGraphContent,
-  useGraphContentRoot,
-  useSetGraphContent,
-} from '@/contexts/views/graph';
+import { useGraphParagraph, useSetGraphParagraph } from '@/contexts/views/graph';
 
 import styles from './styles.module.scss';
 
@@ -22,13 +19,16 @@ export type SectionViewEditorComponentProps = {
 const APP_EDITOR_MMODE = { text: 'regular', graph: 'simple' } as const;
 
 const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({ loadableGraph, view }) => {
-  const graphRoot = useGraphContentRoot();
-  const graph = useGraphContent();
-  const setGraph = useSetGraphContent();
+  const graphParagraph = useGraphParagraph();
+  const setGraphParagraph = useSetGraphParagraph();
+
+  const props = useStarGraph();
+  const { graphRoot, graphRootChildren, setFocusedGraphChildId } = props;
+  const { focusedGraphParent, setFocusedGraphChildren } = useFocusedGraph(props);
 
   const graphNodeNames = React.useMemo(() => {
     const result = new Set<string>([graphRoot.name]);
-    const queue = [...graph.graphRootChildren];
+    const queue = [...graphRootChildren];
     while (queue.length > 0) {
       const node = queue.shift();
       if (!node) continue;
@@ -36,16 +36,16 @@ const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({
       queue.push(...node.children);
     }
     return result;
-  }, [graphRoot.name, graph.graphRootChildren]);
+  }, [graphRoot, graphRootChildren]);
 
   const setText = React.useCallback(
     (value: React.SetStateAction<string>) => {
-      setGraph((prev) => {
+      setGraphParagraph((prev) => {
         const updated = typeof value === 'function' ? value(prev.paragraph) : value;
-        return { ...prev, paragraph: updated };
+        return { paragraph: updated };
       });
     },
-    [setGraph],
+    [setGraphParagraph],
   );
 
   const hashtagAnchorProps = React.useCallback(
@@ -59,39 +59,15 @@ const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({
       onClick: (event) => {
         event.preventDefault();
         if (!clickable) return;
-
-        const graphChild: GraphChildWithId = {
-          id: generateGraphChildId(),
-          name: linkName,
-          relation: '',
-          description: '',
-          children: [],
-        };
-        setGraph((prev) => {
-          const focusedParent = prev.graphRootChildren.find((child) => child.id === prev.focusedGraphParentId);
-          if (!focusedParent) {
-            if ([graphRoot, ...prev.graphRootChildren].some((node) => node.name === graphChild.name)) {
-              return prev;
-            }
-            return {
-              ...prev,
-              graphRootChildren: [...prev.graphRootChildren, graphChild],
-              focusedGraphChildId: graphChild.id,
-            };
-          }
-
-          if ([focusedParent, ...focusedParent.children].some((node) => node.name === graphChild.name)) {
-            return prev;
-          }
-          const updated = prev.graphRootChildren.map((child) => {
-            if (child !== focusedParent) return child;
-            return { ...child, children: [...child.children, graphChild] };
-          });
-          return { ...prev, graphRootChildren: updated, focusedGraphChildId: graphChild.id };
+        const graphChild = starGraphChildOf({ name: linkName });
+        setFocusedGraphChildren((prev) => {
+          const nodeExists = [focusedGraphParent, ...prev].some((node) => node.name === graphChild.name);
+          return nodeExists ? prev : [...prev, graphChild];
         });
+        setFocusedGraphChildId(graphChild.id);
       },
     }),
-    [setGraph, graphRoot, graphNodeNames],
+    [focusedGraphParent, graphNodeNames, setFocusedGraphChildId, setFocusedGraphChildren],
   );
 
   return (
@@ -101,7 +77,7 @@ const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({
         mode={APP_EDITOR_MMODE[view]}
         setText={setText}
         state={loadableGraph.state}
-        text={graph.paragraph}
+        text={graphParagraph.paragraph}
       />
     </SectionViewEditorRootComponent>
   );
