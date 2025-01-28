@@ -42,7 +42,7 @@ class GraphLinkLogic {
     });
 
     this.descSelection.select<SVGRectElement>('rect').attr('transform', (link) => {
-      if (link.target.y - link.source.y >= 0) {
+      if (link.source.y - link.target.y >= 0) {
         return `translate(${(link.source.x + link.target.x) / 2 - 80},${(link.source.y + link.target.y) / 2 + 12})`;
       } else {
         return `translate(${(link.source.x + link.target.x) / 2 - 80},${(link.source.y + link.target.y) / 2 - 80 - 12})`;
@@ -50,7 +50,7 @@ class GraphLinkLogic {
     });
 
     this.descSelection.select<SVGForeignObjectElement>('foreignObject').attr('transform', (link) => {
-      if (link.target.y - link.source.y >= 0) {
+      if (link.source.y - link.target.y >= 0) {
         return `translate(${(link.source.x + link.target.x) / 2 - 78},${(link.source.y + link.target.y) / 2 + 10})`;
       } else {
         return `translate(${(link.source.x + link.target.x) / 2 - 78},${(link.source.y + link.target.y) / 2 - 80 - 10})`;
