@@ -66,7 +66,7 @@ const NextStepDialogFormComponent: React.FC<NextStepDialogFormComponentProps> = 
             setPage(page);
           }}
           page={page}
-          sx={{ flexGrow: 1 }}
+          sx={{ flexGrow: 1, flexShrink: 1 }}
         />
         <Button disabled={isSubmitting} onClick={onClose} variant="outlined">
           Close

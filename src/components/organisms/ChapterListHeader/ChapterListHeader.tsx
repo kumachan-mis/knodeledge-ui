@@ -32,7 +32,7 @@ const ChapterListHeaderComponent: React.FC<ChapterListHeaderComponentProps> = ({
         LinkComponent={Link}
         color="inherit"
         href={`/${PROJECTS_ID_PATH_NAME}/${project.id}`}
-        sx={{ flexGrow: 1, textTransform: 'none' }}
+        sx={{ flexGrow: 1, flexShrink: 1, textTransform: 'none' }}
       >
         <Typography fontWeight="bold" noWrap variant="subtitle1">
           {project.name}

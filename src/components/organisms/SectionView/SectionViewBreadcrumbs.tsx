@@ -4,6 +4,8 @@ import { LoadableAction } from '@/contexts/openapi/types';
 import { graphContentEquals, graphContentToServer, useGraphContent } from '@/contexts/views/graph';
 import { Project, Chapter, SectionOfChapter, GraphContentWithoutAutofield } from '@/openapi';
 
+import GraphViewIcon from '@mui/icons-material/Hub';
+import TextViewIcon from '@mui/icons-material/Notes';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import React from 'react';
@@ -55,11 +57,17 @@ const SectionViewBreadcrumbsComponent: React.FC<SectionViewBreadcrumbsComponentP
         onChange={(event, value: 'text' | 'graph') => {
           onChangeView(value);
         }}
-        sx={{ mx: 4, my: 1, minHeight: '28px', '& button': { padding: '0 28px', minHeight: '28px' } }}
+        sx={{
+          mx: { xs: 0, sm: 0, md: 4 },
+          my: 1,
+          minHeight: '28px',
+          '& button': { minHeight: '28px', fontSize: 'small' },
+        }}
         value={view}
+        variant="fullWidth"
       >
-        <Tab label="Text View" value="text" />
-        <Tab label="Graph View" value="graph" />
+        <Tab icon={<TextViewIcon />} iconPosition="start" label="Text View" value="text" />
+        <Tab icon={<GraphViewIcon />} iconPosition="start" label="Graph View" value="graph" />
       </Tabs>
     </AppBreadcrumbs>
   );

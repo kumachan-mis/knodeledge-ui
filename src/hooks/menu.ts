@@ -9,11 +9,20 @@ type UseMenuReturn = {
 
 export function useMenu(): UseMenuReturn {
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
-  const onOpen = (event: React.MouseEvent<HTMLElement>) => {
+  const onOpen = React.useCallback((event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
-  };
-  const onClose = () => {
+  }, []);
+
+  const onClose = React.useCallback(() => {
     setAnchorEl(null);
-  };
+  }, []);
+
+  React.useEffect(() => {
+    window.addEventListener('resize', onClose);
+    return () => {
+      window.removeEventListener('resize', onClose);
+    };
+  }, [onClose]);
+
   return { open: !!anchorEl, anchorEl, onOpen, onClose };
 }

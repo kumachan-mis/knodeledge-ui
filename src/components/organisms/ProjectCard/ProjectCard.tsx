@@ -29,7 +29,7 @@ const ProjectCardComponent: React.FC<ProjectCardComponentProps> = ({ project, on
   } = useDialog();
 
   return (
-    <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+    <Card sx={{ height: '100%' }}>
       <CardActionArea LinkComponent={Link} href={`/${PROJECTS_ID_PATH_NAME}/${project.id}`}>
         <CardContent>
           <Tooltip title={project.name}>
@@ -37,7 +37,11 @@ const ProjectCardComponent: React.FC<ProjectCardComponentProps> = ({ project, on
               {project.name}
             </Typography>
           </Tooltip>
-          <Typography color="text.secondary" flexGrow={1} minHeight="120px" textAlign="justify" variant="body2">
+          <Typography
+            color="text.secondary"
+            sx={{ width: '100%', height: '120px', overflow: 'hidden', whiteSpace: 'pre-wrap', textAlign: 'justify' }}
+            variant="body2"
+          >
             {project.description}
           </Typography>
         </CardContent>
