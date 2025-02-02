@@ -40,7 +40,7 @@ const AppToolbar: React.FC<AppToolbarProps> = ({
         </Typography>
       </Button>
     </Box>
-    <Box sx={{ display: { xs: 'flex', sm: 'flex', md: 'none' }, alignItems: 'center' }}>
+    <Box sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center' }}>
       <IconButton
         aria-expanded={mobileAccountMenuOpen ? 'true' : undefined}
         aria-haspopup="true"
@@ -58,19 +58,21 @@ const AppToolbar: React.FC<AppToolbarProps> = ({
         open={mobileAccountMenuOpen}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <Typography component="div" sx={{ px: 2, py: 1 }}>
-          {username ?? ''}
-        </Typography>
-        <Divider />
         {authorized ? (
-          <MenuItem href="/api/auth/logout">
-            <ListItemIcon>
-              <LogoutIcon fontSize="small" />
-            </ListItemIcon>
-            Logout
-          </MenuItem>
+          <>
+            <Typography component="div" sx={{ px: 2, py: 1 }}>
+              {username ?? ''}
+            </Typography>
+            <Divider />
+            <MenuItem component={Link} href="/api/auth/logout">
+              <ListItemIcon>
+                <LogoutIcon fontSize="small" />
+              </ListItemIcon>
+              Logout
+            </MenuItem>
+          </>
         ) : (
-          <MenuItem href="/api/auth/login">
+          <MenuItem component={Link} href="/api/auth/login">
             <ListItemIcon>
               <LoginIcon fontSize="small" />
             </ListItemIcon>
@@ -79,16 +81,16 @@ const AppToolbar: React.FC<AppToolbarProps> = ({
         )}
       </Popover>
     </Box>
-    <Box sx={{ display: { xs: 'none', sm: 'none', md: 'flex' }, alignItems: 'center' }}>
+    <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
       <Typography component="div" sx={{ mr: 4 }}>
         {username ?? ''}
       </Typography>
       {authorized ? (
-        <Button color="inherit" href="/api/auth/logout" startIcon={<LogoutIcon fontSize="small" />}>
+        <Button color="inherit" component={Link} href="/api/auth/logout" startIcon={<LogoutIcon fontSize="small" />}>
           Logout
         </Button>
       ) : (
-        <Button color="inherit" href="/api/auth/login" startIcon={<LoginIcon fontSize="small" />}>
+        <Button color="inherit" component={Link} href="/api/auth/login" startIcon={<LoginIcon fontSize="small" />}>
           Login
         </Button>
       )}

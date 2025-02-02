@@ -1,3 +1,4 @@
+'use client';
 import AppContainer from '@/components/molecules/AppContainer';
 import AppHeader from '@/components/molecules/AppHeader';
 import AppMain from '@/components/molecules/AppMain';

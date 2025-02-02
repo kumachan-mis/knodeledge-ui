@@ -2,12 +2,10 @@ import { CHAPTER_ID_PARAM_KEY, PROJECTS_ID_PATH_NAME } from '@/utils/page';
 
 import { SaveResult, useAppBreadcrumbsSaving } from './AppBreadcrumbs.hooks';
 
-import SaveIcon from '@mui/icons-material/Save';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
 import Snackbar from '@mui/material/Snackbar';
 import Typography from '@mui/material/Typography';
 import Link from 'next/link';
@@ -35,7 +33,7 @@ const AppBreadcrumbs: React.FC<AppBreadcrumbsProps> = ({ project, chapter, secti
       <Breadcrumbs
         aria-label="breadcrumb"
         sx={{
-          display: { xs: 'none', sm: 'none', md: 'flex' },
+          display: { xs: 'none', md: 'flex' },
           alignItems: 'center',
           '& a': {
             textDecoration: 'none',
@@ -65,24 +63,7 @@ const AppBreadcrumbs: React.FC<AppBreadcrumbsProps> = ({ project, chapter, secti
         )}
       </Breadcrumbs>
       <Box sx={{ flexGrow: 1 }}>{children}</Box>
-      <IconButton
-        aria-label="Save"
-        color="primary"
-        disabled={!dirty}
-        onClick={onSaveClick}
-        size="small"
-        sx={{ display: { xs: 'inline-flex', sm: 'inline-flex', md: 'none' }, alignSelf: 'center' }}
-      >
-        <SaveIcon />
-      </IconButton>
-      <Button
-        color="primary"
-        disabled={!dirty}
-        onClick={onSaveClick}
-        size="small"
-        startIcon={<SaveIcon />}
-        sx={{ display: { xs: 'none', sm: 'none', md: 'inline-flex' } }}
-      >
+      <Button color="primary" disabled={!dirty} onClick={onSaveClick} size="small">
         Save
       </Button>
       <Snackbar onClose={onClearSavingError} open={!!savingError}>
