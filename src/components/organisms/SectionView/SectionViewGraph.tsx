@@ -23,7 +23,9 @@ const SectionViewGraphComponent: React.FC<SectionViewGraphComponentProps> = ({ l
 const SectionViewGraphRootComponent = styled.div({
   '&': {
     width: '100%',
-    height: '80%',
+    height: 0,
+    flexGrow: 4,
+    flexShrink: 4,
   },
 });
 

@@ -3,6 +3,7 @@ import AppContainer from '@/components/molecules/AppContainer';
 import AppDrawer, { useAppDrawer } from '@/components/molecules/AppDrawer';
 import AppDrawerHeader from '@/components/molecules/AppDrawerHeader';
 import AppDrawerMain from '@/components/molecules/AppDrawerMain';
+import { useMenu } from '@/hooks/menu';
 
 import { Claims } from '@auth0/nextjs-auth0';
 
@@ -27,11 +28,25 @@ const ProjectLayoutComponent: React.FC<ProjectLayoutComponentProps> = ({
   DrawerContent,
   children,
 }) => {
+  const {
+    open: mobileAccountMenuOpen,
+    anchorEl: mobileAccountMenuAnchorEl,
+    onOpen: onOpenMobileAccountMenu,
+    onClose: onCloseMobileAccountMenu,
+  } = useMenu();
   const { mobileOpen, handleMobileClose, handleMobileToggle, handleMobileTransitionEnd } = useAppDrawer();
 
   return (
     <AppContainer>
-      <AppDrawerHeader authorized={!!user} onToggleMobileDrawer={handleMobileToggle} username={user?.name} />
+      <AppDrawerHeader
+        authorized={!!user}
+        mobileAccountMenuAnchorEl={mobileAccountMenuAnchorEl}
+        mobileAccountMenuOpen={mobileAccountMenuOpen}
+        onCloseMobileAccountMenu={onCloseMobileAccountMenu}
+        onOpenMobileAccountMenu={onOpenMobileAccountMenu}
+        onToggleMobileDrawer={handleMobileToggle}
+        username={user?.name}
+      />
       <AppDrawer
         header={user && DrawerHeader && <DrawerHeader projectId={projectId} user={user} />}
         mobileOpen={mobileOpen}

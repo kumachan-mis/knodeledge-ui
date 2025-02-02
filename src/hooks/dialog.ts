@@ -8,11 +8,11 @@ type UseDialogReturn = {
 
 export function useDialog(): UseDialogReturn {
   const [open, setOpen] = React.useState(false);
-  const onOpen = () => {
+  const onOpen = React.useCallback(() => {
     setOpen(true);
-  };
-  const onClose = () => {
+  }, []);
+  const onClose = React.useCallback(() => {
     setOpen(false);
-  };
+  }, []);
   return { open, onOpen, onClose };
 }

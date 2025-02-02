@@ -27,7 +27,7 @@ const AppDrawer: React.FC<AppDrawerProps> = ({
       onTransitionEnd={onMobileTransitionEnd}
       open={mobileOpen}
       sx={{
-        display: { xs: 'block', sm: 'block', md: 'none' },
+        display: { xs: 'block', md: 'none' },
         '& .MuiDrawer-paper': { boxSizing: 'border-box', width: APP_DRAWER_WIDTH },
       }}
       variant="temporary"
@@ -39,7 +39,7 @@ const AppDrawer: React.FC<AppDrawerProps> = ({
     <Drawer
       open
       sx={{
-        display: { xs: 'none', sm: 'none', md: 'block' },
+        display: { xs: 'none', md: 'block' },
         '& .MuiDrawer-paper': { boxSizing: 'border-box', width: APP_DRAWER_WIDTH },
       }}
       variant="permanent"

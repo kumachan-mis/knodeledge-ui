@@ -5,11 +5,15 @@ import AppBar from '@mui/material/AppBar';
 export type AppHeaderProps = {
   readonly authorized: boolean;
   readonly username?: string;
+  readonly mobileAccountMenuOpen: boolean;
+  readonly mobileAccountMenuAnchorEl: HTMLElement | null;
+  readonly onOpenMobileAccountMenu: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  readonly onCloseMobileAccountMenu: (event: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
-const AppHeader: React.FC<AppHeaderProps> = ({ authorized, username }) => (
+const AppHeader: React.FC<AppHeaderProps> = (props) => (
   <AppBar>
-    <AppToolbar authorized={authorized} username={username} />
+    <AppToolbar {...props} />
   </AppBar>
 );
 

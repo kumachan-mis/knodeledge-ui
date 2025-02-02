@@ -8,13 +8,16 @@ import IconButton from '@mui/material/IconButton';
 export type AppDrawerHeaderProps = {
   readonly authorized: boolean;
   readonly username?: string;
-  readonly onToggleMobileDrawer: () => void;
+  readonly mobileAccountMenuOpen: boolean;
+  readonly mobileAccountMenuAnchorEl: HTMLElement | null;
+  readonly onOpenMobileAccountMenu: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  readonly onCloseMobileAccountMenu: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  readonly onToggleMobileDrawer: (event: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
-const AppDrawerHeader: React.FC<AppDrawerHeaderProps> = ({ authorized, username, onToggleMobileDrawer }) => (
+const AppDrawerHeader: React.FC<AppDrawerHeaderProps> = ({ onToggleMobileDrawer, ...rest }) => (
   <AppBar sx={{ width: { md: `calc(100% - ${APP_DRAWER_WIDTH}px)` }, ml: { md: `${APP_DRAWER_WIDTH}px` } }}>
     <AppToolbar
-      authorized={authorized}
       menu={
         <IconButton
           aria-label="open drawer"
@@ -26,7 +29,7 @@ const AppDrawerHeader: React.FC<AppDrawerHeaderProps> = ({ authorized, username,
           <MenuIcon />
         </IconButton>
       }
-      username={username}
+      {...rest}
     />
   </AppBar>
 );

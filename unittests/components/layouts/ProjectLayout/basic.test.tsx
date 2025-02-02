@@ -12,6 +12,6 @@ test('should show the app name and login button when user logged out', () => {
 test('should show the app name, user name and logout button', () => {
   const screen = render(<ProjectLayout projectId="PROJECT" user={USER} />);
   expect(screen.getByRole('link', { name: 'kNODEledge' })).toHaveAttribute('href', '/');
-  expect(screen.queryByText('Test User')).toBeInTheDocument();
+  expect(screen.queryAllByText('Test User')).toHaveLength(2);
   expect(screen.getByRole('link', { name: 'Logout' })).toHaveAttribute('href', '/api/auth/logout');
 });

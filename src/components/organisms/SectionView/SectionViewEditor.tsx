@@ -71,7 +71,7 @@ const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({
   );
 
   return (
-    <SectionViewEditorRootComponent view={view}>
+    <SectionViewEditorRootComponent>
       <AppEditor
         hashtagProps={{ anchorProps: hashtagAnchorProps }}
         mode={APP_EDITOR_MMODE[view]}
@@ -83,11 +83,13 @@ const SectionViewEditorComponent: React.FC<SectionViewEditorComponentProps> = ({
   );
 };
 
-const SectionViewEditorRootComponent = styled.div<{ view: 'text' | 'graph' }>(({ view }) => ({
+const SectionViewEditorRootComponent = styled.div({
   '&': {
     width: '100%',
-    height: view === 'graph' ? '20%' : '100%',
+    height: 0,
+    flexGrow: 1,
+    flexShrink: 1,
   },
-}));
+});
 
 export default SectionViewEditorComponent;

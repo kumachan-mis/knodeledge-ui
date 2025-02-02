@@ -36,6 +36,8 @@ export const Basic: Story = {
           "It's so long that it's hard to fit it in a single line.",
           "This long description is a good test for the component's layout.",
           "This long description is a good test for the component's layout.",
+          "This long description is a good test for the component's layout.",
+          "This long description is a good test for the component's layout.",
         ].join(' '),
       },
     ],
