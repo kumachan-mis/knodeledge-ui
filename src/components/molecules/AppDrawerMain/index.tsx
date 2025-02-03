@@ -8,7 +8,7 @@ export type AppDrawerMainProps = {
 };
 
 const AppDrawerMain: React.FC<AppDrawerMainProps> = ({ children }) => (
-  <Box component="main" sx={{ width: { md: `calc(100% - ${APP_DRAWER_WIDTH}px)` } }}>
+  <Box component="main" sx={{ display: 'block', width: { xs: '100%', md: `calc(100% - ${APP_DRAWER_WIDTH}px)` } }}>
     <Toolbar variant="dense" />
     {children}
   </Box>
