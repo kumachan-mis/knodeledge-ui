@@ -4,10 +4,10 @@ import { useLoadableProject } from '@/contexts/openapi/projects';
 
 import SectionViewComponent from './SectionView';
 
-import { Claims } from '@auth0/nextjs-auth0';
+import { User } from '@auth0/nextjs-auth0/types';
 
 export type SectionViewProps = {
-  readonly user: Claims;
+  readonly user: User;
   readonly projectId: string;
   readonly chapterId: string;
   readonly sectionId: string;

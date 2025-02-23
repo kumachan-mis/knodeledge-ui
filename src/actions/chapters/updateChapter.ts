@@ -1,4 +1,5 @@
-import { Errorable, fetchFromOpenApi, defaultOnResposeError } from '../openapi';
+import { fetchCsrFromOpenApi } from '@/apis/action/csr';
+import { Errorable, defaultOnResposeError } from '@/apis/action/fetch';
 import {
   ChapterUpdateRequest,
   ChapterUpdateResponse,
@@ -6,13 +7,13 @@ import {
   ChapterUpdateErrorResponseFromJSON,
 } from '@/openapi';
 
-import { chaptersApi } from './api';
+import { csrChaptersApi } from './csr';
 
 export function updateChapter(
   request: ChapterUpdateRequest,
 ): Promise<Errorable<ChapterUpdateResponse, ChapterUpdateErrorResponse>> {
-  return fetchFromOpenApi<ChapterUpdateResponse, ChapterUpdateErrorResponse>(
-    async () => await chaptersApi.chaptersUpdate({ chapterUpdateRequest: request }),
+  return fetchCsrFromOpenApi<ChapterUpdateResponse, ChapterUpdateErrorResponse>(
+    async (initOverrides) => await csrChaptersApi.chaptersUpdate({ chapterUpdateRequest: request }, initOverrides),
     async (error) => {
       if (400 <= error.response.status && error.response.status < 500) {
         const errorResponse = ChapterUpdateErrorResponseFromJSON(await error.response.json());

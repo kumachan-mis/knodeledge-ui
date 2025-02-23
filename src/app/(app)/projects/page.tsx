@@ -3,14 +3,14 @@ import AppLayout from '@/components/layouts/AppLayout';
 import InternalError from '@/components/organisms/InternalError';
 import UnauthorizedError from '@/components/organisms/UnauthorizedError';
 import { ProjectListContextProvider } from '@/contexts/openapi/projects';
+import { auth0 } from '@/libs/auth0';
 
 import ProjectListPageContent from './content';
 
-import { getSession } from '@auth0/nextjs-auth0';
 import { NextPage } from 'next';
 
 const ProjectListPage: NextPage = async () => {
-  const session = await getSession();
+  const session = await auth0.getSession();
   if (!session) {
     return (
       <AppLayout>

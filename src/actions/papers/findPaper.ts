@@ -1,13 +1,14 @@
-import { Errorable, defaultOnResposeError, fetchFromOpenApi } from '@/actions/openapi';
+import { fetchCsrFromOpenApi } from '@/apis/action/csr';
+import { Errorable, defaultOnResposeError } from '@/apis/action/fetch';
 import { PaperFindErrorResponse, PaperFindErrorResponseFromJSON, PaperFindRequest, PaperFindResponse } from '@/openapi';
 
-import { papersApi } from './api';
+import { csrPapersApi } from './csr';
 
 export async function findPaper(
   request: PaperFindRequest,
 ): Promise<Errorable<PaperFindResponse, PaperFindErrorResponse>> {
-  return await fetchFromOpenApi(
-    async () => await papersApi.papersFind({ paperFindRequest: request }),
+  return await fetchCsrFromOpenApi(
+    async (initOverrides) => await csrPapersApi.papersFind({ paperFindRequest: request }, initOverrides),
     async (error) => {
       if (error.response.status === 404) {
         const errorResponse = PaperFindErrorResponseFromJSON(await error.response.json());

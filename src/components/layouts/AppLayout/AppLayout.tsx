@@ -4,10 +4,10 @@ import AppHeader from '@/components/molecules/AppHeader';
 import AppMain from '@/components/molecules/AppMain';
 import { useMenu } from '@/hooks/menu';
 
-import { Claims } from '@auth0/nextjs-auth0';
+import { User } from '@auth0/nextjs-auth0/types';
 
 export type AppLayoutComponentProps = {
-  readonly user: Claims | undefined;
+  readonly user: User | undefined;
   readonly children?: React.ReactNode;
 };
 

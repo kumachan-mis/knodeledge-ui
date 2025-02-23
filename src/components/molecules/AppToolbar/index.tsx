@@ -64,7 +64,7 @@ const AppToolbar: React.FC<AppToolbarProps> = ({
               {username ?? ''}
             </Typography>
             <Divider />
-            <MenuItem component="a" href="/api/auth/logout">
+            <MenuItem component="a" href="/auth/logout">
               <ListItemIcon>
                 <LogoutIcon fontSize="small" />
               </ListItemIcon>
@@ -72,7 +72,7 @@ const AppToolbar: React.FC<AppToolbarProps> = ({
             </MenuItem>
           </>
         ) : (
-          <MenuItem component="a" href="/api/auth/login">
+          <MenuItem component="a" href="/auth/login">
             <ListItemIcon>
               <LoginIcon fontSize="small" />
             </ListItemIcon>
@@ -86,11 +86,11 @@ const AppToolbar: React.FC<AppToolbarProps> = ({
         {username ?? ''}
       </Typography>
       {authorized ? (
-        <Button color="inherit" href="/api/auth/logout" startIcon={<LogoutIcon fontSize="small" />}>
+        <Button color="inherit" href="/auth/logout" startIcon={<LogoutIcon fontSize="small" />}>
           Logout
         </Button>
       ) : (
-        <Button color="inherit" href="/api/auth/login" startIcon={<LoginIcon fontSize="small" />}>
+        <Button color="inherit" href="/auth/login" startIcon={<LoginIcon fontSize="small" />}>
           Login
         </Button>
       )}

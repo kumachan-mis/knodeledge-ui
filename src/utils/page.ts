@@ -1,7 +1,7 @@
-import { Claims } from '@auth0/nextjs-auth0';
+import { User } from '@auth0/nextjs-auth0/types';
 
 export type AuthorizedPageProps<PageProps extends object = object> = {
-  readonly user: Claims;
+  readonly user: User;
 } & PageProps;
 
 export const PROJECTS_ID_PATH_NAME = 'projects';

@@ -1,5 +1,3 @@
-import { JSON_ROUTE } from '../../utils/json';
+import { createJsonRoute, jsonCsrHeaders } from '@/apis/route/json';
 
-export async function POST(request: Request): Promise<Response> {
-  return JSON_ROUTE('/api/projects/update', 'POST', request);
-}
+export const POST = createJsonRoute('/api/projects/update', 'POST', jsonCsrHeaders);

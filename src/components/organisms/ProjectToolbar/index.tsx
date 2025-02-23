@@ -3,10 +3,10 @@ import { useCreateProjectInList } from '@/contexts/openapi/projects';
 
 import ProjectToolbarComponent from './ProjectToolbar';
 
-import { Claims } from '@auth0/nextjs-auth0';
+import { User } from '@auth0/nextjs-auth0/types';
 
 export type ProjectToolbarProps = {
-  readonly user: Claims;
+  readonly user: User;
 };
 
 const ProjectToolbar: React.FC<ProjectToolbarProps> = ({ user }) => {

@@ -7,5 +7,5 @@ test('should show 401, message, description and button to log in', () => {
   expect(screen.getByText('401')).toBeInTheDocument();
   expect(screen.getByText('Unauthorized')).toBeInTheDocument();
   expect(screen.getByText('You are not authorized to access this page. Please login.')).toBeInTheDocument();
-  expect(screen.getByRole('link', { name: 'Login' })).toHaveAttribute('href', '/api/auth/login');
+  expect(screen.getByRole('link', { name: 'Login' })).toHaveAttribute('href', '/auth/login');
 });
