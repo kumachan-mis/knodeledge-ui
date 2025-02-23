@@ -3,10 +3,10 @@ import { useLoadableChapterList, useUpdateChapterInList } from '@/contexts/opena
 
 import ChapterListComponent from './ChapterList';
 
-import { Claims } from '@auth0/nextjs-auth0';
+import { User } from '@auth0/nextjs-auth0/types';
 
 export type ChapterListProps = {
-  readonly user: Claims;
+  readonly user: User;
   readonly projectId: string;
 };
 

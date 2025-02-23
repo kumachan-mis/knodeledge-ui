@@ -3,10 +3,10 @@ import { useLoadableProjectList, useUpdateProjectInList } from '@/contexts/opena
 
 import ProjectCardListComponent from './ProjectCardList';
 
-import { Claims } from '@auth0/nextjs-auth0';
+import { User } from '@auth0/nextjs-auth0/types';
 
 export type ProjectCardListProps = {
-  readonly user: Claims;
+  readonly user: User;
 };
 
 const ProjectCardList: React.FC<ProjectCardListProps> = ({ user }) => {

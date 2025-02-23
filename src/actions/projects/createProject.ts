@@ -1,4 +1,5 @@
-import { Errorable, defaultOnResposeError, fetchFromOpenApi } from '@/actions/openapi';
+import { fetchCsrFromOpenApi } from '@/apis/action/csr';
+import { Errorable, defaultOnResposeError } from '@/apis/action/fetch';
 import {
   ProjectCreateErrorResponse,
   ProjectCreateErrorResponseFromJSON,
@@ -6,13 +7,13 @@ import {
   ProjectCreateResponse,
 } from '@/openapi';
 
-import { projectsApi } from './api';
+import { csrProjectsApi } from './csr';
 
 export async function createProject(
   request: ProjectCreateRequest,
 ): Promise<Errorable<ProjectCreateResponse, ProjectCreateErrorResponse>> {
-  return await fetchFromOpenApi<ProjectCreateResponse, ProjectCreateErrorResponse>(
-    async () => await projectsApi.projectsCreate({ projectCreateRequest: request }),
+  return await fetchCsrFromOpenApi<ProjectCreateResponse, ProjectCreateErrorResponse>(
+    async (initOverrides) => await csrProjectsApi.projectsCreate({ projectCreateRequest: request }, initOverrides),
     async (error) => {
       if (400 <= error.response.status && error.response.status < 500) {
         const errorResponse = ProjectCreateErrorResponseFromJSON(await error.response.json());

@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 const UnauthorizedErrorComponent: React.FC = () => (
   <AppError
     action={
-      <Button href="/api/auth/login" variant="contained">
+      <Button href="/auth/login" variant="contained">
         Login
       </Button>
     }

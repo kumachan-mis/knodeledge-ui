@@ -10,23 +10,25 @@ import { ChapterListContextProvider } from '@/contexts/openapi/chapters';
 import { CachedGraphContextProvider } from '@/contexts/openapi/graphs';
 import { CachedPaperContextProvider } from '@/contexts/openapi/papers';
 import { ProjectContextProvider } from '@/contexts/openapi/projects';
+import { auth0 } from '@/libs/auth0';
 
 import ProjectDetailPageContent from './content';
 
-import { getSession } from '@auth0/nextjs-auth0';
 import { NextPage } from 'next';
 
 export type ProjectDetailPageProps = {
-  readonly params: {
+  readonly params: Promise<{
     readonly projectId: string;
-  };
+  }>;
 };
 
 const ProjectDetailPage: NextPage<ProjectDetailPageProps> = async (props) => {
-  const session = await getSession();
+  const session = await auth0.getSession();
+  const params = await props.params;
+
   if (!session) {
     return (
-      <ProjectDetailPageLayout {...props}>
+      <ProjectDetailPageLayout params={params}>
         <UnauthorizedError />
       </ProjectDetailPageLayout>
     );
@@ -34,12 +36,12 @@ const ProjectDetailPage: NextPage<ProjectDetailPageProps> = async (props) => {
 
   const errorableProject = await findProject({
     user: { id: session.user.sub },
-    project: { id: props.params.projectId },
+    project: { id: params.projectId },
   });
 
   if (errorableProject.state === 'panic') {
     return (
-      <ProjectDetailPageLayout {...props}>
+      <ProjectDetailPageLayout params={params}>
         <InternalError />
       </ProjectDetailPageLayout>
     );
@@ -47,7 +49,7 @@ const ProjectDetailPage: NextPage<ProjectDetailPageProps> = async (props) => {
 
   if (errorableProject.state === 'error') {
     return (
-      <ProjectDetailPageLayout {...props}>
+      <ProjectDetailPageLayout params={params}>
         <NotFoundError />
       </ProjectDetailPageLayout>
     );
@@ -55,12 +57,12 @@ const ProjectDetailPage: NextPage<ProjectDetailPageProps> = async (props) => {
 
   const errorableChapterList = await listChapter({
     user: { id: session.user.sub },
-    project: { id: props.params.projectId },
+    project: { id: params.projectId },
   });
 
   if (errorableChapterList.state !== 'success') {
     return (
-      <ProjectDetailPageLayout {...props}>
+      <ProjectDetailPageLayout params={params}>
         <InternalError />
       </ProjectDetailPageLayout>
     );
@@ -71,8 +73,8 @@ const ProjectDetailPage: NextPage<ProjectDetailPageProps> = async (props) => {
       <ChapterListContextProvider initialChapterList={errorableChapterList.response.chapters}>
         <CachedPaperContextProvider>
           <CachedGraphContextProvider>
-            <ProjectDetailPageLayout {...props}>
-              <ProjectDetailPageContent user={session.user} {...props} />
+            <ProjectDetailPageLayout params={params}>
+              <ProjectDetailPageContent user={session.user} params={params} />
             </ProjectDetailPageLayout>
           </CachedGraphContextProvider>
         </CachedPaperContextProvider>
@@ -81,10 +83,14 @@ const ProjectDetailPage: NextPage<ProjectDetailPageProps> = async (props) => {
   );
 };
 
-const ProjectDetailPageLayout: React.FC<ProjectDetailPageProps & { readonly children?: React.ReactNode }> = ({
-  children,
-  params: { projectId },
-}) => (
+export type ProjectDetailPageLayoutProps = {
+  readonly params: {
+    readonly projectId: string;
+  };
+  readonly children?: React.ReactNode;
+};
+
+const ProjectDetailPageLayout: React.FC<ProjectDetailPageLayoutProps> = ({ children, params: { projectId } }) => (
   <ProjectLayout DrawerContent={ChapterList} DrawerHeader={ChapterListHeader} projectId={projectId}>
     {children}
   </ProjectLayout>

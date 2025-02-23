@@ -3,10 +3,10 @@ import { useLoadableProject, useUpdateProject } from '@/contexts/openapi/project
 
 import ProjectViewComponent from './ProjectView';
 
-import { Claims } from '@auth0/nextjs-auth0';
+import { User } from '@auth0/nextjs-auth0/types';
 
 export type ProjectViewProps = {
-  readonly user: Claims;
+  readonly user: User;
 };
 
 const ProjectView: React.FC<ProjectViewProps> = ({ user }) => {

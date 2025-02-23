@@ -5,17 +5,17 @@ import AppDrawerHeader from '@/components/molecules/AppDrawerHeader';
 import AppDrawerMain from '@/components/molecules/AppDrawerMain';
 import { useMenu } from '@/hooks/menu';
 
-import { Claims } from '@auth0/nextjs-auth0';
+import { User } from '@auth0/nextjs-auth0/types';
 
 export type ProjectLayoutComponentProps = {
-  readonly user: Claims | undefined;
+  readonly user: User | undefined;
   readonly projectId: string;
   readonly DrawerHeader?: React.FC<{
-    readonly user: Claims;
+    readonly user: User;
     readonly projectId: string;
   }>;
   readonly DrawerContent?: React.FC<{
-    readonly user: Claims;
+    readonly user: User;
     readonly projectId: string;
   }>;
   readonly children?: React.ReactNode;

@@ -1,4 +1,5 @@
-import { Errorable, defaultOnResposeError, fetchFromOpenApi } from '@/actions/openapi';
+import { Errorable, defaultOnResposeError } from '@/apis/action/fetch';
+import { fetchSsrFromOpenApi } from '@/apis/action/ssr';
 import {
   ProjectFindErrorResponse,
   ProjectFindErrorResponseFromJSON,
@@ -6,13 +7,13 @@ import {
   ProjectFindResponse,
 } from '@/openapi';
 
-import { projectsApi } from './api';
+import { ssrProjectsApi } from './ssr';
 
 export async function findProject(
   request: ProjectFindRequest,
 ): Promise<Errorable<ProjectFindResponse, ProjectFindErrorResponse>> {
-  return await fetchFromOpenApi(
-    async () => await projectsApi.projectsFind({ projectFindRequest: request }),
+  return await fetchSsrFromOpenApi(
+    async (initOverrides) => await ssrProjectsApi.projectsFind({ projectFindRequest: request }, initOverrides),
     async (error) => {
       if (error.response.status === 404) {
         const errorResponse = ProjectFindErrorResponseFromJSON(await error.response.json());
