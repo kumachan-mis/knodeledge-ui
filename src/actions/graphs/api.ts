@@ -1,4 +1,4 @@
-import { csrConfig } from '@/apis/action/csr';
+import { config } from '@/apis/action/api';
 import { GraphsApi } from '@/openapi';
 
-export const csrGraphsApi = new GraphsApi(csrConfig);
+export const graphsApi = new GraphsApi(config);

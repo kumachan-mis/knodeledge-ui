@@ -1,5 +1,5 @@
 import { ApplicationErrorResponse, ApplicationErrorResponseFromJSON } from '@/openapi';
-import { ResponseError } from '@/openapi/runtime';
+import { Configuration, ResponseError } from '@/openapi/runtime';
 
 export type Errorable<R extends object, E extends object = ApplicationErrorResponse> =
   | {
@@ -17,6 +17,8 @@ export type Errorable<R extends object, E extends object = ApplicationErrorRespo
       response: null;
       error: ApplicationErrorResponse;
     };
+
+export const config = new Configuration({ basePath: process.env.NEXT_PUBLIC_APP_URL });
 
 export async function fetchFromOpenApi<R extends object, E extends object = ApplicationErrorResponse>(
   onRequest: () => Promise<R>,
