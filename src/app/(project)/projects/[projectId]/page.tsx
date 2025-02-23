@@ -74,7 +74,7 @@ const ProjectDetailPage: NextPage<ProjectDetailPageProps> = async (props) => {
         <CachedPaperContextProvider>
           <CachedGraphContextProvider>
             <ProjectDetailPageLayout params={params}>
-              <ProjectDetailPageContent user={session.user} params={params} />
+              <ProjectDetailPageContent params={params} user={session.user} />
             </ProjectDetailPageLayout>
           </CachedGraphContextProvider>
         </CachedPaperContextProvider>

@@ -1,4 +1,4 @@
-import { fixupConfigRules, fixupConfigRules } from '@eslint/compat';
+import { fixupConfigRules } from '@eslint/compat';
 import globals from 'globals';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
