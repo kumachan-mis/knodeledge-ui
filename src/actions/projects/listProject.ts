@@ -1,11 +1,11 @@
-import { Errorable } from '@/apis/action/fetch';
+import { Errorable } from '@/apis/action/api';
 import { fetchSsrFromOpenApi } from '@/apis/action/ssr';
 import { ProjectListRequest, ProjectListResponse } from '@/openapi';
 
-import { ssrProjectsApi } from './ssr';
+import { projectsApi } from './api';
 
 export async function listProject(request: ProjectListRequest): Promise<Errorable<ProjectListResponse>> {
   return await fetchSsrFromOpenApi(
-    async (initOverrides) => await ssrProjectsApi.projectsList({ projectListRequest: request }, initOverrides),
+    async (initOverrides) => await projectsApi.projectsList({ projectListRequest: request }, initOverrides),
   );
 }

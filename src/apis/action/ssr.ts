@@ -1,9 +1,7 @@
 import { AUTH0_AUTH_HEADER_NAME, fetchAuth0AuthHeaderValue } from '../auth/auth0';
-import { ApplicationErrorResponse, Configuration, InitOverrideFunction, ResponseError } from '@/openapi';
+import { ApplicationErrorResponse, InitOverrideFunction, ResponseError } from '@/openapi';
 
-import { Errorable, defaultOnResposeError, fetchFromOpenApi } from './fetch';
-
-export const ssrConfig = new Configuration({ basePath: process.env.API_URL });
+import { Errorable, defaultOnResposeError, fetchFromOpenApi } from './api';
 
 export async function fetchSsrFromOpenApi<R extends object, E extends object = ApplicationErrorResponse>(
   onRequest: (initOverrides?: RequestInit | InitOverrideFunction) => Promise<R>,

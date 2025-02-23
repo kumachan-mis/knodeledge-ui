@@ -1,4 +1,4 @@
-import { Errorable, defaultOnResposeError } from '@/apis/action/fetch';
+import { Errorable, defaultOnResposeError } from '@/apis/action/api';
 import { fetchSsrFromOpenApi } from '@/apis/action/ssr';
 import {
   ChapterListErrorResponse,
@@ -7,13 +7,13 @@ import {
   ChapterListResponse,
 } from '@/openapi';
 
-import { ssrChaptersApi } from './ssr';
+import { chaptersApi } from './api';
 
 export function listChapter(
   request: ChapterListRequest,
 ): Promise<Errorable<ChapterListResponse, ChapterListErrorResponse>> {
   return fetchSsrFromOpenApi(
-    async (initOverrides) => await ssrChaptersApi.chaptersList({ chapterListRequest: request }, initOverrides),
+    async (initOverrides) => await chaptersApi.chaptersList({ chapterListRequest: request }, initOverrides),
     async (error) => {
       if (error.response.status === 404) {
         const errorResponse = ChapterListErrorResponseFromJSON(await error.response.json());

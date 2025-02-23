@@ -1,5 +1,5 @@
+import { Errorable, defaultOnResposeError } from '@/apis/action/api';
 import { fetchCsrFromOpenApi } from '@/apis/action/csr';
-import { Errorable, defaultOnResposeError } from '@/apis/action/fetch';
 import {
   GraphUpdateErrorResponse,
   GraphUpdateErrorResponseFromJSON,
@@ -7,13 +7,13 @@ import {
   GraphUpdateResponse,
 } from '@/openapi';
 
-import { csrGraphsApi } from './api';
+import { graphsApi } from './api';
 
 export async function updateGraph(
   request: GraphUpdateRequest,
 ): Promise<Errorable<GraphUpdateResponse, GraphUpdateErrorResponse>> {
   return await fetchCsrFromOpenApi<GraphUpdateResponse, GraphUpdateErrorResponse>(
-    async (initOverrides) => await csrGraphsApi.graphsUpdate({ graphUpdateRequest: request }, initOverrides),
+    async (initOverrides) => await graphsApi.graphsUpdate({ graphUpdateRequest: request }, initOverrides),
     async (error) => {
       if (400 <= error.response.status && error.response.status < 500) {
         const errorResponse = GraphUpdateErrorResponseFromJSON(await error.response.json());
