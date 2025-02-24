@@ -1,5 +1,5 @@
 import { generateRandomString } from '../../../testutils/string';
-import ProjectDialog from '@/components/organisms/ProjectDialog';
+import ProjectFormDialog from '@/components/organisms/ProjectFormDialog';
 
 import { render, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -9,7 +9,7 @@ test('should render project dialog', async () => {
   const onClose = jest.fn();
 
   const screen = render(
-    <ProjectDialog
+    <ProjectFormDialog
       defaultValues={{ name: '', description: '' }}
       onClose={onClose}
       onSubmit={onSubmit}
@@ -45,7 +45,7 @@ test.each<{ name: string; projectName: string }>([
   const onClose = jest.fn();
 
   const screen = render(
-    <ProjectDialog
+    <ProjectFormDialog
       defaultValues={{ name: '', description: '' }}
       onClose={onClose}
       onSubmit={onSubmit}
@@ -93,7 +93,7 @@ test.each<{ name: string; projectName: string; projectDescription: string }>([
   const onClose = jest.fn();
 
   const screen = render(
-    <ProjectDialog
+    <ProjectFormDialog
       defaultValues={{ name: '', description: '' }}
       onClose={onClose}
       onSubmit={onSubmit}
@@ -133,7 +133,7 @@ test('should not submit if project name is empty', async () => {
   const onClose = jest.fn();
 
   const screen = render(
-    <ProjectDialog
+    <ProjectFormDialog
       defaultValues={{ name: '', description: '' }}
       onClose={onClose}
       onSubmit={onSubmit}
@@ -171,7 +171,7 @@ test('should not submit if project name is too long', async () => {
   const onClose = jest.fn();
 
   const screen = render(
-    <ProjectDialog
+    <ProjectFormDialog
       defaultValues={{ name: '', description: '' }}
       onClose={onClose}
       onSubmit={onSubmit}
@@ -208,7 +208,7 @@ test('should not submit if project description is too long', async () => {
   const onClose = jest.fn();
 
   const screen = render(
-    <ProjectDialog
+    <ProjectFormDialog
       defaultValues={{ name: '', description: '' }}
       onClose={onClose}
       onSubmit={onSubmit}
@@ -245,7 +245,7 @@ test('should not submit if project properties are same as default', async () => 
   const onClose = jest.fn();
 
   const screen = render(
-    <ProjectDialog
+    <ProjectFormDialog
       defaultValues={{ name: 'Project Name', description: 'Project Description' }}
       onClose={onClose}
       onSubmit={onSubmit}
@@ -294,7 +294,7 @@ test('should show error mmessages if project submission fails', async () => {
   const onClose = jest.fn();
 
   const screen = render(
-    <ProjectDialog
+    <ProjectFormDialog
       defaultValues={{ name: '', description: '' }}
       onClose={onClose}
       onSubmit={onSubmit}
@@ -335,7 +335,7 @@ test('should close dialog', async () => {
   const onClose = jest.fn();
 
   const screen = render(
-    <ProjectDialog
+    <ProjectFormDialog
       defaultValues={{ name: '', description: '' }}
       onClose={onClose}
       onSubmit={jest.fn()}

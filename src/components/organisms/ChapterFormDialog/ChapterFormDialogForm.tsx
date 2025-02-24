@@ -10,7 +10,7 @@ import FormHelperText from '@mui/material/FormHelperText';
 import TextField from '@mui/material/TextField';
 import { Controller, useForm, Validate } from 'react-hook-form';
 
-export type ChapterDialogFormComponentProps = {
+export type ChapterFormDialogFormComponentProps = {
   readonly submitText: string;
   readonly defaultValues: ChapterFieldValues;
   readonly validates?: ChapterFieldValidates;
@@ -28,7 +28,7 @@ export type ChapterFieldValidates = {
   number?: Validate<string, ChapterFieldValues>;
 };
 
-const ChapterDialogFormComponent: React.FC<ChapterDialogFormComponentProps> = ({
+const ChapterFormDialogFormComponent: React.FC<ChapterFormDialogFormComponentProps> = ({
   submitText,
   defaultValues,
   validates,
@@ -120,4 +120,4 @@ const ChapterDialogFormComponent: React.FC<ChapterDialogFormComponentProps> = ({
   );
 };
 
-export default ChapterDialogFormComponent;
+export default ChapterFormDialogFormComponent;

@@ -1,9 +1,9 @@
-import ChapterDialogComponent from './ChapterDialog';
+import ChapterFormDialogComponent from './ChapterFormDialog';
 
 import { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof ChapterDialogComponent> = {
-  component: ChapterDialogComponent,
+const meta: Meta<typeof ChapterFormDialogComponent> = {
+  component: ChapterFormDialogComponent,
   args: {
     open: true,
     // eslint-disable-next-line @typescript-eslint/require-await
@@ -21,7 +21,7 @@ const meta: Meta<typeof ChapterDialogComponent> = {
 
 export default meta;
 
-type Story = StoryObj<typeof ChapterDialogComponent>;
+type Story = StoryObj<typeof ChapterFormDialogComponent>;
 
 export const Create: Story = {
   args: {

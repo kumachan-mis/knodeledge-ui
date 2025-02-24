@@ -2,10 +2,10 @@ import { ProjectActionError } from '@/contexts/openapi/projects';
 import { LoadableAction } from '@/contexts/openapi/types';
 import { ProjectWithoutAutofield } from '@/openapi';
 
-import ProjectDialogComponent from './ProjectDialog';
-import { ProjectFieldValidates, ProjectFieldValues } from './ProjectDialogForm';
+import ProjectFormDialogComponent from './ProjectFormDialog';
+import { ProjectFieldValidates, ProjectFieldValues } from './ProjectFormDialogForm';
 
-export type ProjectDialogProps = {
+export type ProjectFormDialogProps = {
   readonly open: boolean;
   readonly title: string;
   readonly submitText: string;
@@ -15,6 +15,6 @@ export type ProjectDialogProps = {
   readonly onClose: () => void;
 };
 
-const ProjectDialog: React.FC<ProjectDialogProps> = (props) => <ProjectDialogComponent {...props} />;
+const ProjectFormDialog: React.FC<ProjectFormDialogProps> = (props) => <ProjectFormDialogComponent {...props} />;
 
-export default ProjectDialog;
+export default ProjectFormDialog;

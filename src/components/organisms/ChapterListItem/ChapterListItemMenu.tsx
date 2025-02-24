@@ -1,5 +1,5 @@
 'use client';
-import ChapterDialog from '@/components/organisms/ChapterDialog';
+import ChapterFormDialog from '@/components/organisms/ChapterFormDialog';
 import { ChapterActionError } from '@/contexts/openapi/chapters';
 import { LoadableAction } from '@/contexts/openapi/types';
 import { useDialog } from '@/hooks/dialog';
@@ -50,7 +50,7 @@ const ChapterListItemMenuComponent: React.FC<ChapterListItemMenuComponentProps> 
         </ListItemIcon>
         <ListItemText>Update Chapter</ListItemText>
       </MenuItem>
-      <ChapterDialog
+      <ChapterFormDialog
         defaultValues={{ name: chapter.name, number: chapter.number.toString(10) }}
         onClose={onCloseUpdateChapterDialog}
         onSubmit={onUpdateChapter}

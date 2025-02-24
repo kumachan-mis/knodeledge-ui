@@ -3,12 +3,12 @@ import { ChapterActionError } from '@/contexts/openapi/chapters';
 import { LoadableAction } from '@/contexts/openapi/types';
 import { ChapterWithoutAutofield } from '@/openapi';
 
-import ChapterDialogFormComponent, { ChapterFieldValidates, ChapterFieldValues } from './ChapterDialogForm';
+import ChapterFormDialogFormComponent, { ChapterFieldValidates, ChapterFieldValues } from './ChapterFormDialogForm';
 
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 
-export type ChapterDialogComponentProps = {
+export type ChapterFormDialogComponentProps = {
   readonly open: boolean;
   readonly title: string;
   readonly submitText: string;
@@ -18,11 +18,11 @@ export type ChapterDialogComponentProps = {
   readonly onClose: () => void;
 };
 
-const ChapterDialogComponent: React.FC<ChapterDialogComponentProps> = ({ open, title, ...rest }) => (
+const ChapterFormDialogComponent: React.FC<ChapterFormDialogComponentProps> = ({ open, title, ...rest }) => (
   <Dialog fullWidth maxWidth="md" open={open}>
     <DialogTitle>{title}</DialogTitle>
-    <ChapterDialogFormComponent {...rest} />
+    <ChapterFormDialogFormComponent {...rest} />
   </Dialog>
 );
 
-export default ChapterDialogComponent;
+export default ChapterFormDialogComponent;

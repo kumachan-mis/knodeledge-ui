@@ -1,5 +1,5 @@
 'use client';
-import ProjectDialog from '@/components/organisms/ProjectDialog';
+import ProjectFormDialog from '@/components/organisms/ProjectFormDialog';
 import { ProjectActionError } from '@/contexts/openapi/projects';
 import { LoadableAction } from '@/contexts/openapi/types';
 import { useDialog } from '@/hooks/dialog';
@@ -21,7 +21,7 @@ const ProjectToolbarComponent: React.FC<ProjectToolbarComponentProps> = ({ onCre
       <Button onClick={onOpenNewProjectDialog} startIcon={<NoteAddIcon />} variant="contained">
         New Project
       </Button>
-      <ProjectDialog
+      <ProjectFormDialog
         defaultValues={{ name: '', description: '' }}
         onClose={onCloseNewProjectDialog}
         onSubmit={onCreateProject}

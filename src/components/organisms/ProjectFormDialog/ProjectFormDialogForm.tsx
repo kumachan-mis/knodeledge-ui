@@ -10,7 +10,7 @@ import FormHelperText from '@mui/material/FormHelperText';
 import TextField from '@mui/material/TextField';
 import { Controller, Validate, useForm } from 'react-hook-form';
 
-export type ProjectDialogFormComponentProps = {
+export type ProjectFormDialogFormComponentProps = {
   readonly submitText: string;
   readonly defaultValues: ProjectFieldValues;
   readonly validates?: ProjectFieldValidates;
@@ -28,7 +28,7 @@ export type ProjectFieldValidates = {
   description?: Validate<string, ProjectFieldValues>;
 };
 
-const ProjectDialogFormComponent: React.FC<ProjectDialogFormComponentProps> = ({
+const ProjectFormDialogFormComponent: React.FC<ProjectFormDialogFormComponentProps> = ({
   submitText,
   defaultValues,
   validates,
@@ -120,4 +120,4 @@ const ProjectDialogFormComponent: React.FC<ProjectDialogFormComponentProps> = ({
   );
 };
 
-export default ProjectDialogFormComponent;
+export default ProjectFormDialogFormComponent;

@@ -1,4 +1,4 @@
-import ProjectDialog from '@/components/organisms/ProjectDialog';
+import ProjectFormDialog from '@/components/organisms/ProjectFormDialog';
 import { ProjectActionError } from '@/contexts/openapi/projects';
 import { LoadableAction } from '@/contexts/openapi/types';
 import { useDialog } from '@/hooks/dialog';
@@ -38,7 +38,7 @@ const ProjectViewComponent: React.FC<ProjectViewComponentProps> = ({ project, on
           Update Project
         </Button>
       </Box>
-      <ProjectDialog
+      <ProjectFormDialog
         defaultValues={{ name: project.name, description: project.description ?? '' }}
         onClose={onCloseUpdateProjectDialog}
         onSubmit={(updatedProject) => onUpdateProject(project.id, updatedProject)}

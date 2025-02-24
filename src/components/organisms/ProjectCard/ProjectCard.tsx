@@ -1,5 +1,5 @@
 'use client';
-import ProjectDialog from '@/components/organisms/ProjectDialog';
+import ProjectFormDialog from '@/components/organisms/ProjectFormDialog';
 import { ProjectActionError } from '@/contexts/openapi/projects';
 import { LoadableAction } from '@/contexts/openapi/types';
 import { useDialog } from '@/hooks/dialog';
@@ -50,7 +50,7 @@ const ProjectCardComponent: React.FC<ProjectCardComponentProps> = ({ project, on
         <IconButton aria-label="update project" onClick={onOpenUpdateProjectDialog} size="small">
           <EditNoteIcon />
         </IconButton>
-        <ProjectDialog
+        <ProjectFormDialog
           defaultValues={{ name: project.name, description: project.description ?? '' }}
           onClose={onCloseUpdateProjectDialog}
           onSubmit={onUpdateProject}
