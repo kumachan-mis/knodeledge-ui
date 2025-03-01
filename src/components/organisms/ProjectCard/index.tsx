@@ -7,6 +7,7 @@ import ProjectCardComponent from './ProjectCard';
 export type ProjectCardProps = {
   readonly project: Project;
   readonly onUpdateProject: (project: ProjectWithoutAutofield) => Promise<LoadableAction<ProjectActionError>>;
+  readonly onDeleteProject: () => Promise<LoadableAction<ProjectActionError>>;
 };
 
 const ProjectCard: React.FC<ProjectCardProps> = (props) => <ProjectCardComponent {...props} />;

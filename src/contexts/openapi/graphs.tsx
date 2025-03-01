@@ -1,4 +1,5 @@
 'use client';
+import { deleteGraph } from '@/actions/graphs/deleteGraph';
 import { findGraph } from '@/actions/graphs/findGraph';
 import { updateGraph } from '@/actions/graphs/updateGraph';
 import { Graph, GraphContentWithoutAutofield, GraphContentWithoutAutofieldError, UserOnlyId } from '@/openapi';
@@ -21,6 +22,8 @@ export type LoadableActionGraphUpdate = (
   id: string,
   graph: GraphContentWithoutAutofield,
 ) => Promise<LoadableAction<GraphActionError>>;
+
+export type LoadableActionGraphDelete = (sectionId: string) => Promise<LoadableAction<GraphActionError>>;
 
 const EMPTY_GRAPH_ACTION_ERROR: GraphActionError = {
   message: '',
@@ -123,6 +126,51 @@ export function useUpdateGraph(
     }
 
     setGraphMap((prev) => new Map(prev.set(sectionId, { state: 'success', data: errorable.response.graph })));
+    return { state: 'success', error: null };
+  };
+}
+
+export function useDeleteGraph(user: UserOnlyId, projectId: string, chapterId: string): LoadableActionGraphDelete {
+  const setPanic = useSetPanic();
+  const graphMap = React.useContext(GraphMapValueContext);
+  const setGraphMap = React.useContext(GraphMapSetContext);
+
+  return async (sectionId) => {
+    const loadableGraph = graphMap.get(sectionId);
+    if (loadableGraph?.state !== 'success') {
+      return { state: 'error', error: UNKNOWN_GRAPH_ACTION_ERROR };
+    }
+
+    const errorable = await deleteGraph({
+      user,
+      project: { id: projectId },
+      chapter: { id: chapterId },
+      section: { id: sectionId },
+    });
+
+    if (errorable.state === 'panic') {
+      setPanic(errorable.error.message);
+      return { state: 'error', error: UNKNOWN_GRAPH_ACTION_ERROR };
+    }
+
+    if (
+      errorable.state === 'error' &&
+      (!!errorable.error.user?.id || !!errorable.error.project?.id || !!errorable.error.chapter?.id)
+    ) {
+      return { state: 'error', error: UNKNOWN_GRAPH_ACTION_ERROR };
+    }
+
+    if (errorable.state === 'error') {
+      return {
+        state: 'error',
+        error: {
+          message: errorable.error.message,
+          graph: { ...EMPTY_GRAPH_ACTION_ERROR.graph, ...errorable.error.section },
+        },
+      };
+    }
+
+    setGraphMap((prev) => new Map(prev.set(sectionId, { state: 'notfound', data: null })));
     return { state: 'success', error: null };
   };
 }

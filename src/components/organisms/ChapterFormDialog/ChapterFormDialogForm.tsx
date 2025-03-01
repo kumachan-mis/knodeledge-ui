@@ -104,7 +104,7 @@ const ChapterFormDialogFormComponent: React.FC<ChapterFormDialogFormComponentPro
         />
       </DialogContent>
       <DialogActions>
-        <Button disabled={isValidating || isSubmitting} onClick={onClose} variant="outlined">
+        <Button color="inherit" disabled={isValidating || isSubmitting} onClick={onClose} variant="outlined">
           Close
         </Button>
         {/**

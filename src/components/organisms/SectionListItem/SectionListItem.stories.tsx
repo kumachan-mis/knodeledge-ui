@@ -5,6 +5,12 @@ import { Meta } from '@storybook/react';
 
 const meta: Meta<typeof SectionListItemComponent> = {
   component: SectionListItemComponent,
+  args: {
+    // eslint-disable-next-line @typescript-eslint/require-await
+    onDeleteSection: async () => {
+      return { state: 'success', error: null };
+    },
+  },
   decorators: [
     (Story) => (
       <List>

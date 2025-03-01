@@ -1,4 +1,5 @@
 'use client';
+import ChapterPreviewDialog from '../ChapterPreviewDialog';
 import ChapterFormDialog from '@/components/organisms/ChapterFormDialog';
 import { ChapterActionError } from '@/contexts/openapi/chapters';
 import { LoadableAction } from '@/contexts/openapi/types';
@@ -6,6 +7,7 @@ import { useDialog } from '@/hooks/dialog';
 import { ChapterWithSections, ChapterWithoutAutofield } from '@/openapi';
 import { CHAPTER_ID_PARAM_KEY, PROJECTS_ID_PATH_NAME } from '@/utils/page';
 
+import DeleteIcon from '@mui/icons-material/Delete';
 import OpenNoteIcon from '@mui/icons-material/Description';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -19,6 +21,7 @@ export type ChapterListItemMenuComponentProps = {
   readonly chapter: ChapterWithSections;
   readonly maxChapterNumber: number;
   readonly onUpdateChapter: (chapter: ChapterWithoutAutofield) => Promise<LoadableAction<ChapterActionError>>;
+  readonly onDeleteChapter: () => Promise<LoadableAction<ChapterActionError>>;
 } & MenuProps;
 
 const ChapterListItemMenuComponent: React.FC<ChapterListItemMenuComponentProps> = ({
@@ -26,12 +29,19 @@ const ChapterListItemMenuComponent: React.FC<ChapterListItemMenuComponentProps> 
   chapter,
   maxChapterNumber,
   onUpdateChapter,
+  onDeleteChapter,
   ...rest
 }) => {
   const {
     open: openUpdateChapterDialog,
     onOpen: onOpenUpdateChapterDialog,
     onClose: onCloseUpdateChapterDialog,
+  } = useDialog();
+
+  const {
+    open: openDeleteChapterDialog,
+    onOpen: onOpenDeleteChapterDialog,
+    onClose: onCloseDeleteChapterDialog,
   } = useDialog();
 
   return (
@@ -50,6 +60,12 @@ const ChapterListItemMenuComponent: React.FC<ChapterListItemMenuComponentProps> 
         </ListItemIcon>
         <ListItemText>Update Chapter</ListItemText>
       </MenuItem>
+      <MenuItem onClick={onOpenDeleteChapterDialog}>
+        <ListItemIcon>
+          <DeleteIcon fontSize="small" />
+        </ListItemIcon>
+        <ListItemText>Delete Chapter</ListItemText>
+      </MenuItem>
       <ChapterFormDialog
         defaultValues={{ name: chapter.name, number: chapter.number.toString(10) }}
         onClose={onCloseUpdateChapterDialog}
@@ -58,6 +74,15 @@ const ChapterListItemMenuComponent: React.FC<ChapterListItemMenuComponentProps> 
         submitText="Save Changes"
         title="Update Chapter"
         validates={{ number: (value) => parseInt(value, 10) <= maxChapterNumber || 'chapter number is too large' }}
+      />
+      <ChapterPreviewDialog
+        chapter={chapter}
+        onClose={onCloseDeleteChapterDialog}
+        onSubmit={onDeleteChapter}
+        open={openDeleteChapterDialog}
+        submitColor="error"
+        submitText="Delete Chapter"
+        title="Delete Chapter"
       />
     </Menu>
   );

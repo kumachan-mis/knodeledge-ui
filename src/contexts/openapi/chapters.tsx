@@ -1,5 +1,6 @@
 'use client';
 import { createChapter } from '@/actions/chapters/createChapter';
+import { deleteChapter } from '@/actions/chapters/deleteChapter';
 import { updateChapter } from '@/actions/chapters/updateChapter';
 import { sectionalizeIntoGraphs } from '@/actions/graphs/sectionallizeIntoGraphs';
 import {
@@ -43,6 +44,8 @@ export type LoadableActionChapterUpdate = (
   id: string,
   chapter: ChapterWithoutAutofield,
 ) => Promise<LoadableAction<ChapterActionError>>;
+
+export type LoadableActionChapterDelete = (id: string) => Promise<LoadableAction<ChapterActionError>>;
 
 export type LoadableActionSectionalizePaper = (
   sections: SectionWithoutAutofield[],
@@ -187,6 +190,42 @@ export function useUpdateChapterInList(user: UserOnlyId, project: ProjectOnlyId)
 
       return { state: 'success', data };
     });
+    return { state: 'success', error: null };
+  };
+}
+
+export function useDeleteChapterInList(user: UserOnlyId, project: ProjectOnlyId): LoadableActionChapterDelete {
+  const setPanic = useSetPanic();
+  const setChapterList = React.useContext(ChapterListSetContext);
+
+  return async (id) => {
+    const errorable = await deleteChapter({ user, project, chapter: { id } });
+    if (errorable.state === 'panic') {
+      setPanic(errorable.error.message);
+      return { state: 'error', error: UNKNOWN_CHAPTER_ACTION_ERROR };
+    }
+
+    if (
+      errorable.state === 'error' &&
+      (!!errorable.error.user?.id || !!errorable.error.project?.id || !!errorable.error.chapter?.id)
+    ) {
+      return { state: 'error', error: UNKNOWN_CHAPTER_ACTION_ERROR };
+    }
+
+    if (errorable.state === 'error') {
+      return {
+        state: 'error',
+        error: {
+          message: errorable.error.message,
+          chapter: { ...EMPTY_CHAPTER_ACTION_ERROR.chapter, ...errorable.error.chapter },
+        },
+      };
+    }
+
+    setChapterList((prev) => ({
+      state: 'success',
+      data: prev.data.filter((chapter) => chapter.id !== id),
+    }));
     return { state: 'success', error: null };
   };
 }

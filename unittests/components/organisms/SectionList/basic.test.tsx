@@ -1,3 +1,4 @@
+import { USER } from '../../../testutils/user';
 import SectionList from '@/components/organisms/SectionList';
 
 import { render } from '@testing-library/react';
@@ -17,6 +18,7 @@ test('should show sections', () => {
           name: 'Section Two',
         },
       ]}
+      user={USER}
     />,
   );
 

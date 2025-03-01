@@ -14,6 +14,8 @@
 import * as runtime from '../runtime';
 import type {
   ApplicationErrorResponse,
+  GraphDeleteErrorResponse,
+  GraphDeleteRequest,
   GraphFindErrorResponse,
   GraphFindRequest,
   GraphFindResponse,
@@ -27,6 +29,10 @@ import type {
 import {
   ApplicationErrorResponseFromJSON,
   ApplicationErrorResponseToJSON,
+  GraphDeleteErrorResponseFromJSON,
+  GraphDeleteErrorResponseToJSON,
+  GraphDeleteRequestFromJSON,
+  GraphDeleteRequestToJSON,
   GraphFindErrorResponseFromJSON,
   GraphFindErrorResponseToJSON,
   GraphFindRequestFromJSON,
@@ -47,6 +53,10 @@ import {
   GraphUpdateResponseToJSON,
 } from '../models/index';
 
+export interface GraphsDeleteRequest {
+  graphDeleteRequest?: GraphDeleteRequest;
+}
+
 export interface GraphsFindRequest {
   graphFindRequest?: GraphFindRequest;
 }
@@ -63,6 +73,43 @@ export interface GraphsUpdateRequest {
  *
  */
 export class GraphsApi extends runtime.BaseAPI {
+  /**
+   * Delete graph
+   */
+  async graphsDeleteRaw(
+    requestParameters: GraphsDeleteRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<runtime.ApiResponse<void>> {
+    const queryParameters: any = {};
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    headerParameters['Content-Type'] = 'application/json';
+
+    const response = await this.request(
+      {
+        path: `/api/graphs/delete`,
+        method: 'POST',
+        headers: headerParameters,
+        query: queryParameters,
+        body: GraphDeleteRequestToJSON(requestParameters['graphDeleteRequest']),
+      },
+      initOverrides,
+    );
+
+    return new runtime.VoidApiResponse(response);
+  }
+
+  /**
+   * Delete graph
+   */
+  async graphsDelete(
+    requestParameters: GraphsDeleteRequest = {},
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<void> {
+    await this.graphsDeleteRaw(requestParameters, initOverrides);
+  }
+
   /**
    * Find graph
    */

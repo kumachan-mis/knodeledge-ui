@@ -3,6 +3,12 @@ import SectionListComponent from './SectionList';
 import { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof SectionListComponent> = {
+  args: {
+    // eslint-disable-next-line @typescript-eslint/require-await
+    onDeleteSection: async () => {
+      return { state: 'success', error: null };
+    },
+  },
   component: SectionListComponent,
 };
 

@@ -1,9 +1,30 @@
+import SectionListComponent from '@/components/organisms/SectionList/SectionList';
+
 import ChapterListComponent from './ChapterList';
 
 import { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof ChapterListComponent> = {
   component: ChapterListComponent,
+  args: {
+    // eslint-disable-next-line @typescript-eslint/require-await
+    onUpdateChapter: async () => {
+      return { state: 'success', error: null };
+    },
+    // eslint-disable-next-line @typescript-eslint/require-await
+    onDeleteChapter: async () => {
+      return { state: 'success', error: null };
+    },
+    SectionList: (props) => (
+      <SectionListComponent
+        // eslint-disable-next-line @typescript-eslint/require-await
+        onDeleteSection={async () => {
+          return { state: 'success', error: null };
+        }}
+        {...props}
+      />
+    ),
+  },
 };
 
 export default meta;

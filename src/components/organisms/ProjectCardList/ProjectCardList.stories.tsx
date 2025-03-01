@@ -9,6 +9,10 @@ const meta: Meta<typeof ProjectCardListComponent> = {
     onUpdateProject: async () => {
       return { state: 'success', error: null };
     },
+    // eslint-disable-next-line @typescript-eslint/require-await
+    onDeleteProject: async () => {
+      return { state: 'success', error: null };
+    },
   },
 };
 

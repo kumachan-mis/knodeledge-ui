@@ -1,13 +1,17 @@
+import { USER } from '../../../testutils/user';
 import ChapterListItem from '@/components/organisms/ChapterListItem';
+import SectionList from '@/components/organisms/SectionList';
 
 import { render, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 test('should show chapter', () => {
   const updateChapter = jest.fn();
+  const deleteChapter = jest.fn();
 
   const screen = render(
     <ChapterListItem
+      SectionList={(props) => <SectionList {...props} user={USER} />}
       chapter={{
         id: 'CHAPTER',
         name: 'Chapter Name',
@@ -15,6 +19,7 @@ test('should show chapter', () => {
         sections: [],
       }}
       maxChapterNumber={3}
+      onDeleteChapter={deleteChapter}
       onUpdateChapter={updateChapter}
       projectId="PROJECT"
     />,
@@ -27,10 +32,13 @@ test('should show chapter', () => {
 
 test('should show chapter menu', async () => {
   const user = userEvent.setup();
+
   const updateChapter = jest.fn();
+  const deleteChapter = jest.fn();
 
   const screen = render(
     <ChapterListItem
+      SectionList={(props) => <SectionList {...props} user={USER} />}
       chapter={{
         id: 'CHAPTER',
         name: 'Chapter Name',
@@ -38,6 +46,7 @@ test('should show chapter menu', async () => {
         sections: [],
       }}
       maxChapterNumber={3}
+      onDeleteChapter={deleteChapter}
       onUpdateChapter={updateChapter}
       projectId="PROJECT"
     />,

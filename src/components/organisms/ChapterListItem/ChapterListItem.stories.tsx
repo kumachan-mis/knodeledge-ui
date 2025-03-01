@@ -1,3 +1,5 @@
+import SectionListComponent from '@/components/organisms/SectionList/SectionList';
+
 import ChapterListItemComponent from './ChapterListItem';
 
 import List from '@mui/material/List';
@@ -10,6 +12,19 @@ const meta: Meta<typeof ChapterListItemComponent> = {
     onUpdateChapter: async () => {
       return { state: 'success', error: null };
     },
+    // eslint-disable-next-line @typescript-eslint/require-await
+    onDeleteChapter: async () => {
+      return { state: 'success', error: null };
+    },
+    SectionList: (props) => (
+      <SectionListComponent
+        // eslint-disable-next-line @typescript-eslint/require-await
+        onDeleteSection={async () => {
+          return { state: 'success', error: null };
+        }}
+        {...props}
+      />
+    ),
   },
   decorators: [
     (Story) => (

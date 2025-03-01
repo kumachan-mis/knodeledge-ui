@@ -17,6 +17,8 @@ import type {
   ChapterCreateErrorResponse,
   ChapterCreateRequest,
   ChapterCreateResponse,
+  ChapterDeleteErrorResponse,
+  ChapterDeleteRequest,
   ChapterListErrorResponse,
   ChapterListRequest,
   ChapterListResponse,
@@ -33,6 +35,10 @@ import {
   ChapterCreateRequestToJSON,
   ChapterCreateResponseFromJSON,
   ChapterCreateResponseToJSON,
+  ChapterDeleteErrorResponseFromJSON,
+  ChapterDeleteErrorResponseToJSON,
+  ChapterDeleteRequestFromJSON,
+  ChapterDeleteRequestToJSON,
   ChapterListErrorResponseFromJSON,
   ChapterListErrorResponseToJSON,
   ChapterListRequestFromJSON,
@@ -49,6 +55,10 @@ import {
 
 export interface ChaptersCreateRequest {
   chapterCreateRequest?: ChapterCreateRequest;
+}
+
+export interface ChaptersDeleteRequest {
+  chapterDeleteRequest?: ChapterDeleteRequest;
 }
 
 export interface ChaptersListRequest {
@@ -99,6 +109,43 @@ export class ChaptersApi extends runtime.BaseAPI {
   ): Promise<ChapterCreateResponse> {
     const response = await this.chaptersCreateRaw(requestParameters, initOverrides);
     return await response.value();
+  }
+
+  /**
+   * Delete chapter
+   */
+  async chaptersDeleteRaw(
+    requestParameters: ChaptersDeleteRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<runtime.ApiResponse<void>> {
+    const queryParameters: any = {};
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    headerParameters['Content-Type'] = 'application/json';
+
+    const response = await this.request(
+      {
+        path: `/api/chapters/delete`,
+        method: 'POST',
+        headers: headerParameters,
+        query: queryParameters,
+        body: ChapterDeleteRequestToJSON(requestParameters['chapterDeleteRequest']),
+      },
+      initOverrides,
+    );
+
+    return new runtime.VoidApiResponse(response);
+  }
+
+  /**
+   * Delete chapter
+   */
+  async chaptersDelete(
+    requestParameters: ChaptersDeleteRequest = {},
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<void> {
+    await this.chaptersDeleteRaw(requestParameters, initOverrides);
   }
 
   /**
