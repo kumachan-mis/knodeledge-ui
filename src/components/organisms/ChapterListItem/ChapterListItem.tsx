@@ -1,5 +1,5 @@
 'use client';
-import SectionList from '../SectionList';
+import { SectionListProps } from '../SectionList';
 import { ChapterActionError } from '@/contexts/openapi/chapters';
 import { LoadableAction } from '@/contexts/openapi/types';
 import { useMenu } from '@/hooks/menu';
@@ -17,6 +17,8 @@ export type ChapterListItemComponentProps = {
   readonly chapter: ChapterWithSections;
   readonly maxChapterNumber: number;
   readonly onUpdateChapter: (chapter: ChapterWithoutAutofield) => Promise<LoadableAction<ChapterActionError>>;
+  readonly onDeleteChapter: () => Promise<LoadableAction<ChapterActionError>>;
+  readonly SectionList: React.FC<Omit<SectionListProps, 'user'>>;
 };
 
 const ChapterListItemComponent: React.FC<ChapterListItemComponentProps> = ({
@@ -24,6 +26,8 @@ const ChapterListItemComponent: React.FC<ChapterListItemComponentProps> = ({
   chapter,
   maxChapterNumber,
   onUpdateChapter,
+  onDeleteChapter,
+  SectionList,
 }) => {
   const {
     open: chapterMenuOpen,
@@ -61,6 +65,7 @@ const ChapterListItemComponent: React.FC<ChapterListItemComponentProps> = ({
           id={`chapter-list-item-menu-${chapter.number}`}
           maxChapterNumber={maxChapterNumber}
           onClose={onCloseChapterMenu}
+          onDeleteChapter={onDeleteChapter}
           onUpdateChapter={onUpdateChapter}
           open={chapterMenuOpen}
           projectId={projectId}

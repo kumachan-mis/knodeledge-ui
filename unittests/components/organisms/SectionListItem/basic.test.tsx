@@ -3,9 +3,12 @@ import SectionListItem from '@/components/organisms/SectionListItem';
 import { render } from '@testing-library/react';
 
 test('should show section', () => {
+  const deleteSection = jest.fn();
+
   const screen = render(
     <SectionListItem
       chapterId="CHAPTER"
+      onDeleteSection={deleteSection}
       projectId="PROJECT"
       section={{
         id: 'SECTION',

@@ -1,5 +1,6 @@
 'use client';
 import { createProject } from '@/actions/projects/createProject';
+import { deleteProject } from '@/actions/projects/deleteProject';
 import { updateProject } from '@/actions/projects/updateProject';
 import { Project, ProjectWithoutAutofield, ProjectWithoutAutofieldError, UserOnlyId } from '@/openapi';
 
@@ -25,6 +26,8 @@ export type LoadableActionProjectUpdate = (
   id: string,
   project: ProjectWithoutAutofield,
 ) => Promise<LoadableAction<ProjectActionError>>;
+
+export type LoadableActionProjectDelete = (id: string) => Promise<LoadableAction<ProjectActionError>>;
 
 const EMPTY_PROJECT_ACTION_ERROR: ProjectActionError = {
   message: '',
@@ -145,6 +148,39 @@ export function useUpdateProjectInList(user: UserOnlyId): LoadableActionProjectU
       data: prev.data.map((project) =>
         project.id === errorable.response.project.id ? errorable.response.project : project,
       ),
+    }));
+    return { state: 'success', error: null };
+  };
+}
+
+export function useDeleteProjectInList(user: UserOnlyId): LoadableActionProjectDelete {
+  const setPanic = useSetPanic();
+  const setProjectList = React.useContext(ProjectListSetContext);
+
+  return async (id) => {
+    const errorable = await deleteProject({ user, project: { id } });
+    if (errorable.state === 'panic') {
+      setPanic(errorable.error.message);
+      return { state: 'error', error: UNKNOWN_PROJECT_ACTION_ERROR };
+    }
+
+    if (errorable.state === 'error' && (!!errorable.error.user?.id || !!errorable.error.project?.id)) {
+      return { state: 'error', error: UNKNOWN_PROJECT_ACTION_ERROR };
+    }
+
+    if (errorable.state === 'error') {
+      return {
+        state: 'error',
+        error: {
+          message: errorable.error.message,
+          project: { ...EMPTY_PROJECT_ACTION_ERROR.project, ...errorable.error.project },
+        },
+      };
+    }
+
+    setProjectList((prev) => ({
+      state: 'success',
+      data: prev.data.filter((project) => project.id !== id),
     }));
     return { state: 'success', error: null };
   };

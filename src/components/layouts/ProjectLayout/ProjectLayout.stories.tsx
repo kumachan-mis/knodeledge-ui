@@ -1,5 +1,6 @@
 import ChapterListComponent from '@/components/organisms/ChapterList/ChapterList';
 import ChapterListHeaderComponent from '@/components/organisms/ChapterListHeader/ChapterListHeader';
+import SectionListComponent from '@/components/organisms/SectionList/SectionList';
 
 import ProjectLayout from './ProjectLayout';
 
@@ -64,6 +65,13 @@ export const Login: Story = {
     ),
     DrawerContent: () => (
       <ChapterListComponent
+        SectionList={(props) => (
+          <SectionListComponent
+            // eslint-disable-next-line @typescript-eslint/require-await
+            onDeleteSection={async () => ({ state: 'success', data: [], error: null })}
+            {...props}
+          />
+        )}
         chapterList={[
           {
             id: 'CHAPTER_ONE',
@@ -97,9 +105,9 @@ export const Login: Story = {
           },
         ]}
         // eslint-disable-next-line @typescript-eslint/require-await
-        onUpdateChapter={async () => {
-          return { state: 'success', error: null };
-        }}
+        onDeleteChapter={async () => ({ state: 'success', data: [], error: null })}
+        // eslint-disable-next-line @typescript-eslint/require-await
+        onUpdateChapter={async () => ({ state: 'success', data: [], error: null })}
         projectId="PROJECT"
       />
     ),

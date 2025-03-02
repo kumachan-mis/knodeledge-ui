@@ -1,20 +1,21 @@
 'use client';
 import { createChapter } from '@/actions/chapters/createChapter';
+import { deleteChapter } from '@/actions/chapters/deleteChapter';
 import { updateChapter } from '@/actions/chapters/updateChapter';
 import { sectionalizeIntoGraphs } from '@/actions/graphs/sectionallizeIntoGraphs';
 import {
-  ChapterOnlyId,
   ChapterWithSections,
   ChapterWithoutAutofield,
   ChapterWithoutAutofieldError,
-  ProjectOnlyId,
   SectionOfChapter,
   SectionWithoutAutofield,
   SectionWithoutAutofieldListError,
   UserOnlyId,
 } from '@/openapi';
 
+import { GraphActionError, useDeleteGraph } from './graphs';
 import { useSetPanic } from './panic';
+import { useDeletePaper } from './papers';
 import { LoadableAction, LoadableServerSideData } from './types';
 
 import React from 'react';
@@ -44,9 +45,13 @@ export type LoadableActionChapterUpdate = (
   chapter: ChapterWithoutAutofield,
 ) => Promise<LoadableAction<ChapterActionError>>;
 
+export type LoadableActionChapterDelete = (id: string) => Promise<LoadableAction<ChapterActionError>>;
+
 export type LoadableActionSectionalizePaper = (
   sections: SectionWithoutAutofield[],
 ) => Promise<LoadableAction<SectionsActionError>>;
+
+export type LoadableActionSectionDelete = (id: string) => Promise<LoadableAction<GraphActionError>>;
 
 const EMPTY_CHAPTER_ACTION_ERROR: ChapterActionError = {
   message: '',
@@ -96,12 +101,12 @@ export function useLoadableActiveSectionInList(): LoadableSection {
   return React.useContext(AtiveSectionValueContext);
 }
 
-export function useCreateChapterInList(user: UserOnlyId, project: ProjectOnlyId): LoadableActionChapterCreate {
+export function useCreateChapterInList(user: UserOnlyId, projectId: string): LoadableActionChapterCreate {
   const setPanic = useSetPanic();
   const setChapterList = React.useContext(ChapterListSetContext);
 
   return async (chapter) => {
-    const errorable = await createChapter({ user, project, chapter });
+    const errorable = await createChapter({ user, project: { id: projectId }, chapter });
     if (errorable.state === 'panic') {
       setPanic(errorable.error.message);
       return { state: 'error', error: UNKNOWN_CHAPTER_ACTION_ERROR };
@@ -137,12 +142,12 @@ export function useCreateChapterInList(user: UserOnlyId, project: ProjectOnlyId)
   };
 }
 
-export function useUpdateChapterInList(user: UserOnlyId, project: ProjectOnlyId): LoadableActionChapterUpdate {
+export function useUpdateChapterInList(user: UserOnlyId, projectId: string): LoadableActionChapterUpdate {
   const setPanic = useSetPanic();
   const setChapterList = React.useContext(ChapterListSetContext);
 
   return async (id, chapter) => {
-    const errorable = await updateChapter({ user, project, chapter: { id, ...chapter } });
+    const errorable = await updateChapter({ user, project: { id: projectId }, chapter: { id, ...chapter } });
     if (errorable.state === 'panic') {
       setPanic(errorable.error.message);
       return { state: 'error', error: UNKNOWN_CHAPTER_ACTION_ERROR };
@@ -191,16 +196,59 @@ export function useUpdateChapterInList(user: UserOnlyId, project: ProjectOnlyId)
   };
 }
 
+export function useDeleteChapterInList(user: UserOnlyId, projectId: string): LoadableActionChapterDelete {
+  const setPanic = useSetPanic();
+  const setChapterList = React.useContext(ChapterListSetContext);
+
+  return async (id) => {
+    const errorable = await deleteChapter({ user, project: { id: projectId }, chapter: { id } });
+    if (errorable.state === 'panic') {
+      setPanic(errorable.error.message);
+      return { state: 'error', error: UNKNOWN_CHAPTER_ACTION_ERROR };
+    }
+
+    if (
+      errorable.state === 'error' &&
+      (!!errorable.error.user?.id || !!errorable.error.project?.id || !!errorable.error.chapter?.id)
+    ) {
+      return { state: 'error', error: UNKNOWN_CHAPTER_ACTION_ERROR };
+    }
+
+    if (errorable.state === 'error') {
+      return {
+        state: 'error',
+        error: {
+          message: errorable.error.message,
+          chapter: { ...EMPTY_CHAPTER_ACTION_ERROR.chapter, ...errorable.error.chapter },
+        },
+      };
+    }
+
+    setChapterList((prev) => ({
+      state: 'success',
+      data: prev.data.filter((chapter) => chapter.id !== id),
+    }));
+    return { state: 'success', error: null };
+  };
+}
+
 export function useSectionalizePaper(
   user: UserOnlyId,
-  project: ProjectOnlyId,
-  chapter: ChapterOnlyId,
+  projectId: string,
+  chapterId: string,
 ): LoadableActionSectionalizePaper {
   const setPanic = useSetPanic();
   const setChapterList = React.useContext(ChapterListSetContext);
 
+  const deletePaper = useDeletePaper(user, projectId);
+
   return async (sections) => {
-    const errorable = await sectionalizeIntoGraphs({ user, project, chapter, sections });
+    const errorable = await sectionalizeIntoGraphs({
+      user,
+      project: { id: projectId },
+      chapter: { id: chapterId },
+      sections,
+    });
     if (errorable.state === 'panic') {
       setPanic(errorable.error.message);
       return { state: 'error', error: UNKNOWN_SECTIONS_ACTION_ERROR };
@@ -224,12 +272,45 @@ export function useSectionalizePaper(
     }
 
     setChapterList((prev) => {
-      const prevChapter = prev.data.find((ch) => ch.id === chapter.id);
+      const prevChapter = prev.data.find((ch) => ch.id === chapterId);
       if (!prevChapter) return prev;
 
       const data = prev.data.map((ch) => {
-        if (ch.id !== chapter.id) return ch;
+        if (ch.id !== chapterId) return ch;
         const sections = errorable.response.graphs.map((graph) => ({ id: graph.id, name: graph.name }));
+        return { ...ch, sections };
+      });
+      return { state: 'success', data };
+    });
+
+    await deletePaper(chapterId);
+
+    return { state: 'success', error: null };
+  };
+}
+
+export function useDeleteSectionInList(
+  user: UserOnlyId,
+  projectId: string,
+  chapterId: string,
+): LoadableActionSectionDelete {
+  const setChapterList = React.useContext(ChapterListSetContext);
+
+  const deleteGraph = useDeleteGraph(user, projectId, chapterId);
+
+  return async (id) => {
+    const errorable = await deleteGraph(id);
+    if (errorable.state === 'error') {
+      return { state: 'error', error: errorable.error };
+    }
+
+    setChapterList((prev) => {
+      const prevChapter = prev.data.find((ch) => ch.id === chapterId);
+      if (!prevChapter) return prev;
+
+      const data = prev.data.map((ch) => {
+        if (ch.id !== chapterId) return ch;
+        const sections = prevChapter.sections.filter((section) => section.id !== id);
         return { ...ch, sections };
       });
       return { state: 'success', data };

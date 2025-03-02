@@ -1,3 +1,4 @@
+import { SectionListProps } from '../SectionList';
 import ChapterListItem from '@/components/organisms/ChapterListItem';
 import { ChapterActionError } from '@/contexts/openapi/chapters';
 import { LoadableAction } from '@/contexts/openapi/types';
@@ -12,15 +13,25 @@ export type ChapterListComponentProps = {
     id: string,
     chapter: ChapterWithoutAutofield,
   ) => Promise<LoadableAction<ChapterActionError>>;
+  readonly onDeleteChapter: (id: string) => Promise<LoadableAction<ChapterActionError>>;
+  readonly SectionList: React.FC<Omit<SectionListProps, 'user'>>;
 };
 
-const ChapterListComponent: React.FC<ChapterListComponentProps> = ({ projectId, chapterList, onUpdateChapter }) => (
+const ChapterListComponent: React.FC<ChapterListComponentProps> = ({
+  projectId,
+  chapterList,
+  onUpdateChapter,
+  onDeleteChapter,
+  SectionList,
+}) => (
   <List>
     {chapterList.map((chapter) => (
       <ChapterListItem
+        SectionList={SectionList}
         chapter={chapter}
         key={chapter.id}
         maxChapterNumber={chapterList.length}
+        onDeleteChapter={() => onDeleteChapter(chapter.id)}
         onUpdateChapter={(updatedChapter) => onUpdateChapter(chapter.id, updatedChapter)}
         projectId={projectId}
       />

@@ -1,5 +1,5 @@
 'use client';
-import ChapterDialog from '@/components/organisms/ChapterDialog';
+import ChapterFormDialog from '@/components/organisms/ChapterFormDialog';
 import { ChapterActionError } from '@/contexts/openapi/chapters';
 import { LoadableAction } from '@/contexts/openapi/types';
 import { useDialog } from '@/hooks/dialog';
@@ -41,7 +41,7 @@ const ChapterListHeaderComponent: React.FC<ChapterListHeaderComponentProps> = ({
       <IconButton aria-label="new chapter" onClick={onOpenNewChapterDialog} size="small">
         <NoteAddIcon />
       </IconButton>
-      <ChapterDialog
+      <ChapterFormDialog
         defaultValues={{ name: '', number: '' }}
         onClose={onCloseNewChapterDialog}
         onSubmit={onCreateChapter}

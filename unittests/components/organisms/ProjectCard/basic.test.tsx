@@ -4,9 +4,11 @@ import { render } from '@testing-library/react';
 
 test('should show project with description', () => {
   const updateProject = jest.fn();
+  const deleteProject = jest.fn();
 
   const screen = render(
     <ProjectCard
+      onDeleteProject={deleteProject}
       onUpdateProject={updateProject}
       project={{
         id: 'PROJECT_ID',
@@ -24,9 +26,11 @@ test('should show project with description', () => {
 
 test('should show project without description', () => {
   const updateProject = jest.fn();
+  const deleteProject = jest.fn();
 
   const screen = render(
     <ProjectCard
+      onDeleteProject={deleteProject}
       onUpdateProject={updateProject}
       project={{
         id: 'PROJECT_ID',

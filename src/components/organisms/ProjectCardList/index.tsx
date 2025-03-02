@@ -1,5 +1,5 @@
 'use client';
-import { useLoadableProjectList, useUpdateProjectInList } from '@/contexts/openapi/projects';
+import { useDeleteProjectInList, useLoadableProjectList, useUpdateProjectInList } from '@/contexts/openapi/projects';
 
 import ProjectCardListComponent from './ProjectCardList';
 
@@ -12,7 +12,14 @@ export type ProjectCardListProps = {
 const ProjectCardList: React.FC<ProjectCardListProps> = ({ user }) => {
   const loadableProjectList = useLoadableProjectList();
   const updateProject = useUpdateProjectInList({ id: user.sub });
-  return <ProjectCardListComponent onUpdateProject={updateProject} projectList={loadableProjectList.data} />;
+  const deleteProject = useDeleteProjectInList({ id: user.sub });
+  return (
+    <ProjectCardListComponent
+      onDeleteProject={deleteProject}
+      onUpdateProject={updateProject}
+      projectList={loadableProjectList.data}
+    />
+  );
 };
 
 export default ProjectCardList;

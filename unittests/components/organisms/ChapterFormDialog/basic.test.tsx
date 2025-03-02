@@ -1,5 +1,5 @@
 import { generateRandomString } from '../../../testutils/string';
-import ChapterDialog from '@/components/organisms/ChapterDialog';
+import ChapterFormDialog from '@/components/organisms/ChapterFormDialog';
 
 import { render, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -9,7 +9,7 @@ test('should render chapter dialog', async () => {
   const onClose = jest.fn();
 
   const screen = render(
-    <ChapterDialog
+    <ChapterFormDialog
       defaultValues={{ name: '', number: '' }}
       onClose={onClose}
       onSubmit={onSubmit}
@@ -31,14 +31,14 @@ test('should render chapter dialog', async () => {
   expect(dialog.queryByText('chapter number is required')).not.toBeInTheDocument();
 });
 
-test('should create chapter', async () => {
+test('should submit chapter', async () => {
   const user = userEvent.setup();
 
   const onSubmit = jest.fn().mockResolvedValueOnce({ state: 'success', error: null });
   const onClose = jest.fn();
 
   const screen = render(
-    <ChapterDialog
+    <ChapterFormDialog
       defaultValues={{ name: '', number: '' }}
       onClose={onClose}
       onSubmit={onSubmit}
@@ -79,7 +79,7 @@ test('should not submit if chapter name is empty', async () => {
   const onClose = jest.fn();
 
   const screen = render(
-    <ChapterDialog
+    <ChapterFormDialog
       defaultValues={{ name: '', number: '' }}
       onClose={onClose}
       onSubmit={onSubmit}
@@ -118,7 +118,7 @@ test('should not submit if chapter name is too long', async () => {
   const onClose = jest.fn();
 
   const screen = render(
-    <ChapterDialog
+    <ChapterFormDialog
       defaultValues={{ name: '', number: '' }}
       onClose={onClose}
       onSubmit={onSubmit}
@@ -156,7 +156,7 @@ test('should not submit if chapter number is empty', async () => {
   const onClose = jest.fn();
 
   const screen = render(
-    <ChapterDialog
+    <ChapterFormDialog
       defaultValues={{ name: '', number: '' }}
       onClose={onClose}
       onSubmit={onSubmit}
@@ -227,7 +227,7 @@ test.each<{ name: string; chapterNumber: string }>([
   const onClose = jest.fn();
 
   const screen = render(
-    <ChapterDialog
+    <ChapterFormDialog
       defaultValues={{ name: '', number: '' }}
       onClose={onClose}
       onSubmit={onSubmit}
@@ -262,7 +262,7 @@ test('should not submit if chapter number is too large', async () => {
   const onClose = jest.fn();
 
   const screen = render(
-    <ChapterDialog
+    <ChapterFormDialog
       defaultValues={{ name: '', number: '' }}
       onClose={onClose}
       onSubmit={onSubmit}
@@ -301,7 +301,7 @@ test('should not submit if chapter properties are same as default', async () => 
   const onClose = jest.fn();
 
   const screen = render(
-    <ChapterDialog
+    <ChapterFormDialog
       defaultValues={{ name: 'Chapter Name', number: '1' }}
       onClose={onClose}
       onSubmit={onSubmit}
@@ -351,7 +351,7 @@ test('should show error mmessages if chapter submission fails', async () => {
   const onClose = jest.fn();
 
   const screen = render(
-    <ChapterDialog
+    <ChapterFormDialog
       defaultValues={{ name: '', number: '' }}
       onClose={onClose}
       onSubmit={onSubmit}
@@ -391,7 +391,7 @@ test('should close dialog', async () => {
   const onClose = jest.fn();
 
   const screen = render(
-    <ChapterDialog
+    <ChapterFormDialog
       defaultValues={{ name: '', number: '' }}
       onClose={onClose}
       onSubmit={jest.fn()}

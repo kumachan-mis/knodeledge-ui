@@ -1,9 +1,9 @@
-import ProjectDialogComponent from './ProjectDialog';
+import ProjectFormDialogComponent from './ProjectFormDialog';
 
 import { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof ProjectDialogComponent> = {
-  component: ProjectDialogComponent,
+const meta: Meta<typeof ProjectFormDialogComponent> = {
+  component: ProjectFormDialogComponent,
   args: {
     open: true,
     // eslint-disable-next-line @typescript-eslint/require-await
@@ -21,7 +21,7 @@ const meta: Meta<typeof ProjectDialogComponent> = {
 
 export default meta;
 
-type Story = StoryObj<typeof ProjectDialogComponent>;
+type Story = StoryObj<typeof ProjectFormDialogComponent>;
 
 export const Create: Story = {
   args: {

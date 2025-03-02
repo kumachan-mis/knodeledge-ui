@@ -17,6 +17,8 @@ import type {
   ProjectCreateErrorResponse,
   ProjectCreateRequest,
   ProjectCreateResponse,
+  ProjectDeleteErrorResponse,
+  ProjectDeleteRequest,
   ProjectFindErrorResponse,
   ProjectFindRequest,
   ProjectFindResponse,
@@ -36,6 +38,10 @@ import {
   ProjectCreateRequestToJSON,
   ProjectCreateResponseFromJSON,
   ProjectCreateResponseToJSON,
+  ProjectDeleteErrorResponseFromJSON,
+  ProjectDeleteErrorResponseToJSON,
+  ProjectDeleteRequestFromJSON,
+  ProjectDeleteRequestToJSON,
   ProjectFindErrorResponseFromJSON,
   ProjectFindErrorResponseToJSON,
   ProjectFindRequestFromJSON,
@@ -58,6 +64,10 @@ import {
 
 export interface ProjectsCreateRequest {
   projectCreateRequest?: ProjectCreateRequest;
+}
+
+export interface ProjectsDeleteRequest {
+  projectDeleteRequest?: ProjectDeleteRequest;
 }
 
 export interface ProjectsFindRequest {
@@ -112,6 +122,43 @@ export class ProjectsApi extends runtime.BaseAPI {
   ): Promise<ProjectCreateResponse> {
     const response = await this.projectsCreateRaw(requestParameters, initOverrides);
     return await response.value();
+  }
+
+  /**
+   * Delete project
+   */
+  async projectsDeleteRaw(
+    requestParameters: ProjectsDeleteRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<runtime.ApiResponse<void>> {
+    const queryParameters: any = {};
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    headerParameters['Content-Type'] = 'application/json';
+
+    const response = await this.request(
+      {
+        path: `/api/projects/delete`,
+        method: 'POST',
+        headers: headerParameters,
+        query: queryParameters,
+        body: ProjectDeleteRequestToJSON(requestParameters['projectDeleteRequest']),
+      },
+      initOverrides,
+    );
+
+    return new runtime.VoidApiResponse(response);
+  }
+
+  /**
+   * Delete project
+   */
+  async projectsDelete(
+    requestParameters: ProjectsDeleteRequest = {},
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<void> {
+    await this.projectsDeleteRaw(requestParameters, initOverrides);
   }
 
   /**

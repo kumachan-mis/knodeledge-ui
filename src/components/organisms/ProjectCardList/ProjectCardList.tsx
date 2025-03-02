@@ -13,9 +13,14 @@ export type ProjectCardListComponentProps = {
     id: string,
     project: ProjectWithoutAutofield,
   ) => Promise<LoadableAction<ProjectActionError>>;
+  readonly onDeleteProject: (id: string) => Promise<LoadableAction<ProjectActionError>>;
 };
 
-const ProjectCardListComponent: React.FC<ProjectCardListComponentProps> = ({ projectList, onUpdateProject }) =>
+const ProjectCardListComponent: React.FC<ProjectCardListComponentProps> = ({
+  projectList,
+  onUpdateProject,
+  onDeleteProject,
+}) =>
   projectList.length === 0 ? (
     <Box display="flex" justifyContent="center" p={2}>
       <Typography color="text.secondary" variant="h5">
@@ -27,6 +32,7 @@ const ProjectCardListComponent: React.FC<ProjectCardListComponentProps> = ({ pro
       {projectList.map((project) => (
         <Grid key={project.id} size={{ xs: 12, sm: 6, md: 4, xl: 3 }}>
           <ProjectCard
+            onDeleteProject={() => onDeleteProject(project.id)}
             onUpdateProject={(updatedProject) => onUpdateProject(project.id, updatedProject)}
             project={project}
           />

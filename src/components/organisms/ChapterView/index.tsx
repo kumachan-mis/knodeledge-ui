@@ -17,8 +17,8 @@ const ChapterView: React.FC<ChapterViewProps> = ({ user, projectId, chapterId })
   const loadableChapter = useLoadableActiveChapterInList();
   const loadablePaper = useLoadablePaper(chapterId);
 
-  const updatePaper = useUpdatePaper({ id: user.sub }, { id: projectId }, { id: chapterId });
-  const sectionalizePaper = useSectionalizePaper({ id: user.sub }, { id: projectId }, { id: chapterId });
+  const updatePaper = useUpdatePaper({ id: user.sub }, projectId, chapterId);
+  const sectionalizePaper = useSectionalizePaper({ id: user.sub }, projectId, chapterId);
 
   return (
     <ChapterViewComponent

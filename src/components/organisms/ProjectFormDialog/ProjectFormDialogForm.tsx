@@ -1,34 +1,34 @@
 'use client';
-import { ChapterActionError } from '@/contexts/openapi/chapters';
+import { ProjectActionError } from '@/contexts/openapi/projects';
 import { LoadableAction } from '@/contexts/openapi/types';
-import { ChapterWithoutAutofield } from '@/openapi';
+import { ProjectWithoutAutofield } from '@/openapi';
 
 import Button from '@mui/material/Button';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import FormHelperText from '@mui/material/FormHelperText';
 import TextField from '@mui/material/TextField';
-import { Controller, useForm, Validate } from 'react-hook-form';
+import { Controller, Validate, useForm } from 'react-hook-form';
 
-export type ChapterDialogFormComponentProps = {
+export type ProjectFormDialogFormComponentProps = {
   readonly submitText: string;
-  readonly defaultValues: ChapterFieldValues;
-  readonly validates?: ChapterFieldValidates;
-  readonly onSubmit: (project: ChapterWithoutAutofield) => Promise<LoadableAction<ChapterActionError>>;
+  readonly defaultValues: ProjectFieldValues;
+  readonly validates?: ProjectFieldValidates;
+  readonly onSubmit: (project: ProjectWithoutAutofield) => Promise<LoadableAction<ProjectActionError>>;
   readonly onClose: () => void;
 };
 
-export type ChapterFieldValues = {
+export type ProjectFieldValues = {
   name: string;
-  number: string;
+  description: string;
 };
 
-export type ChapterFieldValidates = {
-  name?: Validate<string, ChapterFieldValues>;
-  number?: Validate<string, ChapterFieldValues>;
+export type ProjectFieldValidates = {
+  name?: Validate<string, ProjectFieldValues>;
+  description?: Validate<string, ProjectFieldValues>;
 };
 
-const ChapterDialogFormComponent: React.FC<ChapterDialogFormComponentProps> = ({
+const ProjectFormDialogFormComponent: React.FC<ProjectFormDialogFormComponentProps> = ({
   submitText,
   defaultValues,
   validates,
@@ -40,17 +40,17 @@ const ChapterDialogFormComponent: React.FC<ChapterDialogFormComponentProps> = ({
     control,
     setError,
     formState: { isValidating, isValid, isDirty, isSubmitting, errors },
-  } = useForm<ChapterFieldValues>({ defaultValues, mode: 'onChange' });
+  } = useForm<ProjectFieldValues>({ defaultValues, mode: 'onChange' });
 
   const handleSubmitForm = handleSubmit(async (data) => {
-    const result = await onSubmit({ name: data.name, number: parseInt(data.number, 10) });
+    const result = await onSubmit(data);
     if (result.state === 'success') {
       onClose();
       return;
     }
     setError('root', { type: 'server', message: result.error.message });
-    setError('name', { type: 'server', message: result.error.chapter.name });
-    setError('number', { type: 'server', message: result.error.chapter.number });
+    setError('name', { type: 'server', message: result.error.project.name });
+    setError('description', { type: 'server', message: result.error.project.description });
   });
 
   return (
@@ -72,45 +72,45 @@ const ChapterDialogFormComponent: React.FC<ChapterDialogFormComponentProps> = ({
               error={!!errors.name}
               fullWidth
               helperText={errors.name?.message}
-              label="Chapter Name"
+              label="Project Name"
               variant="standard"
             />
           )}
           rules={{
-            required: 'chapter name is required',
-            maxLength: { value: 100, message: 'chapter name cannot be longer than 100 characters' },
+            required: 'project name is required',
+            maxLength: { value: 100, message: 'project name cannot be longer than 100 characters' },
             validate: validates?.name,
           }}
         />
         <Controller
           control={control}
-          name="number"
+          name="description"
           render={({ field }) => (
             <TextField
               {...field}
               disabled={isSubmitting}
-              error={!!errors.number}
+              error={!!errors.description}
               fullWidth
-              helperText={errors.number?.message}
-              label="Chapter Number"
+              helperText={errors.description?.message}
+              label="Project Description"
+              multiline
               variant="standard"
             />
           )}
           rules={{
-            required: 'chapter number is required',
-            pattern: { value: /^[1-9][0-9]*$/, message: 'chapter number must be a positive integer' },
-            validate: validates?.number,
+            maxLength: { value: 400, message: 'project description cannot be longer than 400 characters' },
+            validate: validates?.description,
           }}
         />
       </DialogContent>
       <DialogActions>
-        <Button disabled={isValidating || isSubmitting} onClick={onClose} variant="outlined">
+        <Button color="inherit" disabled={isValidating || isSubmitting} onClick={onClose} variant="outlined">
           Close
         </Button>
         {/**
          * Button can be disabled if isDitry because:
-         * - if new chapter is being created, chapter name is required
-         * - if chapter is being update, one or more of chapter properties must be different from the original
+         * - if new project is being created, project name is required
+         * - if project is being update, one or more of project properties must be different from the original
          */}
         <Button disabled={isValidating || !isValid || !isDirty || isSubmitting} type="submit" variant="contained">
           {submitText}
@@ -120,4 +120,4 @@ const ChapterDialogFormComponent: React.FC<ChapterDialogFormComponentProps> = ({
   );
 };
 
-export default ChapterDialogFormComponent;
+export default ProjectFormDialogFormComponent;

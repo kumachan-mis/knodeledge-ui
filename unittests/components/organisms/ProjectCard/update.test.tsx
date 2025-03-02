@@ -7,9 +7,11 @@ test('should update project', async () => {
   const user = userEvent.setup();
 
   const updateProject = jest.fn().mockResolvedValueOnce({ state: 'success', error: null });
+  const deleteProject = jest.fn();
 
   const screen = render(
     <ProjectCard
+      onDeleteProject={deleteProject}
       onUpdateProject={updateProject}
       project={{
         id: 'PROJECT_ID',
@@ -38,9 +40,11 @@ test('should close dialog', async () => {
   const user = userEvent.setup();
 
   const updateProject = jest.fn().mockResolvedValueOnce({ state: 'success', error: null });
+  const deleteProject = jest.fn();
 
   const screen = render(
     <ProjectCard
+      onDeleteProject={deleteProject}
       onUpdateProject={updateProject}
       project={{
         id: 'PROJECT_ID',
@@ -73,9 +77,11 @@ test('should show error when failed to update project', async () => {
       project: { name: 'name error', description: 'description error' },
     },
   });
+  const deleteProject = jest.fn();
 
   const screen = render(
     <ProjectCard
+      onDeleteProject={deleteProject}
       onUpdateProject={updateProject}
       project={{
         id: 'PROJECT_ID',
