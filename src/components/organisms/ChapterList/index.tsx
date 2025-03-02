@@ -14,8 +14,8 @@ export type ChapterListProps = {
 
 const ChapterList: React.FC<ChapterListProps> = ({ user, projectId }) => {
   const loadableChapterList = useLoadableChapterList();
-  const updateChapter = useUpdateChapterInList({ id: user.sub }, { id: projectId });
-  const deleteChapter = useDeleteChapterInList({ id: user.sub }, { id: projectId });
+  const updateChapter = useUpdateChapterInList({ id: user.sub }, projectId);
+  const deleteChapter = useDeleteChapterInList({ id: user.sub }, projectId);
 
   const SectionListComponent = React.useCallback(
     (props: Omit<SectionListProps, 'user'>) => <SectionList {...props} user={user} />,

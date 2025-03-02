@@ -14,7 +14,7 @@ export type ChapterListHeaderProps = {
 const ChapterListHeader: React.FC<ChapterListHeaderProps> = ({ user, projectId }) => {
   const loadableProject = useLoadableProject();
   const loadableChapterList = useLoadableChapterList();
-  const createChapter = useCreateChapterInList({ id: user.sub }, { id: projectId });
+  const createChapter = useCreateChapterInList({ id: user.sub }, projectId);
   return (
     <ChapterListHeaderComponent
       chapterList={loadableChapterList.data}

@@ -132,15 +132,9 @@ export function useUpdateGraph(
 
 export function useDeleteGraph(user: UserOnlyId, projectId: string, chapterId: string): LoadableActionGraphDelete {
   const setPanic = useSetPanic();
-  const graphMap = React.useContext(GraphMapValueContext);
   const setGraphMap = React.useContext(GraphMapSetContext);
 
   return async (sectionId) => {
-    const loadableGraph = graphMap.get(sectionId);
-    if (loadableGraph?.state !== 'success') {
-      return { state: 'error', error: UNKNOWN_GRAPH_ACTION_ERROR };
-    }
-
     const errorable = await deleteGraph({
       user,
       project: { id: projectId },

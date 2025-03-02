@@ -38,7 +38,7 @@ test.each<{ name: string; projectName: string }>([
     name: 'max length',
     projectName: generateRandomString(100),
   },
-])('should create project without description ($name)', async ({ projectName }) => {
+])('should submit project without description ($name)', async ({ projectName }) => {
   const user = userEvent.setup();
 
   const onSubmit = jest.fn().mockResolvedValueOnce({ state: 'success', error: null });
@@ -86,7 +86,7 @@ test.each<{ name: string; projectName: string; projectDescription: string }>([
     projectName: generateRandomString(100),
     projectDescription: generateRandomString(400),
   },
-])('should create project with description ($name)', async ({ projectName, projectDescription }) => {
+])('should submit project with description ($name)', async ({ projectName, projectDescription }) => {
   const user = userEvent.setup();
 
   const onSubmit = jest.fn().mockResolvedValueOnce({ state: 'success', error: null });

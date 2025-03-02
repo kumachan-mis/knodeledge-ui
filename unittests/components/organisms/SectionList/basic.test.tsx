@@ -1,7 +1,25 @@
 import { USER } from '../../../testutils/user';
+import PanicError from '@/components/organisms/PanicError';
 import SectionList from '@/components/organisms/SectionList';
+import { CachedGraphContextProvider } from '@/contexts/openapi/graphs';
+import { PanicContextProvider } from '@/contexts/openapi/panic';
 
 import { render } from '@testing-library/react';
+
+const Wrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => (
+  <PanicContextProvider>
+    <PanicError />
+    <CachedGraphContextProvider>{children}</CachedGraphContextProvider>
+  </PanicContextProvider>
+);
+
+beforeAll(() => {
+  global.fetch = jest.fn();
+});
+
+beforeEach(() => {
+  (global.fetch as jest.Mock).mockRestore();
+});
 
 test('should show sections', () => {
   const screen = render(
@@ -20,6 +38,7 @@ test('should show sections', () => {
       ]}
       user={USER}
     />,
+    { wrapper: Wrapper },
   );
 
   expect(screen.queryByText('SECTION_ONE')).not.toBeInTheDocument();

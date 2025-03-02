@@ -1,4 +1,4 @@
-import { useDeleteGraph } from '@/contexts/openapi/graphs';
+import { useDeleteSectionInList } from '@/contexts/openapi/chapters';
 import { SectionOfChapter } from '@/openapi';
 
 import SectionListComponent from './SectionList';
@@ -13,7 +13,7 @@ export type SectionListProps = {
 };
 
 const SectionList: React.FC<SectionListProps> = ({ user, projectId, chapterId, sections }) => {
-  const deleteSection = useDeleteGraph({ id: user.sub }, projectId, chapterId);
+  const deleteSection = useDeleteSectionInList({ id: user.sub }, projectId, chapterId);
 
   return (
     <SectionListComponent

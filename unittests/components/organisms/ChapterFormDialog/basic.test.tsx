@@ -31,7 +31,7 @@ test('should render chapter dialog', async () => {
   expect(dialog.queryByText('chapter number is required')).not.toBeInTheDocument();
 });
 
-test('should create chapter', async () => {
+test('should submit chapter', async () => {
   const user = userEvent.setup();
 
   const onSubmit = jest.fn().mockResolvedValueOnce({ state: 'success', error: null });
