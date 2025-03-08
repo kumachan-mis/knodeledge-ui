@@ -200,6 +200,8 @@ export function useDeleteChapterInList(user: UserOnlyId, projectId: string): Loa
   const setPanic = useSetPanic();
   const setChapterList = React.useContext(ChapterListSetContext);
 
+  const deletePaper = useDeletePaper(user, projectId);
+
   return async (id) => {
     const errorable = await deleteChapter({ user, project: { id: projectId }, chapter: { id } });
     if (errorable.state === 'panic') {
@@ -228,6 +230,9 @@ export function useDeleteChapterInList(user: UserOnlyId, projectId: string): Loa
       state: 'success',
       data: prev.data.filter((chapter) => chapter.id !== id),
     }));
+
+    await deletePaper(id);
+
     return { state: 'success', error: null };
   };
 }
@@ -239,8 +244,6 @@ export function useSectionalizePaper(
 ): LoadableActionSectionalizePaper {
   const setPanic = useSetPanic();
   const setChapterList = React.useContext(ChapterListSetContext);
-
-  const deletePaper = useDeletePaper(user, projectId);
 
   return async (sections) => {
     const errorable = await sectionalizeIntoGraphs({
@@ -282,8 +285,6 @@ export function useSectionalizePaper(
       });
       return { state: 'success', data };
     });
-
-    await deletePaper(chapterId);
 
     return { state: 'success', error: null };
   };
