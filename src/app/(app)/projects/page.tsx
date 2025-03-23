@@ -19,7 +19,7 @@ const ProjectListPage: NextPage = async () => {
     );
   }
 
-  const errorableProjectList = await listProject({ user: { id: session.user.sub } });
+  const errorableProjectList = await listProject({ userId: session.user.sub });
 
   if (errorableProjectList.state !== 'success') {
     return (

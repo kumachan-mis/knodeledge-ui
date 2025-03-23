@@ -60,12 +60,7 @@ export function useInitGraph(userId: string, projectId: string, chapterId: strin
     setGraphMap((prev) => new Map(prev.set(sectionId, { state: 'loading', data: null })));
 
     void (async () => {
-      const errorable = await findGraph({
-        user: { id: userId },
-        project: { id: projectId },
-        chapter: { id: chapterId },
-        section: { id: sectionId },
-      });
+      const errorable = await findGraph({ userId, projectId, chapterId, sectionId });
 
       if (errorable.state === 'panic') {
         setPanic(errorable.error.message);

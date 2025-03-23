@@ -20,8 +20,17 @@ export function createJsonRoute(
     }
 
     try {
-      const body = JSON.stringify(await request.json());
-      return await fetch(`${process.env.API_URL}${path}`, { method, headers, body });
+      const url = new URL(`${process.env.API_URL}${path}`);
+      const parameters = new URL(request.url).searchParams;
+      for (const [key, value] of Array.from(parameters.entries())) {
+        url.searchParams.append(key, value);
+      }
+
+      let body: string | null = null;
+      if (request.body) {
+        body = JSON.stringify(await request.json());
+      }
+      return await fetch(url, { method, headers, body });
     } catch (e) {
       console.warn(e);
       return Response.json({ message: 'connection error' }, { status: 500 });

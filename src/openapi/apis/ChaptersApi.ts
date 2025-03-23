@@ -20,7 +20,6 @@ import type {
   ChapterDeleteErrorResponse,
   ChapterDeleteRequest,
   ChapterListErrorResponse,
-  ChapterListRequest,
   ChapterListResponse,
   ChapterUpdateErrorResponse,
   ChapterUpdateRequest,
@@ -41,8 +40,6 @@ import {
   ChapterDeleteRequestToJSON,
   ChapterListErrorResponseFromJSON,
   ChapterListErrorResponseToJSON,
-  ChapterListRequestFromJSON,
-  ChapterListRequestToJSON,
   ChapterListResponseFromJSON,
   ChapterListResponseToJSON,
   ChapterUpdateErrorResponseFromJSON,
@@ -62,7 +59,8 @@ export interface ChaptersDeleteRequest {
 }
 
 export interface ChaptersListRequest {
-  chapterListRequest?: ChapterListRequest;
+  userId: string;
+  projectId: string;
 }
 
 export interface ChaptersUpdateRequest {
@@ -155,19 +153,38 @@ export class ChaptersApi extends runtime.BaseAPI {
     requestParameters: ChaptersListRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<ChapterListResponse>> {
+    if (requestParameters['userId'] == null) {
+      throw new runtime.RequiredError(
+        'userId',
+        'Required parameter "userId" was null or undefined when calling chaptersList().',
+      );
+    }
+
+    if (requestParameters['projectId'] == null) {
+      throw new runtime.RequiredError(
+        'projectId',
+        'Required parameter "projectId" was null or undefined when calling chaptersList().',
+      );
+    }
+
     const queryParameters: any = {};
 
-    const headerParameters: runtime.HTTPHeaders = {};
+    if (requestParameters['userId'] != null) {
+      queryParameters['userId'] = requestParameters['userId'];
+    }
 
-    headerParameters['Content-Type'] = 'application/json';
+    if (requestParameters['projectId'] != null) {
+      queryParameters['projectId'] = requestParameters['projectId'];
+    }
+
+    const headerParameters: runtime.HTTPHeaders = {};
 
     const response = await this.request(
       {
         path: `/api/chapters/list`,
-        method: 'POST',
+        method: 'GET',
         headers: headerParameters,
         query: queryParameters,
-        body: ChapterListRequestToJSON(requestParameters['chapterListRequest']),
       },
       initOverrides,
     );
@@ -179,7 +196,7 @@ export class ChaptersApi extends runtime.BaseAPI {
    * Get list of chapters for a project
    */
   async chaptersList(
-    requestParameters: ChaptersListRequest = {},
+    requestParameters: ChaptersListRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<ChapterListResponse> {
     const response = await this.chaptersListRaw(requestParameters, initOverrides);

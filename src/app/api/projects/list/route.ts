@@ -1,3 +1,3 @@
 import { createJsonRoute, jsonSsrHeaders } from '@/apis/route/json';
 
-export const POST = createJsonRoute('/api/projects/list', 'POST', jsonSsrHeaders);
+export const GET = createJsonRoute('/api/projects/list', 'GET', jsonSsrHeaders);

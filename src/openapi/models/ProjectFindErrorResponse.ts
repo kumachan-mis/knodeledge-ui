@@ -12,21 +12,6 @@
  */
 
 import { mapValues } from '../runtime';
-import type { ProjectOnlyIdError } from './ProjectOnlyIdError';
-import {
-  ProjectOnlyIdErrorFromJSON,
-  ProjectOnlyIdErrorFromJSONTyped,
-  ProjectOnlyIdErrorToJSON,
-  ProjectOnlyIdErrorToJSONTyped,
-} from './ProjectOnlyIdError';
-import type { UserOnlyIdError } from './UserOnlyIdError';
-import {
-  UserOnlyIdErrorFromJSON,
-  UserOnlyIdErrorFromJSONTyped,
-  UserOnlyIdErrorToJSON,
-  UserOnlyIdErrorToJSONTyped,
-} from './UserOnlyIdError';
-
 /**
  * Error Response Body for Project Find API
  * @export
@@ -40,17 +25,17 @@ export interface ProjectFindErrorResponse {
    */
   message: string;
   /**
-   *
-   * @type {UserOnlyIdError}
+   * Error message for user ID
+   * @type {string}
    * @memberof ProjectFindErrorResponse
    */
-  user?: UserOnlyIdError;
+  userId?: string;
   /**
-   *
-   * @type {ProjectOnlyIdError}
+   * Error message for project ID
+   * @type {string}
    * @memberof ProjectFindErrorResponse
    */
-  project?: ProjectOnlyIdError;
+  projectId?: string;
 }
 
 /**
@@ -74,8 +59,8 @@ export function ProjectFindErrorResponseFromJSONTyped(
   }
   return {
     message: json['message'],
-    user: json['user'] == null ? undefined : UserOnlyIdErrorFromJSON(json['user']),
-    project: json['project'] == null ? undefined : ProjectOnlyIdErrorFromJSON(json['project']),
+    userId: json['userId'] == null ? undefined : json['userId'],
+    projectId: json['projectId'] == null ? undefined : json['projectId'],
   };
 }
 
@@ -93,7 +78,7 @@ export function ProjectFindErrorResponseToJSONTyped(
 
   return {
     message: value['message'],
-    user: UserOnlyIdErrorToJSON(value['user']),
-    project: ProjectOnlyIdErrorToJSON(value['project']),
+    userId: value['userId'],
+    projectId: value['projectId'],
   };
 }

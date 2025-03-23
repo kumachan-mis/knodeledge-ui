@@ -8,7 +8,7 @@ export async function findGraph(
   request: GraphFindRequest,
 ): Promise<Errorable<GraphFindResponse, GraphFindErrorResponse>> {
   return await fetchCsrFromOpenApi(
-    async (initOverrides) => await graphsApi.graphsFind({ graphFindRequest: request }, initOverrides),
+    async (initOverrides) => await graphsApi.graphsFind(request, initOverrides),
     async (error) => {
       if (error.response.status === 404) {
         const errorResponse = GraphFindErrorResponseFromJSON(await error.response.json());

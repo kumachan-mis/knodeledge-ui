@@ -15,7 +15,6 @@ import * as runtime from '../runtime';
 import type {
   ApplicationErrorResponse,
   PaperFindErrorResponse,
-  PaperFindRequest,
   PaperFindResponse,
   PaperUpdateErrorResponse,
   PaperUpdateRequest,
@@ -26,8 +25,6 @@ import {
   ApplicationErrorResponseToJSON,
   PaperFindErrorResponseFromJSON,
   PaperFindErrorResponseToJSON,
-  PaperFindRequestFromJSON,
-  PaperFindRequestToJSON,
   PaperFindResponseFromJSON,
   PaperFindResponseToJSON,
   PaperUpdateErrorResponseFromJSON,
@@ -39,7 +36,9 @@ import {
 } from '../models/index';
 
 export interface PapersFindRequest {
-  paperFindRequest?: PaperFindRequest;
+  userId: string;
+  projectId: string;
+  chapterId: string;
 }
 
 export interface PapersUpdateRequest {
@@ -57,19 +56,49 @@ export class PapersApi extends runtime.BaseAPI {
     requestParameters: PapersFindRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<PaperFindResponse>> {
+    if (requestParameters['userId'] == null) {
+      throw new runtime.RequiredError(
+        'userId',
+        'Required parameter "userId" was null or undefined when calling papersFind().',
+      );
+    }
+
+    if (requestParameters['projectId'] == null) {
+      throw new runtime.RequiredError(
+        'projectId',
+        'Required parameter "projectId" was null or undefined when calling papersFind().',
+      );
+    }
+
+    if (requestParameters['chapterId'] == null) {
+      throw new runtime.RequiredError(
+        'chapterId',
+        'Required parameter "chapterId" was null or undefined when calling papersFind().',
+      );
+    }
+
     const queryParameters: any = {};
 
-    const headerParameters: runtime.HTTPHeaders = {};
+    if (requestParameters['userId'] != null) {
+      queryParameters['userId'] = requestParameters['userId'];
+    }
 
-    headerParameters['Content-Type'] = 'application/json';
+    if (requestParameters['projectId'] != null) {
+      queryParameters['projectId'] = requestParameters['projectId'];
+    }
+
+    if (requestParameters['chapterId'] != null) {
+      queryParameters['chapterId'] = requestParameters['chapterId'];
+    }
+
+    const headerParameters: runtime.HTTPHeaders = {};
 
     const response = await this.request(
       {
         path: `/api/papers/find`,
-        method: 'POST',
+        method: 'GET',
         headers: headerParameters,
         query: queryParameters,
-        body: PaperFindRequestToJSON(requestParameters['paperFindRequest']),
       },
       initOverrides,
     );
@@ -81,7 +110,7 @@ export class PapersApi extends runtime.BaseAPI {
    * Find paper
    */
   async papersFind(
-    requestParameters: PapersFindRequest = {},
+    requestParameters: PapersFindRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<PaperFindResponse> {
     const response = await this.papersFindRaw(requestParameters, initOverrides);

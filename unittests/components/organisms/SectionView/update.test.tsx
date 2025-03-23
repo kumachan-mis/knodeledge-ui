@@ -148,16 +148,8 @@ test('should update graph paragraph with Graph Update API', async () => {
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
     1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/find`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({
-        user: { id: USER.sub },
-        project: { id: 'PROJECT' },
-        chapter: { id: 'CHAPTER' },
-        section: { id: 'SECTION' },
-      }),
-    }),
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/find?userId=${encodeURIComponent(USER.sub)}&projectId=PROJECT&chapterId=CHAPTER&sectionId=SECTION`,
+    expect.objectContaining({ method: 'GET' }),
   );
 
   // eslint-disable-next-line @typescript-eslint/unbound-method
@@ -270,16 +262,8 @@ test('should update graph children with Graph Update API', async () => {
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
     1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/find`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({
-        user: { id: USER.sub },
-        project: { id: 'PROJECT' },
-        chapter: { id: 'CHAPTER' },
-        section: { id: 'SECTION' },
-      }),
-    }),
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/find?userId=${encodeURIComponent(USER.sub)}&projectId=PROJECT&chapterId=CHAPTER&sectionId=SECTION`,
+    expect.objectContaining({ method: 'GET' }),
   );
 
   await user.click(screen.getByRole('tab', { name: 'Graph View' }));
@@ -469,16 +453,8 @@ test('should update graph grandchildren with Graph Update API', async () => {
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
     1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/find`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({
-        user: { id: USER.sub },
-        project: { id: 'PROJECT' },
-        chapter: { id: 'CHAPTER' },
-        section: { id: 'SECTION' },
-      }),
-    }),
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/find?userId=${encodeURIComponent(USER.sub)}&projectId=PROJECT&chapterId=CHAPTER&sectionId=SECTION`,
+    expect.objectContaining({ method: 'GET' }),
   );
 
   await user.click(screen.getByRole('tab', { name: 'Graph View' }));
@@ -654,16 +630,8 @@ test('should show error message when graph update failed', async () => {
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
     1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/find`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({
-        user: { id: USER.sub },
-        project: { id: 'PROJECT' },
-        chapter: { id: 'CHAPTER' },
-        section: { id: 'SECTION' },
-      }),
-    }),
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/find?userId=${encodeURIComponent(USER.sub)}&projectId=PROJECT&chapterId=CHAPTER&sectionId=SECTION`,
+    expect.objectContaining({ method: 'GET' }),
   );
 
   // eslint-disable-next-line @typescript-eslint/unbound-method
@@ -767,16 +735,8 @@ test('should show error message when graph to be updated does not exist', async 
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
     1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/find`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({
-        user: { id: USER.sub },
-        project: { id: 'PROJECT' },
-        chapter: { id: 'CHAPTER' },
-        section: { id: 'SECTION' },
-      }),
-    }),
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/find?userId=${encodeURIComponent(USER.sub)}&projectId=PROJECT&chapterId=CHAPTER&sectionId=SECTION`,
+    expect.objectContaining({ method: 'GET' }),
   );
 
   // eslint-disable-next-line @typescript-eslint/unbound-method
@@ -877,16 +837,8 @@ test('should show error message when internal error occured', async () => {
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
     1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/find`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({
-        user: { id: USER.sub },
-        project: { id: 'PROJECT' },
-        chapter: { id: 'CHAPTER' },
-        section: { id: 'SECTION' },
-      }),
-    }),
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/find?userId=${encodeURIComponent(USER.sub)}&projectId=PROJECT&chapterId=CHAPTER&sectionId=SECTION`,
+    expect.objectContaining({ method: 'GET' }),
   );
 
   // eslint-disable-next-line @typescript-eslint/unbound-method

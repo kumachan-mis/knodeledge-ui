@@ -13,7 +13,7 @@ export async function findProject(
   request: ProjectFindRequest,
 ): Promise<Errorable<ProjectFindResponse, ProjectFindErrorResponse>> {
   return await fetchSsrFromOpenApi(
-    async (initOverrides) => await projectsApi.projectsFind({ projectFindRequest: request }, initOverrides),
+    async (initOverrides) => await projectsApi.projectsFind(request, initOverrides),
     async (error) => {
       if (error.response.status === 404) {
         const errorResponse = ProjectFindErrorResponseFromJSON(await error.response.json());

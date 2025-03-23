@@ -8,7 +8,7 @@ export async function findPaper(
   request: PaperFindRequest,
 ): Promise<Errorable<PaperFindResponse, PaperFindErrorResponse>> {
   return await fetchCsrFromOpenApi(
-    async (initOverrides) => await papersApi.papersFind({ paperFindRequest: request }, initOverrides),
+    async (initOverrides) => await papersApi.papersFind(request, initOverrides),
     async (error) => {
       if (error.response.status === 404) {
         const errorResponse = PaperFindErrorResponseFromJSON(await error.response.json());

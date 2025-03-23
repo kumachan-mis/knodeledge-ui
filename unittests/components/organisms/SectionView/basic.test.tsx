@@ -150,16 +150,8 @@ test('should show graph diagram and paragraph from Graph Find API', async () => 
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
     1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/find`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({
-        user: { id: USER.sub },
-        project: { id: 'PROJECT' },
-        chapter: { id: 'CHAPTER' },
-        section: { id: 'SECTION' },
-      }),
-    }),
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/find?userId=${encodeURIComponent(USER.sub)}&projectId=PROJECT&chapterId=CHAPTER&sectionId=SECTION`,
+    expect.objectContaining({ method: 'GET' }),
   );
 });
 
@@ -204,16 +196,8 @@ test('should show nothing when not found error occured in Graph Find API', async
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
     1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/find`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({
-        user: { id: USER.sub },
-        project: { id: 'PROJECT' },
-        chapter: { id: 'CHAPTER' },
-        section: { id: 'SECTION' },
-      }),
-    }),
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/find?userId=${encodeURIComponent(USER.sub)}&projectId=PROJECT&chapterId=CHAPTER&sectionId=SECTION`,
+    expect.objectContaining({ method: 'GET' }),
   );
 });
 
@@ -260,15 +244,7 @@ test('should show error message when internal error occured in Graph Find API', 
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
     1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/find`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({
-        user: { id: USER.sub },
-        project: { id: 'PROJECT' },
-        chapter: { id: 'CHAPTER' },
-        section: { id: 'SECTION' },
-      }),
-    }),
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/graphs/find?userId=${encodeURIComponent(USER.sub)}&projectId=PROJECT&chapterId=CHAPTER&sectionId=SECTION`,
+    expect.objectContaining({ method: 'GET' }),
   );
 });

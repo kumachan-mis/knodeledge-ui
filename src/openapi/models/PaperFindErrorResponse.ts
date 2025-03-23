@@ -12,28 +12,6 @@
  */
 
 import { mapValues } from '../runtime';
-import type { ProjectOnlyIdError } from './ProjectOnlyIdError';
-import {
-  ProjectOnlyIdErrorFromJSON,
-  ProjectOnlyIdErrorFromJSONTyped,
-  ProjectOnlyIdErrorToJSON,
-  ProjectOnlyIdErrorToJSONTyped,
-} from './ProjectOnlyIdError';
-import type { UserOnlyIdError } from './UserOnlyIdError';
-import {
-  UserOnlyIdErrorFromJSON,
-  UserOnlyIdErrorFromJSONTyped,
-  UserOnlyIdErrorToJSON,
-  UserOnlyIdErrorToJSONTyped,
-} from './UserOnlyIdError';
-import type { ChapterOnlyIdError } from './ChapterOnlyIdError';
-import {
-  ChapterOnlyIdErrorFromJSON,
-  ChapterOnlyIdErrorFromJSONTyped,
-  ChapterOnlyIdErrorToJSON,
-  ChapterOnlyIdErrorToJSONTyped,
-} from './ChapterOnlyIdError';
-
 /**
  * Error Response Body for Paper Find API
  * @export
@@ -47,23 +25,23 @@ export interface PaperFindErrorResponse {
    */
   message: string;
   /**
-   *
-   * @type {UserOnlyIdError}
+   * Error message for user ID
+   * @type {string}
    * @memberof PaperFindErrorResponse
    */
-  user?: UserOnlyIdError;
+  userId?: string;
   /**
-   *
-   * @type {ProjectOnlyIdError}
+   * Error message for project ID
+   * @type {string}
    * @memberof PaperFindErrorResponse
    */
-  project?: ProjectOnlyIdError;
+  projectId?: string;
   /**
-   *
-   * @type {ChapterOnlyIdError}
+   * Error message for chapter ID
+   * @type {string}
    * @memberof PaperFindErrorResponse
    */
-  chapter?: ChapterOnlyIdError;
+  chapterId?: string;
 }
 
 /**
@@ -84,9 +62,9 @@ export function PaperFindErrorResponseFromJSONTyped(json: any, ignoreDiscriminat
   }
   return {
     message: json['message'],
-    user: json['user'] == null ? undefined : UserOnlyIdErrorFromJSON(json['user']),
-    project: json['project'] == null ? undefined : ProjectOnlyIdErrorFromJSON(json['project']),
-    chapter: json['chapter'] == null ? undefined : ChapterOnlyIdErrorFromJSON(json['chapter']),
+    userId: json['userId'] == null ? undefined : json['userId'],
+    projectId: json['projectId'] == null ? undefined : json['projectId'],
+    chapterId: json['chapterId'] == null ? undefined : json['chapterId'],
   };
 }
 
@@ -104,8 +82,8 @@ export function PaperFindErrorResponseToJSONTyped(
 
   return {
     message: value['message'],
-    user: UserOnlyIdErrorToJSON(value['user']),
-    project: ProjectOnlyIdErrorToJSON(value['project']),
-    chapter: ChapterOnlyIdErrorToJSON(value['chapter']),
+    userId: value['userId'],
+    projectId: value['projectId'],
+    chapterId: value['chapterId'],
   };
 }

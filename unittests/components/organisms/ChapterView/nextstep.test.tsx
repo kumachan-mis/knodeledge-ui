@@ -131,11 +131,8 @@ test('should sectionalize paper into graph with Graph Sectionalize API', async (
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
     1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/papers/find`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' }, chapter: { id: 'CHAPTER' } }),
-    }),
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/papers/find?userId=${encodeURIComponent(USER.sub)}&projectId=PROJECT&chapterId=CHAPTER`,
+    expect.objectContaining({ method: 'GET' }),
   );
 
   await user.click(screen.getByRole('button', { name: 'Go to Next Step' }));
@@ -241,11 +238,8 @@ test('should show error message when paper sectionalization failed', async () =>
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
     1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/papers/find`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' }, chapter: { id: 'CHAPTER' } }),
-    }),
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/papers/find?userId=${encodeURIComponent(USER.sub)}&projectId=PROJECT&chapterId=CHAPTER`,
+    expect.objectContaining({ method: 'GET' }),
   );
 
   await user.click(screen.getByRole('button', { name: 'Go to Next Step' }));
@@ -352,11 +346,8 @@ test('should show error message when paper to be sectionalized does not exist', 
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
     1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/papers/find`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' }, chapter: { id: 'CHAPTER' } }),
-    }),
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/papers/find?userId=${encodeURIComponent(USER.sub)}&projectId=PROJECT&chapterId=CHAPTER`,
+    expect.objectContaining({ method: 'GET' }),
   );
 
   await user.click(screen.getByRole('button', { name: 'Go to Next Step' }));
@@ -459,11 +450,8 @@ test('should show error message when internal error occured', async () => {
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
     1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/papers/find`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' }, chapter: { id: 'CHAPTER' } }),
-    }),
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/papers/find?userId=${encodeURIComponent(USER.sub)}&projectId=PROJECT&chapterId=CHAPTER`,
+    expect.objectContaining({ method: 'GET' }),
   );
 
   await user.click(screen.getByRole('button', { name: 'Go to Next Step' }));
