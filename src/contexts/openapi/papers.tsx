@@ -59,11 +59,7 @@ export function useInitPaper(userId: string, projectId: string, chapterId: strin
     setPaperMap((prev) => new Map(prev.set(chapterId, { state: 'loading', data: null })));
 
     void (async () => {
-      const errorable = await findPaper({
-        user: { id: userId },
-        project: { id: projectId },
-        chapter: { id: chapterId },
-      });
+      const errorable = await findPaper({ userId, projectId, chapterId });
       if (errorable.state === 'panic') {
         setPanic(errorable.error.message);
         return;

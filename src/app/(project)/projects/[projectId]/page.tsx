@@ -34,10 +34,7 @@ const ProjectDetailPage: NextPage<ProjectDetailPageProps> = async (props) => {
     );
   }
 
-  const errorableProject = await findProject({
-    user: { id: session.user.sub },
-    project: { id: params.projectId },
-  });
+  const errorableProject = await findProject({ userId: session.user.sub, projectId: params.projectId });
 
   if (errorableProject.state === 'panic') {
     return (
@@ -55,10 +52,7 @@ const ProjectDetailPage: NextPage<ProjectDetailPageProps> = async (props) => {
     );
   }
 
-  const errorableChapterList = await listChapter({
-    user: { id: session.user.sub },
-    project: { id: params.projectId },
-  });
+  const errorableChapterList = await listChapter({ userId: session.user.sub, projectId: params.projectId });
 
   if (errorableChapterList.state !== 'success') {
     return (

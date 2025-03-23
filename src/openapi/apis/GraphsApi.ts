@@ -17,7 +17,6 @@ import type {
   GraphDeleteErrorResponse,
   GraphDeleteRequest,
   GraphFindErrorResponse,
-  GraphFindRequest,
   GraphFindResponse,
   GraphSectionalizeErrorResponse,
   GraphSectionalizeRequest,
@@ -35,8 +34,6 @@ import {
   GraphDeleteRequestToJSON,
   GraphFindErrorResponseFromJSON,
   GraphFindErrorResponseToJSON,
-  GraphFindRequestFromJSON,
-  GraphFindRequestToJSON,
   GraphFindResponseFromJSON,
   GraphFindResponseToJSON,
   GraphSectionalizeErrorResponseFromJSON,
@@ -58,7 +55,10 @@ export interface GraphsDeleteRequest {
 }
 
 export interface GraphsFindRequest {
-  graphFindRequest?: GraphFindRequest;
+  userId: string;
+  projectId: string;
+  chapterId: string;
+  sectionId: string;
 }
 
 export interface GraphsSectionalizeRequest {
@@ -117,19 +117,60 @@ export class GraphsApi extends runtime.BaseAPI {
     requestParameters: GraphsFindRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<GraphFindResponse>> {
+    if (requestParameters['userId'] == null) {
+      throw new runtime.RequiredError(
+        'userId',
+        'Required parameter "userId" was null or undefined when calling graphsFind().',
+      );
+    }
+
+    if (requestParameters['projectId'] == null) {
+      throw new runtime.RequiredError(
+        'projectId',
+        'Required parameter "projectId" was null or undefined when calling graphsFind().',
+      );
+    }
+
+    if (requestParameters['chapterId'] == null) {
+      throw new runtime.RequiredError(
+        'chapterId',
+        'Required parameter "chapterId" was null or undefined when calling graphsFind().',
+      );
+    }
+
+    if (requestParameters['sectionId'] == null) {
+      throw new runtime.RequiredError(
+        'sectionId',
+        'Required parameter "sectionId" was null or undefined when calling graphsFind().',
+      );
+    }
+
     const queryParameters: any = {};
 
-    const headerParameters: runtime.HTTPHeaders = {};
+    if (requestParameters['userId'] != null) {
+      queryParameters['userId'] = requestParameters['userId'];
+    }
 
-    headerParameters['Content-Type'] = 'application/json';
+    if (requestParameters['projectId'] != null) {
+      queryParameters['projectId'] = requestParameters['projectId'];
+    }
+
+    if (requestParameters['chapterId'] != null) {
+      queryParameters['chapterId'] = requestParameters['chapterId'];
+    }
+
+    if (requestParameters['sectionId'] != null) {
+      queryParameters['sectionId'] = requestParameters['sectionId'];
+    }
+
+    const headerParameters: runtime.HTTPHeaders = {};
 
     const response = await this.request(
       {
         path: `/api/graphs/find`,
-        method: 'POST',
+        method: 'GET',
         headers: headerParameters,
         query: queryParameters,
-        body: GraphFindRequestToJSON(requestParameters['graphFindRequest']),
       },
       initOverrides,
     );
@@ -141,7 +182,7 @@ export class GraphsApi extends runtime.BaseAPI {
    * Find graph
    */
   async graphsFind(
-    requestParameters: GraphsFindRequest = {},
+    requestParameters: GraphsFindRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<GraphFindResponse> {
     const response = await this.graphsFindRaw(requestParameters, initOverrides);

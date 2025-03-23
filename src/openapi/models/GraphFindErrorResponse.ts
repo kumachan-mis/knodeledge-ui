@@ -12,35 +12,6 @@
  */
 
 import { mapValues } from '../runtime';
-import type { SectionOnlyIdError } from './SectionOnlyIdError';
-import {
-  SectionOnlyIdErrorFromJSON,
-  SectionOnlyIdErrorFromJSONTyped,
-  SectionOnlyIdErrorToJSON,
-  SectionOnlyIdErrorToJSONTyped,
-} from './SectionOnlyIdError';
-import type { ProjectOnlyIdError } from './ProjectOnlyIdError';
-import {
-  ProjectOnlyIdErrorFromJSON,
-  ProjectOnlyIdErrorFromJSONTyped,
-  ProjectOnlyIdErrorToJSON,
-  ProjectOnlyIdErrorToJSONTyped,
-} from './ProjectOnlyIdError';
-import type { UserOnlyIdError } from './UserOnlyIdError';
-import {
-  UserOnlyIdErrorFromJSON,
-  UserOnlyIdErrorFromJSONTyped,
-  UserOnlyIdErrorToJSON,
-  UserOnlyIdErrorToJSONTyped,
-} from './UserOnlyIdError';
-import type { ChapterOnlyIdError } from './ChapterOnlyIdError';
-import {
-  ChapterOnlyIdErrorFromJSON,
-  ChapterOnlyIdErrorFromJSONTyped,
-  ChapterOnlyIdErrorToJSON,
-  ChapterOnlyIdErrorToJSONTyped,
-} from './ChapterOnlyIdError';
-
 /**
  * Error Response Body for Graph Find API
  * @export
@@ -54,29 +25,29 @@ export interface GraphFindErrorResponse {
    */
   message: string;
   /**
-   *
-   * @type {UserOnlyIdError}
+   * Error message for user ID
+   * @type {string}
    * @memberof GraphFindErrorResponse
    */
-  user?: UserOnlyIdError;
+  userId?: string;
   /**
-   *
-   * @type {ProjectOnlyIdError}
+   * Error message for project ID
+   * @type {string}
    * @memberof GraphFindErrorResponse
    */
-  project?: ProjectOnlyIdError;
+  projectId?: string;
   /**
-   *
-   * @type {ChapterOnlyIdError}
+   * Error message for chapter ID
+   * @type {string}
    * @memberof GraphFindErrorResponse
    */
-  chapter?: ChapterOnlyIdError;
+  chapterId?: string;
   /**
-   *
-   * @type {SectionOnlyIdError}
+   * Error message for section ID
+   * @type {string}
    * @memberof GraphFindErrorResponse
    */
-  section?: SectionOnlyIdError;
+  sectionId?: string;
 }
 
 /**
@@ -97,10 +68,10 @@ export function GraphFindErrorResponseFromJSONTyped(json: any, ignoreDiscriminat
   }
   return {
     message: json['message'],
-    user: json['user'] == null ? undefined : UserOnlyIdErrorFromJSON(json['user']),
-    project: json['project'] == null ? undefined : ProjectOnlyIdErrorFromJSON(json['project']),
-    chapter: json['chapter'] == null ? undefined : ChapterOnlyIdErrorFromJSON(json['chapter']),
-    section: json['section'] == null ? undefined : SectionOnlyIdErrorFromJSON(json['section']),
+    userId: json['userId'] == null ? undefined : json['userId'],
+    projectId: json['projectId'] == null ? undefined : json['projectId'],
+    chapterId: json['chapterId'] == null ? undefined : json['chapterId'],
+    sectionId: json['sectionId'] == null ? undefined : json['sectionId'],
   };
 }
 
@@ -118,9 +89,9 @@ export function GraphFindErrorResponseToJSONTyped(
 
   return {
     message: value['message'],
-    user: UserOnlyIdErrorToJSON(value['user']),
-    project: ProjectOnlyIdErrorToJSON(value['project']),
-    chapter: ChapterOnlyIdErrorToJSON(value['chapter']),
-    section: SectionOnlyIdErrorToJSON(value['section']),
+    userId: value['userId'],
+    projectId: value['projectId'],
+    chapterId: value['chapterId'],
+    sectionId: value['sectionId'],
   };
 }

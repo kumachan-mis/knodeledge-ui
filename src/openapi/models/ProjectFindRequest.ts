@@ -12,42 +12,32 @@
  */
 
 import { mapValues } from '../runtime';
-import type { ProjectOnlyId } from './ProjectOnlyId';
-import {
-  ProjectOnlyIdFromJSON,
-  ProjectOnlyIdFromJSONTyped,
-  ProjectOnlyIdToJSON,
-  ProjectOnlyIdToJSONTyped,
-} from './ProjectOnlyId';
-import type { UserOnlyId } from './UserOnlyId';
-import { UserOnlyIdFromJSON, UserOnlyIdFromJSONTyped, UserOnlyIdToJSON, UserOnlyIdToJSONTyped } from './UserOnlyId';
-
 /**
- * Request Body for Project Find API
+ * Request Parameters for Project Find API
  * @export
  * @interface ProjectFindRequest
  */
 export interface ProjectFindRequest {
   /**
-   *
-   * @type {UserOnlyId}
+   * User ID
+   * @type {string}
    * @memberof ProjectFindRequest
    */
-  user: UserOnlyId;
+  userId: string;
   /**
-   *
-   * @type {ProjectOnlyId}
+   * Auto-generated project ID
+   * @type {string}
    * @memberof ProjectFindRequest
    */
-  project: ProjectOnlyId;
+  projectId: string;
 }
 
 /**
  * Check if a given object implements the ProjectFindRequest interface.
  */
 export function instanceOfProjectFindRequest(value: object): value is ProjectFindRequest {
-  if (!('user' in value) || value['user'] === undefined) return false;
-  if (!('project' in value) || value['project'] === undefined) return false;
+  if (!('userId' in value) || value['userId'] === undefined) return false;
+  if (!('projectId' in value) || value['projectId'] === undefined) return false;
   return true;
 }
 
@@ -60,8 +50,8 @@ export function ProjectFindRequestFromJSONTyped(json: any, ignoreDiscriminator: 
     return json;
   }
   return {
-    user: UserOnlyIdFromJSON(json['user']),
-    project: ProjectOnlyIdFromJSON(json['project']),
+    userId: json['userId'],
+    projectId: json['projectId'],
   };
 }
 
@@ -78,7 +68,7 @@ export function ProjectFindRequestToJSONTyped(
   }
 
   return {
-    user: UserOnlyIdToJSON(value['user']),
-    project: ProjectOnlyIdToJSON(value['project']),
+    userId: value['userId'],
+    projectId: value['projectId'],
   };
 }

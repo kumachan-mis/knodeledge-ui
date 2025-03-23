@@ -12,28 +12,25 @@
  */
 
 import { mapValues } from '../runtime';
-import type { UserOnlyId } from './UserOnlyId';
-import { UserOnlyIdFromJSON, UserOnlyIdFromJSONTyped, UserOnlyIdToJSON, UserOnlyIdToJSONTyped } from './UserOnlyId';
-
 /**
- * Request Body for Project List API
+ * Request Parameters for Project List API
  * @export
  * @interface ProjectListRequest
  */
 export interface ProjectListRequest {
   /**
-   *
-   * @type {UserOnlyId}
+   * User ID
+   * @type {string}
    * @memberof ProjectListRequest
    */
-  user: UserOnlyId;
+  userId: string;
 }
 
 /**
  * Check if a given object implements the ProjectListRequest interface.
  */
 export function instanceOfProjectListRequest(value: object): value is ProjectListRequest {
-  if (!('user' in value) || value['user'] === undefined) return false;
+  if (!('userId' in value) || value['userId'] === undefined) return false;
   return true;
 }
 
@@ -46,7 +43,7 @@ export function ProjectListRequestFromJSONTyped(json: any, ignoreDiscriminator: 
     return json;
   }
   return {
-    user: UserOnlyIdFromJSON(json['user']),
+    userId: json['userId'],
   };
 }
 
@@ -63,6 +60,6 @@ export function ProjectListRequestToJSONTyped(
   }
 
   return {
-    user: UserOnlyIdToJSON(value['user']),
+    userId: value['userId'],
   };
 }

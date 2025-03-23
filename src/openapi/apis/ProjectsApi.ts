@@ -20,10 +20,8 @@ import type {
   ProjectDeleteErrorResponse,
   ProjectDeleteRequest,
   ProjectFindErrorResponse,
-  ProjectFindRequest,
   ProjectFindResponse,
   ProjectListErrorResponse,
-  ProjectListRequest,
   ProjectListResponse,
   ProjectUpdateErrorResponse,
   ProjectUpdateRequest,
@@ -44,14 +42,10 @@ import {
   ProjectDeleteRequestToJSON,
   ProjectFindErrorResponseFromJSON,
   ProjectFindErrorResponseToJSON,
-  ProjectFindRequestFromJSON,
-  ProjectFindRequestToJSON,
   ProjectFindResponseFromJSON,
   ProjectFindResponseToJSON,
   ProjectListErrorResponseFromJSON,
   ProjectListErrorResponseToJSON,
-  ProjectListRequestFromJSON,
-  ProjectListRequestToJSON,
   ProjectListResponseFromJSON,
   ProjectListResponseToJSON,
   ProjectUpdateErrorResponseFromJSON,
@@ -71,11 +65,12 @@ export interface ProjectsDeleteRequest {
 }
 
 export interface ProjectsFindRequest {
-  projectFindRequest?: ProjectFindRequest;
+  userId: string;
+  projectId: string;
 }
 
 export interface ProjectsListRequest {
-  projectListRequest?: ProjectListRequest;
+  userId: string;
 }
 
 export interface ProjectsUpdateRequest {
@@ -168,19 +163,38 @@ export class ProjectsApi extends runtime.BaseAPI {
     requestParameters: ProjectsFindRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<ProjectFindResponse>> {
+    if (requestParameters['userId'] == null) {
+      throw new runtime.RequiredError(
+        'userId',
+        'Required parameter "userId" was null or undefined when calling projectsFind().',
+      );
+    }
+
+    if (requestParameters['projectId'] == null) {
+      throw new runtime.RequiredError(
+        'projectId',
+        'Required parameter "projectId" was null or undefined when calling projectsFind().',
+      );
+    }
+
     const queryParameters: any = {};
 
-    const headerParameters: runtime.HTTPHeaders = {};
+    if (requestParameters['userId'] != null) {
+      queryParameters['userId'] = requestParameters['userId'];
+    }
 
-    headerParameters['Content-Type'] = 'application/json';
+    if (requestParameters['projectId'] != null) {
+      queryParameters['projectId'] = requestParameters['projectId'];
+    }
+
+    const headerParameters: runtime.HTTPHeaders = {};
 
     const response = await this.request(
       {
         path: `/api/projects/find`,
-        method: 'POST',
+        method: 'GET',
         headers: headerParameters,
         query: queryParameters,
-        body: ProjectFindRequestToJSON(requestParameters['projectFindRequest']),
       },
       initOverrides,
     );
@@ -192,7 +206,7 @@ export class ProjectsApi extends runtime.BaseAPI {
    * Find project
    */
   async projectsFind(
-    requestParameters: ProjectsFindRequest = {},
+    requestParameters: ProjectsFindRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<ProjectFindResponse> {
     const response = await this.projectsFindRaw(requestParameters, initOverrides);
@@ -206,19 +220,27 @@ export class ProjectsApi extends runtime.BaseAPI {
     requestParameters: ProjectsListRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<ProjectListResponse>> {
+    if (requestParameters['userId'] == null) {
+      throw new runtime.RequiredError(
+        'userId',
+        'Required parameter "userId" was null or undefined when calling projectsList().',
+      );
+    }
+
     const queryParameters: any = {};
 
-    const headerParameters: runtime.HTTPHeaders = {};
+    if (requestParameters['userId'] != null) {
+      queryParameters['userId'] = requestParameters['userId'];
+    }
 
-    headerParameters['Content-Type'] = 'application/json';
+    const headerParameters: runtime.HTTPHeaders = {};
 
     const response = await this.request(
       {
         path: `/api/projects/list`,
-        method: 'POST',
+        method: 'GET',
         headers: headerParameters,
         query: queryParameters,
-        body: ProjectListRequestToJSON(requestParameters['projectListRequest']),
       },
       initOverrides,
     );
@@ -230,7 +252,7 @@ export class ProjectsApi extends runtime.BaseAPI {
    * Get list of projects
    */
   async projectsList(
-    requestParameters: ProjectsListRequest = {},
+    requestParameters: ProjectsListRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<ProjectListResponse> {
     const response = await this.projectsListRaw(requestParameters, initOverrides);

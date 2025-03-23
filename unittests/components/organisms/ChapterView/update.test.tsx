@@ -107,11 +107,8 @@ test('should update paper with Paper Update API', async () => {
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
     1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/papers/find`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' }, chapter: { id: 'CHAPTER' } }),
-    }),
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/papers/find?userId=${encodeURIComponent(USER.sub)}&projectId=PROJECT&chapterId=CHAPTER`,
+    expect.objectContaining({ method: 'GET' }),
   );
 
   // eslint-disable-next-line @typescript-eslint/unbound-method
@@ -207,11 +204,8 @@ test('should show error message when paper update failed', async () => {
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
     1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/papers/find`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' }, chapter: { id: 'CHAPTER' } }),
-    }),
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/papers/find?userId=${encodeURIComponent(USER.sub)}&projectId=PROJECT&chapterId=CHAPTER`,
+    expect.objectContaining({ method: 'GET' }),
   );
 
   // eslint-disable-next-line @typescript-eslint/unbound-method
@@ -305,11 +299,8 @@ test('should show error message when paper to be updated does not exist', async 
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
     1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/papers/find`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' }, chapter: { id: 'CHAPTER' } }),
-    }),
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/papers/find?userId=${encodeURIComponent(USER.sub)}&projectId=PROJECT&chapterId=CHAPTER`,
+    expect.objectContaining({ method: 'GET' }),
   );
 
   // eslint-disable-next-line @typescript-eslint/unbound-method
@@ -400,11 +391,8 @@ test('should show error message when internal error occured', async () => {
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch).toHaveBeenNthCalledWith(
     1,
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/papers/find`,
-    expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ user: { id: USER.sub }, project: { id: 'PROJECT' }, chapter: { id: 'CHAPTER' } }),
-    }),
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/papers/find?userId=${encodeURIComponent(USER.sub)}&projectId=PROJECT&chapterId=CHAPTER`,
+    expect.objectContaining({ method: 'GET' }),
   );
 
   // eslint-disable-next-line @typescript-eslint/unbound-method

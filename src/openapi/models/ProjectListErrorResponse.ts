@@ -12,14 +12,6 @@
  */
 
 import { mapValues } from '../runtime';
-import type { UserOnlyIdError } from './UserOnlyIdError';
-import {
-  UserOnlyIdErrorFromJSON,
-  UserOnlyIdErrorFromJSONTyped,
-  UserOnlyIdErrorToJSON,
-  UserOnlyIdErrorToJSONTyped,
-} from './UserOnlyIdError';
-
 /**
  * Error Response Body for Project List API
  * @export
@@ -33,11 +25,11 @@ export interface ProjectListErrorResponse {
    */
   message: string;
   /**
-   *
-   * @type {UserOnlyIdError}
+   * Error message for user ID
+   * @type {string}
    * @memberof ProjectListErrorResponse
    */
-  user?: UserOnlyIdError;
+  userId?: string;
 }
 
 /**
@@ -61,7 +53,7 @@ export function ProjectListErrorResponseFromJSONTyped(
   }
   return {
     message: json['message'],
-    user: json['user'] == null ? undefined : UserOnlyIdErrorFromJSON(json['user']),
+    userId: json['userId'] == null ? undefined : json['userId'],
   };
 }
 
@@ -79,6 +71,6 @@ export function ProjectListErrorResponseToJSONTyped(
 
   return {
     message: value['message'],
-    user: UserOnlyIdErrorToJSON(value['user']),
+    userId: value['userId'],
   };
 }
