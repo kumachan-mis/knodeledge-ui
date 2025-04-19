@@ -7,7 +7,7 @@ import Button, { ButtonProps } from '@mui/material/Button';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import FormHelperText from '@mui/material/FormHelperText';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useForm } from 'react-hook-form';
 
 export type ChapterPreviewDialogFormComponentProps = {
