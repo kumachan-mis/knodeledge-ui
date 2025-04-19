@@ -29,9 +29,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@auth0/nextjs-auth0@npm:^4.4.2":
-  version: 4.4.2
-  resolution: "@auth0/nextjs-auth0@npm:4.4.2"
+"@auth0/nextjs-auth0@npm:4.3.0":
+  version: 4.3.0
+  resolution: "@auth0/nextjs-auth0@npm:4.3.0"
   dependencies:
     "@edge-runtime/cookies": "npm:^5.0.1"
     "@panva/hkdf": "npm:^1.2.1"
@@ -42,7 +42,7 @@ __metadata:
     next: ^14.2.25 || ^15.2.3
     react: ^18.0.0 || ^19.0.0 || ^19.0.0-0
     react-dom: ^18.0.0 || ^19.0.0 || ^19.0.0-0
-  checksum: 10/3b19f2c01e81c97eadf64b33f67d113bd765a5b625e76d71966d6a0fa8ba30ee0a9c746538966e1eb15973d928bb35b6ca22bdaf6c5f9cca0b46ba4162aa3616
+  checksum: 10/18731c5b2ee2dbe54fd625b34f4520e1ca8f715ef6dd46f55a35d1d36d88f76a80f2a8bfea5b48d893b23991093572999de6203eaa06b1af0ab13a94f60781de
   languageName: node
   linkType: hard
 
@@ -8604,7 +8604,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "knodeledge-ui@workspace:."
   dependencies:
-    "@auth0/nextjs-auth0": "npm:^4.4.2"
+    "@auth0/nextjs-auth0": "npm:4.3.0"
     "@babel/runtime": "npm:^7.27.0"
     "@emotion/cache": "npm:^11.14.0"
     "@emotion/react": "npm:^11.14.0"
