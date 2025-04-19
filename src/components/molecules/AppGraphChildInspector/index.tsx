@@ -1,6 +1,6 @@
 import { StarGraphChildWithId } from '@/components/libs/StarGraph/context';
 
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import React from 'react';
 
