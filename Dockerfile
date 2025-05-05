@@ -27,8 +27,8 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 COPY --from=builder /app/next.config.js   ./next.config.js
-COPY --from=builder /app/.next/static     ./.next/static
 COPY --from=builder /app/.next/standalone ./.next/standalone
+COPY --from=builder /app/.next/static     ./.next/standalone/.next/static
 
 RUN addgroup -g 1001 -S nodejs && \
   adduser -S nextjs -u 1001 &&  \
