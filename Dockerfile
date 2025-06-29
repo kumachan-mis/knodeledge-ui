@@ -1,4 +1,4 @@
-FROM node:20.10-alpine AS builder
+FROM node:22.17-alpine AS builder
 
 ARG NEXT_PUBLIC_ENVIRONMENT
 ARG NEXT_PUBLIC_APP_URL
@@ -20,7 +20,7 @@ RUN yarn install && \
   yarn build
 
 
-FROM node:20.10-alpine AS runner
+FROM node:22.17-alpine AS runner
 
 WORKDIR /app
 
