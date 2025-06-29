@@ -1,7 +1,7 @@
 import ProjectCardComponent from './ProjectCard';
 
 import Box from '@mui/material/Box';
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof ProjectCardComponent> = {
   component: ProjectCardComponent,

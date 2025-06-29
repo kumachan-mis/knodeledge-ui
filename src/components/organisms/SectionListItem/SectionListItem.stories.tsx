@@ -1,7 +1,7 @@
 import SectionListItemComponent from './SectionListItem';
 
 import List from '@mui/material/List';
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/react-vite';
 
 const meta: Meta<typeof SectionListItemComponent> = {
   component: SectionListItemComponent,

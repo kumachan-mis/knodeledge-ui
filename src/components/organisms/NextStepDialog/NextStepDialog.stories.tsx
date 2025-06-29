@@ -2,7 +2,7 @@ import { PaperContentProvider } from '@/contexts/views/paper';
 
 import NextStepDialogComponent from './NextStepDialog';
 
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof NextStepDialogComponent> = {
   component: NextStepDialogComponent,

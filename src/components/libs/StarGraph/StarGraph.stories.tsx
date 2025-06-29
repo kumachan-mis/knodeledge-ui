@@ -3,7 +3,7 @@ import { useStarGraph } from './hooks';
 
 import StarGraph from './index';
 
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react-vite';
 import React from 'react';
 
 const StarGraphWithContexts: React.FC<{

@@ -1,6 +1,6 @@
 import ChapterViewComponent from './ChapterView';
 
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof ChapterViewComponent> = {
   component: ChapterViewComponent,

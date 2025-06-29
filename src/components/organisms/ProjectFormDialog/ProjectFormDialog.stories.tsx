@@ -1,6 +1,6 @@
 import ProjectFormDialogComponent from './ProjectFormDialog';
 
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof ProjectFormDialogComponent> = {
   component: ProjectFormDialogComponent,

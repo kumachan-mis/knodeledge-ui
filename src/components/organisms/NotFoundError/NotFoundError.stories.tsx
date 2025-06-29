@@ -1,6 +1,6 @@
 import NotFoundErrorComponent from './NotFoundError';
 
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof NotFoundErrorComponent> = {
   component: NotFoundErrorComponent,
