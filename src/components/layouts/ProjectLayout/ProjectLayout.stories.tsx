@@ -4,7 +4,7 @@ import SectionListComponent from '@/components/organisms/SectionList/SectionList
 
 import ProjectLayout from './ProjectLayout';
 
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof ProjectLayout> = {
   component: ProjectLayout,

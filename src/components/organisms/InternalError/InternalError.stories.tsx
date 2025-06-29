@@ -1,6 +1,6 @@
 import InternalErrorComponent from './InternalError';
 
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof InternalErrorComponent> = {
   component: InternalErrorComponent,

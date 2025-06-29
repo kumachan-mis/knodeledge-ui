@@ -3,7 +3,7 @@ import SectionListComponent from '@/components/organisms/SectionList/SectionList
 import ChapterListItemComponent from './ChapterListItem';
 
 import List from '@mui/material/List';
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof ChapterListItemComponent> = {
   component: ChapterListItemComponent,
