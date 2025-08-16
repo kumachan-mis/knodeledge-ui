@@ -1,13 +1,13 @@
 'use client';
-import AppLayout from '@/components/layouts/AppLayout';
+import ErrorLayout from '@/components/layouts/ErrorLayout';
 import InternalError from '@/components/organisms/InternalError';
 
 import { NextPage } from 'next';
 
 const GlobalErrorPage: NextPage = () => (
-  <AppLayout>
+  <ErrorLayout>
     <InternalError />
-  </AppLayout>
+  </ErrorLayout>
 );
 
 export default GlobalErrorPage;

@@ -6,7 +6,7 @@ import AppBar from '@mui/material/AppBar';
 import IconButton from '@mui/material/IconButton';
 
 export type AppDrawerHeaderProps = {
-  readonly authorized: boolean;
+  readonly userstate: 'authenticated' | 'unauthenticated';
   readonly username?: string;
   readonly mobileAccountMenuOpen: boolean;
   readonly mobileAccountMenuAnchorEl: HTMLElement | null;
