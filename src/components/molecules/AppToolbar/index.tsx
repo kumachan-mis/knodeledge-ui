@@ -1,3 +1,5 @@
+import AppToolbarBase from '../AppToolbarBase';
+
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -9,7 +11,6 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import MenuItem from '@mui/material/MenuItem';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
-import AppToolbarBase from '../AppToolbarBase';
 
 export type AppToolbarProps = {
   readonly userstate: 'authenticated' | 'unauthenticated';

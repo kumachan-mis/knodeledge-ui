@@ -22,12 +22,12 @@ const AppLayoutComponent: React.FC<AppLayoutComponentProps> = ({ user, children 
   return (
     <AppContainer>
       <AppHeader
-        userstate={user ? 'authenticated' : 'unauthenticated'}
         mobileAccountMenuAnchorEl={mobileAccountMenuAnchorEl}
         mobileAccountMenuOpen={mobileAccountMenuOpen}
         onCloseMobileAccountMenu={onCloseMobileAccountMenu}
         onOpenMobileAccountMenu={onOpenMobileAccountMenu}
         username={user?.name}
+        userstate={user ? 'authenticated' : 'unauthenticated'}
       />
       <AppMain>{children}</AppMain>
     </AppContainer>
