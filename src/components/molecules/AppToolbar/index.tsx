@@ -8,12 +8,11 @@ import IconButton from '@mui/material/IconButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import MenuItem from '@mui/material/MenuItem';
 import Popover from '@mui/material/Popover';
-import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Link from 'next/link';
+import AppToolbarBase from '../AppToolbarBase';
 
 export type AppToolbarProps = {
-  readonly userstate: 'authenticated' | 'unauthenticated' | 'error';
+  readonly userstate: 'authenticated' | 'unauthenticated';
   readonly username?: string;
   readonly menu?: React.ReactNode;
   readonly mobileAccountMenuOpen: boolean;
@@ -31,15 +30,7 @@ const AppToolbar: React.FC<AppToolbarProps> = ({
   onOpenMobileAccountMenu,
   onCloseMobileAccountMenu,
 }) => (
-  <Toolbar variant="dense">
-    {menu}
-    <Box sx={{ flexGrow: 1 }}>
-      <Button LinkComponent={Link} color="inherit" href="/" sx={{ textTransform: 'none' }}>
-        <Typography component="div" variant="h6">
-          kNODEledge
-        </Typography>
-      </Button>
-    </Box>
+  <AppToolbarBase menu={menu}>
     <Box sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center' }}>
       <IconButton
         aria-expanded={mobileAccountMenuOpen ? 'true' : undefined}
@@ -71,17 +62,13 @@ const AppToolbar: React.FC<AppToolbarProps> = ({
               Logout
             </MenuItem>
           </>
-        ) : userstate === 'unauthenticated' ? (
+        ) : (
           <MenuItem component="a" href="/auth/login">
             <ListItemIcon>
               <LoginIcon fontSize="small" />
             </ListItemIcon>
             Login
           </MenuItem>
-        ) : (
-          <Typography component="div" sx={{ px: 2, py: 1 }} color="error.main">
-            Error
-          </Typography>
         )}
       </Popover>
     </Box>
@@ -93,15 +80,13 @@ const AppToolbar: React.FC<AppToolbarProps> = ({
         <Button color="inherit" href="/auth/logout" startIcon={<LogoutIcon fontSize="small" />}>
           Logout
         </Button>
-      ) : userstate === 'unauthenticated' ? (
+      ) : (
         <Button color="inherit" href="/auth/login" startIcon={<LoginIcon fontSize="small" />}>
           Login
         </Button>
-      ) : (
-        <></>
       )}
     </Box>
-  </Toolbar>
+  </AppToolbarBase>
 );
 
 export default AppToolbar;

@@ -39,7 +39,7 @@ const ProjectLayoutComponent: React.FC<ProjectLayoutComponentProps> = ({
   return (
     <AppContainer>
       <AppDrawerHeader
-        authorized={!!user}
+        userstate={user ? 'authenticated' : 'unauthenticated'}
         mobileAccountMenuAnchorEl={mobileAccountMenuAnchorEl}
         mobileAccountMenuOpen={mobileAccountMenuOpen}
         onCloseMobileAccountMenu={onCloseMobileAccountMenu}
