@@ -1,4 +1,4 @@
-import AppToolbarBase from '../AppToolbarBase';
+import AppToolbarBase from '@/components/molecules/AppToolbarBase';
 
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LoginIcon from '@mui/icons-material/Login';
