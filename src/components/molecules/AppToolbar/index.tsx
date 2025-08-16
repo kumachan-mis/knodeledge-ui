@@ -13,7 +13,7 @@ import Typography from '@mui/material/Typography';
 import Link from 'next/link';
 
 export type AppToolbarProps = {
-  readonly authorized: boolean;
+  readonly userstate: 'authenticated' | 'unauthenticated' | 'error';
   readonly username?: string;
   readonly menu?: React.ReactNode;
   readonly mobileAccountMenuOpen: boolean;
@@ -23,7 +23,7 @@ export type AppToolbarProps = {
 };
 
 const AppToolbar: React.FC<AppToolbarProps> = ({
-  authorized,
+  userstate,
   username,
   menu,
   mobileAccountMenuOpen,
@@ -58,7 +58,7 @@ const AppToolbar: React.FC<AppToolbarProps> = ({
         open={mobileAccountMenuOpen}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        {authorized ? (
+        {userstate === 'authenticated' ? (
           <>
             <Typography component="div" sx={{ px: 2, py: 1 }}>
               {username ?? ''}
@@ -71,13 +71,17 @@ const AppToolbar: React.FC<AppToolbarProps> = ({
               Logout
             </MenuItem>
           </>
-        ) : (
+        ) : userstate === 'unauthenticated' ? (
           <MenuItem component="a" href="/auth/login">
             <ListItemIcon>
               <LoginIcon fontSize="small" />
             </ListItemIcon>
             Login
           </MenuItem>
+        ) : (
+          <Typography component="div" sx={{ px: 2, py: 1 }} color="error.main">
+            Error
+          </Typography>
         )}
       </Popover>
     </Box>
@@ -85,14 +89,16 @@ const AppToolbar: React.FC<AppToolbarProps> = ({
       <Typography component="div" sx={{ mr: 4 }}>
         {username ?? ''}
       </Typography>
-      {authorized ? (
+      {userstate === 'authenticated' ? (
         <Button color="inherit" href="/auth/logout" startIcon={<LogoutIcon fontSize="small" />}>
           Logout
         </Button>
-      ) : (
+      ) : userstate === 'unauthenticated' ? (
         <Button color="inherit" href="/auth/login" startIcon={<LoginIcon fontSize="small" />}>
           Login
         </Button>
+      ) : (
+        <></>
       )}
     </Box>
   </Toolbar>

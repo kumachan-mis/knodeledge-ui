@@ -3,7 +3,7 @@ import AppToolbar from '@/components/molecules/AppToolbar';
 import AppBar from '@mui/material/AppBar';
 
 export type AppHeaderProps = {
-  readonly authorized: boolean;
+  readonly userstate: 'authenticated' | 'unauthenticated' | 'error';
   readonly username?: string;
   readonly mobileAccountMenuOpen: boolean;
   readonly mobileAccountMenuAnchorEl: HTMLElement | null;
