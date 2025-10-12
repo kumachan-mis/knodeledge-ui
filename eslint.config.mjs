@@ -1,61 +1,48 @@
-import { fixupConfigRules } from '@eslint/compat';
 import globals from 'globals';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import js from '@eslint/js';
+
+import eslint from '@eslint/js';
+
+import { defineConfig } from 'eslint/config';
+import storybookPlugin from 'eslint-plugin-storybook';
+import prettierConfig from 'eslint-config-prettier/flat';
+import tseslint from '@typescript-eslint/eslint-plugin';
+import typescriptParser from '@typescript-eslint/parser';
 import { FlatCompat } from '@eslint/eslintrc';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all,
-});
+const __dirname = new URL('.', import.meta.url).pathname;
+const compat = new FlatCompat({ baseDirectory: __dirname });
 
-export default [
+export default defineConfig(
   {
-    ignores: [
-      '**/node_modules/',
-      '**/dist/',
-      '**/storybook-static/',
-      '**/.yarn/',
-      '**/.pnp.cjs',
-      '**/.pnp.loader.mjs',
-      '.next/',
-    ],
+    ignores: ['**/node_modules/', '**/dist/', '**/storybook-static/', '**/.yarn/', '**/.pnp.cjs', '**/.pnp.loader.mjs'],
   },
-  ...fixupConfigRules(
-    compat.extends(
-      'eslint:recommended',
-      'plugin:import/recommended',
-      'next/core-web-vitals',
-      'plugin:storybook/recommended',
-      'prettier',
-    ),
-  ),
+
+  // JavaScript
+  ...compat.extends('next/core-web-vitals'),
+  eslint.configs.recommended,
+  storybookPlugin.configs['flat/recommended'],
+  prettierConfig,
   {
     languageOptions: {
       globals: {
         ...globals.browser,
         ...globals.node,
       },
-
-      ecmaVersion: 5,
-      sourceType: 'commonjs',
-
-      parserOptions: {
-        project: true,
-        tsconfigRootDir: '.',
-      },
+      ecmaVersion: 'latest',
+      sourceType: 'module',
     },
     settings: {
+      react: {
+        version: 'detect',
+      },
+      'import/parsers': {
+        espree: ['.js', '.cjs', '.mjs', '.jsx'],
+      },
       'import/resolver': {
         typescript: true,
         node: true,
       },
     },
-
     rules: {
       'no-duplicate-imports': 'error',
       'no-unreachable-loop': 'error',
@@ -128,18 +115,27 @@ export default [
       'react/no-danger': 'error',
       'react/no-unsafe': 'error',
       'react/prefer-read-only-props': 'error',
+      'react/prop-types': 'off',
+      'react/react-in-jsx-scope': 'off',
     },
   },
-  ...fixupConfigRules(
-    compat.extends(
-      'plugin:@typescript-eslint/strict-type-checked',
-      'plugin:@typescript-eslint/stylistic-type-checked',
-      'plugin:import/typescript',
-    ),
-  ).map((config) => ({
-    ...config,
+
+  // TypeScript
+  {
     files: ['**/*.ts', '**/*.tsx'],
-  })),
+    languageOptions: {
+      parser: typescriptParser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        project: './tsconfig.json',
+        tsconfigRootDir: __dirname,
+      },
+    },
+  },
+  ...compat.extends('next/typescript'),
+  tseslint.configs['flat/strict-type-checked'],
+  tseslint.configs['flat/stylistic-type-checked'],
   {
     files: ['**/*.ts', '**/*.tsx'],
     rules: {
@@ -160,4 +156,4 @@ export default [
       'no-loop-func': 'off',
     },
   },
-];
+);
