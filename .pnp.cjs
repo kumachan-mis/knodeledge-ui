@@ -79,7 +79,7 @@ const RAW_RUNTIME_STATE =
           ["next", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:15.5.4"],\
           ["prettier", "npm:3.6.2"],\
           ["react", "npm:19.2.0"],\
-          ["react-clay-editor", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:1.7.5"],\
+          ["react-clay-editor", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:1.7.6"],\
           ["react-dom", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:19.2.0"],\
           ["react-hook-form", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:7.65.0"],\
           ["sass", "npm:1.93.2"],\
@@ -11479,7 +11479,7 @@ const RAW_RUNTIME_STATE =
           ["next", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:15.5.4"],\
           ["prettier", "npm:3.6.2"],\
           ["react", "npm:19.2.0"],\
-          ["react-clay-editor", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:1.7.5"],\
+          ["react-clay-editor", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:1.7.6"],\
           ["react-dom", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:19.2.0"],\
           ["react-hook-form", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:7.65.0"],\
           ["sass", "npm:1.93.2"],\
@@ -12871,15 +12871,15 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["react-clay-editor", [\
-      ["npm:1.7.5", {\
-        "packageLocation": "./.yarn/cache/react-clay-editor-npm-1.7.5-4e9a9c33de-5b2d97c63b.zip/node_modules/react-clay-editor/",\
+      ["npm:1.7.6", {\
+        "packageLocation": "./.yarn/cache/react-clay-editor-npm-1.7.6-3bcef8c81f-13b4bc99cf.zip/node_modules/react-clay-editor/",\
         "packageDependencies": [\
-          ["react-clay-editor", "npm:1.7.5"]\
+          ["react-clay-editor", "npm:1.7.6"]\
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:1.7.5", {\
-        "packageLocation": "./.yarn/__virtual__/react-clay-editor-virtual-91b66a892f/0/cache/react-clay-editor-npm-1.7.5-4e9a9c33de-5b2d97c63b.zip/node_modules/react-clay-editor/",\
+      ["virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:1.7.6", {\
+        "packageLocation": "./.yarn/__virtual__/react-clay-editor-virtual-b68fa09cfb/0/cache/react-clay-editor-npm-1.7.6-3bcef8c81f-13b4bc99cf.zip/node_modules/react-clay-editor/",\
         "packageDependencies": [\
           ["@emotion/react", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:11.14.0"],\
           ["@emotion/styled", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:11.14.1"],\
@@ -12890,7 +12890,7 @@ const RAW_RUNTIME_STATE =
           ["@types/react-dom", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:19.2.1"],\
           ["katex", "npm:0.16.23"],\
           ["react", "npm:19.2.0"],\
-          ["react-clay-editor", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:1.7.5"],\
+          ["react-clay-editor", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:1.7.6"],\
           ["react-dom", "virtual:1d3e7fffec545fa411ae4a9654fafa95fa8fed266363cf1d1bbfa8cef13b1650dc747af906f7b21cd94d908d721eec164989169a35b956f946f6a952480d5963#npm:19.2.0"]\
         ],\
         "packagePeers": [\

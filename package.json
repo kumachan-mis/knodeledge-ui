@@ -35,7 +35,7 @@
     "katex": "^0.16.23",
     "next": "^15.5.4",
     "react": "^19.2.0",
-    "react-clay-editor": "^1.7.5",
+    "react-clay-editor": "^1.7.6",
     "react-dom": "^19.2.0",
     "react-hook-form": "^7.65.0",
     "sass": "^1.93.2"
